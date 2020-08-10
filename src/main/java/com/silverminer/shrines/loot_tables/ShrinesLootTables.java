@@ -1,4 +1,4 @@
-package com.silverminer.shrines;
+package com.silverminer.shrines.loot_tables;
 
 import java.util.Random;
 import java.util.Set;
