@@ -34,7 +34,8 @@ public class NetherShrinePiece {
 			new ResourceLocation("shrines:nether_shrine/nether_shrine_007"),
 			new ResourceLocation("shrines:nether_shrine/nether_shrine_008"),
 			new ResourceLocation("shrines:nether_shrine/nether_shrine_009"),
-			new ResourceLocation("shrines:nether_shrine/nether_shrine_010"));
+			new ResourceLocation("shrines:nether_shrine/nether_shrine_010"),
+			new ResourceLocation("shrines:nether_shrine/nether_shrine_011"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
