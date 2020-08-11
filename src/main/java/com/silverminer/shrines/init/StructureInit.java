@@ -4,8 +4,8 @@ import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.ballon.BallonStructure;
 import com.silverminer.shrines.structures.bees.BeesStructure;
 import com.silverminer.shrines.structures.high_tempel.HighTempelStructure;
+import com.silverminer.shrines.structures.nether_pyramid.NetherPyramidStructure;
 import com.silverminer.shrines.structures.nether_shrine.NetherShrineStructure;
-import com.silverminer.shrines.structures.nether_tempel.NetherTempelStructure;
 import com.silverminer.shrines.structures.small_tempel.SmallTempelStructure;
 import com.silverminer.shrines.structures.water_shrine.WaterShrineStructure;
 
@@ -37,6 +37,6 @@ public class StructureInit {
 	public static final RegistryObject<Structure<NoFeatureConfig>> BALLON = STRUCTURES.register("ballon",
 			() -> new BallonStructure(NoFeatureConfig.field_236558_a_));
 
-	public static final RegistryObject<Structure<NoFeatureConfig>> NETHER_TEMPEL = STRUCTURES.register("nether_tempel",
-			() -> new NetherTempelStructure(NoFeatureConfig.field_236558_a_));
+	public static final RegistryObject<Structure<NoFeatureConfig>> NETHER_PYRAMID = STRUCTURES.register("nether_pyramid",
+			() -> new NetherPyramidStructure(NoFeatureConfig.field_236558_a_));
 }
