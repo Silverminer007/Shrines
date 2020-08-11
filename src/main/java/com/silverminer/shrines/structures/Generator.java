@@ -28,7 +28,7 @@ public class Generator {
 				addStructure(biome, StructureInit.SMALL_TEMPEL.get());
 				addStructure(biome, StructureInit.HIGH_TEMPEL.get());
 				addStructure(biome, StructureInit.BALLON.get());
-				addStructure(biome, StructureInit.NETHER_TEMPEL.get());
+				addStructure(biome, StructureInit.NETHER_PYRAMID.get());
 			}
 		}
 	}

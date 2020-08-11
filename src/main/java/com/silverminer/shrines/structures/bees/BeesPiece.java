@@ -28,7 +28,7 @@ public class BeesPiece {
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
-		pieces.add(new BeesPiece.Piece(templateManager, location, pos.add(0, -2, 0), rotation, 0));
+		pieces.add(new BeesPiece.Piece(templateManager, location, pos.add(0, -1, 0), rotation, 0));
 	}
 
 	public static class Piece extends TemplateStructurePiece {

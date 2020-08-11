@@ -1,4 +1,4 @@
-package com.silverminer.shrines.structures.nether_tempel;
+package com.silverminer.shrines.structures.nether_pyramid;
 
 import java.util.List;
 import java.util.Random;
@@ -28,12 +28,12 @@ import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class NetherTempelPiece {
-	private static final ResourceLocation location = new ResourceLocation("shrines:nether_tempel/nether_tempel");
+public class NetherPyramidPiece {
+	private static final ResourceLocation location = new ResourceLocation("shrines:nether_pyramid/nether_pyramid");
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
-		pieces.add(new NetherTempelPiece.Piece(templateManager, location, pos.add(0, -1, 0), rotation, 0));
+		pieces.add(new NetherPyramidPiece.Piece(templateManager, location, pos.add(0, -1, 0), rotation, 0));
 	}
 
 	public static class Piece extends TemplateStructurePiece {
@@ -42,7 +42,7 @@ public class NetherTempelPiece {
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn) {
-			super(IStructurePieceType.register(NetherTempelPiece.Piece::new, "nether_tempel"), componentTypeIn);
+			super(IStructurePieceType.register(NetherPyramidPiece.Piece::new, "nether_pyramid"), componentTypeIn);
 			this.location = location;
 			this.templatePosition = pos;
 			this.rotation = rotation;
@@ -50,7 +50,7 @@ public class NetherTempelPiece {
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
-			super(IStructurePieceType.register(NetherTempelPiece.Piece::new, "nether_tempel"), cNBT);
+			super(IStructurePieceType.register(NetherPyramidPiece.Piece::new, "nether_pyramid"), cNBT);
 			this.location = new ResourceLocation(cNBT.getString("Template"));
 			this.rotation = Rotation.valueOf(cNBT.getString("Rot"));
 			this.setup(templateManager);

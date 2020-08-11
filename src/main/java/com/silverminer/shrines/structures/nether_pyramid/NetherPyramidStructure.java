@@ -1,4 +1,4 @@
-package com.silverminer.shrines.structures.nether_tempel;
+package com.silverminer.shrines.structures.nether_pyramid;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.structures.AbstractStructure;
@@ -14,10 +14,10 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class NetherTempelStructure extends AbstractStructure<NoFeatureConfig> {
+public class NetherPyramidStructure extends AbstractStructure<NoFeatureConfig> {
 
-	public NetherTempelStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "nether_tempel");
+	public NetherPyramidStructure(Codec<NoFeatureConfig> codec) {
+		super(codec, 3, "nether_pyramid");
 	}
 
 	@Override
@@ -27,17 +27,17 @@ public class NetherTempelStructure extends AbstractStructure<NoFeatureConfig> {
 
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return NetherTempelStructure.Start::new;
+		return NetherPyramidStructure.Start::new;
 	}
 
 	@Override
 	public int getDistance() {
-		return 70;
+		return 150;
 	}
 
 	@Override
 	public int getSeparation() {
-		return 20;
+		return 50;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class NetherTempelStructure extends AbstractStructure<NoFeatureConfig> {
 
 	@Override
 	public double getSpawnChance() {
-		return 0.3;
+		return 0.1;
 	}
 
 	public static class Start extends ShrinesStructureStart<NoFeatureConfig> {
@@ -64,7 +64,7 @@ public class NetherTempelStructure extends AbstractStructure<NoFeatureConfig> {
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 90, j);
 			Rotation rotation = Rotation.randomRotation(this.rand);
-			NetherTempelPiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
+			NetherPyramidPiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
 			this.recalculateStructureSize();
 		}
 	}
