@@ -1,7 +1,7 @@
 package com.silverminer.shrines.structures.high_tempel;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.structures.AbstractStructure;
+import com.silverminer.shrines.structures.ShrinesStructure;
 import com.silverminer.shrines.structures.ShrinesStructureStart;
 
 import net.minecraft.util.Rotation;
@@ -14,7 +14,7 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class HighTempelStructure extends AbstractStructure<NoFeatureConfig> {
+public class HighTempelStructure extends ShrinesStructure<NoFeatureConfig> {
 
 	public HighTempelStructure(Codec<NoFeatureConfig> codec) {
 		super(codec, 3, "high_tempel");

@@ -26,12 +26,12 @@ import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 
-public abstract class AbstractStructure<C extends IFeatureConfig> extends Structure<C> {
+public abstract class ShrinesStructure<C extends IFeatureConfig> extends Structure<C> {
 	public final int size;
 
 	public final String name;
 
-	public AbstractStructure(Codec<C> codec, int sizeIn, String nameIn) {
+	public ShrinesStructure(Codec<C> codec, int sizeIn, String nameIn) {
 		super(codec);
 		this.size = sizeIn;
 		this.name = nameIn;
