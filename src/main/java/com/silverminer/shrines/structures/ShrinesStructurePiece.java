@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
@@ -74,11 +74,8 @@ public abstract class ShrinesStructurePiece extends TemplateStructurePiece {
 		return flag;
 	}
 
-	/**
-	 * Override this Method to fill Data Marked Chests(with Structure Block Data
-	 * Mode)
-	 */
-	protected void handleDataMarker(String function, BlockPos pos, IWorld worldIn, Random rand,
+	@Override
+	protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 			MutableBoundingBox sbb) {
 	}
 

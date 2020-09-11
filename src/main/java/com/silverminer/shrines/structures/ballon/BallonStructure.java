@@ -7,6 +7,7 @@ import com.silverminer.shrines.structures.ShrinesStructureStart;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
@@ -58,8 +59,8 @@ public class BallonStructure extends ShrinesStructure<NoFeatureConfig> {
 		}
 
 		@Override
-		public void func_230364_a_(ChunkGenerator chunkGenerator, TemplateManager templateManager, int chunkX,
-				int chunkZ, Biome biome, NoFeatureConfig config) {
+		public void func_230364_a_(DynamicRegistries p_230364_1_, ChunkGenerator chunkGenerator,
+				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 90, j);
