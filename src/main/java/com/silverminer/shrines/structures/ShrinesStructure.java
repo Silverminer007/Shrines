@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.SectionPos;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
@@ -87,7 +88,7 @@ public abstract class ShrinesStructure<C extends IFeatureConfig> extends Structu
 			// Check the entire size of the structure to see if it's all a viable biome:
 			for (Biome biome1 : provider.getBiomes(chunkX * 16 + 9, generator.func_230356_f_(), chunkZ * 16 + 9,
 					getSize() * 16)) {
-				if (!biome1.hasStructure(this)) {
+				if (!biome1.func_242440_e().func_242493_a(this)) {
 					return false;
 				}
 			}
@@ -179,13 +180,13 @@ public abstract class ShrinesStructure<C extends IFeatureConfig> extends Structu
 		return null;
 	}
 
-	public StructureStart<?> func_236389_a_(ChunkGenerator chunkGenerator, BiomeProvider biomeProvider,
-			TemplateManager templateManager, long seed, ChunkPos chunkPos, Biome biome, int p_236389_8_,
-			SharedSeedRandom random, StructureSeparationSettings settings, C config) {
+	public StructureStart<?> func_236389_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator,
+			BiomeProvider biomeProvider, TemplateManager templateManager, long seed, ChunkPos chunkPos, Biome biome,
+			int p_236389_8_, SharedSeedRandom random, StructureSeparationSettings settings, C config) {
 
 		ChunkPos chunkpos = this.seperate(
-				new StructureSeparationSettings(this.getDistance(), this.getSeparation(), this.getSeedModifier()),
-				seed, random, chunkPos.x, chunkPos.z);
+				new StructureSeparationSettings(this.getDistance(), this.getSeparation(), this.getSeedModifier()), seed,
+				random, chunkPos.x, chunkPos.z);
 
 		if (chunkPos.x == chunkpos.x && chunkPos.z == chunkpos.z && this.func_230363_a_(chunkGenerator, biomeProvider,
 				seed, random, chunkPos.x, chunkPos.z, biome, chunkpos, config)) {
@@ -193,7 +194,7 @@ public abstract class ShrinesStructure<C extends IFeatureConfig> extends Structu
 			StructureStart<C> structurestart = this.func_236387_a_(chunkPos.x, chunkPos.z,
 					MutableBoundingBox.getNewBoundingBox(), p_236389_8_, seed);
 
-			structurestart.func_230364_a_(chunkGenerator, templateManager, chunkPos.x, chunkPos.z, biome, config);
+			structurestart.func_230364_a_(registries, chunkGenerator, templateManager, chunkPos.x, chunkPos.z, biome, config);
 
 			if (structurestart.isValid()) {
 				return structurestart;
