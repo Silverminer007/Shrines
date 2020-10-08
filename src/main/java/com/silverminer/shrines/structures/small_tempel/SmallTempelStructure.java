@@ -33,12 +33,12 @@ public class SmallTempelStructure extends ShrinesStructure<NoFeatureConfig> {
 
 	@Override
 	public int getDistance() {
-		return 35;
+		return 75;
 	}
 
 	@Override
 	public int getSeparation() {
-		return 8;
+		return 13;
 	}
 
 	@Override

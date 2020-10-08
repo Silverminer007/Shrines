@@ -33,12 +33,12 @@ public class HighTempelStructure extends ShrinesStructure<NoFeatureConfig> {
 
 	@Override
 	public int getDistance() {
-		return 35;
+		return 85;
 	}
 
 	@Override
 	public int getSeparation() {
-		return 8;
+		return 18;
 	}
 
 	@Override
