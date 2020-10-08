@@ -59,11 +59,11 @@ public class WaterShrineStructure extends ShrinesStructure<NoFeatureConfig> {
 		}
 
 		@Override
-		public void func_230364_a_(DynamicRegistries p_230364_1_, ChunkGenerator chunkGenerator,
+		public void func_230364_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator,
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 90, j);
+			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.randomRotation(this.rand);
 			WaterShrinePiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
 			this.recalculateStructureSize();

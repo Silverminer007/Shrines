@@ -63,7 +63,7 @@ public class BeesStructure extends ShrinesStructure<NoFeatureConfig> {
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 90, j);
+			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.randomRotation(this.rand);
 			BeesPiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
 			this.recalculateStructureSize();

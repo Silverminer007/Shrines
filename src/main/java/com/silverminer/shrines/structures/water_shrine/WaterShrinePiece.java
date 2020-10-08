@@ -35,7 +35,7 @@ public class WaterShrinePiece {
 
 		@Override
 		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+			return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
 		}
 	}
 }

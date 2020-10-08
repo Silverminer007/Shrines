@@ -2,6 +2,9 @@ package com.silverminer.shrines.structures;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -22,6 +25,7 @@ import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public abstract class ShrinesStructurePiece extends TemplateStructurePiece {
+	protected static final Logger LOGGER = LogManager.getLogger(ShrinesStructurePiece.class);
 
 	private final ResourceLocation location;
 	private final Rotation rotation;
@@ -58,17 +62,17 @@ public abstract class ShrinesStructurePiece extends TemplateStructurePiece {
 		tagCompound.putString("Rot", this.rotation.name());
 	}
 
-	public boolean func_230383_a_(ISeedReader p_230383_1_, StructureManager p_230383_2_, ChunkGenerator p_230383_3_,
-			Random p_230383_4_, MutableBoundingBox p_230383_5_, ChunkPos p_230383_6_, BlockPos p_230383_7_) {
+	public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
+			Random rand, MutableBoundingBox mbb, ChunkPos chunkPos, BlockPos blockPos) {
 		PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation)
 				.setMirror(Mirror.NONE).addProcessor(this.getProcessor());
 		BlockPos blockpos1 = this.templatePosition
 				.add(Template.transformedBlockPos(placementsettings, new BlockPos(3, 0, 0)));
-		int i = p_230383_1_.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
+		int i = world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
+		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
 		BlockPos blockpos2 = this.templatePosition;
-		this.templatePosition = this.templatePosition.add(0, i - 90 - 1, 0);
-		boolean flag = super.func_230383_a_(p_230383_1_, p_230383_2_, p_230383_3_, p_230383_4_, p_230383_5_,
-				p_230383_6_, p_230383_7_);
+		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb,
+				chunkPos, blockPos);
 
 		this.templatePosition = blockpos2;
 		return flag;
