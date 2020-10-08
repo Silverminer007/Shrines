@@ -33,12 +33,12 @@ public class NetherShrineStructure extends ShrinesStructure<NoFeatureConfig> {
 
 	@Override
 	public int getDistance() {
-		return 35;
+		return 80;
 	}
 
 	@Override
 	public int getSeparation() {
-		return 8;
+		return 15;
 	}
 
 	@Override

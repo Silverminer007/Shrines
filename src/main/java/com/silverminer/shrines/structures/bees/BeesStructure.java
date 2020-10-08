@@ -33,12 +33,12 @@ public class BeesStructure extends ShrinesStructure<NoFeatureConfig> {
 
 	@Override
 	public int getDistance() {
-		return 35;
+		return 70;
 	}
 
 	@Override
 	public int getSeparation() {
-		return 8;
+		return 12;
 	}
 
 	@Override
