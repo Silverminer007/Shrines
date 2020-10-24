@@ -9,7 +9,7 @@ modId="shrines" #mandatory
 version="${file.jarVersion}" #mandatory
 displayName="Shrines" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-#updateJSONURL="http://myurl.me/" #optional
+updateJSONURL="https://github.com/Silverminer007/Shrines/raw/master/updateJSON.json" #optional
 displayURL="https://github.com/Silverminer007/Shrines" #optional
 #logoFile="examplemod.png" #optional
 #credits="Thanks for this example mod goes to Java" #optional
