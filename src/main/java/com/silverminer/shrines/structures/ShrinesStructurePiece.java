@@ -19,6 +19,7 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
+import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
@@ -83,5 +84,7 @@ public abstract class ShrinesStructurePiece extends TemplateStructurePiece {
 			MutableBoundingBox sbb) {
 	}
 
-	public abstract StructureProcessor getProcessor();
+	public StructureProcessor getProcessor() {
+		return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+	}
 }

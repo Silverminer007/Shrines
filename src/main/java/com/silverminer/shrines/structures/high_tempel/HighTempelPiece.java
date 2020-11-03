@@ -11,8 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
-import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class HighTempelPiece {
@@ -33,11 +31,6 @@ public class HighTempelPiece {
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.HIGH_TEMPEL, templateManager, cNBT);
-		}
-
-		@Override
-		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
 		}
 	}
 }

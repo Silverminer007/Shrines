@@ -46,11 +46,11 @@ public class StructureInit {
 			new NetherPyramidStructure(NoFeatureConfig.field_236558_a_));
 
 	private static <T extends ShrinesStructure<NoFeatureConfig>> RegistryObject<T> register(String name, T structure) {
-		if (!Structure.field_236365_a_.containsValue(structure)) {
-			Structure.field_236365_a_.putIfAbsent(Shrines.MODID + ":" + name, structure);
+		if (!Structure.NAME_STRUCTURE_BIMAP.containsValue(structure)) {
+			Structure.NAME_STRUCTURE_BIMAP.putIfAbsent(Shrines.MODID + ":" + name, structure);
 		}
-		if (!Structure.field_236385_u_.containsValue(structure.getDecorationStage())) {
-			Structure.field_236385_u_.putIfAbsent(structure, structure.getDecorationStage());
+		if (!Structure.STRUCTURE_DECORATION_STAGE_MAP.containsValue(structure.getDecorationStage())) {
+			Structure.STRUCTURE_DECORATION_STAGE_MAP.putIfAbsent(structure, structure.getDecorationStage());
 		}
 
 		Structure.field_236384_t_ = ImmutableList.<Structure<?>>builder().addAll(Structure.field_236384_t_)
