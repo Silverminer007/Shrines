@@ -11,7 +11,6 @@ import net.minecraft.world.biome.Biome.Category;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -21,10 +20,9 @@ public class CommonEvents {
 
 	@EventBusSubscriber(modid = Shrines.MODID, bus = Bus.MOD)
 	public static class ModEventBus {
-		@SuppressWarnings("deprecation")
 		@SubscribeEvent
 		public static void commonSetupEvent(FMLCommonSetupEvent event) {
-			DeferredWorkQueue.runLater(() -> Generator.setupWorldGen());
+			event.enqueueWork(() -> Generator.setupWorldGen());
 		}
 	}
 
@@ -37,13 +35,13 @@ public class CommonEvents {
 					|| event.getCategory() == Category.OCEAN || event.getCategory() == Category.RIVER) {
 				return;
 			}
-			event.getGeneration().func_242516_a(ModStructureFeatures.BALLON);
-			event.getGeneration().func_242516_a(ModStructureFeatures.BEES);
-			event.getGeneration().func_242516_a(ModStructureFeatures.HIGH_TEMPEL);
-			event.getGeneration().func_242516_a(ModStructureFeatures.NETHER_PYRAMID);
-			event.getGeneration().func_242516_a(ModStructureFeatures.NETHER_SHRINE);
-			event.getGeneration().func_242516_a(ModStructureFeatures.SMALL_TEMPEL);
-			event.getGeneration().func_242516_a(ModStructureFeatures.WATER_SHRINE);
+			event.getGeneration().withStructure(ModStructureFeatures.BALLON);
+			event.getGeneration().withStructure(ModStructureFeatures.BEES);
+			event.getGeneration().withStructure(ModStructureFeatures.HIGH_TEMPEL);
+			event.getGeneration().withStructure(ModStructureFeatures.NETHER_PYRAMID);
+			event.getGeneration().withStructure(ModStructureFeatures.NETHER_SHRINE);
+			event.getGeneration().withStructure(ModStructureFeatures.SMALL_TEMPEL);
+			event.getGeneration().withStructure(ModStructureFeatures.WATER_SHRINE);
 		}
 	}
 }

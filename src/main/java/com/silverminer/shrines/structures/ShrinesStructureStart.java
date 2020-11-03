@@ -52,11 +52,11 @@ public abstract class ShrinesStructureStart<C extends IFeatureConfig> extends St
 	}
 
 	protected BlockState getTopLayerBlock(ISeedReader seedReader, BlockPos pos) {
-		return seedReader.getBiome(pos).func_242440_e().func_242500_d().get().config.getTop();
+		return seedReader.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTop();
 	}
 
 	protected BlockState getLowerLayerBlock(ISeedReader seedReader, BlockPos pos) {
-		return seedReader.getBiome(pos).func_242440_e().func_242500_d().get().config.getUnder();
+		return seedReader.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getUnder();
 	}
 
 	private void replaceBlock(ISeedReader seedReader, BlockPos pos) {
