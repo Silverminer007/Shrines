@@ -1,16 +1,16 @@
 package com.silverminer.shrines.loot_tables;
 
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Set;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 
 import net.minecraft.util.ResourceLocation;
 
 public class ShrinesLootTables {
-	private static final Set<ResourceLocation> LOOT_TABLES = Sets.newHashSet();
+	private static final ArrayList<ResourceLocation> LOOT_TABLES = Lists.newArrayList();
 
-	private static final Set<ResourceLocation> NETHER_LOOT_TABLES = Sets.newHashSet();
+	private static final ArrayList<ResourceLocation> NETHER_LOOT_TABLES = Lists.newArrayList();
 
 	/**
 	 * From Jungle Temples
@@ -27,6 +27,16 @@ public class ShrinesLootTables {
 	 */
 	public static final ResourceLocation NETHER_SHRINE_CHEST2 = register("shrines:chests/nether_shrine_chest2", true);
 
+	/**
+	 * From Nether Bastions
+	 */
+	public static final ResourceLocation NETHER_PYRAMID_CHEST1 = register("shrines:chests/nether_pyramid_chest1", false);
+
+	/**
+	 * From Ruined Portal
+	 */
+	public static final ResourceLocation NETHER_PYRAMID_CHEST2 = register("shrines:chests/nether_pyramid_chest2", false);
+
 	private static ResourceLocation register(String id, boolean isNetherChest) {
 		return register(new ResourceLocation(id), isNetherChest);
 	}
@@ -42,10 +52,10 @@ public class ShrinesLootTables {
 	}
 
 	public static ResourceLocation getRandomLoot(Random rand) {
-		return (ResourceLocation) LOOT_TABLES.toArray()[rand.nextInt(LOOT_TABLES.size())];
+		return (ResourceLocation) LOOT_TABLES.get(rand.nextInt(LOOT_TABLES.size()) - 1);
 	}
 
 	public static ResourceLocation getRandomNetherLoot(Random rand) {
-		return (ResourceLocation) NETHER_LOOT_TABLES.toArray()[rand.nextInt(LOOT_TABLES.size())];
+		return (ResourceLocation) NETHER_LOOT_TABLES.get(rand.nextInt(LOOT_TABLES.size()) -1);
 	}
 }
