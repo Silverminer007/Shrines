@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
@@ -54,7 +54,8 @@ public class NetherShrinePiece {
 			super(StructurePieceTypes.NETHER_SHRINE, templateManager, cNBT);
 		}
 
-		protected void handleDataMarker(String function, BlockPos pos, IWorld worldIn, Random rand,
+		@Override
+		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
 			if ("chest1".equals(function) || "chest2".equals(function)) {
 				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
@@ -62,7 +63,6 @@ public class NetherShrinePiece {
 				if (tileentity instanceof ChestTileEntity) {
 					((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomNetherLoot(rand), rand.nextLong());
 				}
-
 			}
 		}
 
