@@ -52,10 +52,10 @@ public class ShrinesLootTables {
 	}
 
 	public static ResourceLocation getRandomLoot(Random rand) {
-		return (ResourceLocation) LOOT_TABLES.get(rand.nextInt(LOOT_TABLES.size()) - 1);
+		return (ResourceLocation) LOOT_TABLES.get(rand.nextInt(LOOT_TABLES.size()));
 	}
 
 	public static ResourceLocation getRandomNetherLoot(Random rand) {
-		return (ResourceLocation) NETHER_LOOT_TABLES.get(rand.nextInt(LOOT_TABLES.size()) -1);
+		return (ResourceLocation) NETHER_LOOT_TABLES.get(rand.nextInt(LOOT_TABLES.size()));
 	}
 }
