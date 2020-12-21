@@ -62,7 +62,7 @@ public class StructureConfig {
 		public StructureGenConfig(final ForgeConfigSpec.Builder SERVER_BUILDER, String name, String dataName,
 				double dSpawnChance, int dDistance, int dSeparation, int dSeed) {
 			dataName = dataName.toLowerCase(Locale.ROOT);
-			GENERATE = SERVER_BUILDER.comment("Generate " + name + "s?").define("structures.ballon.generate", true);
+			GENERATE = SERVER_BUILDER.comment("Generate " + name + "s?").define("structures." + dataName + ".generate", true);
 			SPAWN_CHANCE = SERVER_BUILDER.comment(name + " Spawn Chance [default: " + dSpawnChance + "]")
 					.defineInRange("structures." + dataName + ".spawn_chance", dSpawnChance, 0.0, 1.0);
 			DISTANCE = SERVER_BUILDER.comment(name + " Distance (in chunks) [default: " + dDistance + "]")
