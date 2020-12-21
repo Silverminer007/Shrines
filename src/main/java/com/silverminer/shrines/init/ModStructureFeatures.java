@@ -31,6 +31,9 @@ public class ModStructureFeatures {
 	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> NETHER_PYRAMID = register(
 			"nether_pyramid", StructureInit.NETHER_PYRAMID.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
 
+	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> PLAYER_HOUSE = register(
+			"player_house", StructureInit.PLAYER_HOUSE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+
 	private static <FC extends IFeatureConfig, F extends Structure<FC>> StructureFeature<FC, F> register(String name,
 			StructureFeature<FC, F> structureFeature) {
 		return WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,

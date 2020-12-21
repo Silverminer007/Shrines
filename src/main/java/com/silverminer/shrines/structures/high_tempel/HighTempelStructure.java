@@ -1,8 +1,9 @@
 package com.silverminer.shrines.structures.high_tempel;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.structures.ShrinesStructure;
-import com.silverminer.shrines.structures.ShrinesStructureStart;
+import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.structures.AbstractStructure;
+import com.silverminer.shrines.structures.AbstractStructureStart;
 
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +16,7 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class HighTempelStructure extends ShrinesStructure<NoFeatureConfig> {
+public class HighTempelStructure extends AbstractStructure<NoFeatureConfig> {
 
 	public HighTempelStructure(Codec<NoFeatureConfig> codec) {
 		super(codec, 3, "high_tempel");
@@ -31,27 +32,46 @@ public class HighTempelStructure extends ShrinesStructure<NoFeatureConfig> {
 		return HighTempelStructure.Start::new;
 	}
 
-	@Override
+	/*@Override
 	public int getDistance() {
-		return 85;
+		return Config.STRUCTURES.HIGH_TEMPEL_DISTANCE.get();
 	}
 
 	@Override
 	public int getSeparation() {
-		return 18;
+		return Config.STRUCTURES.HIGH_TEMPEL_SEPARATION.get();
 	}
 
 	@Override
 	public int getSeedModifier() {
-		return 536987987;
+		return Config.STRUCTURES.HIGH_TEMPEL_SEED.get();
 	}
 
 	@Override
 	public double getSpawnChance() {
-		return 0.6;
+		return Config.STRUCTURES.HIGH_TEMPEL_SPAWN_CHANCE.get();
+	}*/
+	@Override
+	public int getDistance() {
+		return Config.STRUCTURES.HIGH_TEMPEL.DISTANCE.get();
 	}
 
-	public static class Start extends ShrinesStructureStart<NoFeatureConfig> {
+	@Override
+	public int getSeparation() {
+		return Config.STRUCTURES.HIGH_TEMPEL.SEPARATION.get();
+	}
+
+	@Override
+	public int getSeedModifier() {
+		return Config.STRUCTURES.HIGH_TEMPEL.SEED.get();
+	}
+
+	@Override
+	public double getSpawnChance() {
+		return Config.STRUCTURES.HIGH_TEMPEL.SPAWN_CHANCE.get();
+	}
+
+	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
 
 		public Start(Structure<NoFeatureConfig> structure, int chunkX, int chunkZ, MutableBoundingBox boundingbox,
 				int p_i225806_5_, long seed) {

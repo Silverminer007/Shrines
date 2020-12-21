@@ -3,7 +3,7 @@ package com.silverminer.shrines.structures.high_tempel;
 import java.util.List;
 import java.util.Random;
 
-import com.silverminer.shrines.structures.ShrinesStructurePiece;
+import com.silverminer.shrines.structures.AbstractStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -23,7 +23,7 @@ public class HighTempelPiece {
 		pieces.add(new HighTempelPiece.Piece(templateManager, top, pos.add(new BlockPos(0, 32, 0)), rotation, 0));
 	}
 
-	public static class Piece extends ShrinesStructurePiece {
+	public static class Piece extends AbstractStructurePiece {
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos,
 				Rotation rotation, int componentTypeIn) {
 			super(StructurePieceTypes.HIGH_TEMPEL, templateManager, location, pos, rotation, componentTypeIn);

@@ -3,8 +3,9 @@ package com.silverminer.shrines.structures.nether_pyramid;
 import java.util.List;
 import java.util.Random;
 
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
-import com.silverminer.shrines.structures.ShrinesStructurePiece;
+import com.silverminer.shrines.structures.AbstractStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.block.Blocks;
@@ -27,7 +28,7 @@ public class NetherPyramidPiece {
 		pieces.add(new NetherPyramidPiece.Piece(templateManager, location, pos.add(0, -1, 0), rotation, 0));
 	}
 
-	public static class Piece extends ShrinesStructurePiece {
+	public static class Piece extends AbstractStructurePiece {
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn) {
 			super(StructurePieceTypes.NETHER_PYRAMID, templateManager, location, pos, rotation, componentTypeIn);
@@ -40,12 +41,16 @@ public class NetherPyramidPiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			if ("chest_left".equals(function) || "chest_right".equals(function) || "chest_d1".equals(function)
-					|| "chest_d2".equals(function) || "chest_d3".equals(function) || "chest_d4".equals(function)) {
-				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-				TileEntity tileentity = worldIn.getTileEntity(pos.down());
-				if (tileentity instanceof ChestTileEntity) {
-					((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomLoot(rand), rand.nextLong());
+			//if (Config.STRUCTURES.GENERATE_NETHER_PYRAMID_LOOT_CHANCE.get() > rand.nextDouble()) {
+			if (Config.STRUCTURES.NETHER_PYRAMID.LOOT_CHANCE.get() > rand.nextDouble()) {
+				if ("chest_left".equals(function) || "chest_right".equals(function) || "chest_d1".equals(function)
+						|| "chest_d2".equals(function) || "chest_d3".equals(function) || "chest_d4".equals(function)) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof ChestTileEntity) {
+						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomLoot(rand),
+								rand.nextLong());
+					}
 				}
 			}
 		}

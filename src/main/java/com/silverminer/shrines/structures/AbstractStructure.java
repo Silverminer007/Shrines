@@ -1,5 +1,8 @@
 package com.silverminer.shrines.structures;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 import javax.annotation.Nonnull;
 
 import org.apache.logging.log4j.LogManager;
@@ -7,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.Shrines;
+import com.silverminer.shrines.init.StructureInit;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
@@ -17,16 +21,17 @@ import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 
-public abstract class ShrinesStructure<C extends IFeatureConfig> extends Structure<C> {
-	protected static final Logger LOGGER = LogManager.getLogger(ShrinesStructure.class);
+public abstract class AbstractStructure<C extends IFeatureConfig> extends Structure<C> {
+	protected static final Logger LOGGER = LogManager.getLogger(AbstractStructure.class);
 	public final int size;
 
 	public final String name;
 
-	public ShrinesStructure(Codec<C> codec, int sizeIn, String nameIn) {
+	public AbstractStructure(Codec<C> codec, int sizeIn, String nameIn) {
 		super(codec);
 		this.size = sizeIn;
 		this.name = nameIn;
@@ -83,6 +88,10 @@ public abstract class ShrinesStructure<C extends IFeatureConfig> extends Structu
 				}
 			}
 
+			if (!checkForOtherStructures(this, generator, seed, rand, chunkX, chunkZ, StructureInit.STRUCTURES_LIST)) {
+				return false;
+			}
+
 			int i = chunkX >> 4;
 			int j = chunkZ >> 4;
 			rand.setSeed((long) (i ^ j << 4) ^ seed);
@@ -94,8 +103,8 @@ public abstract class ShrinesStructure<C extends IFeatureConfig> extends Structu
 	}
 
 	@Override
-	public ChunkPos getChunkPosForStructure(StructureSeparationSettings settings, long seed, SharedSeedRandom sharedSeedRand,
-			int x, int z) {
+	public ChunkPos getChunkPosForStructure(StructureSeparationSettings settings, long seed,
+			SharedSeedRandom sharedSeedRand, int x, int z) {
 		int spacing = this.getDistance();
 		int separation = this.getSeparation();
 
@@ -115,5 +124,27 @@ public abstract class ShrinesStructure<C extends IFeatureConfig> extends Structu
 		}
 
 		return new ChunkPos(k * spacing + i1, l * spacing + j1);
+	}
+
+	public static <C extends IFeatureConfig> boolean checkForOtherStructures(AbstractStructure<C> shrinesStructure,
+			ChunkGenerator generator, long seed, SharedSeedRandom rand, int chunkX, int chunkZ,
+			ArrayList<AbstractStructure<NoFeatureConfig>> structuresList) {
+		for (int k = chunkX - 5; k <= chunkX + 5; ++k) {
+			for (int l = chunkZ - 5; l <= chunkZ + 5; ++l) {
+				for (AbstractStructure<NoFeatureConfig> structure1 : structuresList) {
+					if (shrinesStructure != structure1) {
+						ChunkPos structurePos = structure1.getChunkPosForStructure(
+								Objects.requireNonNull(generator.func_235957_b_().func_236197_a_(structure1)), seed,
+								rand, k, l);
+
+						if (k == structurePos.x && l == structurePos.z) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 }

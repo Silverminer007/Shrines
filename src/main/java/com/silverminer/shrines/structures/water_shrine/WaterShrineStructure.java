@@ -1,8 +1,9 @@
 package com.silverminer.shrines.structures.water_shrine;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.structures.ShrinesStructure;
-import com.silverminer.shrines.structures.ShrinesStructureStart;
+import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.structures.AbstractStructure;
+import com.silverminer.shrines.structures.AbstractStructureStart;
 
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +16,7 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class WaterShrineStructure extends ShrinesStructure<NoFeatureConfig> {
+public class WaterShrineStructure extends AbstractStructure<NoFeatureConfig> {
 
 	public WaterShrineStructure(Codec<NoFeatureConfig> codec) {
 		super(codec, 3, "water_shrine");
@@ -33,25 +34,25 @@ public class WaterShrineStructure extends ShrinesStructure<NoFeatureConfig> {
 
 	@Override
 	public int getDistance() {
-		return 80;
+		return Config.STRUCTURES.WATER_SHRINE.DISTANCE.get();
 	}
 
 	@Override
 	public int getSeparation() {
-		return 15;
+		return Config.STRUCTURES.WATER_SHRINE.SEPARATION.get();
 	}
 
 	@Override
 	public int getSeedModifier() {
-		return 1520586;
+		return Config.STRUCTURES.WATER_SHRINE.SEED.get();
 	}
 
 	@Override
 	public double getSpawnChance() {
-		return 0.6;
+		return Config.STRUCTURES.WATER_SHRINE.SPAWN_CHANCE.get();
 	}
 
-	public static class Start extends ShrinesStructureStart<NoFeatureConfig> {
+	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
 
 		public Start(Structure<NoFeatureConfig> structure, int chunkX, int chunkZ, MutableBoundingBox boundingbox,
 				int p_i225806_5_, long seed) {

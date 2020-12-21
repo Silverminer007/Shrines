@@ -1,13 +1,18 @@
 package com.silverminer.shrines.events;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.Shrines;
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.ModStructureFeatures;
 import com.silverminer.shrines.structures.Generator;
+import com.silverminer.shrines.structures.StructurePieceTypes;
 
-import net.minecraft.world.biome.Biome.Category;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,7 +27,10 @@ public class CommonEvents {
 	public static class ModEventBus {
 		@SubscribeEvent
 		public static void commonSetupEvent(FMLCommonSetupEvent event) {
-			event.enqueueWork(() -> Generator.setupWorldGen());
+			event.enqueueWork(() -> {
+				Generator.setupWorldGen();
+				StructurePieceTypes.regsiter();
+			});
 		}
 	}
 
@@ -31,17 +39,60 @@ public class CommonEvents {
 
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
-			if (event.getCategory() == Category.NETHER || event.getCategory() == Category.THEEND
-					|| event.getCategory() == Category.OCEAN || event.getCategory() == Category.RIVER) {
-				return;
+			if (!Config.STRUCTURES.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
+				if (Config.STRUCTURES.BALLON.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.BALLON.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.BALLON.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.BALLON);
+				}
+				if (Config.STRUCTURES.BEES.GENERATE.get() && checkBiome(Config.STRUCTURES.BEES.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.BEES.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.BEES);
+				}
+				if (Config.STRUCTURES.HIGH_TEMPEL.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.HIGH_TEMPEL.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.HIGH_TEMPEL.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.HIGH_TEMPEL);
+				}
+				if (Config.STRUCTURES.NETHER_PYRAMID.GENERATE.get()
+						&& checkBiome(Config.STRUCTURES.NETHER_PYRAMID.BIOME_CATEGORIES.get(),
+								Config.STRUCTURES.NETHER_PYRAMID.BIOME_BLACKLIST.get(), event.getName(),
+								event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.NETHER_PYRAMID);
+				}
+				if (Config.STRUCTURES.NETHER_SHRINE.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.NETHER_SHRINE.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.NETHER_SHRINE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.NETHER_SHRINE);
+				}
+				if (Config.STRUCTURES.PLAYER_HOUSE.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.PLAYER_HOUSE.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.PLAYER_HOUSE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.PLAYER_HOUSE);
+				}
+				if (Config.STRUCTURES.SMALL_TEMPEL.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.SMALL_TEMPEL.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.SMALL_TEMPEL.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.SMALL_TEMPEL);
+				}
+				if (Config.STRUCTURES.WATER_SHRINE.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.WATER_SHRINE.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.WATER_SHRINE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.WATER_SHRINE);
+				}
 			}
-			event.getGeneration().withStructure(ModStructureFeatures.BALLON);
-			event.getGeneration().withStructure(ModStructureFeatures.BEES);
-			event.getGeneration().withStructure(ModStructureFeatures.HIGH_TEMPEL);
-			event.getGeneration().withStructure(ModStructureFeatures.NETHER_PYRAMID);
-			event.getGeneration().withStructure(ModStructureFeatures.NETHER_SHRINE);
-			event.getGeneration().withStructure(ModStructureFeatures.SMALL_TEMPEL);
-			event.getGeneration().withStructure(ModStructureFeatures.WATER_SHRINE);
+		}
+
+		private static boolean checkBiome(List<? extends Object> allowedBiomeCategories,
+				List<? extends String> blacklistedBiomes, ResourceLocation name, Biome.Category category) {
+			boolean flag = allowedBiomeCategories.contains(category.toString())
+					|| allowedBiomeCategories.contains(category);
+
+			if (!blacklistedBiomes.isEmpty() && flag) {
+				flag = !blacklistedBiomes.contains(name.toString());
+			}
+
+			return flag;
 		}
 	}
 }

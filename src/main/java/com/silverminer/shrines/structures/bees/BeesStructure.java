@@ -1,8 +1,9 @@
 package com.silverminer.shrines.structures.bees;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.structures.ShrinesStructure;
-import com.silverminer.shrines.structures.ShrinesStructureStart;
+import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.structures.AbstractStructure;
+import com.silverminer.shrines.structures.AbstractStructureStart;
 
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +16,7 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class BeesStructure extends ShrinesStructure<NoFeatureConfig> {
+public class BeesStructure extends AbstractStructure<NoFeatureConfig> {
 
 	public BeesStructure(Codec<NoFeatureConfig> codec) {
 		super(codec, 3, "bees");
@@ -31,27 +32,46 @@ public class BeesStructure extends ShrinesStructure<NoFeatureConfig> {
 		return BeesStructure.Start::new;
 	}
 
-	@Override
+	/*@Override
 	public int getDistance() {
-		return 70;
+		return Config.STRUCTURES.BEES_DISTANCE.get();
 	}
 
 	@Override
 	public int getSeparation() {
-		return 12;
+		return Config.STRUCTURES.BEES_SEPARATION.get();
 	}
 
 	@Override
 	public int getSeedModifier() {
-		return 779806245;
+		return Config.STRUCTURES.BEES_SEED.get();
 	}
 
 	@Override
 	public double getSpawnChance() {
-		return 0.6;
+		return Config.STRUCTURES.BEES_SPAWN_CHANCE.get();
+	}*/
+	@Override
+	public int getDistance() {
+		return Config.STRUCTURES.BEES.DISTANCE.get();
 	}
 
-	public static class Start extends ShrinesStructureStart<NoFeatureConfig> {
+	@Override
+	public int getSeparation() {
+		return Config.STRUCTURES.BEES.SEPARATION.get();
+	}
+
+	@Override
+	public int getSeedModifier() {
+		return Config.STRUCTURES.BEES.SEED.get();
+	}
+
+	@Override
+	public double getSpawnChance() {
+		return Config.STRUCTURES.BEES.SPAWN_CHANCE.get();
+	}
+
+	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
 
 		public Start(Structure<NoFeatureConfig> structure, int chunkX, int chunkZ, MutableBoundingBox boundingbox,
 				int p_i225806_5_, long seed) {

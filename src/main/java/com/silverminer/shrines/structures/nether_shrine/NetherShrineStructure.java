@@ -1,8 +1,9 @@
 package com.silverminer.shrines.structures.nether_shrine;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.structures.ShrinesStructure;
-import com.silverminer.shrines.structures.ShrinesStructureStart;
+import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.structures.AbstractStructure;
+import com.silverminer.shrines.structures.AbstractStructureStart;
 
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +16,7 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class NetherShrineStructure extends ShrinesStructure<NoFeatureConfig> {
+public class NetherShrineStructure extends AbstractStructure<NoFeatureConfig> {
 
 	public NetherShrineStructure(Codec<NoFeatureConfig> codec) {
 		super(codec, 3, "nether_shrine");
@@ -31,27 +32,46 @@ public class NetherShrineStructure extends ShrinesStructure<NoFeatureConfig> {
 		return NetherShrineStructure.Start::new;
 	}
 
-	@Override
+	/*@Override
 	public int getDistance() {
-		return 80;
+		return Config.STRUCTURES.NETHER_SHRINE_DISTANCE.get();
 	}
 
 	@Override
 	public int getSeparation() {
-		return 15;
+		return Config.STRUCTURES.NETHER_SHRINE_SEPARATION.get();
 	}
 
 	@Override
 	public int getSeedModifier() {
-		return 653267;
+		return Config.STRUCTURES.NETHER_SHRINE_SEED.get();
 	}
 
 	@Override
 	public double getSpawnChance() {
-		return 0.6;
+		return Config.STRUCTURES.NETHER_SHRINE_SPAWN_CHANCE.get();
+	}*/
+	@Override
+	public int getDistance() {
+		return Config.STRUCTURES.NETHER_SHRINE.DISTANCE.get();
 	}
 
-	public static class Start extends ShrinesStructureStart<NoFeatureConfig> {
+	@Override
+	public int getSeparation() {
+		return Config.STRUCTURES.NETHER_SHRINE.SEPARATION.get();
+	}
+
+	@Override
+	public int getSeedModifier() {
+		return Config.STRUCTURES.NETHER_SHRINE.SEED.get();
+	}
+
+	@Override
+	public double getSpawnChance() {
+		return Config.STRUCTURES.NETHER_SHRINE.SPAWN_CHANCE.get();
+	}
+
+	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
 
 		public Start(Structure<NoFeatureConfig> structure, int chunkX, int chunkZ, MutableBoundingBox boundingbox,
 				int p_i225806_5_, long seed) {
