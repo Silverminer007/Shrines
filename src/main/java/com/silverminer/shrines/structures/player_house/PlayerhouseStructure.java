@@ -1,4 +1,4 @@
-package com.silverminer.shrines.structures.small_tempel;
+package com.silverminer.shrines.structures.player_house;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.Config;
@@ -16,10 +16,10 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class SmallTempelStructure extends AbstractStructure<NoFeatureConfig> {
+public class PlayerhouseStructure extends AbstractStructure<NoFeatureConfig> {
 
-	public SmallTempelStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "small_tempel");
+	public PlayerhouseStructure(Codec<NoFeatureConfig> codec) {
+		super(codec, 3, "player_house");
 	}
 
 	@Override
@@ -29,46 +29,46 @@ public class SmallTempelStructure extends AbstractStructure<NoFeatureConfig> {
 
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return SmallTempelStructure.Start::new;
+		return PlayerhouseStructure.Start::new;
 	}
 
 	/*@Override
 	public int getDistance() {
-		return Config.STRUCTURES.SMALL_TEMPEL_DISTANCE.get();
+		return Config.STRUCTURES.PLAYER_HOUSE_DISTANCE.get();
 	}
 
 	@Override
 	public int getSeparation() {
-		return Config.STRUCTURES.SMALL_TEMPEL_SEPARATION.get();
+		return Config.STRUCTURES.PLAYER_HOUSE_SEPARATION.get();
 	}
 
 	@Override
 	public int getSeedModifier() {
-		return Config.STRUCTURES.SMALL_TEMPEL_SEED.get();
+		return Config.STRUCTURES.PLAYER_HOUSE_SEED.get();
 	}
 
 	@Override
 	public double getSpawnChance() {
-		return Config.STRUCTURES.SMALL_TEMPEL_SPAWN_CHANCE.get();
+		return Config.STRUCTURES.PLAYER_HOUSE_SPAWN_CHANCE.get();
 	}*/
 	@Override
 	public int getDistance() {
-		return Config.STRUCTURES.SMALL_TEMPEL.DISTANCE.get();
+		return Config.STRUCTURES.PLAYER_HOUSE.DISTANCE.get();
 	}
 
 	@Override
 	public int getSeparation() {
-		return Config.STRUCTURES.SMALL_TEMPEL.SEPARATION.get();
+		return Config.STRUCTURES.PLAYER_HOUSE.SEPARATION.get();
 	}
 
 	@Override
 	public int getSeedModifier() {
-		return Config.STRUCTURES.SMALL_TEMPEL.SEED.get();
+		return Config.STRUCTURES.PLAYER_HOUSE.SEED.get();
 	}
 
 	@Override
 	public double getSpawnChance() {
-		return Config.STRUCTURES.SMALL_TEMPEL.SPAWN_CHANCE.get();
+		return Config.STRUCTURES.PLAYER_HOUSE.SPAWN_CHANCE.get();
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
@@ -79,13 +79,13 @@ public class SmallTempelStructure extends AbstractStructure<NoFeatureConfig> {
 		}
 
 		@Override
-		public void func_230364_a_(DynamicRegistries p_230364_1_, ChunkGenerator chunkGenerator,
+		public void func_230364_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator,
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.randomRotation(this.rand);
-			SmallTempelPiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
+			PlayerhousePiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
 			this.recalculateStructureSize();
 		}
 	}

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.structures.ShrinesStructurePiece;
+import com.silverminer.shrines.structures.AbstractStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -31,7 +31,7 @@ public class BallonPiece {
 				rotation, 0));
 	}
 
-	public static class Piece extends ShrinesStructurePiece {
+	public static class Piece extends AbstractStructurePiece {
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos,
 				Rotation rotation, int componentTypeIn) {

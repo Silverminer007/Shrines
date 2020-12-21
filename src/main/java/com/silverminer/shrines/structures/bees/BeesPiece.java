@@ -3,7 +3,7 @@ package com.silverminer.shrines.structures.bees;
 import java.util.List;
 import java.util.Random;
 
-import com.silverminer.shrines.structures.ShrinesStructurePiece;
+import com.silverminer.shrines.structures.AbstractStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -21,7 +21,7 @@ public class BeesPiece {
 		pieces.add(new BeesPiece.Piece(templateManager, location, pos.add(0, -1, 0), rotation, 0));
 	}
 
-	public static class Piece extends ShrinesStructurePiece {
+	public static class Piece extends AbstractStructurePiece {
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos,
 				Rotation rotation, int componentTypeIn) {
 			super(StructurePieceTypes.BEES, templateManager, location, pos, rotation, componentTypeIn);
