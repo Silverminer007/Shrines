@@ -2,6 +2,7 @@ package com.silverminer.shrines.structures.bees;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -32,43 +33,9 @@ public class BeesStructure extends AbstractStructure<NoFeatureConfig> {
 		return BeesStructure.Start::new;
 	}
 
-	/*@Override
-	public int getDistance() {
-		return Config.STRUCTURES.BEES_DISTANCE.get();
-	}
-
 	@Override
-	public int getSeparation() {
-		return Config.STRUCTURES.BEES_SEPARATION.get();
-	}
-
-	@Override
-	public int getSeedModifier() {
-		return Config.STRUCTURES.BEES_SEED.get();
-	}
-
-	@Override
-	public double getSpawnChance() {
-		return Config.STRUCTURES.BEES_SPAWN_CHANCE.get();
-	}*/
-	@Override
-	public int getDistance() {
-		return Config.STRUCTURES.BEES.DISTANCE.get();
-	}
-
-	@Override
-	public int getSeparation() {
-		return Config.STRUCTURES.BEES.SEPARATION.get();
-	}
-
-	@Override
-	public int getSeedModifier() {
-		return Config.STRUCTURES.BEES.SEED.get();
-	}
-
-	@Override
-	public double getSpawnChance() {
-		return Config.STRUCTURES.BEES.SPAWN_CHANCE.get();
+	public StructureGenConfig getConfig() {
+		return Config.STRUCTURES.BEES;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

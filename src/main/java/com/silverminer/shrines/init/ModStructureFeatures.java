@@ -34,6 +34,12 @@ public class ModStructureFeatures {
 	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> PLAYER_HOUSE = register(
 			"player_house", StructureInit.PLAYER_HOUSE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
 
+	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> MINERAL_TEMPLE = register(
+			"mineral_temple", StructureInit.MINERAL_TEMPLE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+
+	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> FLOODED_TEMPLE = register(
+			"flooded_temple", StructureInit.FLOODED_TEMPLE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+
 	private static <FC extends IFeatureConfig, F extends Structure<FC>> StructureFeature<FC, F> register(String name,
 			StructureFeature<FC, F> structureFeature) {
 		return WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,

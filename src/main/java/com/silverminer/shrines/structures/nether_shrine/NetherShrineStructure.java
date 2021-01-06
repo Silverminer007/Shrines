@@ -2,6 +2,7 @@ package com.silverminer.shrines.structures.nether_shrine;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -32,43 +33,9 @@ public class NetherShrineStructure extends AbstractStructure<NoFeatureConfig> {
 		return NetherShrineStructure.Start::new;
 	}
 
-	/*@Override
-	public int getDistance() {
-		return Config.STRUCTURES.NETHER_SHRINE_DISTANCE.get();
-	}
-
 	@Override
-	public int getSeparation() {
-		return Config.STRUCTURES.NETHER_SHRINE_SEPARATION.get();
-	}
-
-	@Override
-	public int getSeedModifier() {
-		return Config.STRUCTURES.NETHER_SHRINE_SEED.get();
-	}
-
-	@Override
-	public double getSpawnChance() {
-		return Config.STRUCTURES.NETHER_SHRINE_SPAWN_CHANCE.get();
-	}*/
-	@Override
-	public int getDistance() {
-		return Config.STRUCTURES.NETHER_SHRINE.DISTANCE.get();
-	}
-
-	@Override
-	public int getSeparation() {
-		return Config.STRUCTURES.NETHER_SHRINE.SEPARATION.get();
-	}
-
-	@Override
-	public int getSeedModifier() {
-		return Config.STRUCTURES.NETHER_SHRINE.SEED.get();
-	}
-
-	@Override
-	public double getSpawnChance() {
-		return Config.STRUCTURES.NETHER_SHRINE.SPAWN_CHANCE.get();
+	public StructureGenConfig getConfig() {
+		return Config.STRUCTURES.NETHER_SHRINE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

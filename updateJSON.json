@@ -2,8 +2,8 @@
 	"homepage": "https://github.com/Silverminer007/Shrines",
 	"promos": {
 		"1.16.1-recommended": "1.16.1-1.3.0",
-		"1.16.3-recommended": "1.16.4-1.5.2",
-		"1.16.4-recommended": "1.16.4-1.5.2"
+		"1.16.3-recommended": "1.16.4-1.6.0",
+		"1.16.4-recommended": "1.16.4-1.6.0"
 	},
 	"1.16.4": {
 		"1.16.4-1.4.0": "Updated from 1.16.3 to 1.16.4",
@@ -11,7 +11,8 @@
 		"1.16.4-1.4.2": "Merged PR #1 (Fixing #1)",
 		"1.16.4-1.5.0": "Added Player House Structure; Modified Loot-table content; Added Structure config System; Fixed Bug",
 		"1.16.4-1.5.1": "Improved Structure Config system",
-		"1.16.4-1.5.2": "Issue structures can't be located was fixed; Version is now compactible with Mc 1.16.3/Forge 34.1.x"
+		"1.16.4-1.5.2": "Issue structures can't be located was fixed; Version is now compactible with Mc 1.16.3/Forge 34.1.x",
+		"1.16.4-1.6.0": "Added new variant of Player House; Added Mineral Temple(By SamhitApple); Added more variants of the Ballon (Over 400.000 - Unbelivable, but it's true); Added new Config option: NeedsGround; Added new Variants of: Small Tempel, High Tempel, Nether Shrine, Nether Pyramid, Water Shrine and Player house; Added Flooded Temple(by SamhitApple)"
 	},
 	"1.16.3": {
 		"1.16.3-1.4.0-Beta1": "Updated from 1.16.1 to 1.16.3",

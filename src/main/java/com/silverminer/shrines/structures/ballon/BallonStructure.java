@@ -2,6 +2,7 @@ package com.silverminer.shrines.structures.ballon;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -32,43 +33,9 @@ public class BallonStructure extends AbstractStructure<NoFeatureConfig> {
 		return BallonStructure.Start::new;
 	}
 
-	/*@Override
-	public int getDistance() {
-		return Config.STRUCTURES.BALLON_DISTANCE.get();
-	}
-
 	@Override
-	public int getSeparation() {
-		return Config.STRUCTURES.BALLON_SEPARATION.get();
-	}
-
-	@Override
-	public int getSeedModifier() {
-		return Config.STRUCTURES.BALLON_SEED.get();
-	}
-
-	@Override
-	public double getSpawnChance() {
-		return Config.STRUCTURES.BALLON_SPAWN_CHANCE.get();
-	}*/
-	@Override
-	public int getDistance() {
-		return Config.STRUCTURES.BALLON.DISTANCE.get();
-	}
-
-	@Override
-	public int getSeparation() {
-		return Config.STRUCTURES.BALLON.SEPARATION.get();
-	}
-
-	@Override
-	public int getSeedModifier() {
-		return Config.STRUCTURES.BALLON.SEED.get();
-	}
-
-	@Override
-	public double getSpawnChance() {
-		return Config.STRUCTURES.BALLON.SPAWN_CHANCE.get();
+	public StructureGenConfig getConfig() {
+		return Config.STRUCTURES.BALLON;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

@@ -7,7 +7,7 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
-import com.silverminer.shrines.structures.AbstractStructurePiece;
+import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.block.Blocks;
@@ -32,18 +32,30 @@ public class PlayerhousePiece {
 			new ResourceLocation("shrines:player_house/player_house_spruce_table_1"),
 			new ResourceLocation("shrines:player_house/player_house_spruce_table_2"),
 			new ResourceLocation("shrines:player_house/player_house_table"));
+	private static final ArrayList<ResourceLocation> v2_location = Lists
+			.newArrayList(new ResourceLocation("shrines:player_house/player_house_v2_1"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
-		pieces.add(new PlayerhousePiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-				rotation, 0));
+		boolean flag = true;
+		if (flag)
+			if (random.nextInt(2) == 0)
+				pieces.add(new PlayerhousePiece.Piece(templateManager, location.get(random.nextInt(location.size())),
+						pos, rotation, 0, true));
+			else
+				pieces.add(new PlayerhousePiece.Piece(templateManager,
+						v2_location.get(random.nextInt(v2_location.size())), pos, rotation, 0, true));
+		else
+			pieces.add(new PlayerhousePiece.Piece(templateManager, location.get(location.size() - 1), pos, rotation, 0,
+					true));
 	}
 
-	public static class Piece extends AbstractStructurePiece {
+	public static class Piece extends ColorStructurePiece {
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn) {
-			super(StructurePieceTypes.PLAYER_HOUSE, templateManager, location, pos, rotation, componentTypeIn);
+				int componentTypeIn, boolean defaultValue) {
+			super(StructurePieceTypes.PLAYER_HOUSE, templateManager, location, pos, rotation, componentTypeIn,
+					defaultValue);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
@@ -56,30 +68,36 @@ public class PlayerhousePiece {
 		}
 
 		@Override
+		protected boolean useRandomVarianting() {
+			return Config.STRUCTURES.PLAYER_HOUSE.USE_RANDOM_VARIANTING.get();
+		}
+
+		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			//if (Config.STRUCTURES.GENERATE_PLAYER_HOUSE_LOOT_CHANCE.get() > rand.nextDouble()) {
 			if (Config.STRUCTURES.PLAYER_HOUSE.LOOT_CHANCE.get() > rand.nextDouble()) {
-				if ("chest".equals(function)) {
+				boolean chest2 = "chest_2".equals(function);
+				if ("chest".equals(function) || chest2) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity;
+					if (chest2) {
+						tileentity = worldIn.getTileEntity(pos.down(5));
+					} else {
+						tileentity = worldIn.getTileEntity(pos.down());
+					}
 					if (rand.nextInt(6) == 0) {
 						if (rand.nextInt(2) == 0) {
-							worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-							TileEntity tileentity = worldIn.getTileEntity(pos.down());
 							if (tileentity instanceof ChestTileEntity) {
 								((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.HOUSE_OP,
 										rand.nextLong());
 							}
 						} else {
-							worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-							TileEntity tileentity = worldIn.getTileEntity(pos.down());
 							if (tileentity instanceof ChestTileEntity) {
 								((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.HOUSE_OP_2,
 										rand.nextLong());
 							}
 						}
 					} else {
-						worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-						TileEntity tileentity = worldIn.getTileEntity(pos.down());
 						if (tileentity instanceof ChestTileEntity) {
 							((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomVillageLoot(rand),
 									rand.nextLong());
@@ -87,15 +105,13 @@ public class PlayerhousePiece {
 					}
 				}
 				if ("chest_furnace".equals(function)) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
 					if (rand.nextInt(2) == 0) {
-						worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-						TileEntity tileentity = worldIn.getTileEntity(pos.down());
 						if (tileentity instanceof ChestTileEntity) {
 							((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.FURNACE, rand.nextLong());
 						}
 					} else {
-						worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-						TileEntity tileentity = worldIn.getTileEntity(pos.down());
 						if (tileentity instanceof ChestTileEntity) {
 							((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.FURNACE_2, rand.nextLong());
 						}

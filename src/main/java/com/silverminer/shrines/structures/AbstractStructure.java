@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.Shrines;
+import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
@@ -57,13 +58,27 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 		return this.size;
 	}
 
-	public abstract int getDistance();
+	public int getDistance() {
+		return this.getConfig().DISTANCE.get();
+	}
 
-	public abstract int getSeparation();
+	public int getSeparation() {
+		return this.getConfig().SEPARATION.get();
+	}
 
-	public abstract int getSeedModifier();
+	public int getSeedModifier() {
+		return this.getConfig().SEED.get();
+	}
 
-	public abstract double getSpawnChance();
+	public double getSpawnChance() {
+		return this.getConfig().SPAWN_CHANCE.get();
+	}
+
+	public boolean needsGround() {
+		return this.getConfig().NEEDS_GROUND.get();
+	}
+
+	public abstract StructureGenConfig getConfig();
 
 	@Override
 	protected boolean func_230363_a_(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,

@@ -70,13 +70,17 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 		BlockPos blockpos1 = this.templatePosition
 				.add(Template.transformedBlockPos(placementsettings, new BlockPos(3, 0, 0)));
 		int i = world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
-		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
+		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ())
+				.add(this.getOffsetPos(rand));
 		BlockPos blockpos2 = this.templatePosition;
-		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb,
-				chunkPos, blockPos);
+		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos, blockPos);
 
 		this.templatePosition = blockpos2;
 		return flag;
+	}
+
+	public BlockPos getOffsetPos(Random rand) {
+		return BlockPos.ZERO;
 	}
 
 	@Override
