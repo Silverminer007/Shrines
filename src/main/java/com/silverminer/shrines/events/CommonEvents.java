@@ -40,9 +40,9 @@ public class CommonEvents {
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
 			if (!Config.STRUCTURES.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
-				if (Config.STRUCTURES.BALLON.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.BALLON.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.BALLON.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+				if (Config.STRUCTURES.BALLON.GENERATE.get()
+						&& checkBiome(Config.STRUCTURES.BALLON.BIOME_CATEGORIES.get(),
+								Config.STRUCTURES.BALLON.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
 					event.getGeneration().withStructure(ModStructureFeatures.BALLON);
 				}
 				if (Config.STRUCTURES.BEES.GENERATE.get() && checkBiome(Config.STRUCTURES.BEES.BIOME_CATEGORIES.get(),
@@ -54,10 +54,19 @@ public class CommonEvents {
 						Config.STRUCTURES.HIGH_TEMPEL.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
 					event.getGeneration().withStructure(ModStructureFeatures.HIGH_TEMPEL);
 				}
-				if (Config.STRUCTURES.NETHER_PYRAMID.GENERATE.get()
-						&& checkBiome(Config.STRUCTURES.NETHER_PYRAMID.BIOME_CATEGORIES.get(),
-								Config.STRUCTURES.NETHER_PYRAMID.BIOME_BLACKLIST.get(), event.getName(),
-								event.getCategory())) {
+				if (Config.STRUCTURES.MINERAL_TEMPLE.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.MINERAL_TEMPLE.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.MINERAL_TEMPLE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.MINERAL_TEMPLE);
+				}
+				if (Config.STRUCTURES.FLOODED_TEMPLE.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.FLOODED_TEMPLE.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.FLOODED_TEMPLE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.FLOODED_TEMPLE);
+				}
+				if (Config.STRUCTURES.NETHER_PYRAMID.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.NETHER_PYRAMID.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.NETHER_PYRAMID.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
 					event.getGeneration().withStructure(ModStructureFeatures.NETHER_PYRAMID);
 				}
 				if (Config.STRUCTURES.NETHER_SHRINE.GENERATE.get() && checkBiome(

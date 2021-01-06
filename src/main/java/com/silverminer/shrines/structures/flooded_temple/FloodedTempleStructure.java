@@ -1,4 +1,4 @@
-package com.silverminer.shrines.structures.player_house;
+package com.silverminer.shrines.structures.flooded_temple;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.Config;
@@ -17,10 +17,10 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class PlayerhouseStructure extends AbstractStructure<NoFeatureConfig> {
+public class FloodedTempleStructure extends AbstractStructure<NoFeatureConfig> {
 
-	public PlayerhouseStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "player_house");
+	public FloodedTempleStructure(Codec<NoFeatureConfig> codec) {
+		super(codec, 3, "flooded_temple");
 	}
 
 	@Override
@@ -30,12 +30,12 @@ public class PlayerhouseStructure extends AbstractStructure<NoFeatureConfig> {
 
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return PlayerhouseStructure.Start::new;
+		return FloodedTempleStructure.Start::new;
 	}
 
 	@Override
 	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.PLAYER_HOUSE;
+		return Config.STRUCTURES.FLOODED_TEMPLE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
@@ -46,13 +46,13 @@ public class PlayerhouseStructure extends AbstractStructure<NoFeatureConfig> {
 		}
 
 		@Override
-		public void func_230364_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator,
+		public void func_230364_a_(DynamicRegistries p_230364_1_, ChunkGenerator chunkGenerator,
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.randomRotation(this.rand);
-			PlayerhousePiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
+			FloodedTemplePiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
 			this.recalculateStructureSize();
 		}
 	}

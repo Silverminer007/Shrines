@@ -2,6 +2,7 @@ package com.silverminer.shrines.structures.small_tempel;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -32,43 +33,9 @@ public class SmallTempelStructure extends AbstractStructure<NoFeatureConfig> {
 		return SmallTempelStructure.Start::new;
 	}
 
-	/*@Override
-	public int getDistance() {
-		return Config.STRUCTURES.SMALL_TEMPEL_DISTANCE.get();
-	}
-
 	@Override
-	public int getSeparation() {
-		return Config.STRUCTURES.SMALL_TEMPEL_SEPARATION.get();
-	}
-
-	@Override
-	public int getSeedModifier() {
-		return Config.STRUCTURES.SMALL_TEMPEL_SEED.get();
-	}
-
-	@Override
-	public double getSpawnChance() {
-		return Config.STRUCTURES.SMALL_TEMPEL_SPAWN_CHANCE.get();
-	}*/
-	@Override
-	public int getDistance() {
-		return Config.STRUCTURES.SMALL_TEMPEL.DISTANCE.get();
-	}
-
-	@Override
-	public int getSeparation() {
-		return Config.STRUCTURES.SMALL_TEMPEL.SEPARATION.get();
-	}
-
-	@Override
-	public int getSeedModifier() {
-		return Config.STRUCTURES.SMALL_TEMPEL.SEED.get();
-	}
-
-	@Override
-	public double getSpawnChance() {
-		return Config.STRUCTURES.SMALL_TEMPEL.SPAWN_CHANCE.get();
+	public StructureGenConfig getConfig() {
+		return Config.STRUCTURES.SMALL_TEMPEL;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

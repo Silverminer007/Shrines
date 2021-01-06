@@ -7,7 +7,9 @@ import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.ballon.BallonStructure;
 import com.silverminer.shrines.structures.bees.BeesStructure;
+import com.silverminer.shrines.structures.flooded_temple.FloodedTempleStructure;
 import com.silverminer.shrines.structures.high_tempel.HighTempelStructure;
+import com.silverminer.shrines.structures.mineral_temple.MineralTempleStructure;
 import com.silverminer.shrines.structures.nether_pyramid.NetherPyramidStructure;
 import com.silverminer.shrines.structures.nether_shrine.NetherShrineStructure;
 import com.silverminer.shrines.structures.player_house.PlayerhouseStructure;
@@ -49,6 +51,12 @@ public class StructureInit {
 
 	public static final RegistryObject<PlayerhouseStructure> PLAYER_HOUSE = register("player_house",
 			new PlayerhouseStructure(NoFeatureConfig.field_236558_a_));
+
+	public static final RegistryObject<MineralTempleStructure> MINERAL_TEMPLE = register("mineral_temple",
+			new MineralTempleStructure(NoFeatureConfig.field_236558_a_));
+
+	public static final RegistryObject<FloodedTempleStructure> FLOODED_TEMPLE = register("flooded_temple",
+			new FloodedTempleStructure(NoFeatureConfig.field_236558_a_));
 
 	private static <T extends AbstractStructure<NoFeatureConfig>> RegistryObject<T> register(String name, T structure) {
 		if (!Structure.NAME_STRUCTURE_BIMAP.containsValue(structure)) {

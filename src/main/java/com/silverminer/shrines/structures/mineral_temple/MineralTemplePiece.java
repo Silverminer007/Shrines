@@ -1,4 +1,4 @@
-package com.silverminer.shrines.structures.nether_pyramid;
+package com.silverminer.shrines.structures.mineral_temple;
 
 import java.util.List;
 import java.util.Random;
@@ -18,61 +18,50 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
+import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class NetherPyramidPiece {
-	private static final ResourceLocation location = new ResourceLocation("shrines:nether_pyramid/nether_pyramid");
+public class MineralTemplePiece {
+	private static final ResourceLocation location = new ResourceLocation("shrines:mineral_temple/mineral_temple");
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
-		pieces.add(new NetherPyramidPiece.Piece(templateManager, location, pos.add(0, -1, 0), rotation, 0));
+		pieces.add(new MineralTemplePiece.Piece(templateManager, location, pos, rotation, 0));
 	}
 
 	public static class Piece extends ColorStructurePiece {
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn) {
-			super(StructurePieceTypes.NETHER_PYRAMID, templateManager, location, pos, rotation, componentTypeIn, false);
+			super(StructurePieceTypes.MINERAL_TEMPLE, templateManager, location, pos, rotation, componentTypeIn, true);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
-			super(StructurePieceTypes.NETHER_PYRAMID, templateManager, cNBT);
+			super(StructurePieceTypes.MINERAL_TEMPLE, templateManager, cNBT);
+		}
+
+		@Override
+		public StructureProcessor getProcessor() {
+			return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
+		}
+
+		@Override
+		protected boolean useRandomVarianting() {
+			return Config.STRUCTURES.MINERAL_TEMPLE.USE_RANDOM_VARIANTING.get();
 		}
 
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			if (Config.STRUCTURES.NETHER_PYRAMID.LOOT_CHANCE.get() > rand.nextDouble()) {
-				if ("chest_left".equals(function) || "chest_right".equals(function) || "chest_d1".equals(function)
-						|| "chest_d2".equals(function) || "chest_d3".equals(function) || "chest_d4".equals(function)) {
+			if (Config.STRUCTURES.MINERAL_TEMPLE.LOOT_CHANCE.get() > rand.nextDouble()) {
+				if ("chest".equals(function)) {
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 					TileEntity tileentity = worldIn.getTileEntity(pos.down());
 					if (tileentity instanceof ChestTileEntity) {
-						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomLoot(rand),
-								rand.nextLong());
+						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.MINERAL_TEMPLE, rand.nextLong());
 					}
 				}
 			}
-		}
-
-		@Override
-		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.NETHER_PYRAMID.USE_RANDOM_VARIANTING.get();
-		}
-
-		public boolean overwriteStone() {
-			return true;
-		}
-
-		public boolean overwriteStairs() {
-			return true;
-		}
-
-		public boolean overwriteSlabs() {
-			return true;
-		}
-
-		public float getStoneChangeChance() {
-			return 0.15F;
 		}
 	}
 }
