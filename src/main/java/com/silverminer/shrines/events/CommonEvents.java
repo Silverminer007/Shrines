@@ -89,6 +89,11 @@ public class CommonEvents {
 						Config.STRUCTURES.WATER_SHRINE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
 					event.getGeneration().withStructure(ModStructureFeatures.WATER_SHRINE);
 				}
+				if (Config.STRUCTURES.HARBOUR.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.HARBOUR.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.HARBOUR.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.HARBOUR);
+				}
 			}
 		}
 
