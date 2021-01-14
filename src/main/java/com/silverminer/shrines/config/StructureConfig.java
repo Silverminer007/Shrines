@@ -25,6 +25,7 @@ public class StructureConfig {
 	public final LootableStructureGenConfig PLAYER_HOUSE;
 	public final LootableStructureGenConfig MINERAL_TEMPLE;
 	public final LootableStructureGenConfig FLOODED_TEMPLE;
+	public final StructureGenConfig HARBOUR;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
 
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
@@ -48,6 +49,8 @@ public class StructureConfig {
 				576143753).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		FLOODED_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("Flooded Temple", "flooded_temple",
 				54315143).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
+		HARBOUR = new StructureGenConfig.ConfigBuilder("Harbour", "harbour", 789034134).setDistance(50).setSeparation(8)
+				.build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
 						"", "Biomes in which Structures cant generate in")
@@ -88,8 +91,7 @@ public class StructureConfig {
 					.comment(name + " Seed (Only Change if you know what you are doing)[default: " + dSeed + "]")
 					.defineInRange("structures." + dataName + ".seed", dSeed, Integer.MIN_VALUE, Integer.MAX_VALUE);
 			BIOME_CATEGORIES = SERVER_BUILDER.comment("Biome Types the " + name + " can generate in").defineList(
-					"structures." + dataName + ".biome_categories",
-					Arrays.asList(Biome.Category.PLAINS, Biome.Category.FOREST, Biome.Category.TAIGA),
+					"structures." + dataName + ".biome_categories", Arrays.asList(biomeCategories),
 					StructureConfig::validateBiomeCategory);
 			BIOME_BLACKLIST = SERVER_BUILDER.comment("Biomes the " + name + " can NOT generate in").defineList(
 					"structures." + dataName + ".biome_blacklist", Collections.emptyList(),

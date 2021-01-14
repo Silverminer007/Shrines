@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.init.StructureInit;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
@@ -83,7 +84,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	@Override
 	protected boolean func_230363_a_(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
 			int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config) {
-		if (isSurfaceFlat(generator, chunkX, chunkZ)) {
+		if (isSurfaceFlat(generator, chunkX, chunkZ) && checkForOtherStructures(rand, chunkX, chunkZ, seed)) {
 
 			// Check the entire size of the structure to see if it's all a viable biome:
 			for (Biome biome1 : provider.getBiomes(chunkX * 16 + 9, generator.getGroundHeight(), chunkZ * 16 + 9,
@@ -100,6 +101,17 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 		}
 
 		return false;
+	}
+
+	protected boolean checkForOtherStructures(SharedSeedRandom rand, int chunkX, int chunkZ, long seed) {
+		for (AbstractStructure<?> s : StructureInit.STRUCTURES_LIST) {
+			if (new ChunkPos(chunkX, chunkZ).equals(s.getChunkPosForStructure(
+					new StructureSeparationSettings(s.getDistance(), s.getSeparation(), s.getSeedModifier()), seed,
+					rand, chunkX, chunkZ))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
