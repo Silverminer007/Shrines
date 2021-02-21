@@ -353,12 +353,14 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 		if (!CHANGED_POS.contains(pos) && this.validateBlock(pos, state, world)) {
 			CHANGED_POS.add(pos);
 			world.setBlockState(pos, state, 3);
+			return true;
 		}
 		return false;
 	}
 
 	public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
-		return true;
+		LOGGER.info("Validating Block on {} in ColorStructurePiece", pos);
+		return false;
 	}
 
 	protected Block getSlab(Block plank) {

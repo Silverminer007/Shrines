@@ -1,5 +1,8 @@
 package com.silverminer.shrines.structures.harbour;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
@@ -7,12 +10,17 @@ import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
 import net.minecraft.util.Rotation;
+import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
@@ -36,6 +44,32 @@ public class HarbourStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public StructureGenConfig getConfig() {
 		return Config.STRUCTURES.HARBOUR;
+	}
+
+	protected boolean isSurfaceFlatExtended(@Nonnull ChunkGenerator generator, int chunkX, int chunkZ) {
+		int xStart = (chunkX << 4);
+		int zStart = (chunkZ << 4);
+		MutableBoundingBox mbb = MutableBoundingBox.createProper(xStart - 50, 0, zStart - 50, xStart + 50, 0,
+				zStart + 50);
+		int minheight = 256;
+		int maxheight = 0;
+		for (int x = mbb.minX; x < mbb.maxX; x++) {
+			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
+				int height = generator.getHeight(x / 16, z / 16, Heightmap.Type.WORLD_SURFACE_WG);
+				minheight = Math.min(minheight, height);
+				maxheight = Math.max(maxheight, height);
+			}
+		}
+		return Math.abs(maxheight - minheight) <= 4;
+	}
+
+	public boolean validateGeneration(ChunkGenerator generator, BiomeProvider provider, long seed,
+			SharedSeedRandom rand, int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config,
+			@Nullable Structure<?>... exeptStructure) {
+		if(super.validateGeneration(generator, provider, seed, rand, chunkX, chunkZ, biome, pos, config, exeptStructure))
+			return this.isSurfaceFlatExtended(generator, chunkX, chunkZ);
+
+		return false;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

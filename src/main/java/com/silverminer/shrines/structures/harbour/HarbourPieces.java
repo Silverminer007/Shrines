@@ -14,14 +14,15 @@ import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.StructureManager;
@@ -32,116 +33,124 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class HarbourPieces {
 	protected static final Logger LOGGER = LogManager.getLogger(HarbourPieces.class);
-	private static final ArrayList<ResourceLocation> warehouse_locations = Lists.newArrayList(
-			new ResourceLocation("shrines:harbour/warehouse1"), new ResourceLocation("shrines:harbour/warehouse2"),
-			new ResourceLocation("shrines:harbour/warehouse3"));
 
-	private static final ArrayList<ResourceLocation> house_locations = Lists.newArrayList(
-			new ResourceLocation("shrines:harbour/harbourhouse1"),
-			new ResourceLocation("shrines:harbour/harbourhouse2"));
-
-	private static final ArrayList<ResourceLocation> ware_locations = Lists
-			.newArrayList(new ResourceLocation("shrines:harbour/ware1"));
-
-	private static final ResourceLocation crane_location = new ResourceLocation("shrines:harbour/crane");
+	protected static final ArrayList<ResourceLocation> PIECES = Lists.newArrayList(
+			new ResourceLocation("shrines:harbour/complete/harbour_p1"),
+			new ResourceLocation("shrines:harbour/complete/harbour_p2"),
+			new ResourceLocation("shrines:harbour/complete/harbour_p3"),
+			new ResourceLocation("shrines:harbour/complete/harbour_p4"),
+			new ResourceLocation("shrines:harbour/complete/harbour_p5"),
+			new ResourceLocation("shrines:harbour/complete/harbour_p6"),
+			new ResourceLocation("shrines:harbour/complete/harbour_p7"),
+			new ResourceLocation("shrines:harbour/complete/harbour_p8"),
+			new ResourceLocation("shrines:harbour/complete/harbour_p9"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
 		LOGGER.info("Generating Harbour on: {}", pos);
-		pos = pos.up(chunkGenerator.getHeight(pos.getX() / 16, pos.getZ() / 16, Heightmap.Type.WORLD_SURFACE_WG));
-		MutableBoundingBox mbb = MutableBoundingBox.createProper(pos.getX(), pos.getY(), pos.getZ(), pos.getX(),
-				pos.getY() + 1, pos.getZ());
-		ArrayList<MutableBoundingBox> parts = new ArrayList<MutableBoundingBox>();
-		BlockPos nextWater = chunkGenerator.getBiomeProvider().findBiomePosition(pos.getX(), pos.getY(), pos.getZ(),
-				100, 3, biomeTest -> {
-					return biomeTest.getCategory() == Biome.Category.OCEAN
-							|| biomeTest.getCategory() == Biome.Category.RIVER;
-				}, random, true);
-		if (nextWater == null)
-			nextWater = pos;
-		int i = 0;
-		int maxStructures = 20 + random.nextInt(10);
-		int tries = 0;
-		int houses = 0;
-		int wares = 0;
-		int warehouses = 0;
-		int cranes = 0;
-		LOGGER.info("Generating Harbour on Water pos: {}", nextWater);
-		while (i < maxStructures && tries++ < 500) {
-			BlockPos nextPos = pos.add(random.nextInt(50) * (random.nextBoolean() ? -1 : 1), 0,
-					random.nextInt(50) * (random.nextBoolean() ? -1 : 1));
-			for (MutableBoundingBox bb : parts) {
-				if (bb.isVecInside(nextPos)) {
+		boolean flag = true;
+		if (flag) {
+			rotation = Rotation.NONE;
+			int height = getStartHeigth(pos, chunkGenerator) - 6;
+			height = 56;
+			pos = new BlockPos(pos.getX(), height, pos.getZ());
+			LOGGER.info("Generating Harbourpieces on: {}", pos);
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(0),
+					pos.add(new BlockPos(0, 0, 0).rotate(rotation)), rotation, 0, random, height));
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(1),
+					pos.add(new BlockPos(47, 0, 0).rotate(rotation)), rotation, 0, random, height));
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(2),
+					pos.add(new BlockPos(94, 0, 0).rotate(rotation)), rotation, 0, random, height));
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(3),
+					pos.add(new BlockPos(0, 0, 47).rotate(rotation)), rotation, 0, random, height));
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(4),
+					pos.add(new BlockPos(47, 0, 47).rotate(rotation)), rotation, 0, random, height));
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(5),
+					pos.add(new BlockPos(94, 0, 47).rotate(rotation)), rotation, 0, random, height));
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(6),
+					pos.add(new BlockPos(0, 0, 94).rotate(rotation)), rotation, 0, random, height));
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(7),
+					pos.add(new BlockPos(47, 0, 94).rotate(rotation)), rotation, 0, random, height));
+			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(8),
+					pos.add(new BlockPos(94, 0, 94).rotate(rotation)), rotation, 0, random, height));
+		} else {
+			pos = pos.up(getStartHeigth(pos, chunkGenerator));
+			MutableBoundingBox mbb = MutableBoundingBox.createProper(pos.getX(), pos.getY(), pos.getZ(), pos.getX(),
+					pos.getY() + 1, pos.getZ());
+			ArrayList<MutableBoundingBox> parts = new ArrayList<MutableBoundingBox>();
+			int i = 0;
+			int maxStructures = 20 + random.nextInt(10);
+			int tries = 0;
+			while (i < maxStructures && tries++ < 500) {
+				BlockPos nextPos = pos.add(random.nextInt(50) * (random.nextBoolean() ? -1 : 1), 0,
+						random.nextInt(50) * (random.nextBoolean() ? -1 : 1));
+				for (MutableBoundingBox bb : parts) {
+					if (bb.isVecInside(nextPos)) {
+						continue;
+					}
+				}
+				Rotation newRot = rotation.add(Rotation.randomRotation(random));
+				HarbourPieceType type = HarbourPieceType.TYPES.get(random.nextInt(HarbourPieceType.TYPES.size()));
+				if (type.structureIn >= type.getMaxStructures())
 					continue;
+				MutableBoundingBox newMBB = type.getBoundingBox(nextPos, newRot);
+				if (!checkFlatness(newMBB, chunkGenerator))
+					continue;
+				for (MutableBoundingBox bb : parts) {
+					if (areBoundingBoxesIntersecting(newMBB, bb)) {
+						continue;
+					}
 				}
+				pieces.add(new HarbourPieces.Piece(templateManager,
+						type.getPieces()[random.nextInt(type.getPieces().length)], nextPos, newRot, 0, random, newMBB));
+				parts.add(newMBB);
+				mbb.expandTo(newMBB);
+				i++;
+				type.structureIn++;
+				LOGGER.info("Generating Harbourpiece [{}] on: {}; Had found {} pieces, Pieces {}", type.getName(),
+						nextPos, i, parts);
 			}
-			Rotation newRot = rotation.add(Rotation.randomRotation(random));
-			BlockPos houseSize = new BlockPos(20, 15, 15).rotate(newRot);
-			BlockPos warehouseSize = new BlockPos(20, 15, 20).rotate(newRot);
-			BlockPos craneSize = new BlockPos(15, 10, 15).rotate(newRot);
-			BlockPos wareSize = new BlockPos(7, 5, 7).rotate(newRot);
-			double distance = Math.pow(nextWater.distanceSq(nextPos), 0.5);
-			LOGGER.info("Generating Harbour on: {}; Had found {} pieces; Distance {}", nextPos, i, distance);
-			if (random.nextInt(300) < distance && houses < 4) {
-				MutableBoundingBox mbb2 = MutableBoundingBox.createProper(nextPos.getX(), nextPos.getY(),
-						nextPos.getZ(), nextPos.getX() + houseSize.getX(), nextPos.getY() + houseSize.getY(),
-						nextPos.getZ() + houseSize.getZ());
-				for (MutableBoundingBox bb : parts) {
-					if (mbb2.intersectsWith(bb))
-						continue;
-				}
-				pieces.add(new HarbourPieces.Piece(templateManager,
-						house_locations.get(random.nextInt(house_locations.size())), nextPos, newRot, 0, random, mbb2));
-				parts.add(mbb2);
-				mbb.expandTo(mbb2);
-				i++;
-				houses++;
-			} else if (random.nextInt(200) < distance && warehouses < 5) {
-				MutableBoundingBox mbb2 = MutableBoundingBox.createProper(nextPos.getX(), nextPos.getY(),
-						nextPos.getZ(), nextPos.getX() + warehouseSize.getX(), nextPos.getY() + warehouseSize.getY(),
-						nextPos.getZ() + warehouseSize.getZ());
-				for (MutableBoundingBox bb : parts) {
-					if (mbb2.intersectsWith(bb))
-						continue;
-				}
-				pieces.add(new HarbourPieces.Piece(templateManager,
-						warehouse_locations.get(random.nextInt(warehouse_locations.size())), nextPos, newRot, 0, random,
-						mbb2));
-				parts.add(mbb2);
-				mbb.expandTo(mbb2);
-				i++;
-				warehouses++;
-			} else if (random.nextInt(100) < distance && cranes < 2) {
-				MutableBoundingBox mbb2 = MutableBoundingBox.createProper(nextPos.getX(), nextPos.getY(),
-						nextPos.getZ(), nextPos.getX() + craneSize.getX(), nextPos.getY() + craneSize.getY(),
-						nextPos.getZ() + craneSize.getZ());
-				for (MutableBoundingBox bb : parts) {
-					if (mbb2.intersectsWith(bb))
-						continue;
-				}
-				pieces.add(new HarbourPieces.Piece(templateManager, crane_location, nextPos, newRot, 0, random, mbb2));
-				parts.add(mbb2);
-				mbb.expandTo(mbb2);
-				i++;
-				cranes++;
-			} else if (random.nextInt(200) < distance && wares < 4) {
-				MutableBoundingBox mbb2 = MutableBoundingBox.createProper(nextPos.getX(), nextPos.getY(),
-						nextPos.getZ(), nextPos.getX() + wareSize.getX(), nextPos.getY() + wareSize.getY(),
-						nextPos.getZ() + wareSize.getZ());
-				for (MutableBoundingBox bb : parts) {
-					if (mbb2.intersectsWith(bb))
-						continue;
-				}
-				pieces.add(new HarbourPieces.Piece(templateManager,
-						ware_locations.get(random.nextInt(ware_locations.size())), nextPos, newRot, 0, random, mbb2));
-				parts.add(mbb2);
-				mbb.expandTo(mbb2);
-				i++;
-				wares++;
+			LOGGER.info("Adding Ground Piece: {}", mbb);
+			pieces.add(new HarbourPieces.GroundPiece(5, mbb, parts));
+		}
+	}
+
+	/**
+	 * Only checks x and z pos to prevent generating into each other because of
+	 * Terraforming
+	 * 
+	 * @param mmb1        First BoundingBox
+	 * @param structurebb Second BoundingBox
+	 * @return true if the BoundingBoxes are intersecting
+	 */
+	protected static boolean areBoundingBoxesIntersecting(MutableBoundingBox mmb1, MutableBoundingBox structurebb) {
+		return mmb1.maxX >= structurebb.minX && mmb1.minX <= structurebb.maxX && mmb1.maxZ >= structurebb.minZ
+				&& mmb1.minZ <= structurebb.maxZ;
+	}
+
+	protected static boolean checkFlatness(MutableBoundingBox mbb, ChunkGenerator chunkGenerator) {
+		int minheight = 256;
+		int maxheight = 0;
+		for (int x = mbb.minX; x < mbb.maxX; x++) {
+			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
+				int height = chunkGenerator.getHeight(x / 16, z / 16, Heightmap.Type.WORLD_SURFACE_WG);
+				minheight = Math.min(minheight, height);
+				maxheight = Math.max(maxheight, height);
 			}
 		}
-		LOGGER.info("Adding Ground Piece: {}", mbb);
-		pieces.add(new HarbourPieces.GroundPiece(5, mbb, parts));
+		return Math.abs(maxheight - minheight) <= 4;
+	}
+
+	protected static int getStartHeigth(BlockPos pos, ChunkGenerator chunkGenerator) {
+		MutableBoundingBox mbb = MutableBoundingBox.createProper(pos.getX() - 50, 0, pos.getZ() - 50, pos.getX() + 50,
+				0, pos.getZ() + 50);
+		int heigth = 0;
+		for (int x = mbb.minX; x < mbb.maxX; x++) {
+			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
+				heigth += chunkGenerator.getHeight(x / 16, z / 16, Heightmap.Type.WORLD_SURFACE_WG);
+			}
+		}
+		return heigth / (mbb.maxX - mbb.minX * mbb.maxZ - mbb.minZ);
 	}
 
 	public static class Piece extends ColorStructurePiece {
@@ -169,6 +178,48 @@ public class HarbourPieces {
 		@Override
 		protected boolean useRandomVarianting() {
 			return Config.STRUCTURES.HARBOUR.USE_RANDOM_VARIANTING.get();
+		}
+
+		public boolean overwriteWool() {
+			return false;
+		}
+	}
+
+	public static class HarbourPiece extends ColorStructurePiece {
+		protected BlockPos offsetPos = BlockPos.ZERO;
+		protected int height;
+
+		public HarbourPiece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
+				int componentTypeIn, Random rand, int height) {
+			super(StructurePieceTypes.HARBOUR_HOUSE, templateManager, location, pos, rotation, componentTypeIn, true);
+			this.height = height;
+		}
+
+		public HarbourPiece(TemplateManager templateManager, CompoundNBT cNBT) {
+			super(StructurePieceTypes.HARBOUR_HOUSE, templateManager, cNBT);
+		}
+
+		public StructureProcessor getProcessor() {
+			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+		}
+
+		@Override
+		protected boolean useRandomVarianting() {
+			return Config.STRUCTURES.HARBOUR.USE_RANDOM_VARIANTING.get();
+		}
+
+		public boolean overwriteWool() {
+			return false;
+		}
+
+		protected int getHeight(ISeedReader world, BlockPos pos) {
+			return this.height;
+		}
+
+		@Override
+		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
+			LOGGER.info("Validated Block on {} against height: {}", pos.getY(), this.getHeight(world, pos));
+			return pos.getY() - 6 > this.getHeight(world, pos);
 		}
 	}
 
@@ -204,6 +255,15 @@ public class HarbourPieces {
 						BlockState state = Blocks.STONE_BRICKS.getDefaultState();
 						if (rand.nextInt(8) == 0)
 							state = Blocks.MOSSY_STONE_BRICKS.getDefaultState();
+						else if (rand.nextInt(16) == 0)
+							state = Blocks.CRACKED_STONE_BRICKS.getDefaultState();
+						else if (rand.nextInt(32) == 0)
+							state = Blocks.POLISHED_BLACKSTONE_BRICKS.getDefaultState();
+						else if (rand.nextInt(512) == 0)
+							state = Blocks.WATER.getDefaultState();
+						else if (rand.nextInt(256) == 0)
+							state = Blocks.STONE_BRICK_STAIRS.getDefaultState().with(StairsBlock.WATERLOGGED, true)
+									.with(StairsBlock.FACING, Direction.Plane.HORIZONTAL.random(rand));
 						world.setBlockState(pos, state, 2);
 					}
 				}
