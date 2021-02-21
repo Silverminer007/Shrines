@@ -69,14 +69,19 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 				.setMirror(Mirror.NONE).addProcessor(this.getProcessor());
 		BlockPos blockpos1 = this.templatePosition
 				.add(Template.transformedBlockPos(placementsettings, new BlockPos(3, 0, 0)));
-		int i = world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
-		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ())
-				.add(this.getOffsetPos(rand));
+		int i = this.getHeight(world, blockpos1);
+		i = 56;
+		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
 		BlockPos blockpos2 = this.templatePosition;
-		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos, blockPos);
-
+		LOGGER.info("Generating {} on {}", this.location, this.templatePosition);
+		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos, this.templatePosition);
+		
 		this.templatePosition = blockpos2;
 		return flag;
+	}
+
+	protected int getHeight(ISeedReader world, BlockPos blockpos1) {
+		return world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
 	}
 
 	public BlockPos getOffsetPos(Random rand) {
