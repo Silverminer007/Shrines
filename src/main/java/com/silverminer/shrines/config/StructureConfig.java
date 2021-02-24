@@ -49,7 +49,7 @@ public class StructureConfig {
 				576143753).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		FLOODED_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("Flooded Temple", "flooded_temple",
 				54315143).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
-		HARBOUR = new StructureGenConfig.ConfigBuilder("Harbour", "harbour", 789034134).setDistance(50).setSeparation(8)
+		HARBOUR = new StructureGenConfig.ConfigBuilder("Harbour", "harbour", 651398043).setDistance(50).setSeparation(8)
 				.build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
@@ -225,8 +225,11 @@ public class StructureConfig {
 
 	private static boolean validateBiomeCategory(Object o) {
 		for (Biome.Category category : Biome.Category.values()) {
-			if (category == Biome.Category.valueOf((String) o)) {
-				return true;
+			try {
+				if (category == Biome.Category.valueOf((String) o)) {
+					return true;
+				}
+			} catch (ClassCastException e) {
 			}
 		}
 		return false;

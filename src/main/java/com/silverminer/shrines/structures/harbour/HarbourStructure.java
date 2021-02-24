@@ -49,18 +49,18 @@ public class HarbourStructure extends AbstractStructure<NoFeatureConfig> {
 	protected boolean isSurfaceFlatExtended(@Nonnull ChunkGenerator generator, int chunkX, int chunkZ) {
 		int xStart = (chunkX << 4);
 		int zStart = (chunkZ << 4);
-		MutableBoundingBox mbb = MutableBoundingBox.createProper(xStart - 50, 0, zStart - 50, xStart + 50, 0,
-				zStart + 50);
+		MutableBoundingBox mbb = MutableBoundingBox.createProper(xStart, 0, zStart, xStart + 100, 0,
+				zStart + 100);
 		int minheight = 256;
 		int maxheight = 0;
 		for (int x = mbb.minX; x < mbb.maxX; x++) {
 			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
-				int height = generator.getHeight(x / 16, z / 16, Heightmap.Type.WORLD_SURFACE_WG);
+				int height = generator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
 				minheight = Math.min(minheight, height);
 				maxheight = Math.max(maxheight, height);
 			}
 		}
-		return Math.abs(maxheight - minheight) <= 4;
+		return (maxheight - minheight) <= 8;
 	}
 
 	public boolean validateGeneration(ChunkGenerator generator, BiomeProvider provider, long seed,

@@ -7,10 +7,12 @@ import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
@@ -35,6 +37,10 @@ public class WaterShrinePiece {
 		@Override
 		protected boolean useRandomVarianting() {
 			return Config.STRUCTURES.WATER_SHRINE.USE_RANDOM_VARIANTING.get();
+		}
+
+		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
+			return true;
 		}
 	}
 }
