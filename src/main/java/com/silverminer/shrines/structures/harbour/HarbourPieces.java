@@ -52,9 +52,8 @@ public class HarbourPieces {
 		if (flag) {
 			rotation = Rotation.NONE;
 			int height = getStartHeigth(pos, chunkGenerator) - 6;
-			height = 56;
 			pos = new BlockPos(pos.getX(), height, pos.getZ());
-			LOGGER.info("Generating Harbourpieces on: {}", pos);
+			LOGGER.info("Generating Harbourpieces on: {}, with height: {}", pos, height);
 			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(0),
 					pos.add(new BlockPos(0, 0, 0).rotate(rotation)), rotation, 0, random, height));
 			pieces.add(new HarbourPieces.HarbourPiece(templateManager, PIECES.get(1),
@@ -109,9 +108,9 @@ public class HarbourPieces {
 				type.structureIn++;
 				LOGGER.info("Generating Harbourpiece [{}] on: {}; Had found {} pieces, Pieces {}", type.getName(),
 						nextPos, i, parts);
+				LOGGER.info("Adding Ground Piece: {}", mbb);
+				pieces.add(new HarbourPieces.GroundPiece(5, mbb, parts));
 			}
-			LOGGER.info("Adding Ground Piece: {}", mbb);
-			pieces.add(new HarbourPieces.GroundPiece(5, mbb, parts));
 		}
 	}
 
@@ -142,15 +141,31 @@ public class HarbourPieces {
 	}
 
 	protected static int getStartHeigth(BlockPos pos, ChunkGenerator chunkGenerator) {
-		MutableBoundingBox mbb = MutableBoundingBox.createProper(pos.getX() - 50, 0, pos.getZ() - 50, pos.getX() + 50,
-				0, pos.getZ() + 50);
-		int heigth = 0;
+		MutableBoundingBox mbb = MutableBoundingBox.createProper(pos.getX(), 0, pos.getZ(), pos.getX() + 100, 0,
+				pos.getZ() + 100);
+		ArrayList<Integer> heigth = new ArrayList<Integer>();
 		for (int x = mbb.minX; x < mbb.maxX; x++) {
 			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
-				heigth += chunkGenerator.getHeight(x / 16, z / 16, Heightmap.Type.WORLD_SURFACE_WG);
+				int surface = chunkGenerator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE);
+				int ocean = chunkGenerator.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR);
+				heigth.add(ocean <= surface ? chunkGenerator.getSeaLevel() - 1 : surface);
 			}
 		}
-		return heigth / (mbb.maxX - mbb.minX * mbb.maxZ - mbb.minZ);
+		return getAverage(heigth);
+	}
+
+	public static int getAverage(ArrayList<Integer> list) {
+		double summe = 0.0;
+
+		for (int index = 0; index < list.size(); index++) {
+			summe = summe + list.get(index);
+		}
+
+		if (list.size() > 0)
+			return (int) (summe / list.size());
+		else
+			return 0;
+
 	}
 
 	public static class Piece extends ColorStructurePiece {
@@ -183,20 +198,34 @@ public class HarbourPieces {
 		public boolean overwriteWool() {
 			return false;
 		}
+
+		@Override
+		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
+			return true;
+		}
 	}
 
 	public static class HarbourPiece extends ColorStructurePiece {
-		protected BlockPos offsetPos = BlockPos.ZERO;
 		protected int height;
 
 		public HarbourPiece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn, Random rand, int height) {
 			super(StructurePieceTypes.HARBOUR_HOUSE, templateManager, location, pos, rotation, componentTypeIn, true);
 			this.height = height;
+			LOGGER.info("Generating on height: {}", height);
 		}
 
 		public HarbourPiece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.HARBOUR_HOUSE, templateManager, cNBT);
+			this.height = cNBT.getInt("height");
+		}
+
+		/**
+		 * (abstract) Helper method to read subclass data from NBT
+		 */
+		protected void readAdditional(CompoundNBT tagCompound) {
+			super.readAdditional(tagCompound);
+			tagCompound.putInt("height", this.height);
 		}
 
 		public StructureProcessor getProcessor() {
@@ -218,7 +247,6 @@ public class HarbourPieces {
 
 		@Override
 		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
-			LOGGER.info("Validated Block on {} against height: {}", pos.getY(), this.getHeight(world, pos));
 			return pos.getY() - 6 > this.getHeight(world, pos);
 		}
 	}

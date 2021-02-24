@@ -37,7 +37,7 @@ public class StructurePieceTypes {
 
 	public static final IStructurePieceType MINERAL_TEMPLE = MineralTemplePiece.Piece::new;
 	public static final IStructurePieceType FLOODED_TEMPLE = FloodedTemplePiece.Piece::new;
-	public static final IStructurePieceType HARBOUR_HOUSE = HarbourPieces.Piece::new;
+	public static final IStructurePieceType HARBOUR_HOUSE = HarbourPieces.HarbourPiece::new;
 	public static final IStructurePieceType HARBOUR_GROUND = HarbourPieces.GroundPiece::new;
 
 	public static void regsiter() {

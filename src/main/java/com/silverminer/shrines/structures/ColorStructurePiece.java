@@ -227,9 +227,13 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 					if (this.overwriteButtons()) {
 						for (Template.BlockInfo template$blockinfo : this.template.func_215381_a(this.templatePosition,
 								this.placeSettings, this.getButton(block))) {
-							this.changeBlock(template$blockinfo.pos,
-									this.getButton(newBlock).getDefaultState().with(AbstractButtonBlock.POWERED,
-											template$blockinfo.state.get(AbstractButtonBlock.POWERED)),
+							this.changeBlock(template$blockinfo.pos, this.getButton(newBlock).getDefaultState()
+									.with(AbstractButtonBlock.POWERED,
+											template$blockinfo.state.get(AbstractButtonBlock.POWERED))
+									.with(AbstractButtonBlock.FACE,
+											template$blockinfo.state.get(AbstractButtonBlock.FACE))
+									.with(AbstractButtonBlock.HORIZONTAL_FACING,
+											template$blockinfo.state.get(AbstractButtonBlock.HORIZONTAL_FACING)),
 									world);
 						}
 					}
@@ -358,10 +362,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 		return false;
 	}
 
-	public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
-		LOGGER.info("Validating Block on {} in ColorStructurePiece", pos);
-		return false;
-	}
+	public abstract boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world);
 
 	protected Block getSlab(Block plank) {
 		if (plank == Blocks.OAK_PLANKS) {

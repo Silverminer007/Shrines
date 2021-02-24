@@ -70,7 +70,6 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 		BlockPos blockpos1 = this.templatePosition
 				.add(Template.transformedBlockPos(placementsettings, new BlockPos(3, 0, 0)));
 		int i = this.getHeight(world, blockpos1);
-		i = 56;
 		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
 		BlockPos blockpos2 = this.templatePosition;
 		LOGGER.info("Generating {} on {}", this.location, this.templatePosition);
