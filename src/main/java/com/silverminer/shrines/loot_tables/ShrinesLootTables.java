@@ -51,8 +51,7 @@ public class ShrinesLootTables {
 	public static final ResourceLocation HOUSE_4 = register("minecraft:chests/village/village_snowy_house", false,
 			true);
 
-	public static final ResourceLocation MINERAL_TEMPLE = new ResourceLocation(
-			"shrines:chests/mineral_temple_chest");
+	public static final ResourceLocation MINERAL_TEMPLE = new ResourceLocation("shrines:chests/mineral_temple_chest");
 
 	public static final ResourceLocation HOUSE_OP = new ResourceLocation("minecraft:chests/village/village_toolsmith");
 	public static final ResourceLocation HOUSE_OP_2 = new ResourceLocation(
@@ -65,6 +64,7 @@ public class ShrinesLootTables {
 	public static final ResourceLocation HIGH_TEMPEL = new ResourceLocation("shrines:chests/high_tempel_chest");
 
 	public static final ResourceLocation FLOODED_TEMPLE = new ResourceLocation("shrines:chests/flooded_temple_chest");
+	public static final ResourceLocation HARBOUR = new ResourceLocation("shrines:chests/harbour_chest");
 
 	private static ResourceLocation register(String id, boolean isNetherChest, boolean isVillageChest) {
 		return register(new ResourceLocation(id), isNetherChest, isVillageChest);

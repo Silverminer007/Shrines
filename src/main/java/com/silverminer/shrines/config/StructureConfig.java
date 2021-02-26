@@ -25,7 +25,7 @@ public class StructureConfig {
 	public final LootableStructureGenConfig PLAYER_HOUSE;
 	public final LootableStructureGenConfig MINERAL_TEMPLE;
 	public final LootableStructureGenConfig FLOODED_TEMPLE;
-	public final StructureGenConfig HARBOUR;
+	public final LootableStructureGenConfig HARBOUR;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
 
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
@@ -49,8 +49,8 @@ public class StructureConfig {
 				576143753).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		FLOODED_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("Flooded Temple", "flooded_temple",
 				54315143).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
-		HARBOUR = new StructureGenConfig.ConfigBuilder("Harbour", "harbour", 651398043).setDistance(50).setSeparation(8)
-				.build(SERVER_BUILDER);
+		HARBOUR = new LootableStructureGenConfig.LootableConfigBuilder("Harbour", "harbour", 651398043).setDistance(50)
+				.setSeparation(8).build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
 						"", "Biomes in which Structures cant generate in")

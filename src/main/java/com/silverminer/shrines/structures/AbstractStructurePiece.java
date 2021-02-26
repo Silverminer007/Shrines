@@ -72,7 +72,6 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 		int i = this.getHeight(world, blockpos1);
 		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
 		BlockPos blockpos2 = this.templatePosition;
-		LOGGER.info("Generating {} on {}", this.location, this.templatePosition);
 		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos, this.templatePosition);
 		
 		this.templatePosition = blockpos2;
