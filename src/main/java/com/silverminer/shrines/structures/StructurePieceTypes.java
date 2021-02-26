@@ -5,6 +5,7 @@ import com.silverminer.shrines.structures.ballon.BallonPiece;
 import com.silverminer.shrines.structures.bees.BeesPiece;
 import com.silverminer.shrines.structures.flooded_temple.FloodedTemplePiece;
 import com.silverminer.shrines.structures.harbour.HarbourPieces;
+import com.silverminer.shrines.structures.harbour.HarbourPieces.HarbourBuildingPiece;
 import com.silverminer.shrines.structures.high_tempel.HighTempelPiece;
 import com.silverminer.shrines.structures.mineral_temple.MineralTemplePiece;
 import com.silverminer.shrines.structures.nether_pyramid.NetherPyramidPiece;
@@ -37,8 +38,8 @@ public class StructurePieceTypes {
 
 	public static final IStructurePieceType MINERAL_TEMPLE = MineralTemplePiece.Piece::new;
 	public static final IStructurePieceType FLOODED_TEMPLE = FloodedTemplePiece.Piece::new;
-	public static final IStructurePieceType HARBOUR_HOUSE = HarbourPieces.HarbourPiece::new;
-	public static final IStructurePieceType HARBOUR_GROUND = HarbourPieces.GroundPiece::new;
+	public static final IStructurePieceType HARBOUR_HOUSE = HarbourBuildingPiece::new;
+	public static final IStructurePieceType HARBOUR_GROUND = HarbourPieces.HarbourPiece::new;
 
 	public static void regsiter() {
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "ballon"), BALLON);
