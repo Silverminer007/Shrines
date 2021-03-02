@@ -43,6 +43,12 @@ public class ModStructureFeatures {
 	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> HARBOUR = register(
 			"harbour", StructureInit.HARBOUR.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
 
+	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> INFESTED_PRISON = register(
+			"infested_prison", StructureInit.INFESTED_PRISON.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+
+	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> WITCH_HOUSE = register(
+			"witch_house", StructureInit.WITCH_HOUSE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+
 	private static <FC extends IFeatureConfig, F extends Structure<FC>> StructureFeature<FC, F> register(String name,
 			StructureFeature<FC, F> structureFeature) {
 		return WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,

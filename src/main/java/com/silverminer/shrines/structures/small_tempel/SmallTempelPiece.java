@@ -4,15 +4,19 @@ import java.util.List;
 import java.util.Random;
 
 import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
+import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
@@ -39,8 +43,18 @@ public class SmallTempelPiece {
 			return Config.STRUCTURES.SMALL_TEMPEL.USE_RANDOM_VARIANTING.get();
 		}
 
-		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
-			return true;
+		@Override
+		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
+				MutableBoundingBox sbb) {
+			if (Config.STRUCTURES.SMALL_TEMPEL.LOOT_CHANCE.get() > rand.nextDouble()) {
+				if (function.equals("chest")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof ChestTileEntity) {
+						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.SMALL_TEMPEL, rand.nextLong());
+					}
+				}
+			}
 		}
 	}
 }

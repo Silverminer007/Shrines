@@ -11,8 +11,10 @@ import com.silverminer.shrines.structures.mineral_temple.MineralTemplePiece;
 import com.silverminer.shrines.structures.nether_pyramid.NetherPyramidPiece;
 import com.silverminer.shrines.structures.nether_shrine.NetherShrinePiece;
 import com.silverminer.shrines.structures.player_house.PlayerhousePiece;
+import com.silverminer.shrines.structures.prison.InfestedPrisonPiece;
 import com.silverminer.shrines.structures.small_tempel.SmallTempelPiece;
 import com.silverminer.shrines.structures.water_shrine.WaterShrinePiece;
+import com.silverminer.shrines.structures.witch_house.AbandonedWitchHousePiece;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -40,6 +42,8 @@ public class StructurePieceTypes {
 	public static final IStructurePieceType FLOODED_TEMPLE = FloodedTemplePiece.Piece::new;
 	public static final IStructurePieceType HARBOUR_HOUSE = HarbourBuildingPiece::new;
 	public static final IStructurePieceType HARBOUR_GROUND = HarbourPieces.HarbourPiece::new;
+	public static final IStructurePieceType INFESTED_PRISON = InfestedPrisonPiece.Piece::new;
+	public static final IStructurePieceType WITCH_HOUSE = AbandonedWitchHousePiece.Piece::new;
 
 	public static void regsiter() {
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "ballon"), BALLON);
@@ -60,5 +64,8 @@ public class StructurePieceTypes {
 				HARBOUR_HOUSE);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "harbour_ground"),
 				HARBOUR_GROUND);
+		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "infested_prison"),
+				INFESTED_PRISON);
+		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "witch_house"), WITCH_HOUSE);
 	}
 }

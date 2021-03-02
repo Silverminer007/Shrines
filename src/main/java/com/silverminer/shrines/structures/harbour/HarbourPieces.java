@@ -33,6 +33,7 @@ import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
+import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class HarbourPieces {
@@ -223,8 +224,9 @@ public class HarbourPieces {
 		for (int x = mbb.minX; x < mbb.maxX; x++) {
 			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
 				int surface = chunkGenerator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE);
-				int ocean = chunkGenerator.getHeight(x, z, Heightmap.Type.OCEAN_FLOOR);
-				heigth.add(ocean <= surface ? chunkGenerator.getSeaLevel() - 1 : surface);
+				boolean water = chunkGenerator.func_230348_a_(x / 16, z / 16)
+						.getBlockState(new BlockPos(x, surface + 1, z)).getBlock() == Blocks.WATER;
+				heigth.add(water ? chunkGenerator.getSeaLevel() - 1 : surface - 1);
 			}
 		}
 		return getAverage(heigth);
@@ -276,7 +278,7 @@ public class HarbourPieces {
 		}
 
 		@Override
-		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
+		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world, Random rand) {
 			return true;
 		}
 	}
@@ -284,9 +286,10 @@ public class HarbourPieces {
 	public static class HarbourPiece extends ColorStructurePiece {
 		protected int height;
 
-		public HarbourPiece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, Random rand, int height) {
-			super(StructurePieceTypes.HARBOUR_GROUND, templateManager, location, pos, rotation, componentTypeIn, false);
+		public HarbourPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
+				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
+			super(StructurePieceTypes.HARBOUR_GROUND, templateManagerIn, locationIn, posIn, rotationIn, componentTypeIn,
+					false);
 			this.height = height;
 		}
 
@@ -317,23 +320,36 @@ public class HarbourPieces {
 		}
 
 		@Override
-		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
-			return false;
+		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world, Random rand) {
+			return newState.getBlock() == Blocks.DIRT && pos.getY() - 6 < this.getHeight(world, pos);
+		}
+
+		public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
+				Random rand, MutableBoundingBox mbb, ChunkPos chunkPos, BlockPos blockPos) {
+			boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos, blockPos);
+			BlockState newBlock = Blocks.DIRT.getDefaultState();
+			for (Template.BlockInfo template$blockinfo : this.template.func_215381_a(this.templatePosition,
+					this.placeSettings, Blocks.AIR)) {
+				this.changeBlock(template$blockinfo.pos, newBlock, world, rand);
+			}
+			return flag;
 		}
 	}
 
 	public static class HarbourBuildingPiece extends ColorStructurePiece {
 		protected int height;
 
-		public HarbourBuildingPiece(TemplateManager templateManager, ResourceLocation location, BlockPos pos,
-				Rotation rotation, int componentTypeIn, Random rand, int height) {
-			super(StructurePieceTypes.HARBOUR_HOUSE, templateManager, location, pos, rotation, componentTypeIn, true);
+		public HarbourBuildingPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
+				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
+			super(StructurePieceTypes.HARBOUR_HOUSE, templateManagerIn, locationIn, posIn, rotationIn, componentTypeIn,
+					true);
 			this.height = height;
 		}
 
 		public HarbourBuildingPiece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.HARBOUR_HOUSE, templateManager, cNBT);
 			this.height = cNBT.getInt("height");
+			this.diamonds = cNBT.getInt("diamonds");
 		}
 
 		/**
@@ -342,10 +358,15 @@ public class HarbourPieces {
 		protected void readAdditional(CompoundNBT tagCompound) {
 			super.readAdditional(tagCompound);
 			tagCompound.putInt("height", this.height);
+			tagCompound.putInt("diamonds", this.diamonds);
 		}
 
 		public StructureProcessor getProcessor() {
 			return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
+		}
+
+		public boolean overwriteOres() {
+			return true;
 		}
 
 		@Override
@@ -377,8 +398,21 @@ public class HarbourPieces {
 			return this.height + 7;
 		}
 
+		protected int diamonds = 0;
+
 		@Override
-		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
+		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world, Random rand) {
+			if (newState.getBlock() == Blocks.DIAMOND_ORE) {
+				if (diamonds <= 16) {
+					this.diamonds++;
+					return true;
+				} else {
+					if (COLORS.get(newState.getBlock()) == null)
+						COLORS.put(newState.getBlock(), ORES.get(rand.nextInt(ORES.size())));
+					world.setBlockState(pos, COLORS.get(newState.getBlock()).getDefaultState(), 3);
+					return false;
+				}
+			}
 			return true;
 		}
 	}

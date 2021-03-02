@@ -2,10 +2,11 @@ package com.silverminer.shrines.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -15,34 +16,36 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class StructureConfig {
-	public final StructureGenConfig BALLON;
-	public final StructureGenConfig BEES;
+	public final LootableStructureGenConfig BALLON;
+	public final LootableStructureGenConfig BEES;
 	public final LootableStructureGenConfig HIGH_TEMPEL;
-	public final StructureGenConfig SMALL_TEMPEL;
+	public final LootableStructureGenConfig SMALL_TEMPEL;
 	public final LootableStructureGenConfig NETHER_SHRINE;
 	public final LootableStructureGenConfig NETHER_PYRAMID;
-	public final StructureGenConfig WATER_SHRINE;
+	public final LootableStructureGenConfig WATER_SHRINE;
 	public final LootableStructureGenConfig PLAYER_HOUSE;
 	public final LootableStructureGenConfig MINERAL_TEMPLE;
 	public final LootableStructureGenConfig FLOODED_TEMPLE;
 	public final LootableStructureGenConfig HARBOUR;
+	public final LootableStructureGenConfig INFESTED_PRISON;
+	public final LootableStructureGenConfig WITCH_HOUSE;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
 
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
-		BALLON = new StructureGenConfig.ConfigBuilder("Ballon", "ballon", 143665).setDistance(50).setSeparation(8)
-				.setNeedsGround(false).build(SERVER_BUILDER);
-		BEES = new StructureGenConfig.ConfigBuilder("Bees", "bees", 779806245).setDistance(70).setSeparation(12)
-				.setUseRandomVarianting(false).build(SERVER_BUILDER);
+		BALLON = new LootableStructureGenConfig.LootableConfigBuilder("Ballon", "ballon", 143665).setLootChance(0.25D)
+				.setDistance(50).setSeparation(8).setNeedsGround(false).build(SERVER_BUILDER);
+		BEES = new LootableStructureGenConfig.LootableConfigBuilder("Bees", "bees", 779806245).setDistance(70)
+				.setSeparation(12).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		HIGH_TEMPEL = new LootableStructureGenConfig.LootableConfigBuilder("High Tempel", "high_tempel", 536987987)
 				.setDistance(85).setSeparation(18).build(SERVER_BUILDER);
-		SMALL_TEMPEL = new StructureGenConfig.ConfigBuilder("Small Tempel", "small_tempel", 4765321).setDistance(75)
-				.setSeparation(13).build(SERVER_BUILDER);
+		SMALL_TEMPEL = new LootableStructureGenConfig.LootableConfigBuilder("Small Tempel", "small_tempel", 4765321)
+				.setDistance(75).setSeparation(13).build(SERVER_BUILDER);
 		NETHER_SHRINE = new LootableStructureGenConfig.LootableConfigBuilder("Nether Shrine", "nether_shrine", 653267)
 				.setDistance(80).setSeparation(15).build(SERVER_BUILDER);
 		NETHER_PYRAMID = new LootableStructureGenConfig.LootableConfigBuilder("Nether Pyramid", "nether_pyramid",
 				7428394).setDistance(150).setSeparation(50).build(SERVER_BUILDER);
-		WATER_SHRINE = new StructureGenConfig.ConfigBuilder("Water Shrine", "water_shrine", 643168754).setDistance(80)
-				.setSeparation(15).build(SERVER_BUILDER);
+		WATER_SHRINE = new LootableStructureGenConfig.LootableConfigBuilder("Water Shrine", "water_shrine", 643168754)
+				.setDistance(80).setSeparation(15).build(SERVER_BUILDER);
 		PLAYER_HOUSE = new LootableStructureGenConfig.LootableConfigBuilder("Player House", "player_house", 751963298)
 				.setDistance(80).setSeparation(15).build(SERVER_BUILDER);
 		MINERAL_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("Mineral Temple", "mineral_temple",
@@ -51,6 +54,13 @@ public class StructureConfig {
 				54315143).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		HARBOUR = new LootableStructureGenConfig.LootableConfigBuilder("Harbour", "harbour", 651398043).setDistance(50)
 				.setSeparation(8).build(SERVER_BUILDER);
+		INFESTED_PRISON = new LootableStructureGenConfig.LootableConfigBuilder("Infested Prison", "infested_prison",
+				-567483014).setDistance(60).setSeparation(11).build(SERVER_BUILDER);
+		WITCH_HOUSE = new LootableStructureGenConfig.LootableConfigBuilder("Abandoned Witch House", "witch_house",
+				-1721882513).setBiomes(Category.SWAMP, Category.FOREST)
+						.addToBlacklist("minecraft:flower_forest", "minecraft:tall_birch_forest", "minecraft:forest",
+								"minecraft:birch_forest", "minecraft:birch_forest_hills")
+						.setDistance(60).setSeparation(11).build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
 						"", "Biomes in which Structures cant generate in")
@@ -72,7 +82,7 @@ public class StructureConfig {
 
 		public StructureGenConfig(final ForgeConfigSpec.Builder SERVER_BUILDER, String name, String dataName,
 				double dSpawnChance, int dDistance, int dSeparation, int dSeed, boolean needsGround,
-				boolean useRandomVarianting, Category... biomeCategories) {
+				boolean useRandomVarianting, ArrayList<String> blacklist, Category... biomeCategories) {
 			biomeCategories = biomeCategories == null
 					? new Category[] { Biome.Category.PLAINS, Biome.Category.FOREST, Biome.Category.TAIGA }
 					: biomeCategories;
@@ -94,8 +104,7 @@ public class StructureConfig {
 					"structures." + dataName + ".biome_categories", Arrays.asList(biomeCategories),
 					StructureConfig::validateBiomeCategory);
 			BIOME_BLACKLIST = SERVER_BUILDER.comment("Biomes the " + name + " can NOT generate in").defineList(
-					"structures." + dataName + ".biome_blacklist", Collections.emptyList(),
-					StructureConfig::validateBiome);
+					"structures." + dataName + ".biome_blacklist", blacklist, StructureConfig::validateBiome);
 			USE_RANDOM_VARIANTING = SERVER_BUILDER
 					.comment("Use Random Varianting for " + name + "? [default: " + useRandomVarianting + "]")
 					.define("structures." + dataName + ".varianting", useRandomVarianting);
@@ -110,6 +119,7 @@ public class StructureConfig {
 			protected int separation = 12;
 			protected boolean needsGround = true;
 			protected boolean useRandomVarianting = true;
+			protected ArrayList<String> blacklist = Lists.newArrayList();
 			protected Category[] biomes = new Category[] { Biome.Category.PLAINS, Biome.Category.FOREST,
 					Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.JUNGLE, Biome.Category.MESA,
 					Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.SWAMP, Biome.Category.MUSHROOM };
@@ -122,7 +132,13 @@ public class StructureConfig {
 
 			public StructureGenConfig build(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 				return new StructureGenConfig(SERVER_BUILDER, name, dataName, spawnChance, distance, separation, seed,
-						needsGround, useRandomVarianting, biomes);
+						needsGround, useRandomVarianting, blacklist, biomes);
+			}
+
+			public ConfigBuilder addToBlacklist(String... blacklist) {
+				for (String s : blacklist)
+					this.blacklist.add(s);
+				return this;
 			}
 
 			public ConfigBuilder setSpawnChance(double spawnChance) {
@@ -162,9 +178,9 @@ public class StructureConfig {
 
 		public LootableStructureGenConfig(Builder SERVER_BUILDER, String name, String dataName, double dSpawnChance,
 				int dDistance, int dSeparation, int dSeed, double dLootChance, boolean needsGround,
-				boolean useRandomVarianting, Category... biomeCategories) {
+				boolean useRandomVarianting, ArrayList<String> blacklist, Category... biomeCategories) {
 			super(SERVER_BUILDER, name, dataName, dSpawnChance, dDistance, dSeparation, dSeed, needsGround,
-					useRandomVarianting, biomeCategories);
+					useRandomVarianting, blacklist, biomeCategories);
 			LOOT_CHANCE = SERVER_BUILDER.comment(name + " Generate Loot Chance [default: " + dLootChance + "]")
 					.defineInRange("structures." + dataName.toLowerCase(Locale.ROOT) + ".loot_chance", dLootChance, 0.0,
 							1.0);
@@ -179,11 +195,17 @@ public class StructureConfig {
 
 			public LootableStructureGenConfig build(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 				return new LootableStructureGenConfig(SERVER_BUILDER, name, dataName, spawnChance, distance, separation,
-						seed, lootChance, needsGround, useRandomVarianting, biomes);
+						seed, lootChance, needsGround, useRandomVarianting, blacklist, biomes);
 			}
 
 			public LootableConfigBuilder setLootChance(double lootChance) {
 				this.lootChance = lootChance;
+				return this;
+			}
+
+			public LootableConfigBuilder addToBlacklist(String... blacklist) {
+				for (String s : blacklist)
+					this.blacklist.add(s);
 				return this;
 			}
 
