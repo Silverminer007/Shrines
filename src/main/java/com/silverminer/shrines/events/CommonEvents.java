@@ -94,6 +94,17 @@ public class CommonEvents {
 						Config.STRUCTURES.HARBOUR.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
 					event.getGeneration().withStructure(ModStructureFeatures.HARBOUR);
 				}
+				if (Config.STRUCTURES.INFESTED_PRISON.GENERATE.get()
+						&& checkBiome(Config.STRUCTURES.INFESTED_PRISON.BIOME_CATEGORIES.get(),
+								Config.STRUCTURES.INFESTED_PRISON.BIOME_BLACKLIST.get(), event.getName(),
+								event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.INFESTED_PRISON);
+				}
+				if (Config.STRUCTURES.WITCH_HOUSE.GENERATE.get() && checkBiome(
+						Config.STRUCTURES.WITCH_HOUSE.BIOME_CATEGORIES.get(),
+						Config.STRUCTURES.WITCH_HOUSE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+					event.getGeneration().withStructure(ModStructureFeatures.WITCH_HOUSE);
+				}
 			}
 		}
 

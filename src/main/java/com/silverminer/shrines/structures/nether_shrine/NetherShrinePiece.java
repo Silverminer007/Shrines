@@ -10,7 +10,6 @@ import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
@@ -19,7 +18,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
@@ -60,8 +58,6 @@ public class NetherShrinePiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			// if (Config.STRUCTURES.GENERATE_NETHER_SHRINE_LOOT_CHANCE.get() >
-			// rand.nextDouble()) {
 			if (Config.STRUCTURES.NETHER_SHRINE.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if ("chest1".equals(function) || "chest2".equals(function)) {
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
@@ -72,10 +68,6 @@ public class NetherShrinePiece {
 					}
 				}
 			}
-		}
-
-		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
-			return true;
 		}
 
 		@Override

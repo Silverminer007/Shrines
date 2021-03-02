@@ -14,8 +14,10 @@ import com.silverminer.shrines.structures.mineral_temple.MineralTempleStructure;
 import com.silverminer.shrines.structures.nether_pyramid.NetherPyramidStructure;
 import com.silverminer.shrines.structures.nether_shrine.NetherShrineStructure;
 import com.silverminer.shrines.structures.player_house.PlayerhouseStructure;
+import com.silverminer.shrines.structures.prison.InfestedPrisonStructure;
 import com.silverminer.shrines.structures.small_tempel.SmallTempelStructure;
 import com.silverminer.shrines.structures.water_shrine.WaterShrineStructure;
+import com.silverminer.shrines.structures.witch_house.AbandonedWitchHouseStructure;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -61,6 +63,12 @@ public class StructureInit {
 
 	public static final RegistryObject<HarbourStructure> HARBOUR = register("harbour",
 			new HarbourStructure(NoFeatureConfig.field_236558_a_));
+
+	public static final RegistryObject<InfestedPrisonStructure> INFESTED_PRISON = register("infested_prison",
+			new InfestedPrisonStructure(NoFeatureConfig.field_236558_a_));
+
+	public static final RegistryObject<AbandonedWitchHouseStructure> WITCH_HOUSE = register("witch_house",
+			new AbandonedWitchHouseStructure(NoFeatureConfig.field_236558_a_));
 
 	private static <T extends AbstractStructure<NoFeatureConfig>> RegistryObject<T> register(String name, T structure) {
 		if (!Structure.NAME_STRUCTURE_BIMAP.containsValue(structure)) {

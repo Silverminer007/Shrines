@@ -68,6 +68,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 			Blocks.BROWN_CONCRETE_POWDER, Blocks.GREEN_CONCRETE_POWDER, Blocks.RED_CONCRETE_POWDER);
 	protected static final ArrayList<Block> PLANKS = Lists.newArrayList(Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS,
 			Blocks.DARK_OAK_PLANKS, Blocks.BIRCH_PLANKS, Blocks.ACACIA_PLANKS, Blocks.JUNGLE_PLANKS);
+	protected static final ArrayList<Block> ORES = Lists.newArrayList(Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE,
+			Blocks.DIAMOND_ORE, Blocks.REDSTONE_ORE, Blocks.EMERALD_ORE);
 
 	protected static final ArrayList<Block> STONES = Lists.newArrayList(Blocks.COBBLESTONE, Blocks.STONE_BRICKS,
 			Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.MOSSY_COBBLESTONE, Blocks.MOSSY_STONE_BRICKS,
@@ -112,7 +114,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							this.placeSettings, block)) {
 						if (block == Blocks.BLACK_WOOL)
 							newBlock = WOOLS.get(rand.nextInt(WOOLS.size())).getDefaultState();
-						this.changeBlock(template$blockinfo.pos, newBlock, world);
+						this.changeBlock(template$blockinfo.pos, newBlock, world, rand);
 					}
 				}
 			}
@@ -124,14 +126,14 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 					if (this.overwritePlanks()) {
 						for (Template.BlockInfo template$blockinfo : this.template.func_215381_a(this.templatePosition,
 								this.placeSettings, block)) {
-							this.changeBlock(template$blockinfo.pos, newBlock.getDefaultState(), world);
+							this.changeBlock(template$blockinfo.pos, newBlock.getDefaultState(), world, rand);
 						}
 					}
 					if (this.overwriteSlabs()) {
 						for (Template.BlockInfo template$blockinfo : this.template.func_215381_a(this.templatePosition,
 								this.placeSettings, this.getSlab(block))) {
 							this.changeBlock(template$blockinfo.pos, this.getSlab(newBlock).getDefaultState()
-									.with(SlabBlock.TYPE, template$blockinfo.state.get(SlabBlock.TYPE)), world);
+									.with(SlabBlock.TYPE, template$blockinfo.state.get(SlabBlock.TYPE)), world, rand);
 						}
 					}
 					if (this.overwriteFences()) {
@@ -143,7 +145,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 									.with(FenceBlock.SOUTH, template$blockinfo.state.get(FenceBlock.SOUTH))
 									.with(FenceBlock.WEST, template$blockinfo.state.get(FenceBlock.WEST))
 									.with(FenceBlock.WATERLOGGED, template$blockinfo.state.get(FenceBlock.WATERLOGGED)),
-									world);
+									world, rand);
 						}
 					}
 					if (this.overwriteLogs()) {
@@ -152,7 +154,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							this.changeBlock(template$blockinfo.pos,
 									this.getLog(newBlock, false).getDefaultState().with(RotatedPillarBlock.AXIS,
 											template$blockinfo.state.get(RotatedPillarBlock.AXIS)),
-									world);
+									world, rand);
 						}
 					}
 					if (this.overwriteStrippedLogs()) {
@@ -161,7 +163,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							this.changeBlock(template$blockinfo.pos,
 									this.getLog(newBlock, true).getDefaultState().with(RotatedPillarBlock.AXIS,
 											template$blockinfo.state.get(RotatedPillarBlock.AXIS)),
-									world);
+									world, rand);
 						}
 					}
 					if (this.overwriteTrapdoors()) {
@@ -175,7 +177,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 											template$blockinfo.state.get(TrapDoorBlock.WATERLOGGED))
 									.with(TrapDoorBlock.HORIZONTAL_FACING,
 											template$blockinfo.state.get(TrapDoorBlock.HORIZONTAL_FACING)),
-									world);
+									world, rand);
 						}
 					}
 					if (this.overwriteDoors()) {
@@ -188,7 +190,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 											.with(DoorBlock.FACING, template$blockinfo.state.get(DoorBlock.FACING))
 											.with(DoorBlock.HALF, template$blockinfo.state.get(DoorBlock.HALF))
 											.with(DoorBlock.POWERED, template$blockinfo.state.get(DoorBlock.POWERED)),
-									world);
+									world, rand);
 						}
 					}
 					if (this.overwriteStairs()) {
@@ -201,7 +203,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 											.with(StairsBlock.FACING, template$blockinfo.state.get(StairsBlock.FACING))
 											.with(StairsBlock.HALF, template$blockinfo.state.get(StairsBlock.HALF))
 											.with(StairsBlock.SHAPE, template$blockinfo.state.get(StairsBlock.SHAPE)),
-									world);
+									world, rand);
 						}
 					}
 					if (this.overwriteSigns()) {
@@ -211,7 +213,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 									.with(AbstractSignBlock.WATERLOGGED,
 											template$blockinfo.state.get(AbstractSignBlock.WATERLOGGED))
 									.with(WallSignBlock.FACING, template$blockinfo.state.get(WallSignBlock.FACING)),
-									world);
+									world, rand);
 						}
 						for (Template.BlockInfo template$blockinfo : this.template.func_215381_a(this.templatePosition,
 								this.placeSettings, this.getSign(block, false))) {
@@ -221,7 +223,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 													template$blockinfo.state.get(AbstractSignBlock.WATERLOGGED))
 											.with(StandingSignBlock.ROTATION,
 													template$blockinfo.state.get(StandingSignBlock.ROTATION)),
-									world);
+									world, rand);
 						}
 					}
 					if (this.overwriteButtons()) {
@@ -234,7 +236,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 											template$blockinfo.state.get(AbstractButtonBlock.FACE))
 									.with(AbstractButtonBlock.HORIZONTAL_FACING,
 											template$blockinfo.state.get(AbstractButtonBlock.HORIZONTAL_FACING)),
-									world);
+									world, rand);
 						}
 					}
 				}
@@ -248,7 +250,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							this.placeSettings, block)) {
 						if (block == Blocks.BLACK_TERRACOTTA)
 							newBlock = TERRACOTTAS.get(rand.nextInt(TERRACOTTAS.size())).getDefaultState();
-						this.changeBlock(template$blockinfo.pos, newBlock, world);
+						this.changeBlock(template$blockinfo.pos, newBlock, world, rand);
 					}
 				}
 			}
@@ -262,7 +264,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 						if (block == Blocks.BLACK_GLAZED_TERRACOTTA)
 							newBlock = GLAZED_TERRACOTTAS.get(rand.nextInt(GLAZED_TERRACOTTAS.size()))
 									.getDefaultState();
-						this.changeBlock(template$blockinfo.pos, newBlock, world);
+						this.changeBlock(template$blockinfo.pos, newBlock, world, rand);
 					}
 				}
 			}
@@ -275,7 +277,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							this.placeSettings, block)) {
 						if (block == Blocks.BLACK_CONCRETE)
 							newBlock = CONCRETE.get(rand.nextInt(CONCRETE.size())).getDefaultState();
-						this.changeBlock(template$blockinfo.pos, newBlock, world);
+						this.changeBlock(template$blockinfo.pos, newBlock, world, rand);
 					}
 				}
 			}
@@ -288,7 +290,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							this.placeSettings, block)) {
 						if (block == Blocks.BLACK_CONCRETE_POWDER)
 							newBlock = CONCRETE_POWDERS.get(rand.nextInt(CONCRETE_POWDERS.size())).getDefaultState();
-						this.changeBlock(template$blockinfo.pos, newBlock, world);
+						this.changeBlock(template$blockinfo.pos, newBlock, world, rand);
 					}
 				}
 			}
@@ -303,7 +305,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 						newBlock2 = newBlock;
 						if (rand.nextFloat() < this.getStoneChangeChance())
 							newBlock2 = STONES.get(rand.nextInt(STONES.size()));
-						this.changeBlock(template$blockinfo.pos, newBlock2.getDefaultState(), world);
+						this.changeBlock(template$blockinfo.pos, newBlock2.getDefaultState(), world, rand);
 					}
 					if (this.overwriteSlabs()) {
 						for (Template.BlockInfo template$blockinfo : this.template.func_215381_a(this.templatePosition,
@@ -312,7 +314,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							if (rand.nextFloat() < this.getStoneChangeChance())
 								newBlock2 = STONES.get(rand.nextInt(STONES.size()));
 							this.changeBlock(template$blockinfo.pos, this.getSlab(newBlock2).getDefaultState()
-									.with(SlabBlock.TYPE, template$blockinfo.state.get(SlabBlock.TYPE)), world);
+									.with(SlabBlock.TYPE, template$blockinfo.state.get(SlabBlock.TYPE)), world, rand);
 						}
 					}
 					if (this.overwriteStairs()) {
@@ -328,7 +330,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 											.with(StairsBlock.FACING, template$blockinfo.state.get(StairsBlock.FACING))
 											.with(StairsBlock.HALF, template$blockinfo.state.get(StairsBlock.HALF))
 											.with(StairsBlock.SHAPE, template$blockinfo.state.get(StairsBlock.SHAPE)),
-									world);
+									world, rand);
 						}
 					}
 				}
@@ -344,7 +346,18 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 					this.changeBlock(template$blockinfo.pos,
 							newBlock.with(BeehiveBlock.FACING, template$blockinfo.state.get(BeehiveBlock.FACING)).with(
 									BeehiveBlock.HONEY_LEVEL, template$blockinfo.state.get(BeehiveBlock.HONEY_LEVEL)),
-							world);
+							world, rand);
+				}
+			}
+		}
+		if (this.overwriteOres()) {
+			for (Block block : ORES) {
+				if (COLORS.get(block) == null)
+					COLORS.put(block, ORES.get(rand.nextInt(ORES.size())));
+				BlockState newBlock = COLORS.get(block).getDefaultState();
+				for (Template.BlockInfo template$blockinfo : this.template.func_215381_a(this.templatePosition,
+						this.placeSettings, block)) {
+					this.changeBlock(template$blockinfo.pos, newBlock, world, rand);
 				}
 			}
 		}
@@ -353,8 +366,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 
 	protected abstract boolean useRandomVarianting();
 
-	protected boolean changeBlock(BlockPos pos, BlockState state, ISeedReader world) {
-		if (!CHANGED_POS.contains(pos) && this.validateBlock(pos, state, world)) {
+	protected boolean changeBlock(BlockPos pos, BlockState state, ISeedReader world, Random rand) {
+		if (!CHANGED_POS.contains(pos) && this.validateBlock(pos, state, world, rand)) {
 			CHANGED_POS.add(pos);
 			world.setBlockState(pos, state, 3);
 			return true;
@@ -362,7 +375,9 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 		return false;
 	}
 
-	public abstract boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world);
+	public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world, Random rand) {
+		return true;
+	}
 
 	protected Block getSlab(Block plank) {
 		if (plank == Blocks.OAK_PLANKS) {
@@ -564,6 +579,10 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 			worldIn.setBlockState(pos, block.getDefaultState(), 2);
 			CHANGED_POS.add(pos);
 		}
+	}
+
+	public boolean overwriteOres() {
+		return false;
 	}
 
 	public boolean overwriteWool() {

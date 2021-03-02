@@ -6,15 +6,19 @@ import java.util.Random;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.BarrelTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
+import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
@@ -37,7 +41,7 @@ public class BallonPiece {
 					rotation, 0, random));
 		else
 			// Test function for single variant
-			pieces.add(new BallonPiece.Piece(templateManager, location.get(6), pos, rotation, 0, random));
+			pieces.add(new BallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random));
 	}
 
 	public static class Piece extends ColorStructurePiece {
@@ -83,8 +87,18 @@ public class BallonPiece {
 			return Config.STRUCTURES.BALLON.USE_RANDOM_VARIANTING.get();
 		}
 
-		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world) {
-			return true;
+		@Override
+		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
+				MutableBoundingBox sbb) {
+			if (Config.STRUCTURES.BALLON.LOOT_CHANCE.get() > rand.nextDouble()) {
+				if (function.equals("chest")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.up(2));
+					if (tileentity instanceof BarrelTileEntity) {
+						((BarrelTileEntity) tileentity).setLootTable(ShrinesLootTables.BALLON, rand.nextLong());
+					}
+				}
+			}
 		}
 	}
 }

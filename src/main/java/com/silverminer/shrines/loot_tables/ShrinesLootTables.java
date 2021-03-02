@@ -65,6 +65,12 @@ public class ShrinesLootTables {
 
 	public static final ResourceLocation FLOODED_TEMPLE = new ResourceLocation("shrines:chests/flooded_temple_chest");
 	public static final ResourceLocation HARBOUR = new ResourceLocation("shrines:chests/harbour_chest");
+	public static final ResourceLocation INFECTED_PRISON = new ResourceLocation("shrines:chests/prison_chest");
+	public static final ResourceLocation WITCH_HOUSE = new ResourceLocation("shrines:chests/witch_house");
+	public static final ResourceLocation SMALL_TEMPEL = new ResourceLocation("shrines:chests/small_tempel");
+	public static final ResourceLocation WATER_SHRINE = new ResourceLocation("shrines:chests/water_shrine");
+	public static final ResourceLocation BEES = new ResourceLocation("shrines:chests/bees");
+	public static final ResourceLocation BALLON = new ResourceLocation("shrines:chests/ballon");
 
 	private static ResourceLocation register(String id, boolean isNetherChest, boolean isVillageChest) {
 		return register(new ResourceLocation(id), isNetherChest, isVillageChest);
