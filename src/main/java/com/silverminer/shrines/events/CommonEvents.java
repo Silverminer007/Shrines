@@ -110,11 +110,6 @@ public class CommonEvents {
 						Config.STRUCTURES.JUNGLE_TOWER.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
 					event.getGeneration().withStructure(ModStructureFeatures.JUNGLE_TOWER);
 				}
-				if (Config.STRUCTURES.DUMMY.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.DUMMY.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.DUMMY.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().withStructure(ModStructureFeatures.DUMMY);
-				}
 				if (Config.STRUCTURES.GUARDIAN.GENERATE.get() && checkBiome(
 						Config.STRUCTURES.GUARDIAN.BIOME_CATEGORIES.get(),
 						Config.STRUCTURES.GUARDIAN.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
