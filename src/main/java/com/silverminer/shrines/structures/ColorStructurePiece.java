@@ -85,12 +85,29 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn, boolean defaultValue) {
 		super(pieceType, templateManager, location, pos, rotation, componentTypeIn);
 		this.defaultValue = defaultValue;
+		this.addOresOfMoreOre();
 	}
 
 	public ColorStructurePiece(IStructurePieceType pieceType, TemplateManager templateManager, CompoundNBT cNBT) {
 		super(pieceType, templateManager, cNBT);
 		if (cNBT.contains("DefaultValue"))
 			this.defaultValue = cNBT.getBoolean("DefaultValue");
+		this.addOresOfMoreOre();
+	}
+
+	protected void addOresOfMoreOre() {
+		Block ruby = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("moreore", "rubin_ore"));
+		if (ruby != null && ruby != Blocks.AIR && !ORES.contains(ruby))
+			ORES.add(ruby);
+		Block saphire = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("moreore", "saphir_ore"));
+		if (saphire != null && ruby != Blocks.AIR && !ORES.contains(saphire))
+			ORES.add(saphire);
+		Block silver = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("moreore", "silver_ore"));
+		if (silver != null && ruby != Blocks.AIR && !ORES.contains(silver))
+			ORES.add(silver);
+		Block alexandrit = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("moreore", "alexandrit_ore"));
+		if (alexandrit != null && ruby != Blocks.AIR && !ORES.contains(alexandrit))
+			ORES.add(alexandrit);
 	}
 
 	/**

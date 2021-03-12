@@ -28,8 +28,8 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractStructurePiece.class);
 
-	private final ResourceLocation location;
-	private final Rotation rotation;
+	protected final ResourceLocation location;
+	protected final Rotation rotation;
 
 	public AbstractStructurePiece(IStructurePieceType pieceType, TemplateManager templateManager,
 			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn) {

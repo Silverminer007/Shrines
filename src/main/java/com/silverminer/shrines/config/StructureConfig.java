@@ -26,11 +26,14 @@ public class StructureConfig {
 	public final LootableStructureGenConfig PLAYER_HOUSE;
 	public final LootableStructureGenConfig MINERAL_TEMPLE;
 	public final LootableStructureGenConfig FLOODED_TEMPLE;
-	public final LootableStructureGenConfig HARBOUR;
+	public final HarbourStructureGenConfig HARBOUR;
 	public final LootableStructureGenConfig INFESTED_PRISON;
 	public final LootableStructureGenConfig WITCH_HOUSE;
+	public final LootableStructureGenConfig JUNGLE_TOWER;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
-
+	public final LootableStructureGenConfig END_TEMPLE;
+	public final LootableStructureGenConfig DUMMY;
+	public final LootableStructureGenConfig GUARDIAN;
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		BALLON = new LootableStructureGenConfig.LootableConfigBuilder("Ballon", "ballon", 143665).setLootChance(0.25D)
 				.setDistance(50).setSeparation(8).setNeedsGround(false).build(SERVER_BUILDER);
@@ -52,21 +55,35 @@ public class StructureConfig {
 				576143753).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		FLOODED_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("Flooded Temple", "flooded_temple",
 				54315143).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
-		HARBOUR = new LootableStructureGenConfig.LootableConfigBuilder("Harbour", "harbour", 651398043).setDistance(50)
-				.setSeparation(8).build(SERVER_BUILDER);
+		HARBOUR = new HarbourStructureGenConfig.LootableHarbourConfigBuilder("Harbour", "harbour", 651398043)
+				.setDistance(50).setSeparation(8)
+				.setBiomes(Biome.Category.PLAINS, Biome.Category.FOREST, Biome.Category.TAIGA, Biome.Category.SAVANNA,
+						Biome.Category.JUNGLE, Biome.Category.MESA, Biome.Category.ICY, Biome.Category.SWAMP,
+						Biome.Category.MUSHROOM)
+				.build(SERVER_BUILDER);
 		INFESTED_PRISON = new LootableStructureGenConfig.LootableConfigBuilder("Infested Prison", "infested_prison",
 				-567483014).setDistance(60).setSeparation(11).build(SERVER_BUILDER);
 		WITCH_HOUSE = new LootableStructureGenConfig.LootableConfigBuilder("Abandoned Witch House", "witch_house",
-				-1721882513).setBiomes(Category.SWAMP, Category.FOREST)
+				-1721882513)
+						.setBiomes(Category.SWAMP, Category.FOREST)
 						.addToBlacklist("minecraft:flower_forest", "minecraft:tall_birch_forest", "minecraft:forest",
 								"minecraft:birch_forest", "minecraft:birch_forest_hills")
 						.setDistance(60).setSeparation(11).build(SERVER_BUILDER);
+		JUNGLE_TOWER = new LootableStructureGenConfig.LootableConfigBuilder("Jungle Tower", "jungle_tower", -987531843)
+				.setDistance(60).setSeparation(11).setBiomes(Category.JUNGLE).build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
-						"", "Biomes in which Structures cant generate in")
+						"", "Biomes in which Overworld Structures cant generate in")
 				.defineList("structures.blacklisted_biomes",
 						getAllBiomesForCategory(Biome.Category.THEEND, Biome.Category.NETHER),
 						StructureConfig::validateBiome);
+		END_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("End Temple", "end_temple", -32 ^ 478392)
+				.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
+				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands").build(SERVER_BUILDER);
+		DUMMY = new LootableStructureGenConfig.LootableConfigBuilder("Dummy", "dummy", 124582353).setLootChance(0.5D)
+				.setDistance(55).setSeparation(12).build(SERVER_BUILDER);
+		GUARDIAN = new LootableStructureGenConfig.LootableConfigBuilder("Guardian", "guardian", 980252343).setLootChance(0.5D)
+				.setDistance(55).setSeparation(12).build(SERVER_BUILDER);
 	}
 
 	public static class StructureGenConfig {
@@ -235,6 +252,79 @@ public class StructureConfig {
 			}
 
 			public LootableConfigBuilder setUseRandomVarianting(boolean useRandomVarianting) {
+				this.useRandomVarianting = useRandomVarianting;
+				return this;
+			}
+		}
+	}
+
+	public static class HarbourStructureGenConfig extends LootableStructureGenConfig {
+		public final ForgeConfigSpec.BooleanValue SPAWN_VILLAGERS;
+
+		public HarbourStructureGenConfig(Builder SERVER_BUILDER, String name, String dataName, double dSpawnChance,
+				int dDistance, int dSeparation, int dSeed, double dLootChance, boolean needsGround,
+				boolean useRandomVarianting, ArrayList<String> blacklist, boolean spawnVillagers,
+				Category... biomeCategories) {
+			super(SERVER_BUILDER, name, dataName, dSpawnChance, dDistance, dSeparation, dSeed, dLootChance, needsGround,
+					useRandomVarianting, blacklist, biomeCategories);
+			SPAWN_VILLAGERS = SERVER_BUILDER.comment(name + " Spawn Villagers [default: " + spawnVillagers + "]")
+					.define("structures." + dataName.toLowerCase(Locale.ROOT) + ".spawn_villagers", spawnVillagers);
+		}
+
+		public static class LootableHarbourConfigBuilder extends LootableConfigBuilder {
+			protected boolean spawn_villagers = true;
+
+			public LootableHarbourConfigBuilder(String name, String dataName, int seed) {
+				super(name, dataName, seed);
+			}
+
+			public HarbourStructureGenConfig build(final ForgeConfigSpec.Builder SERVER_BUILDER) {
+				return new HarbourStructureGenConfig(SERVER_BUILDER, name, dataName, spawnChance, distance, separation,
+						seed, lootChance, needsGround, useRandomVarianting, blacklist, spawn_villagers, biomes);
+			}
+
+			public LootableHarbourConfigBuilder setSpawnVillagers(boolean spawn_villagers) {
+				this.spawn_villagers = spawn_villagers;
+				return this;
+			}
+
+			public LootableHarbourConfigBuilder setLootChance(double lootChance) {
+				this.lootChance = lootChance;
+				return this;
+			}
+
+			public LootableHarbourConfigBuilder addToBlacklist(String... blacklist) {
+				for (String s : blacklist)
+					this.blacklist.add(s);
+				return this;
+			}
+
+			public LootableHarbourConfigBuilder setSpawnChance(double spawnChance) {
+				this.spawnChance = spawnChance;
+				return this;
+			}
+
+			public LootableHarbourConfigBuilder setDistance(int distance) {
+				this.distance = distance;
+				return this;
+			}
+
+			public LootableHarbourConfigBuilder setSeparation(int separation) {
+				this.separation = separation;
+				return this;
+			}
+
+			public LootableHarbourConfigBuilder setNeedsGround(boolean needsGround) {
+				this.needsGround = needsGround;
+				return this;
+			}
+
+			public LootableHarbourConfigBuilder setBiomes(Category... biomes) {
+				this.biomes = biomes;
+				return this;
+			}
+
+			public LootableHarbourConfigBuilder setUseRandomVarianting(boolean useRandomVarianting) {
 				this.useRandomVarianting = useRandomVarianting;
 				return this;
 			}

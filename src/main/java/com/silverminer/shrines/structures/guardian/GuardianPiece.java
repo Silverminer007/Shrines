@@ -1,4 +1,4 @@
-package com.silverminer.shrines.structures.ballon;
+package com.silverminer.shrines.structures.guardian;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,37 +24,30 @@ import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class BallonPiece {
+public class GuardianPiece {
 	private static final ArrayList<ResourceLocation> location = Lists.newArrayList(
-			new ResourceLocation("shrines:ballon/ballon_1"), new ResourceLocation("shrines:ballon/ballon_2"),
-			new ResourceLocation("shrines:ballon/ballon_3"), new ResourceLocation("shrines:ballon/ballon_4"),
-			new ResourceLocation("shrines:ballon/ballon_5"), new ResourceLocation("shrines:ballon/ballon_6"),
-			new ResourceLocation("shrines:ballon/ballon_7"), new ResourceLocation("shrines:ballon/ballon2_1"),
-			new ResourceLocation("shrines:ballon/ballon2_2"), new ResourceLocation("shrines:ballon/ballon2_3"),
-			new ResourceLocation("shrines:ballon/ballon2_4"));
+			new ResourceLocation("shrines:guardian/guardian_1"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
 		boolean flag = true;
 		if (flag)
-			pieces.add(new BallonPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
+			pieces.add(new GuardianPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
 					rotation, 0, random));
 		else
 			// Test function for single variant
-			pieces.add(new BallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random));
+			pieces.add(new GuardianPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random));
 	}
 
 	public static class Piece extends ColorStructurePiece {
-		protected BlockPos offsetPos = BlockPos.ZERO;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn, Random rand) {
-			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true);
-			this.offsetPos = new BlockPos(0, 5 + rand.nextInt(25), 0);
+			super(StructurePieceTypes.GUARDIAN, templateManager, location, pos, rotation, componentTypeIn, true);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
-			super(StructurePieceTypes.BALLON, templateManager, cNBT);
+			super(StructurePieceTypes.GUARDIAN, templateManager, cNBT);
 		}
 
 		@Override
@@ -62,40 +55,20 @@ public class BallonPiece {
 			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
 		}
 
-		public BlockPos getOffsetPos(Random rand) {
-			return this.offsetPos;
-		}
-
-		public boolean overwriteWool() {
-			return true;
-		}
-
-		public boolean overwriteWood() {
-			return true;
-		}
-
-		public boolean overwritePlanks() {
-			return true;
-		}
-
-		public boolean overwriteSlabs() {
-			return true;
-		}
-
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.BALLON.USE_RANDOM_VARIANTING.get();
+			return Config.STRUCTURES.DUMMY.USE_RANDOM_VARIANTING.get();
 		}
 
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			if (Config.STRUCTURES.BALLON.LOOT_CHANCE.get() > rand.nextDouble()) {
+			if (Config.STRUCTURES.DUMMY.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 					TileEntity tileentity = worldIn.getTileEntity(pos.up(2));
 					if (tileentity instanceof BarrelTileEntity) {
-						((BarrelTileEntity) tileentity).setLootTable(ShrinesLootTables.BALLON, rand.nextLong());
+						((BarrelTileEntity) tileentity).setLootTable(ShrinesLootTables.DUMMY, rand.nextLong());
 					}
 				}
 			}
