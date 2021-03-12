@@ -26,7 +26,7 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class GuardianPiece {
 	private static final ArrayList<ResourceLocation> location = Lists.newArrayList(
-			new ResourceLocation("shrines:guardian/guardian_1"));
+			new ResourceLocation("shrines:guardian/guardian"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {

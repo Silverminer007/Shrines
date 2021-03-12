@@ -26,7 +26,7 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class DummyPiece {
 	private static final ArrayList<ResourceLocation> location = Lists.newArrayList(
-			new ResourceLocation("shrines:dummy/dummy_1"));
+			new ResourceLocation("shrines:dummy/dummy"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
