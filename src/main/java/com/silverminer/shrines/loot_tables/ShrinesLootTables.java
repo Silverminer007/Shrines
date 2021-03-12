@@ -74,8 +74,6 @@ public class ShrinesLootTables {
 	public static final ResourceLocation WATER_SHRINE = new ResourceLocation("shrines:chests/water_shrine");
 	public static final ResourceLocation BEES = new ResourceLocation("shrines:chests/bees");
 	public static final ResourceLocation BALLON = new ResourceLocation("shrines:chests/ballon");
-	public static final ResourceLocation DUMMY = new ResourceLocation("shrines:chests/dummy");
-	public static final ResourceLocation GUARDIAN = new ResourceLocation("shrines:chests/guardian");
 
 	private static ResourceLocation register(String id, boolean isNetherChest, boolean isVillageChest) {
 		return register(new ResourceLocation(id), isNetherChest, isVillageChest);
