@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
+import com.silverminer.shrines.structures.AbstractStructurePiece;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
@@ -17,9 +18,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -32,6 +34,7 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
+import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
@@ -70,6 +73,7 @@ public class HarbourPieces {
 	protected static final ResourceLocation WAREHOUSE_BIG = new ResourceLocation("shrines:harbour/warehouse2");
 	protected static final ArrayList<ResourceLocation> WAREHOUSE_SMALL = Lists.newArrayList(
 			new ResourceLocation("shrines:harbour/warehouse1"), new ResourceLocation("shrines:harbour/warehouse3"));
+	protected static final ResourceLocation VILLAGER = new ResourceLocation("shrines:harbour/villager");
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
@@ -149,6 +153,14 @@ public class HarbourPieces {
 			pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
 					WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(87, 0, 62)),
 					rotation.add(Rotation.NONE), 0, random, height));
+			if (Config.STRUCTURES.HARBOUR.SPAWN_VILLAGERS.get()) {
+				int maxV = 20 + random.nextInt(20);
+				for (int i = 0; i < maxV; i++) {
+					pieces.add(new HarbourPieces.VillagerPiece(templateManager, VILLAGER,
+							pos.add(new BlockPos(random.nextInt(100), 0, random.nextInt(100))),
+							rotation.add(Rotation.NONE), 0, random, height + 7));
+				}
+			}
 		} else {
 			pos = pos.up(getStartHeigth(pos, chunkGenerator));
 			MutableBoundingBox mbb = MutableBoundingBox.createProper(pos.getX(), pos.getY(), pos.getZ(), pos.getX(),
@@ -277,9 +289,8 @@ public class HarbourPieces {
 			return false;
 		}
 
-		@Override
-		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world, Random rand) {
-			return true;
+		public boolean overwriteBeehives() {
+			return false;
 		}
 	}
 
@@ -336,6 +347,58 @@ public class HarbourPieces {
 		}
 	}
 
+	public static class VillagerPiece extends AbstractStructurePiece {
+		protected int height;
+
+		public VillagerPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
+				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
+			super(StructurePieceTypes.HARBOUR_VILLAGER, templateManagerIn, locationIn, posIn, rotationIn,
+					componentTypeIn);
+			this.height = height;
+		}
+
+		public VillagerPiece(TemplateManager templateManager, CompoundNBT cNBT) {
+			super(StructurePieceTypes.HARBOUR_VILLAGER, templateManager, cNBT);
+			this.height = cNBT.getInt("height");
+		}
+
+		/**
+		 * (abstract) Helper method to read subclass data from NBT
+		 */
+		protected void readAdditional(CompoundNBT tagCompound) {
+			super.readAdditional(tagCompound);
+			tagCompound.putInt("height", this.height);
+		}
+
+		public StructureProcessor getProcessor() {
+			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+		}
+
+		protected int getHeight(ISeedReader world, BlockPos pos) {
+			return this.height;
+		}
+
+		public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
+				Random rand, MutableBoundingBox mbb, ChunkPos chunkPos, BlockPos blockPos) {
+			PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation)
+					.setMirror(Mirror.NONE).addProcessor(this.getProcessor());
+			BlockPos blockpos1 = this.templatePosition
+					.add(Template.transformedBlockPos(placementsettings, new BlockPos(3, 0, 0)));
+			int i = this.getHeight(world, blockpos1);
+			this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
+			BlockPos blockpos2 = this.templatePosition;
+			if (world.getBlockState(blockpos2).getBlock() == Blocks.AIR
+					&& world.getBlockState(blockpos2.up()).getBlock() == Blocks.AIR) {
+				boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos,
+						this.templatePosition);
+
+				this.templatePosition = blockpos2;
+				return flag;
+			} else
+				return false;
+		}
+	}
+
 	public static class HarbourBuildingPiece extends ColorStructurePiece {
 		protected int height;
 
@@ -372,14 +435,42 @@ public class HarbourPieces {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			ArrayList<String> data = Lists.newArrayList("warehouse1_1", "warehouse1_3", "warehouse1_2");
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
 			if (Config.STRUCTURES.HARBOUR.LOOT_CHANCE.get() > rand.nextDouble()) {
-				if (data.contains(function)) {
+				if (function.equals("warehouse1_1")) {
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 					TileEntity tileentity = worldIn.getTileEntity(pos.down());
-					if (tileentity instanceof ChestTileEntity) {
-						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+				}
+				if (function.equals("warehouse1_2") || function.equals("warehouse1_3")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+					tileentity = worldIn.getTileEntity(pos.down(2));
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+					tileentity = worldIn.getTileEntity(pos.down(3));
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+				}
+				if (function.equals("chest_tavern")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down(2));
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR_TAVERN,
+								rand.nextLong());
+					} else {
+						tileentity = worldIn.getTileEntity(pos.down(3));
+						if (tileentity instanceof LockableLootTileEntity) {
+							((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR_TAVERN,
+									rand.nextLong());
+						}
 					}
 				}
 			}

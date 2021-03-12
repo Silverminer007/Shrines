@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ImmutableMap;
 import com.silverminer.shrines.init.StructureInit;
 
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
@@ -28,6 +29,13 @@ public class Generator {
 			DimensionSettings.field_242740_q.getStructures().field_236193_d_.put(structure,
 					new StructureSeparationSettings(structure.getDistance(), structure.getSeparation(),
 							structure.getSeedModifier()));
+			if (structure.isEndStructure())
+				WorldGenRegistries.NOISE_SETTINGS.forEach(dim -> {
+					if (dim.func_242744_a(DimensionSettings.field_242737_f)) {
+						dim.getStructures().field_236193_d_.put(structure, new StructureSeparationSettings(
+								structure.getDistance(), structure.getSeparation(), structure.getSeedModifier()));
+					}
+				});
 		});
 	}
 }

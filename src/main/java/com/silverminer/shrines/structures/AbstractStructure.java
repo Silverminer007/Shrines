@@ -155,4 +155,8 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 
 		return new ChunkPos(k * spacing + i1, l * spacing + j1);
 	}
+
+	public boolean isEndStructure() {
+		return false;
+	}
 }

@@ -3,14 +3,14 @@
 	"pools": [
 		{
 			"rolls": {
-				"min": 4.0,
-				"max": 7.0,
+				"min": 2.0,
+				"max": 6.0,
 				"type": "minecraft:uniform"
 			},
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"weight": 3,
+					"weight": 7,
 					"functions": [
 						{
 							"function": "minecraft:set_count",
@@ -21,26 +21,11 @@
 							}
 						}
 					],
-					"name": "minecraft:diamond"
+					"name": "minecraft:flower_pot"
 				},
 				{
 					"type": "minecraft:item",
-					"weight": 7,
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": {
-								"min": 2.0,
-								"max": 3.0,
-								"type": "minecraft:uniform"
-							}
-						}
-					],
-					"name": "minecraft:iron_ingot"
-				},
-				{
-					"type": "minecraft:item",
-					"weight": 15,
+					"weight": 10,
 					"functions": [
 						{
 							"function": "minecraft:set_count",
@@ -51,11 +36,11 @@
 							}
 						}
 					],
-					"name": "minecraft:cobblestone"
+					"name": "minecraft:honey_bottle"
 				},
 				{
 					"type": "minecraft:item",
-					"weight": 20,
+					"weight": 5,
 					"functions": [
 						{
 							"function": "minecraft:set_count",
@@ -66,7 +51,7 @@
 							}
 						}
 					],
-					"name": "minecraft:cooked_cod"
+					"name": "minecraft:grass"
 				},
 				{
 					"type": "minecraft:item",
@@ -81,7 +66,7 @@
 							}
 						}
 					],
-					"name": "minecraft:lily_pad"
+					"name": "minecraft:milk_bucket"
 				},
 				{
 					"type": "minecraft:item",
@@ -96,52 +81,7 @@
 							}
 						}
 					],
-					"name": "minecraft:iron_ore"
-				},
-				{
-					"type": "minecraft:item",
-					"weight": 15,
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": {
-								"min": 5.0,
-								"max": 10.0,
-								"type": "minecraft:uniform"
-							}
-						}
-					],
-					"name": "minecraft:coal_ore"
-				},
-				{
-					"type": "minecraft:item",
-					"weight": 12,
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": {
-								"min": 5.0,
-								"max": 10.0,
-								"type": "minecraft:uniform"
-							}
-						}
-					],
-					"name": "minecraft:redstone_ore"
-				},
-				{
-					"type": "minecraft:item",
-					"weight": 17,
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": {
-								"min": 5.0,
-								"max": 7.0,
-								"type": "minecraft:uniform"
-							}
-						}
-					],
-					"name": "minecraft:redstone"
+					"name": "minecraft:cod"
 				},
 				{
 					"type": "minecraft:item",
@@ -207,50 +147,7 @@
 							}
 						}
 					],
-					"name": "minecraft:stone"
-				},
-				{
-					"type": "minecraft:item",
-					"weight": 20,
-					"functions": [
-						{
-							"function": "minecraft:set_count",
-							"count": {
-								"min": 4.0,
-								"max": 6.0,
-								"type": "minecraft:uniform"
-							}
-						}
-					],
 					"name": "minecraft:pumpkin"
-				},
-				{
-					"type": "minecraft:item",
-					"weight": 3,
-					"name": "minecraft:saddle"
-				},
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:iron_horse_armor"
-				},
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:golden_horse_armor"
-				},
-				{
-					"type": "minecraft:item",
-					"name": "minecraft:diamond_horse_armor"
-				},
-				{
-					"type": "minecraft:item",
-					"functions": [
-						{
-							"function": "minecraft:enchant_with_levels",
-							"levels": 30,
-							"treasure": true
-						}
-					],
-					"name": "minecraft:book"
 				}
 			]
 		}
