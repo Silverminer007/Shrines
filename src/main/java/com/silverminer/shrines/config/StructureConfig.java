@@ -32,8 +32,7 @@ public class StructureConfig {
 	public final LootableStructureGenConfig JUNGLE_TOWER;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
 	public final LootableStructureGenConfig END_TEMPLE;
-	public final LootableStructureGenConfig DUMMY;
-	public final LootableStructureGenConfig GUARDIAN;
+
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		BALLON = new LootableStructureGenConfig.LootableConfigBuilder("Ballon", "ballon", 143665).setLootChance(0.25D)
 				.setDistance(50).setSeparation(8).setNeedsGround(false).build(SERVER_BUILDER);
@@ -80,10 +79,6 @@ public class StructureConfig {
 		END_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("End Temple", "end_temple", -32 ^ 478392)
 				.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
 				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands").build(SERVER_BUILDER);
-		DUMMY = new LootableStructureGenConfig.LootableConfigBuilder("Dummy", "dummy", 124582353).setLootChance(0.5D)
-				.setDistance(55).setSeparation(12).build(SERVER_BUILDER);
-		GUARDIAN = new LootableStructureGenConfig.LootableConfigBuilder("Guardian", "guardian", 980252343).setLootChance(0.5D)
-				.setDistance(55).setSeparation(12).build(SERVER_BUILDER);
 	}
 
 	public static class StructureGenConfig {

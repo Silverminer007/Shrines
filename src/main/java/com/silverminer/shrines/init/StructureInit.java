@@ -7,10 +7,8 @@ import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.ballon.BallonStructure;
 import com.silverminer.shrines.structures.bees.BeesStructure;
-import com.silverminer.shrines.structures.dummy.DummyStructure;
 import com.silverminer.shrines.structures.end_temple.EndTempleStructure;
 import com.silverminer.shrines.structures.flooded_temple.FloodedTempleStructure;
-import com.silverminer.shrines.structures.guardian.GuardianStructure;
 import com.silverminer.shrines.structures.harbour.HarbourStructure;
 import com.silverminer.shrines.structures.high_tempel.HighTempelStructure;
 import com.silverminer.shrines.structures.jungle_tower.JungleTowerStructure;
@@ -79,12 +77,6 @@ public class StructureInit {
 
 	public static final RegistryObject<EndTempleStructure> END_TEMPLE = register("end_temple",
 			new EndTempleStructure(NoFeatureConfig.field_236558_a_));
-	
-	public static final RegistryObject<DummyStructure> DUMMY = register("dummy",
-			new DummyStructure(NoFeatureConfig.field_236558_a_));
-	
-	public static final RegistryObject<GuardianStructure> GUARDIAN = register("guardian",
-			new GuardianStructure(NoFeatureConfig.field_236558_a_));
 	
 
 	private static <T extends AbstractStructure<NoFeatureConfig>> RegistryObject<T> register(String name, T structure) {
