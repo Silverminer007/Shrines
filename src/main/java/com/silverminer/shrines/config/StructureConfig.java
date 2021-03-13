@@ -16,6 +16,7 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class StructureConfig {
+	
 	public final LootableStructureGenConfig BALLON;
 	public final LootableStructureGenConfig BEES;
 	public final LootableStructureGenConfig HIGH_TEMPEL;
@@ -32,6 +33,7 @@ public class StructureConfig {
 	public final LootableStructureGenConfig JUNGLE_TOWER;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
 	public final LootableStructureGenConfig END_TEMPLE;
+	public final LootableStructureGenConfig GUARDIAN_MEETING;
 
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		BALLON = new LootableStructureGenConfig.LootableConfigBuilder("Ballon", "ballon", 143665).setLootChance(0.25D)
@@ -79,6 +81,8 @@ public class StructureConfig {
 		END_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("End Temple", "end_temple", -32 ^ 478392)
 				.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
 				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands").build(SERVER_BUILDER);
+		GUARDIAN_MEETING = new LootableStructureGenConfig.LootableConfigBuilder("Guardian Meeting", "guardian_meeting", 143665).setLootChance(0.25D)
+				.setDistance(70).setSeparation(17).setNeedsGround(true).build(SERVER_BUILDER);
 	}
 
 	public static class StructureGenConfig {

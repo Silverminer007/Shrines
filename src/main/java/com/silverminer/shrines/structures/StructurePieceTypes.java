@@ -5,6 +5,7 @@ import com.silverminer.shrines.structures.ballon.BallonPiece;
 import com.silverminer.shrines.structures.bees.BeesPiece;
 import com.silverminer.shrines.structures.end_temple.EndTemplePiece;
 import com.silverminer.shrines.structures.flooded_temple.FloodedTemplePiece;
+import com.silverminer.shrines.structures.guardian_meeting.GuardianMeetingPiece;
 import com.silverminer.shrines.structures.harbour.HarbourPieces;
 import com.silverminer.shrines.structures.harbour.HarbourPieces.HarbourBuildingPiece;
 import com.silverminer.shrines.structures.high_tempel.HighTempelPiece;
@@ -17,7 +18,6 @@ import com.silverminer.shrines.structures.prison.InfestedPrisonPiece;
 import com.silverminer.shrines.structures.small_tempel.SmallTempelPiece;
 import com.silverminer.shrines.structures.water_shrine.WaterShrinePiece;
 import com.silverminer.shrines.structures.witch_house.AbandonedWitchHousePiece;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
@@ -57,6 +57,12 @@ public class StructurePieceTypes {
 	public static final IStructurePieceType WITCH_HOUSE = AbandonedWitchHousePiece.Piece::new;
 	
 	public static final IStructurePieceType END_TEMPLE = EndTemplePiece.Piece::new;
+	
+	public static final IStructurePieceType GUARDIAN_MEETING = GuardianMeetingPiece.Piece::new;
+
+
+
+	
 
 	public static void regsiter() {
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "ballon"), BALLON);
@@ -84,5 +90,6 @@ public class StructurePieceTypes {
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "witch_house"), WITCH_HOUSE);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "jungle_tower"), JUNGLE_TOWER);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "end_temple"), END_TEMPLE);
+		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "guardian_meeting"), GUARDIAN_MEETING);
 	}
 }

@@ -54,6 +54,11 @@ public class ModStructureFeatures {
 
 	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> END_TEMPLE = register(
 			"end_temple", StructureInit.END_TEMPLE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+	
+	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> GUARDIAN_MEETING = register(
+			"guardian_meeting", StructureInit.GUARDIAN_MEETING.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+
+	
 
 	private static <FC extends IFeatureConfig, F extends Structure<FC>> StructureFeature<FC, F> register(String name,
 			StructureFeature<FC, F> structureFeature) {
