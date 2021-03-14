@@ -116,7 +116,6 @@ public class CommonEvents {
 					event.getGeneration().withStructure(ModStructureFeatures.GUARDIAN_MEETING);
 				}
 			}
-			LOGGER.info(event.getCategory());
 			if (Config.STRUCTURES.END_TEMPLE.GENERATE.get()
 					&& checkBiome(Config.STRUCTURES.END_TEMPLE.BIOME_CATEGORIES.get(),
 							Config.STRUCTURES.END_TEMPLE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
