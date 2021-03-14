@@ -72,6 +72,8 @@ public class StructureConfig {
 						.setDistance(60).setSeparation(11).build(SERVER_BUILDER);
 		JUNGLE_TOWER = new LootableStructureGenConfig.LootableConfigBuilder("Jungle Tower", "jungle_tower", -987531843)
 				.setDistance(60).setSeparation(11).setBiomes(Category.JUNGLE).build(SERVER_BUILDER);
+		GUARDIAN_MEETING = new LootableStructureGenConfig.LootableConfigBuilder("Guardian Meeting", "guardian_meeting", 143665^98473232).setLootChance(0.75D)
+				.setDistance(70).setSeparation(17).build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
 						"", "Biomes in which Overworld Structures cant generate in")
@@ -81,8 +83,6 @@ public class StructureConfig {
 		END_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("End Temple", "end_temple", -32 ^ 478392)
 				.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
 				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands").build(SERVER_BUILDER);
-		GUARDIAN_MEETING = new LootableStructureGenConfig.LootableConfigBuilder("Guardian Meeting", "guardian_meeting", 143665).setLootChance(0.25D)
-				.setDistance(70).setSeparation(17).setNeedsGround(true).build(SERVER_BUILDER);
 	}
 
 	public static class StructureGenConfig {
