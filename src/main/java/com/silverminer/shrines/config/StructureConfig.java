@@ -73,7 +73,7 @@ public class StructureConfig {
 		JUNGLE_TOWER = new LootableStructureGenConfig.LootableConfigBuilder("Jungle Tower", "jungle_tower", -987531843)
 				.setDistance(60).setSeparation(11).setBiomes(Category.JUNGLE).build(SERVER_BUILDER);
 		GUARDIAN_MEETING = new LootableStructureGenConfig.LootableConfigBuilder("Guardian Meeting", "guardian_meeting", 143665^98473232).setLootChance(0.75D)
-				.setDistance(70).setSeparation(17).build(SERVER_BUILDER);
+				.setDistance(70).setSeparation(17).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
 						"", "Biomes in which Overworld Structures cant generate in")
