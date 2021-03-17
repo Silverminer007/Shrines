@@ -9,7 +9,7 @@ displayName="Shrines" #mandatory
 updateJSONURL="https://github.com/Silverminer007/Shrines/raw/master/updateJSON.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/shrines-structures" #optional
 #logoFile="examplemod.png" #optional
-credits="Thanks for this Mod goes to S1lencegamer(Structure builder), ThanatosLP(Structure builder), J0hanna_(Structure builder), CPTR1(Nether Shrine builder), SamhitApple(Structure builder), Forscher09(Ballon Builder) and everybody else who had his/her part in this mod" #optional
+credits="Thanks for this Mod goes to S1lencegamer(Structure builder and CoAuthor), ThanatosLP(Structure builder), J0hanna_(Structure builder), CPTR1(Nether Shrine builder), SamhitApple(Structure builder), Forscher09(Ballon Builder) and everybody else who had his/her part in this mod" #optional
 authors="Silverminer007" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
