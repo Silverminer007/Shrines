@@ -217,7 +217,7 @@
 							"function": "minecraft:enchant_randomly"
 						}
 					],
-					"name": "minecraft:chain_boots"
+					"name": "minecraft:chainmail_boots"
 				},
 				{
 					"type": "minecraft:item",

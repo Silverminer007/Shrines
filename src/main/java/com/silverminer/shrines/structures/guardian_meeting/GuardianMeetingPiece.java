@@ -12,7 +12,7 @@ import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.BarrelTileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -88,9 +88,9 @@ public class GuardianMeetingPiece {
 			if (Config.STRUCTURES.GUARDIAN_MEETING.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.up(2));
-					if (tileentity instanceof BarrelTileEntity) {
-						((BarrelTileEntity) tileentity).setLootTable(ShrinesLootTables.GUARDIAN_MEETING, rand.nextLong());
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.GUARDIAN_MEETING, rand.nextLong());
 					}
 				}
 			}
