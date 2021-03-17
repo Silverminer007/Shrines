@@ -72,7 +72,7 @@ public class StructureConfig {
 						.setDistance(60).setSeparation(11).build(SERVER_BUILDER);
 		JUNGLE_TOWER = new LootableStructureGenConfig.LootableConfigBuilder("Jungle Tower", "jungle_tower", -987531843)
 				.setDistance(60).setSeparation(11).setBiomes(Category.JUNGLE).build(SERVER_BUILDER);
-		GUARDIAN_MEETING = new LootableStructureGenConfig.LootableConfigBuilder("Guardian Meeting", "guardian_meeting", 143665^98473232).setLootChance(0.75D)
+		GUARDIAN_MEETING = new LootableStructureGenConfig.LootableConfigBuilder("Guardian Meeting", "guardian_meeting", 143665^98473232).setLootChance(1.0D)
 				.setDistance(70).setSeparation(17).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
