@@ -116,11 +116,11 @@ public class CommonEvents {
 					event.getGeneration().withStructure(ModStructureFeatures.GUARDIAN_MEETING);
 				}
 			}
-			if (Config.STRUCTURES.END_TEMPLE.GENERATE.get()
+			/*if (Config.STRUCTURES.END_TEMPLE.GENERATE.get()
 					&& checkBiome(Config.STRUCTURES.END_TEMPLE.BIOME_CATEGORIES.get(),
 							Config.STRUCTURES.END_TEMPLE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
 				event.getGeneration().withStructure(ModStructureFeatures.END_TEMPLE);
-			}
+			}*/
 		}
 
 		private static boolean checkBiome(List<? extends Object> allowedBiomeCategories,
