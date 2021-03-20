@@ -80,9 +80,10 @@ public class StructureConfig {
 				.defineList("structures.blacklisted_biomes",
 						getAllBiomesForCategory(Biome.Category.THEEND, Biome.Category.NETHER),
 						StructureConfig::validateBiome);
-		END_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("End Temple", "end_temple", -32 ^ 478392)
+		/*END_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("End Temple", "end_temple", -32 ^ 478392)
 				.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
-				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands").build(SERVER_BUILDER);
+				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands").build(SERVER_BUILDER);*/
+		END_TEMPLE = null;
 	}
 
 	public static class StructureGenConfig {
