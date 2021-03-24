@@ -8,6 +8,7 @@ import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
@@ -41,6 +42,10 @@ public class SmallTempelPiece {
 		@Override
 		protected boolean useRandomVarianting() {
 			return Config.STRUCTURES.SMALL_TEMPEL.USE_RANDOM_VARIANTING.get();
+		}
+
+		public Block getDefaultPlank() {
+			return Blocks.SPRUCE_PLANKS;
 		}
 
 		@Override

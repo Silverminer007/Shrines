@@ -10,6 +10,7 @@ import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.BarrelTileEntity;
@@ -80,6 +81,10 @@ public class BallonPiece {
 
 		public boolean overwriteSlabs() {
 			return true;
+		}
+
+		public Block getDefaultPlank() {
+			return Blocks.SPRUCE_PLANKS;
 		}
 
 		@Override

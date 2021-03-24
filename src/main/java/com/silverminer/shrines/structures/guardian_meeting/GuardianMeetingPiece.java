@@ -10,6 +10,7 @@ import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.LockableLootTileEntity;
@@ -25,27 +26,26 @@ import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class GuardianMeetingPiece {
-	private static final ArrayList<ResourceLocation> location = Lists.newArrayList(
-			new ResourceLocation("shrines:guardian_meeting/guardian_meeting")); 
+	private static final ArrayList<ResourceLocation> location = Lists
+			.newArrayList(new ResourceLocation("shrines:guardian_meeting/guardian_meeting"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
 		boolean flag = true;
 		if (flag)
-			pieces.add(new GuardianMeetingPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-					rotation, 0, random));
+			pieces.add(new GuardianMeetingPiece.Piece(templateManager, location.get(random.nextInt(location.size())),
+					pos, rotation, 0, random));
 		else
 			// Test function for single variant
 			pieces.add(new GuardianMeetingPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random));
 	}
 
 	public static class Piece extends ColorStructurePiece {
-		protected BlockPos offsetPos = BlockPos.ZERO;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn, Random rand) {
-			super(StructurePieceTypes.GUARDIAN_MEETING, templateManager, location, pos, rotation, componentTypeIn, true);
-			this.offsetPos = new BlockPos(0, 5 + rand.nextInt(25), 0);
+			super(StructurePieceTypes.GUARDIAN_MEETING, templateManager, location, pos, rotation, componentTypeIn,
+					true);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
@@ -57,8 +57,8 @@ public class GuardianMeetingPiece {
 			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
 		}
 
-		public BlockPos getOffsetPos(Random rand) {
-			return this.offsetPos;
+		public Block getDefaultPlank() {
+			return Blocks.SPRUCE_PLANKS;
 		}
 
 		public boolean overwriteWool() {
@@ -90,7 +90,8 @@ public class GuardianMeetingPiece {
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 					TileEntity tileentity = worldIn.getTileEntity(pos.down());
 					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.GUARDIAN_MEETING, rand.nextLong());
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.GUARDIAN_MEETING,
+								rand.nextLong());
 					}
 				}
 			}
