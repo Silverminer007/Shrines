@@ -8,6 +8,7 @@ import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
@@ -58,6 +59,10 @@ public class HighTempelPiece {
 			return Config.STRUCTURES.HIGH_TEMPEL.USE_RANDOM_VARIANTING.get();
 		}
 
+		public Block getDefaultPlank() {
+			return Blocks.DARK_OAK_PLANKS;
+		}
+		
 		public boolean overwriteWool() {
 			return false;
 		}

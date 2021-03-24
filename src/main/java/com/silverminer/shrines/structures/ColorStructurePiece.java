@@ -28,6 +28,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.StructureManager;
@@ -121,6 +123,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 	public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
 			Random rand, MutableBoundingBox mbb, ChunkPos chunkPos, BlockPos blockPos) {
 		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos, blockPos);
+		Biome biome = chunkGen.getBiomeProvider().getNoiseBiome(chunkPos.x, 0, chunkPos.z);
+		LOGGER.info("Biome {} is on {}", biome.getRegistryName(), chunkPos);
 		if (this.useRandomVarianting()) {
 			if (this.overwriteWool()) {
 				for (Block block : WOOLS) {
@@ -137,8 +141,9 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 			}
 			if (this.overwriteWood()) {
 				for (Block block : PLANKS) {
-					if (COLORS.get(block) == null)
-						COLORS.put(block, PLANKS.get(rand.nextInt(PLANKS.size())));
+					if (COLORS.get(block) == null) {
+						COLORS.put(block, this.getPlankByBiome(biome, block, rand));
+					}
 					Block newBlock = COLORS.get(block);
 					if (this.overwritePlanks()) {
 						for (Template.BlockInfo template$blockinfo : this.template.func_215381_a(this.templatePosition,
@@ -379,6 +384,41 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 			}
 		}
 		return flag;
+	}
+
+	protected Block getPlankByBiome(Biome biome, Block block, Random rand) {
+		if (block != this.getDefaultPlank()) {
+			return PLANKS.get(rand.nextInt(PLANKS.size() - 1));
+		} else {
+			switch (biome.getCategory()) {
+			case TAIGA:
+				return Blocks.SPRUCE_PLANKS;
+			case SAVANNA:
+				return Blocks.ACACIA_PLANKS;
+			case JUNGLE:
+				return Blocks.JUNGLE_PLANKS;
+			case SWAMP:
+				return Blocks.OAK_PLANKS;
+			case FOREST:
+				if (biome.getRegistryName() == Biomes.BIRCH_FOREST.getRegistryName()
+						|| biome.getRegistryName() == Biomes.BIRCH_FOREST_HILLS.getRegistryName()
+						|| biome.getRegistryName() == Biomes.TALL_BIRCH_FOREST.getRegistryName()
+						|| biome.getRegistryName() == Biomes.TALL_BIRCH_HILLS.getRegistryName()) {
+					return Blocks.BIRCH_PLANKS;
+				} else if (biome.getRegistryName() == Biomes.DARK_FOREST.getRegistryName()
+						|| biome.getRegistryName() == Biomes.DARK_FOREST_HILLS.getRegistryName()) {
+					return Blocks.ACACIA_PLANKS;
+				} else {
+					return Blocks.OAK_PLANKS;
+				}
+			default:
+				return PLANKS.get(rand.nextInt(PLANKS.size() - 1));
+			}
+		}
+	}
+
+	public Block getDefaultPlank() {
+		return Blocks.OAK_PLANKS;
 	}
 
 	protected abstract boolean useRandomVarianting();

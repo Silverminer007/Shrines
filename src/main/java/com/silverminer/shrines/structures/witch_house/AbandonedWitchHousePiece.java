@@ -10,6 +10,7 @@ import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.LockableLootTileEntity;
@@ -30,8 +31,8 @@ public class AbandonedWitchHousePiece {
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
-		pieces.add(new AbandonedWitchHousePiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-				rotation, 0, true));
+		pieces.add(new AbandonedWitchHousePiece.Piece(templateManager, location.get(random.nextInt(location.size())),
+				pos, rotation, 0, true));
 	}
 
 	public static class Piece extends ColorStructurePiece {
@@ -44,6 +45,10 @@ public class AbandonedWitchHousePiece {
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.WITCH_HOUSE, templateManager, cNBT);
+		}
+
+		public Block getDefaultPlank() {
+			return Blocks.SPRUCE_PLANKS;
 		}
 
 		@Override

@@ -10,6 +10,7 @@ import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
@@ -41,25 +42,40 @@ public class PlayerhousePiece {
 		if (flag)
 			if (random.nextInt(2) == 0)
 				pieces.add(new PlayerhousePiece.Piece(templateManager, location.get(random.nextInt(location.size())),
-						pos, rotation, 0, true));
+						pos, rotation, 0, true, 1));
 			else
 				pieces.add(new PlayerhousePiece.Piece(templateManager,
-						v2_location.get(random.nextInt(v2_location.size())), pos, rotation, 0, true));
+						v2_location.get(random.nextInt(v2_location.size())), pos, rotation, 0, true, 2));
 		else
 			pieces.add(new PlayerhousePiece.Piece(templateManager, location.get(location.size() - 1), pos, rotation, 0,
-					true));
+					true, 0));
 	}
 
 	public static class Piece extends ColorStructurePiece {
+		public int v = 0;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, boolean defaultValue) {
+				int componentTypeIn, boolean defaultValue, int vIn) {
 			super(StructurePieceTypes.PLAYER_HOUSE, templateManager, location, pos, rotation, componentTypeIn,
 					defaultValue);
+			this.v = vIn;
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.PLAYER_HOUSE, templateManager, cNBT);
+			this.v = cNBT.getInt("version");
+		}
+
+		protected void readAdditional(CompoundNBT tagCompound) {
+			super.readAdditional(tagCompound);
+			tagCompound.putInt("version", this.v);
+		}
+
+		public Block getDefaultPlank() {
+			if (v == 2)
+				return Blocks.SPRUCE_PLANKS;
+			else
+				return Blocks.OAK_PLANKS;
 		}
 
 		@Override

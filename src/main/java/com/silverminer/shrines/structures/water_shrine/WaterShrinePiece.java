@@ -8,6 +8,7 @@ import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ChestTileEntity;
@@ -36,6 +37,10 @@ public class WaterShrinePiece {
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.WATER_SHRINE, templateManager, cNBT);
+		}
+
+		public Block getDefaultPlank() {
+			return Blocks.SPRUCE_PLANKS;
 		}
 
 		@Override
