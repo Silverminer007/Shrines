@@ -124,7 +124,6 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 			Random rand, MutableBoundingBox mbb, ChunkPos chunkPos, BlockPos blockPos) {
 		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos, blockPos);
 		Biome biome = chunkGen.getBiomeProvider().getNoiseBiome(chunkPos.x, 0, chunkPos.z);
-		LOGGER.info("Biome {} is on {}", biome.getRegistryName(), chunkPos);
 		if (this.useRandomVarianting()) {
 			if (this.overwriteWool()) {
 				for (Block block : WOOLS) {
