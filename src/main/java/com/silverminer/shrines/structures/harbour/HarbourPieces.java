@@ -153,12 +153,12 @@ public class HarbourPieces {
 			pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
 					WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(87, 0, 62)),
 					rotation.add(Rotation.NONE), 0, random, height));
-			if (Config.STRUCTURES.HARBOUR.SPAWN_VILLAGERS.get()) {
+			if (true){//Config.STRUCTURES.HARBOUR.SPAWN_VILLAGERS.get()) {
 				int maxV = 20 + random.nextInt(20);
 				for (int i = 0; i < maxV; i++) {
 					pieces.add(new HarbourPieces.VillagerPiece(templateManager, VILLAGER,
 							pos.add(new BlockPos(random.nextInt(100), 0, random.nextInt(100))),
-							rotation.add(Rotation.NONE), 0, random, height + 7));
+							rotation, 0, random));
 				}
 			}
 		} else {
@@ -348,34 +348,19 @@ public class HarbourPieces {
 	}
 
 	public static class VillagerPiece extends AbstractStructurePiece {
-		protected int height;
 
 		public VillagerPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
-				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
+				Rotation rotationIn, int componentTypeIn, Random rand) {
 			super(StructurePieceTypes.HARBOUR_VILLAGER, templateManagerIn, locationIn, posIn, rotationIn,
 					componentTypeIn);
-			this.height = height;
 		}
 
 		public VillagerPiece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.HARBOUR_VILLAGER, templateManager, cNBT);
-			this.height = cNBT.getInt("height");
-		}
-
-		/**
-		 * (abstract) Helper method to read subclass data from NBT
-		 */
-		protected void readAdditional(CompoundNBT tagCompound) {
-			super.readAdditional(tagCompound);
-			tagCompound.putInt("height", this.height);
 		}
 
 		public StructureProcessor getProcessor() {
 			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
-		}
-
-		protected int getHeight(ISeedReader world, BlockPos pos) {
-			return this.height;
 		}
 
 		public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
@@ -389,13 +374,12 @@ public class HarbourPieces {
 			BlockPos blockpos2 = this.templatePosition;
 			if (world.getBlockState(blockpos2).getBlock() == Blocks.AIR
 					&& world.getBlockState(blockpos2.up()).getBlock() == Blocks.AIR) {
-				boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos,
+				super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos,
 						this.templatePosition);
 
 				this.templatePosition = blockpos2;
-				return flag;
-			} else
-				return false;
+			}
+			return true;
 		}
 	}
 

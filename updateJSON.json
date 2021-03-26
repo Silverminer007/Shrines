@@ -5,14 +5,15 @@
 		"1.16.3-recommended": "1.16.4-1.6.0",
 		"1.16.4-recommended": "1.16.4-1.6.0",
 		"1.16.5-recommended": "1.16.4-1.6.0",
-		"1.16.3-latest": "1.16.5-1.7.0-Beta2",
-		"1.16.4-latest": "1.16.5-1.7.0-Beta2",
-		"1.16.5-latest": "1.16.5-1.7.0-Beta2"
+		"1.16.3-latest": "1.16.5-1.7.0-Beta4",
+		"1.16.4-latest": "1.16.5-1.7.0-Beta4",
+		"1.16.5-latest": "1.16.5-1.7.0-Beta4"
 	},
 	"1.16.5": {
 		"1.16.5-1.7.0-Beta1": "Made Harbour playable, Added SamhitApple's Structures 'Infested Prison' and 'Abandoned Witch House'",
 		"1.16.5-1.7.0-Beta2": "Added Villagers to the harbour, removed anvils from harbour, added loot to the harbour, Added jungle Tower structure of SamhitApple; Added Guardian Meeting; Random varianting planks are now choosen by biome",
-		"1.16.5-1.7.0-Beta3": ""
+		"1.16.5-1.7.0-Beta3": "Fixed game crashes when try to locate a structure",
+		"1.16.5-1.7.0-Beta4": "Added loot to jungle tower; Removed option to disable villagers in harbour to prevent crashing sometimes, will be added again later"
 	},
 	"1.16.4": {
 		"1.16.4-1.4.0": "Updated from 1.16.3 to 1.16.4",
