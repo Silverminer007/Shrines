@@ -110,17 +110,20 @@ public class CommonEvents {
 						Config.STRUCTURES.JUNGLE_TOWER.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
 					event.getGeneration().withStructure(ModStructureFeatures.JUNGLE_TOWER);
 				}
-				if (Config.STRUCTURES.GUARDIAN_MEETING.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.GUARDIAN_MEETING.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.GUARDIAN_MEETING.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
+				if (Config.STRUCTURES.GUARDIAN_MEETING.GENERATE.get()
+						&& checkBiome(Config.STRUCTURES.GUARDIAN_MEETING.BIOME_CATEGORIES.get(),
+								Config.STRUCTURES.GUARDIAN_MEETING.BIOME_BLACKLIST.get(), event.getName(),
+								event.getCategory())) {
 					event.getGeneration().withStructure(ModStructureFeatures.GUARDIAN_MEETING);
 				}
 			}
-			/*if (Config.STRUCTURES.END_TEMPLE.GENERATE.get()
-					&& checkBiome(Config.STRUCTURES.END_TEMPLE.BIOME_CATEGORIES.get(),
-							Config.STRUCTURES.END_TEMPLE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-				event.getGeneration().withStructure(ModStructureFeatures.END_TEMPLE);
-			}*/
+			/*
+			 * if (Config.STRUCTURES.END_TEMPLE.GENERATE.get() &&
+			 * checkBiome(Config.STRUCTURES.END_TEMPLE.BIOME_CATEGORIES.get(),
+			 * Config.STRUCTURES.END_TEMPLE.BIOME_BLACKLIST.get(), event.getName(),
+			 * event.getCategory())) {
+			 * event.getGeneration().withStructure(ModStructureFeatures.END_TEMPLE); }
+			 */
 		}
 
 		private static boolean checkBiome(List<? extends Object> allowedBiomeCategories,
