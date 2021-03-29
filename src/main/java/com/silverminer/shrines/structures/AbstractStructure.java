@@ -159,4 +159,8 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	public boolean isEndStructure() {
 		return false;
 	}
+
+	public boolean isNetherStructure() {
+		return false;
+	}
 }

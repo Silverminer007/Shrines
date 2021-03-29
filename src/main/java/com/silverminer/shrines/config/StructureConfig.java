@@ -27,8 +27,8 @@ public class StructureConfig {
 	public final LootableStructureGenConfig PLAYER_HOUSE;
 	public final LootableStructureGenConfig MINERAL_TEMPLE;
 	public final LootableStructureGenConfig FLOODED_TEMPLE;
-	//public final HarbourStructureGenConfig HARBOUR;
-	public final LootableStructureGenConfig HARBOUR;
+	public final HarbourStructureGenConfig HARBOUR;
+	//public final LootableStructureGenConfig HARBOUR;
 	public final LootableStructureGenConfig INFESTED_PRISON;
 	public final LootableStructureGenConfig WITCH_HOUSE;
 	public final LootableStructureGenConfig JUNGLE_TOWER;
@@ -57,14 +57,14 @@ public class StructureConfig {
 				576143753).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
 		FLOODED_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("Flooded Temple", "flooded_temple",
 				54315143).setDistance(50).setSeparation(10).setUseRandomVarianting(false).build(SERVER_BUILDER);
-		/*HARBOUR = new HarbourStructureGenConfig.LootableHarbourConfigBuilder("Harbour", "harbour", 651398043)
+		HARBOUR = new HarbourStructureGenConfig.LootableHarbourConfigBuilder("Harbour", "harbour", 651398043)
 				.setDistance(50).setSeparation(8)
 				.setBiomes(Biome.Category.PLAINS, Biome.Category.FOREST, Biome.Category.TAIGA, Biome.Category.SAVANNA,
 						Biome.Category.JUNGLE, Biome.Category.MESA, Biome.Category.ICY, Biome.Category.SWAMP,
 						Biome.Category.MUSHROOM)
-				.build(SERVER_BUILDER);*/
-		HARBOUR = new LootableStructureGenConfig.LootableConfigBuilder("Harbour", "harbour", 651398043).setDistance(50)
-				.setSeparation(8).build(SERVER_BUILDER);
+				.build(SERVER_BUILDER);
+		/*HARBOUR = new LootableStructureGenConfig.LootableConfigBuilder("Harbour", "harbour", 651398043).setDistance(50)
+				.setSeparation(8).build(SERVER_BUILDER);*/
 		INFESTED_PRISON = new LootableStructureGenConfig.LootableConfigBuilder("Infested Prison", "infested_prison",
 				-567483014).setDistance(60).setSeparation(11).build(SERVER_BUILDER);
 		WITCH_HOUSE = new LootableStructureGenConfig.LootableConfigBuilder("Abandoned Witch House", "witch_house",

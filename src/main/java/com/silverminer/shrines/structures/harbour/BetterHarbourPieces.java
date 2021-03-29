@@ -37,8 +37,8 @@ import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class HarbourPieces {
-	protected static final Logger LOG = LogManager.getLogger(HarbourPieces.class);
+public class BetterHarbourPieces {
+	protected static final Logger LOG = LogManager.getLogger(BetterHarbourPieces.class);
 
 	protected static final ArrayList<ResourceLocation> GROUND = Lists.newArrayList(
 			new ResourceLocation("shrines:harbour/ground/harbour_ground_1_p1"),
@@ -67,82 +67,8 @@ public class HarbourPieces {
 		int height = getStartHeigth(pos, chunkGenerator) - 6;
 		pos = new BlockPos(pos.getX(), height, pos.getZ());
 		LOG.info("Generating Harbourpieces on: {}, with height: {}", pos, height);
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(0),
-				pos.add(new BlockPos(0, 0, 0).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(1),
-				pos.add(new BlockPos(47, 0, 0).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(2),
-				pos.add(new BlockPos(94, 0, 0).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(3),
-				pos.add(new BlockPos(0, 0, 47).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(4),
-				pos.add(new BlockPos(47, 0, 47).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(5),
-				pos.add(new BlockPos(94, 0, 47).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(6),
-				pos.add(new BlockPos(0, 0, 94).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(7),
-				pos.add(new BlockPos(47, 0, 94).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(8),
-				pos.add(new BlockPos(94, 0, 94).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE, pos.add(new BlockPos(24, 0, 18)),
-				rotation.add(Rotation.CLOCKWISE_180), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE, pos.add(new BlockPos(7, 0, 45)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE, pos.add(new BlockPos(75, 0, 85)),
-				rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, TAVERN, pos.add(new BlockPos(20, 0, 47)),
-				rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE, pos.add(new BlockPos(43, 0, 15)),
-				rotation.add(Rotation.NONE), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE, pos.add(new BlockPos(70, 0, 25)),
-				rotation.add(Rotation.CLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE, pos.add(new BlockPos(97, 0, 43)),
-				rotation.add(Rotation.CLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE, pos.add(new BlockPos(54, 0, 57)),
-				rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(78, 0, 37)),
-				rotation.add(Rotation.CLOCKWISE_180), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(43, 0, 89)),
-				rotation.add(Rotation.CLOCKWISE_180), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(6, 0, 85)),
-				rotation.add(Rotation.NONE), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(60, 0, 85)),
-				rotation.add(Rotation.NONE), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(85, 0, 53)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(39, 0, 28)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WAREHOUSE_BIG,
-				pos.add(new BlockPos(64, 0, 8)), rotation.add(Rotation.CLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(20, 0, 98)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(57, 0, 90)),
-				rotation.add(Rotation.CLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(85, 0, 9)),
-				rotation.add(Rotation.CLOCKWISE_180), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(83, 0, 20)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(86, 0, 35)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(47, 0, 63)),
-				rotation.add(Rotation.NONE), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(87, 0, 62)),
-				rotation.add(Rotation.NONE), 0, random, height));
-		LOG.debug("Starting villager generation");
-		if (Config.STRUCTURES.HARBOUR.SPAWN_VILLAGERS.get()) {
-			int maxV = 20 + random.nextInt(20);
-			for (int i = 0; i < maxV; i++) {
-				pieces.add(new HarbourPieces.VillagerPiece(templateManager, VILLAGER,
-						pos.add(new BlockPos(random.nextInt(100), 0, random.nextInt(100))), rotation, 0, random));
-			}
+		for(int s = 1; s >= -1; s -= 2) {
+			
 		}
 	}
 
