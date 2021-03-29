@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.block.AbstractButtonBlock;
@@ -38,6 +41,7 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class ColorStructurePiece extends AbstractStructurePiece {
+	protected static final Logger LOG = LogManager.getLogger(ColorStructurePiece.class);
 	protected static final ArrayList<Block> WOOLS = Lists.newArrayList(Blocks.WHITE_WOOL, Blocks.ORANGE_WOOL,
 			Blocks.MAGENTA_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.YELLOW_WOOL, Blocks.LIME_WOOL, Blocks.PINK_WOOL,
 			Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.BLACK_WOOL, Blocks.CYAN_WOOL, Blocks.PURPLE_WOOL,
