@@ -62,6 +62,7 @@ public class StructureConfig {
 				.setBiomes(Biome.Category.PLAINS, Biome.Category.FOREST, Biome.Category.TAIGA, Biome.Category.SAVANNA,
 						Biome.Category.JUNGLE, Biome.Category.MESA, Biome.Category.ICY, Biome.Category.SWAMP,
 						Biome.Category.MUSHROOM)
+				//.setBiomes(Biome.Category.RIVER)
 				.build(SERVER_BUILDER);
 		/*HARBOUR = new LootableStructureGenConfig.LootableConfigBuilder("Harbour", "harbour", 651398043).setDistance(50)
 				.setSeparation(8).build(SERVER_BUILDER);*/

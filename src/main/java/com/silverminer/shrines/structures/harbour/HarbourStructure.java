@@ -87,6 +87,8 @@ public class HarbourStructure extends AbstractStructure<NoFeatureConfig> {
 			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.randomRotation(this.rand);
 			HarbourPieces.generate(templateManager, blockpos, rotation, this.components, this.rand, chunkGenerator);
+			//BetterHarbourPieces.generate(templateManager, blockpos, rotation, this.components, this.rand, chunkGenerator);
+			//HarbourBallonPiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
 			this.recalculateStructureSize();
 		}
 	}

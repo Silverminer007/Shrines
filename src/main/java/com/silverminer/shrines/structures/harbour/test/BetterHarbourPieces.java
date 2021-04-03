@@ -1,0 +1,229 @@
+package com.silverminer.shrines.structures.harbour.test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Lists;
+import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.loot_tables.ShrinesLootTables;
+import com.silverminer.shrines.structures.ColorStructurePiece;
+import com.silverminer.shrines.structures.StructurePieceTypes;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.world.ISeedReader;
+import net.minecraft.world.IServerWorld;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
+import net.minecraft.world.gen.feature.template.StructureProcessor;
+import net.minecraft.world.gen.feature.template.TemplateManager;
+
+public class BetterHarbourPieces {
+	protected static final Logger LOG = LogManager.getLogger(BetterHarbourPieces.class);
+
+	protected static List<StructurePiece> PIECES = null;
+	protected static final ArrayList<MutableBoundingBox> mbbs = Lists.newArrayList();
+
+	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
+			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+		PIECES = pieces;
+		int height = HarbourHelper.getStartHeigth(pos, chunkGenerator) - 6;
+		pos = new BlockPos(pos.getX(), height, pos.getZ());
+		LOG.info("Generating Harbourpieces on: {}, with height: {}", pos, height);
+		BlockPos ecke = new BlockPos(0, 0, 0);
+		ArrayList<MutableBoundingBox> bounds = Lists.newArrayList();
+		for (int i = 1; i < 70; i = (int) Math.ceil(i * 1.25)) {
+			for (int s = 1; s >= -1; s = s - 2) {
+				ecke = pos.add(i * s, 0, i * s);
+				for (int x = 0; x <= (Math.abs(i * s * 2)); x = x + 1) {
+					BlockPos position = new BlockPos(ecke.getX() + (x * -s), 0, ecke.getZ());
+					ResourceLocation r = checkPos(position, bounds, chunkGenerator, i);
+					if (r == null)
+						break;
+					PIECES.add(new BetterHarbourPieces.HarbourBuildingPiece(templateManager, r, position, rotation, 0, random,
+							height));
+
+				}
+				for (int z = 0; z <= (Math.abs(i * s * 2)); z = z + 1) {
+					BlockPos position = new BlockPos(ecke.getX(), 0, ecke.getZ() + (z * -s));
+					ResourceLocation r = checkPos(position, bounds, chunkGenerator, i);
+					if (r == null)
+						break;
+					PIECES.add(new BetterHarbourPieces.HarbourBuildingPiece(templateManager, r, position, rotation, 0, random,
+							height));
+
+				}
+			}
+		}
+		pieces = PIECES;
+	}
+
+	protected static ResourceLocation checkPos(BlockPos pos, ArrayList<MutableBoundingBox> bounds, ChunkGenerator cG,
+			int distance) {
+		ArrayList<ResourceLocation> pp = HarbourHelper.getPossiblePieces(distance);
+		if (pp == null || pp.isEmpty()) {
+			return null;
+		}
+		MutableBoundingBox mbb = MutableBoundingBox.createProper(0, 0, 0, 0, 0, 0);
+		ResourceLocation piece = null;
+		for (ResourceLocation r : pp) {
+			mbb = HarbourHelper.getBoundByPieces(r);
+			mbb.offset(pos.getX(), pos.getY(), pos.getZ());
+			if (validatePiecePos(pos, mbb, cG)) {
+				piece = r;
+				break;
+			}
+		}
+		if (piece == null || mbb == null)
+			return null;
+		mbbs.add(mbb);
+		return piece;
+	}
+
+	public static boolean validatePiecePos(BlockPos pos, MutableBoundingBox mbb, ChunkGenerator cG) {
+		for (MutableBoundingBox m : mbbs) {
+			if (HarbourHelper.areBoundingBoxesIntersecting(m, mbb)) {
+				return false;
+			}
+		}
+		for (int x = mbb.minX; x <= mbb.maxX; x++) {
+			for (int z = mbb.minZ; z <= mbb.maxZ; z++) {
+				int n = 0;
+				BlockState state = cG.func_230348_a_(x, z).getBlockState(new BlockPos(x, pos.getY() - n, z));
+				while (!state.isSolid()) {
+					n++;
+					state = cG.func_230348_a_(x, z).getBlockState(new BlockPos(x, pos.getY() - n, z));
+					LOG.info("Checking state {} for validation. It's block {}", state, state.getBlock());
+					if (n > 3) {
+						return false;
+					} else if (state.getBlock() instanceof FlowingFluidBlock) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	public static class HarbourBuildingPiece extends ColorStructurePiece {
+		protected int height;
+
+		public HarbourBuildingPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
+				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
+			super(StructurePieceTypes.BETTER_HARBOUR, templateManagerIn, locationIn, posIn, rotationIn, componentTypeIn,
+					true);
+			this.height = height;
+		}
+
+		public HarbourBuildingPiece(TemplateManager templateManager, CompoundNBT cNBT) {
+			super(StructurePieceTypes.BETTER_HARBOUR, templateManager, cNBT);
+			this.height = cNBT.getInt("height");
+			this.diamonds = cNBT.getInt("diamonds");
+		}
+
+		/**
+		 * (abstract) Helper method to read subclass data from NBT
+		 */
+		protected void readAdditional(CompoundNBT tagCompound) {
+			super.readAdditional(tagCompound);
+			tagCompound.putInt("height", this.height);
+			tagCompound.putInt("diamonds", this.diamonds);
+		}
+
+		public StructureProcessor getProcessor() {
+			return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
+		}
+
+		public boolean overwriteOres() {
+			return true;
+		}
+
+		@Override
+		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
+				MutableBoundingBox sbb) {
+			super.handleDataMarker(function, pos, worldIn, rand, sbb);
+			if (Config.STRUCTURES.HARBOUR.LOOT_CHANCE.get() > rand.nextDouble()) {
+				if (function.equals("warehouse1_1")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+				}
+				if (function.equals("warehouse1_2") || function.equals("warehouse1_3")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+					tileentity = worldIn.getTileEntity(pos.down(2));
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+					tileentity = worldIn.getTileEntity(pos.down(3));
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+				}
+				if (function.equals("chest_tavern")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down(2));
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR_TAVERN,
+								rand.nextLong());
+					} else {
+						tileentity = worldIn.getTileEntity(pos.down(3));
+						if (tileentity instanceof LockableLootTileEntity) {
+							((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR_TAVERN,
+									rand.nextLong());
+						}
+					}
+				}
+			}
+		}
+
+		@Override
+		protected boolean useRandomVarianting() {
+			return Config.STRUCTURES.HARBOUR.USE_RANDOM_VARIANTING.get();
+		}
+
+		public boolean overwriteWool() {
+			return false;
+		}
+
+		protected int getHeight(ISeedReader world, BlockPos pos) {
+			return this.height + 7;
+		}
+
+		protected int diamonds = 0;
+
+		@Override
+		public boolean validateBlock(BlockPos pos, BlockState newState, ISeedReader world, Random rand) {
+			if (newState.getBlock() == Blocks.DIAMOND_ORE) {
+				if (diamonds <= 16) {
+					this.diamonds++;
+					return true;
+				} else {
+					if (COLORS.get(newState.getBlock()) == null)
+						COLORS.put(newState.getBlock(), ORES.get(rand.nextInt(ORES.size())));
+					world.setBlockState(pos, COLORS.get(newState.getBlock()).getDefaultState(), 3);
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+}

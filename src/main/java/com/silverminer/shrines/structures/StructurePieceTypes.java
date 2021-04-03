@@ -8,6 +8,7 @@ import com.silverminer.shrines.structures.flooded_temple.FloodedTemplePiece;
 import com.silverminer.shrines.structures.guardian_meeting.GuardianMeetingPiece;
 import com.silverminer.shrines.structures.harbour.HarbourPieces;
 import com.silverminer.shrines.structures.harbour.HarbourPieces.HarbourBuildingPiece;
+import com.silverminer.shrines.structures.harbour.test.BetterHarbourPieces;
 import com.silverminer.shrines.structures.high_tempel.HighTempelPiece;
 import com.silverminer.shrines.structures.jungle_tower.JungleTowerPiece;
 import com.silverminer.shrines.structures.mineral_temple.MineralTemplePiece;
@@ -45,6 +46,7 @@ public class StructurePieceTypes {
 	public static final IStructurePieceType FLOODED_TEMPLE = FloodedTemplePiece.Piece::new;
 	
 	public static final IStructurePieceType HARBOUR_HOUSE = HarbourBuildingPiece::new;
+	public static final IStructurePieceType BETTER_HARBOUR = BetterHarbourPieces.HarbourBuildingPiece::new;
 	
 	public static final IStructurePieceType HARBOUR_GROUND = HarbourPieces.HarbourPiece::new;
 	
@@ -91,5 +93,6 @@ public class StructurePieceTypes {
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "jungle_tower"), JUNGLE_TOWER);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "end_temple"), END_TEMPLE);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "guardian_meeting"), GUARDIAN_MEETING);
+		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "better_harbour"), BETTER_HARBOUR);
 	}
 }
