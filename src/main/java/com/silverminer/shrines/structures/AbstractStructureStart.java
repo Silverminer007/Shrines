@@ -38,10 +38,13 @@ public abstract class AbstractStructureStart<C extends IFeatureConfig> extends S
 				for (int z = this.bounds.minZ - 1; this.bounds.maxZ + 1 >= z; ++z) {
 					for (int y = this.bounds.minY - 1; y > 1; --y) {
 						BlockPos pos = new BlockPos(x, y, z);
-						if (shouldBlockBeReplaced(seedReader, pos)) {
-							replaceBlock(seedReader, pos);
-						} else {
-							break;
+						try {
+							if (shouldBlockBeReplaced(seedReader, pos)) {
+								replaceBlock(seedReader, pos);
+							} else {
+								break;
+							}
+						} catch (Throwable e) {
 						}
 					}
 				}
