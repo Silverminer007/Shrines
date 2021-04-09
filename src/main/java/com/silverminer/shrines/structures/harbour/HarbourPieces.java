@@ -61,6 +61,12 @@ public class HarbourPieces {
 	protected static final ArrayList<ResourceLocation> WAREHOUSE_SMALL = Lists.newArrayList(
 			new ResourceLocation("shrines:harbour/warehouse1"), new ResourceLocation("shrines:harbour/warehouse3"));
 	protected static final ResourceLocation VILLAGER = new ResourceLocation("shrines:harbour/villager");
+	protected static final ResourceLocation[] ZOMBIE = new ResourceLocation[] {
+			new ResourceLocation("shrines:harbour/zombie_villager1"),
+			new ResourceLocation("shrines:harbour/zombie_villager2"),
+			new ResourceLocation("shrines:harbour/zombie_villager3"),
+			new ResourceLocation("shrines:harbour/zombie_villager4"),
+			new ResourceLocation("shrines:harbour/zombie_villager5") };
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
@@ -85,63 +91,80 @@ public class HarbourPieces {
 				pos.add(new BlockPos(47, 0, 94).rotate(rotation)), rotation, 0, random, height));
 		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(8),
 				pos.add(new BlockPos(94, 0, 94).rotate(rotation)), rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE, pos.add(new BlockPos(24, 0, 18)),
-				rotation.add(Rotation.CLOCKWISE_180), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE, pos.add(new BlockPos(7, 0, 45)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE, pos.add(new BlockPos(75, 0, 85)),
-				rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, TAVERN, pos.add(new BlockPos(20, 0, 47)),
-				rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE, pos.add(new BlockPos(43, 0, 15)),
-				rotation.add(Rotation.NONE), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE, pos.add(new BlockPos(70, 0, 25)),
-				rotation.add(Rotation.CLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE, pos.add(new BlockPos(97, 0, 43)),
-				rotation.add(Rotation.CLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE, pos.add(new BlockPos(54, 0, 57)),
-				rotation, 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(78, 0, 37)),
-				rotation.add(Rotation.CLOCKWISE_180), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(43, 0, 89)),
-				rotation.add(Rotation.CLOCKWISE_180), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(6, 0, 85)),
-				rotation.add(Rotation.NONE), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(60, 0, 85)),
-				rotation.add(Rotation.NONE), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(85, 0, 53)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
-		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE, pos.add(new BlockPos(39, 0, 28)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE,
+				pos.add(new BlockPos(24, 0, 18).rotate(rotation)), rotation.add(Rotation.CLOCKWISE_180), 0, random,
+				height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE,
+				pos.add(new BlockPos(7, 0, 45).rotate(rotation)), rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random,
+				height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, HOUSE,
+				pos.add(new BlockPos(75, 0, 85).rotate(rotation)), rotation, 0, random, height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, TAVERN,
+				pos.add(new BlockPos(20, 0, 47).rotate(rotation)), rotation, 0, random, height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE,
+				pos.add(new BlockPos(43, 0, 15).rotate(rotation)), rotation.add(Rotation.NONE), 0, random, height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE,
+				pos.add(new BlockPos(70, 0, 25).rotate(rotation)), rotation.add(Rotation.CLOCKWISE_90), 0, random,
+				height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE,
+				pos.add(new BlockPos(97, 0, 43).rotate(rotation)), rotation.add(Rotation.CLOCKWISE_90), 0, random,
+				height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WARE,
+				pos.add(new BlockPos(54, 0, 57).rotate(rotation)), rotation, 0, random, height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE,
+				pos.add(new BlockPos(78, 0, 37).rotate(rotation)), rotation.add(Rotation.CLOCKWISE_180), 0, random,
+				height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE,
+				pos.add(new BlockPos(43, 0, 89).rotate(rotation)), rotation.add(Rotation.CLOCKWISE_180), 0, random,
+				height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE,
+				pos.add(new BlockPos(6, 0, 85).rotate(rotation)), rotation.add(Rotation.NONE), 0, random, height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE,
+				pos.add(new BlockPos(60, 0, 85).rotate(rotation)), rotation.add(Rotation.NONE), 0, random, height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE,
+				pos.add(new BlockPos(85, 0, 53).rotate(rotation)), rotation.add(Rotation.COUNTERCLOCKWISE_90), 0,
+				random, height));
+		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, CRANE,
+				pos.add(new BlockPos(39, 0, 28).rotate(rotation)), rotation.add(Rotation.COUNTERCLOCKWISE_90), 0,
+				random, height));
 		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager, WAREHOUSE_BIG,
-				pos.add(new BlockPos(64, 0, 8)), rotation.add(Rotation.CLOCKWISE_90), 0, random, height));
+				pos.add(new BlockPos(64, 0, 8).rotate(rotation)), rotation.add(Rotation.CLOCKWISE_90), 0, random,
+				height));
 		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(20, 0, 98)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
+				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())),
+				pos.add(new BlockPos(20, 0, 98).rotate(rotation)), rotation.add(Rotation.COUNTERCLOCKWISE_90), 0,
+				random, height));
 		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(57, 0, 90)),
-				rotation.add(Rotation.CLOCKWISE_90), 0, random, height));
+				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())),
+				pos.add(new BlockPos(57, 0, 90).rotate(rotation)), rotation.add(Rotation.CLOCKWISE_90), 0, random,
+				height));
 		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(85, 0, 9)),
-				rotation.add(Rotation.CLOCKWISE_180), 0, random, height));
+				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())),
+				pos.add(new BlockPos(85, 0, 9).rotate(rotation)), rotation.add(Rotation.CLOCKWISE_180), 0, random,
+				height));
 		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(83, 0, 20)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
+				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())),
+				pos.add(new BlockPos(83, 0, 20).rotate(rotation)), rotation.add(Rotation.COUNTERCLOCKWISE_90), 0,
+				random, height));
 		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(86, 0, 35)),
-				rotation.add(Rotation.COUNTERCLOCKWISE_90), 0, random, height));
+				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())),
+				pos.add(new BlockPos(86, 0, 35).rotate(rotation)), rotation.add(Rotation.COUNTERCLOCKWISE_90), 0,
+				random, height));
 		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(47, 0, 63)),
-				rotation.add(Rotation.NONE), 0, random, height));
+				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())),
+				pos.add(new BlockPos(47, 0, 63).rotate(rotation)), rotation.add(Rotation.NONE), 0, random, height));
 		pieces.add(new HarbourPieces.HarbourBuildingPiece(templateManager,
-				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())), pos.add(new BlockPos(87, 0, 62)),
-				rotation.add(Rotation.NONE), 0, random, height));
+				WAREHOUSE_SMALL.get(random.nextInt(WAREHOUSE_SMALL.size())),
+				pos.add(new BlockPos(87, 0, 62).rotate(rotation)), rotation.add(Rotation.NONE), 0, random, height));
 		LOG.debug("Starting villager generation");
 		if (Config.STRUCTURES.HARBOUR.SPAWN_VILLAGERS.get()) {
 			int maxV = 20 + random.nextInt(20);
+			boolean zombie = random.nextInt(10) == 0;
 			for (int i = 0; i < maxV; i++) {
-				pieces.add(new HarbourPieces.VillagerPiece(templateManager, VILLAGER,
-						pos.add(new BlockPos(random.nextInt(100), 0, random.nextInt(100))), rotation, 0, random));
+				pieces.add(new HarbourPieces.VillagerPiece(templateManager,
+						zombie ? ZOMBIE[random.nextInt(ZOMBIE.length)] : VILLAGER,
+						pos.add(new BlockPos(random.nextInt(100), 0, random.nextInt(100)).rotate(rotation)), rotation,
+						0, random));
 			}
 		}
 	}
@@ -363,6 +386,66 @@ public class HarbourPieces {
 						}
 					}
 				}
+				if (function.equals("house1")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof LockableLootTileEntity) {
+						if (rand.nextInt(6) == 0)
+							((LockableLootTileEntity) tileentity).setLootTable(getRandomHouseLoot(rand),
+									rand.nextLong());
+					}
+				}
+				if (function.equals("house1c")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof LockableLootTileEntity) {
+						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
+					}
+				}
+				if (function.equals("house2")) {
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof LockableLootTileEntity) {
+						if (rand.nextInt(6) == 0)
+							((LockableLootTileEntity) tileentity).setLootTable(getRandomHouseLoot(rand),
+									rand.nextLong());
+					}
+					tileentity = worldIn.getTileEntity(pos.down(2));
+					if (tileentity instanceof LockableLootTileEntity) {
+						if (rand.nextInt(6) == 0)
+							((LockableLootTileEntity) tileentity).setLootTable(getRandomHouseLoot(rand),
+									rand.nextLong());
+					}
+				}
+				if (function.equals("house3")) {
+					worldIn.setBlockState(pos, worldIn.getBlockState(pos.down()), 3);
+					TileEntity tileentity = worldIn.getTileEntity(pos);
+					if (tileentity instanceof LockableLootTileEntity) {
+						if (rand.nextInt(6) == 0)
+							((LockableLootTileEntity) tileentity).setLootTable(getRandomHouseLoot(rand),
+									rand.nextLong());
+					}
+					tileentity = worldIn.getTileEntity(pos.down());
+					if (tileentity instanceof LockableLootTileEntity) {
+						if (rand.nextInt(6) == 0)
+							((LockableLootTileEntity) tileentity).setLootTable(getRandomHouseLoot(rand),
+									rand.nextLong());
+					}
+					tileentity = worldIn.getTileEntity(pos.down(2));
+					if (tileentity instanceof LockableLootTileEntity) {
+						if (rand.nextInt(6) == 0)
+							((LockableLootTileEntity) tileentity).setLootTable(getRandomHouseLoot(rand),
+									rand.nextLong());
+					}
+				}
+			}
+		}
+
+		public static ResourceLocation getRandomHouseLoot(Random rand) {
+			if (rand.nextInt(10) > 7) {
+				return ShrinesLootTables.HARBOUR;
+			} else {
+				return ShrinesLootTables.HARBOUR_TAVERN;
 			}
 		}
 
