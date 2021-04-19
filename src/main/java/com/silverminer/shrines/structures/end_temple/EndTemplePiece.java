@@ -26,7 +26,7 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class EndTemplePiece {
 	private static final ArrayList<ResourceLocation> location = Lists
-			.newArrayList(new ResourceLocation("shrines:jungle_tower/jungle_tower"));
+			.newArrayList(new ResourceLocation("shrines:end_temple/end_temple"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {

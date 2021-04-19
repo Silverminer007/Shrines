@@ -16,7 +16,7 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class StructureConfig {
-	
+
 	public final LootableStructureGenConfig BALLON;
 	public final LootableStructureGenConfig BEES;
 	public final LootableStructureGenConfig HIGH_TEMPEL;
@@ -60,31 +60,34 @@ public class StructureConfig {
 				.setDistance(50).setSeparation(8)
 				.setBiomes(Biome.Category.PLAINS, Biome.Category.FOREST, Biome.Category.TAIGA, Biome.Category.SAVANNA,
 						Biome.Category.JUNGLE, Biome.Category.MESA, Biome.Category.ICY, Biome.Category.SWAMP,
-						Biome.Category.MUSHROOM).setNeedsGround(false)
-				//.setBiomes(Biome.Category.RIVER)
+						Biome.Category.MUSHROOM)
+				.setNeedsGround(false)
+				// .setBiomes(Biome.Category.RIVER)
 				.build(SERVER_BUILDER);
 		INFESTED_PRISON = new LootableStructureGenConfig.LootableConfigBuilder("Infested Prison", "infested_prison",
-				-567483014).setDistance(60).setSeparation(11).build(SERVER_BUILDER);
+				567483014).setDistance(60).setSeparation(11).build(SERVER_BUILDER);
 		WITCH_HOUSE = new LootableStructureGenConfig.LootableConfigBuilder("Abandoned Witch House", "witch_house",
-				-1721882513)
+				1721882513)
 						.setBiomes(Category.SWAMP, Category.FOREST)
 						.addToBlacklist("minecraft:flower_forest", "minecraft:tall_birch_forest", "minecraft:forest",
 								"minecraft:birch_forest", "minecraft:birch_forest_hills")
 						.setDistance(60).setSeparation(11).build(SERVER_BUILDER);
-		JUNGLE_TOWER = new LootableStructureGenConfig.LootableConfigBuilder("Jungle Tower", "jungle_tower", -987531843)
+		JUNGLE_TOWER = new LootableStructureGenConfig.LootableConfigBuilder("Jungle Tower", "jungle_tower", 987531843)
 				.setDistance(60).setSeparation(11).setBiomes(Category.JUNGLE).build(SERVER_BUILDER);
-		GUARDIAN_MEETING = new LootableStructureGenConfig.LootableConfigBuilder("Guardian Meeting", "guardian_meeting", 1498473232).setLootChance(1.0D)
-				.setDistance(70).setSeparation(17).setUseRandomVarianting(false).build(SERVER_BUILDER);
+		GUARDIAN_MEETING = new LootableStructureGenConfig.LootableConfigBuilder("Guardian Meeting", "guardian_meeting",
+				1498473232).setLootChance(1.0D).setDistance(70).setSeparation(17).setUseRandomVarianting(false)
+						.build(SERVER_BUILDER);
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Structure Generation Config", "Take care what you change, this changes may cant be undone",
 						"", "Biomes in which Overworld Structures cant generate in")
 				.defineList("structures.blacklisted_biomes",
 						getAllBiomesForCategory(Biome.Category.THEEND, Biome.Category.NETHER),
 						StructureConfig::validateBiome);
-		/*END_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("End Temple", "end_temple", -32 ^ 478392)
+
+		END_TEMPLE = new LootableStructureGenConfig.LootableConfigBuilder("End Temple", "end_temple", 32 ^ 478392)
 				.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
-				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands").build(SERVER_BUILDER);*/
-		END_TEMPLE = null;
+				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands")
+				.build(SERVER_BUILDER);
 	}
 
 	public static class StructureGenConfig {
