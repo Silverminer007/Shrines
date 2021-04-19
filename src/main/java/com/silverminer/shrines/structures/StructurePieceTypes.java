@@ -1,5 +1,8 @@
 package com.silverminer.shrines.structures;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.ballon.BallonPiece;
 import com.silverminer.shrines.structures.bees.BeesPiece;
@@ -24,6 +27,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 
 public class StructurePieceTypes {
+	protected static final Logger LOGGER = LogManager.getLogger();
 
 	public static final IStructurePieceType NETHER_SHRINE = NetherShrinePiece.Piece::new;
 
@@ -67,6 +71,7 @@ public class StructurePieceTypes {
 	
 
 	public static void regsiter() {
+		LOGGER.debug("Shrines: registering structure piece types");
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "ballon"), BALLON);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "bees"), BEES);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "nether_shrine"),
