@@ -68,7 +68,6 @@ public class StructurePieceTypes {
 
 
 
-	
 
 	public static void regsiter() {
 		LOGGER.debug("Shrines: registering structure piece types");

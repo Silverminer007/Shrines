@@ -18,7 +18,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 public class CommonEvents {
 	protected static final Logger LOGGER = LogManager.getLogger(CommonEvents.class);
@@ -26,8 +26,9 @@ public class CommonEvents {
 	@EventBusSubscriber(modid = Shrines.MODID, bus = Bus.MOD)
 	public static class ModEventBus {
 		@SubscribeEvent
-		public static void commonSetupEvent(FMLCommonSetupEvent event) {
+		public static void commonSetupEvent(FMLLoadCompleteEvent  event) {
 			event.enqueueWork(() -> {
+				LOGGER.debug("Registering structure pieces and structures to dimensions");
 				Generator.setupWorldGen();
 				StructurePieceTypes.regsiter();
 			});
@@ -39,6 +40,7 @@ public class CommonEvents {
 
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
+			LOGGER.debug("Loading Biome and registering structures. Biome: {}", event.getName());
 			if (!Config.STRUCTURES.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				if (Config.STRUCTURES.BALLON.GENERATE.get()
 						&& checkBiome(Config.STRUCTURES.BALLON.BIOME_CATEGORIES.get(),
