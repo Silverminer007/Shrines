@@ -11,9 +11,10 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(Shrines.MODID)
+@Mod(value = Shrines.MODID)
 public class Shrines {
 	public static final String MODID = "shrines";
+	public static final String VERSION = "GRADLE:VERSION";
 
 	public static final Logger LOGGER = LogManager.getLogger(Shrines.class);
 
