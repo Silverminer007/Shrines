@@ -47,7 +47,7 @@ public class BetterHarbourPieces {
 		ArrayList<MutableBoundingBox> bounds = Lists.newArrayList();
 		for (int i = 1; i < 70; i = (int) Math.ceil(i * 1.25)) {
 			for (int s = 1; s >= -1; s = s - 2) {
-				ecke = pos.add(i * s, 0, i * s);
+				ecke = pos.offset(i * s, 0, i * s);
 				for (int x = 0; x <= (Math.abs(i * s * 2)); x = x + 1) {
 					BlockPos position = new BlockPos(ecke.getX() + (x * -s), 0, ecke.getZ());
 					ResourceLocation r = checkPos(position, bounds, chunkGenerator, i);
@@ -81,7 +81,7 @@ public class BetterHarbourPieces {
 		ResourceLocation piece = null;
 		for (ResourceLocation r : pp) {
 			mbb = HarbourHelper.getBoundByPieces(r);
-			mbb.offset(pos.getX(), pos.getY(), pos.getZ());
+			mbb.move(pos.getX(), pos.getY(), pos.getZ());
 			if (validatePiecePos(pos, mbb, cG)) {
 				piece = r;
 				break;
@@ -99,13 +99,13 @@ public class BetterHarbourPieces {
 				return false;
 			}
 		}
-		for (int x = mbb.minX; x <= mbb.maxX; x++) {
-			for (int z = mbb.minZ; z <= mbb.maxZ; z++) {
+		for (int x = mbb.x0; x <= mbb.x1; x++) {
+			for (int z = mbb.z0; z <= mbb.z1; z++) {
 				int n = 0;
-				BlockState state = cG.func_230348_a_(x, z).getBlockState(new BlockPos(x, pos.getY() - n, z));
-				while (!state.isSolid()) {
+				BlockState state = cG.getBaseColumn(x, z).getBlockState(new BlockPos(x, pos.getY() - n, z));
+				while (!state.canOcclude()) {
 					n++;
-					state = cG.func_230348_a_(x, z).getBlockState(new BlockPos(x, pos.getY() - n, z));
+					state = cG.getBaseColumn(x, z).getBlockState(new BlockPos(x, pos.getY() - n, z));
 					LOG.info("Checking state {} for validation. It's block {}", state, state.getBlock());
 					if (n > 3) {
 						return false;
@@ -137,8 +137,8 @@ public class BetterHarbourPieces {
 		/**
 		 * (abstract) Helper method to read subclass data from NBT
 		 */
-		protected void readAdditional(CompoundNBT tagCompound) {
-			super.readAdditional(tagCompound);
+		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+			super.addAdditionalSaveData(tagCompound);
 			tagCompound.putInt("height", this.height);
 			tagCompound.putInt("diamonds", this.diamonds);
 		}
@@ -157,35 +157,35 @@ public class BetterHarbourPieces {
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
 			if (Config.STRUCTURES.HARBOUR.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("warehouse1_1")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
 					}
 				}
 				if (function.equals("warehouse1_2") || function.equals("warehouse1_3")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
 					}
-					tileentity = worldIn.getTileEntity(pos.down(2));
+					tileentity = worldIn.getBlockEntity(pos.below(2));
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
 					}
-					tileentity = worldIn.getTileEntity(pos.down(3));
+					tileentity = worldIn.getBlockEntity(pos.below(3));
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
 					}
 				}
 				if (function.equals("chest_tavern")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down(2));
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below(2));
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR_TAVERN,
 								rand.nextLong());
 					} else {
-						tileentity = worldIn.getTileEntity(pos.down(3));
+						tileentity = worldIn.getBlockEntity(pos.below(3));
 						if (tileentity instanceof LockableLootTileEntity) {
 							((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR_TAVERN,
 									rand.nextLong());
@@ -219,7 +219,7 @@ public class BetterHarbourPieces {
 				} else {
 					if (COLORS.get(newState.getBlock()) == null)
 						COLORS.put(newState.getBlock(), ORES.get(rand.nextInt(ORES.size())));
-					world.setBlockState(pos, COLORS.get(newState.getBlock()).getDefaultState(), 3);
+					world.setBlock(pos, COLORS.get(newState.getBlock()).defaultBlockState(), 3);
 					return false;
 				}
 			}

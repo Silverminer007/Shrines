@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.ballon.BallonPiece;
 import com.silverminer.shrines.structures.bees.BeesPiece;
+import com.silverminer.shrines.structures.custom.CustomPiece;
 import com.silverminer.shrines.structures.end_temple.EndTemplePiece;
 import com.silverminer.shrines.structures.flooded_temple.FloodedTemplePiece;
 import com.silverminer.shrines.structures.guardian_meeting.GuardianMeetingPiece;
@@ -66,7 +67,7 @@ public class StructurePieceTypes {
 	
 	public static final IStructurePieceType GUARDIAN_MEETING = GuardianMeetingPiece.Piece::new;
 
-
+	public static final IStructurePieceType CUSTOM = CustomPiece.Piece::new;
 
 
 	public static void regsiter() {
@@ -98,5 +99,7 @@ public class StructurePieceTypes {
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "end_temple"), END_TEMPLE);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "guardian_meeting"), GUARDIAN_MEETING);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "better_harbour"), BETTER_HARBOUR);
+		
+		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Shrines.MODID, "custom"), CUSTOM);
 	}
 }

@@ -36,7 +36,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	}
 
 	@Override
-	public String getStructureName() {
+	public String getFeatureName() {
 		return new ResourceLocation(Shrines.MODID, this.name).toString();
 	}
 
@@ -47,10 +47,10 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 		int xStart = (chunkX << 4);
 		int zStart = (chunkZ << 4);
 
-		int i1 = generator.getHeight(xStart, zStart, Heightmap.Type.WORLD_SURFACE_WG);
-		int j1 = generator.getHeight(xStart, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
-		int k1 = generator.getHeight(xStart + offset, zStart, Heightmap.Type.WORLD_SURFACE_WG);
-		int l1 = generator.getHeight(xStart + offset, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
+		int i1 = generator.getBaseHeight(xStart, zStart, Heightmap.Type.WORLD_SURFACE_WG);
+		int j1 = generator.getBaseHeight(xStart, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
+		int k1 = generator.getBaseHeight(xStart + offset, zStart, Heightmap.Type.WORLD_SURFACE_WG);
+		int l1 = generator.getBaseHeight(xStart + offset, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
 		int minHeight = Math.min(Math.min(i1, j1), Math.min(k1, l1));
 		int maxHeight = Math.max(Math.max(i1, j1), Math.max(k1, l1));
 
@@ -84,7 +84,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	public abstract StructureGenConfig getConfig();
 
 	@Override
-	protected boolean func_230363_a_(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
+	protected boolean isFeatureChunk(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
 			int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config) {
 		return this.validateGeneration(generator, provider, seed, rand, chunkX, chunkZ, biome, pos, config);
 	}
@@ -95,9 +95,9 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 		if (isSurfaceFlat(generator, chunkX, chunkZ)) {
 
 			// Check the entire size of the structure to see if it's all a viable biome:
-			for (Biome biome1 : provider.getBiomes(chunkX * 16 + 9, generator.getGroundHeight(), chunkZ * 16 + 9,
+			for (Biome biome1 : provider.getBiomesWithin(chunkX * 16 + 9, generator.getGenDepth(), chunkZ * 16 + 9,
 					getSize() * 16)) {
-				if (!biome1.getGenerationSettings().hasStructure(this)) {
+				if (!biome1.getGenerationSettings().isValidStart(this)) {
 					return false;
 				}
 			}
@@ -121,7 +121,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 					if (es.equals(s))
 						continue;
 				}
-			if (new ChunkPos(chunkX, chunkZ).equals(s.getChunkPosForStructure(
+			if (new ChunkPos(chunkX, chunkZ).equals(s.getPotentialFeatureChunk(
 					new StructureSeparationSettings(s.getDistance(), s.getSeparation(), s.getSeedModifier()), seed,
 					rand, chunkX, chunkZ))
 					&& s.validateGeneration(generator, provider, seed, rand, chunkX, chunkZ, biome, pos, config,
@@ -133,7 +133,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	}
 
 	@Override
-	public ChunkPos getChunkPosForStructure(StructureSeparationSettings settings, long seed,
+	public ChunkPos getPotentialFeatureChunk(StructureSeparationSettings settings, long seed,
 			SharedSeedRandom sharedSeedRand, int x, int z) {
 		int spacing = this.getDistance();
 		int separation = this.getSeparation();
@@ -141,11 +141,11 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 		int k = Math.floorDiv(x, spacing);
 		int l = Math.floorDiv(z, spacing);
 
-		sharedSeedRand.setLargeFeatureSeedWithSalt(seed, k, l, this.getSeedModifier());
+		sharedSeedRand.setLargeFeatureWithSalt(seed, k, l, this.getSeedModifier());
 
 		int i1;
 		int j1;
-		if (this.func_230365_b_()) {
+		if (this.linearSeparation()) {
 			i1 = sharedSeedRand.nextInt(spacing - separation);
 			j1 = sharedSeedRand.nextInt(spacing - separation);
 		} else {

@@ -25,7 +25,7 @@ public class NetherPyramidPiece {
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
-		pieces.add(new NetherPyramidPiece.Piece(templateManager, location, pos.add(0, -1, 0), rotation, 0));
+		pieces.add(new NetherPyramidPiece.Piece(templateManager, location, pos.offset(0, -1, 0), rotation, 0));
 	}
 
 	public static class Piece extends ColorStructurePiece {
@@ -44,8 +44,8 @@ public class NetherPyramidPiece {
 			if (Config.STRUCTURES.NETHER_PYRAMID.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if ("chest_left".equals(function) || "chest_right".equals(function) || "chest_d1".equals(function)
 						|| "chest_d2".equals(function) || "chest_d3".equals(function) || "chest_d4".equals(function)) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof ChestTileEntity) {
 						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomLoot(rand),
 								rand.nextLong());

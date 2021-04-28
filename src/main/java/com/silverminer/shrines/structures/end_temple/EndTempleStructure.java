@@ -31,7 +31,7 @@ public class EndTempleStructure extends AbstractStructure<NoFeatureConfig> {
 	}
 
 	@Override
-	public GenerationStage.Decoration getDecorationStage() {
+	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
 	}
 
@@ -54,10 +54,10 @@ public class EndTempleStructure extends AbstractStructure<NoFeatureConfig> {
 		int xStart = (chunkX << 4);
 		int zStart = (chunkZ << 4);
 
-		int i1 = generator.getHeight(xStart, zStart, Heightmap.Type.WORLD_SURFACE_WG);
-		int j1 = generator.getHeight(xStart, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
-		int k1 = generator.getHeight(xStart + offset, zStart, Heightmap.Type.WORLD_SURFACE_WG);
-		int l1 = generator.getHeight(xStart + offset, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
+		int i1 = generator.getBaseHeight(xStart, zStart, Heightmap.Type.WORLD_SURFACE_WG);
+		int j1 = generator.getBaseHeight(xStart, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
+		int k1 = generator.getBaseHeight(xStart + offset, zStart, Heightmap.Type.WORLD_SURFACE_WG);
+		int l1 = generator.getBaseHeight(xStart + offset, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
 		int minHeight = Math.min(Math.min(i1, j1), Math.min(k1, l1));
 		return flag && minHeight > 60;
 	}
@@ -74,14 +74,14 @@ public class EndTempleStructure extends AbstractStructure<NoFeatureConfig> {
 		}
 
 		@Override
-		public void func_230364_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator,
+		public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
-			Rotation rotation = Rotation.randomRotation(this.rand);
-			EndTemplePiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
-			this.recalculateStructureSize();
+			Rotation rotation = Rotation.getRandom(this.random);
+			EndTemplePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			this.calculateBoundingBox();
 		}
 	}
 }

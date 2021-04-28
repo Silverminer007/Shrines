@@ -32,7 +32,7 @@ public class HarbourStructure extends AbstractStructure<NoFeatureConfig> {
 	}
 
 	@Override
-	public GenerationStage.Decoration getDecorationStage() {
+	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
 	}
 
@@ -53,9 +53,9 @@ public class HarbourStructure extends AbstractStructure<NoFeatureConfig> {
 				zStart + 100);
 		int minheight = 256;
 		int maxheight = 0;
-		for (int x = mbb.minX; x < mbb.maxX; x++) {
-			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
-				int height = generator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
+		for (int x = mbb.x0; x < mbb.x1; x++) {
+			for (int z = mbb.z0; z < mbb.z1; z++) {
+				int height = generator.getBaseHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
 				minheight = Math.min(minheight, height);
 				maxheight = Math.max(maxheight, height);
 			}
@@ -80,16 +80,16 @@ public class HarbourStructure extends AbstractStructure<NoFeatureConfig> {
 		}
 
 		@Override
-		public void func_230364_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator,
+		public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
-			Rotation rotation = Rotation.randomRotation(this.rand);
-			HarbourPieces.generate(templateManager, blockpos, rotation, this.components, this.rand, chunkGenerator);
+			Rotation rotation = Rotation.getRandom(this.random);
+			HarbourPieces.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			//BetterHarbourPieces.generate(templateManager, blockpos, rotation, this.components, this.rand, chunkGenerator);
 			//HarbourBallonPiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
-			this.recalculateStructureSize();
+			this.calculateBoundingBox();
 		}
 	}
 }

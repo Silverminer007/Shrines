@@ -27,16 +27,16 @@ public abstract class AbstractStructureStart<C extends IFeatureConfig> extends S
 	}
 
 	@Override
-	public void func_230366_a_(final ISeedReader seedReader, final StructureManager manager,
+	public void placeInChunk(final ISeedReader seedReader, final StructureManager manager,
 			final ChunkGenerator generator, final Random random, final MutableBoundingBox boundingBox,
 			final ChunkPos position) {
-		super.func_230366_a_(seedReader, manager, generator, random, boundingBox, position);
+		super.placeInChunk(seedReader, manager, generator, random, boundingBox, position);
 
-		if (this.getStructure() instanceof AbstractStructure
-				&& ((AbstractStructure<?>) this.getStructure()).needsGround()) {
-			for (int x = this.bounds.minX - 1; this.bounds.maxX + 1 >= x; ++x) {
-				for (int z = this.bounds.minZ - 1; this.bounds.maxZ + 1 >= z; ++z) {
-					for (int y = this.bounds.minY - 1; y > 1; --y) {
+		if (this.getFeature() instanceof AbstractStructure
+				&& ((AbstractStructure<?>) this.getFeature()).needsGround()) {
+			for (int x = this.boundingBox.x0 - 1; this.boundingBox.x1 + 1 >= x; ++x) {
+				for (int z = this.boundingBox.z0 - 1; this.boundingBox.z1 + 1 >= z; ++z) {
+					for (int y = this.boundingBox.y0 - 1; y > 1; --y) {
 						BlockPos pos = new BlockPos(x, y, z);
 						try {
 							if (shouldBlockBeReplaced(seedReader, pos)) {
@@ -53,37 +53,37 @@ public abstract class AbstractStructureStart<C extends IFeatureConfig> extends S
 	}
 
 	private boolean shouldBlockBeReplaced(ISeedReader seedReader, BlockPos pos) {
-		return seedReader.isAirBlock(pos) || seedReader.getBlockState(pos).getMaterial().isLiquid()
+		return seedReader.isEmptyBlock(pos) || seedReader.getBlockState(pos).getMaterial().isLiquid()
 				|| seedReader.getBlockState(pos).getMaterial().isReplaceable();
 	}
 
 	protected BlockState getTopLayerBlock(ISeedReader seedReader, BlockPos pos) {
-		return seedReader.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTop();
+		return seedReader.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getTopMaterial();
 	}
 
 	protected BlockState getLowerLayerBlock(ISeedReader seedReader, BlockPos pos) {
-		return seedReader.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getUnder();
+		return seedReader.getBiome(pos).getGenerationSettings().getSurfaceBuilderConfig().getUnderMaterial();
 	}
 
 	private void replaceBlock(ISeedReader seedReader, BlockPos pos) {
 		BlockState state = getTopLayerBlock(seedReader, pos);
 
-		Block downBlock = seedReader.getBlockState(pos.down()).getBlock();
+		Block downBlock = seedReader.getBlockState(pos.below()).getBlock();
 		// Wenn unter dem Block keine Erde und kein Grass ist und der Block darunter
 		// Stein ist oder die Drei darüber keine Luft dann nutze das untere Material
 		if ((downBlock != Blocks.DIRT && downBlock != Blocks.GRASS_BLOCK)
-				&& (downBlock == Blocks.STONE || !seedReader.isAirBlock(pos.up(1)) && !seedReader.isAirBlock(pos.up(2))
-						&& !seedReader.isAirBlock(pos.up(3)))) {
+				&& (downBlock == Blocks.STONE || !seedReader.isEmptyBlock(pos.above(1)) && !seedReader.isEmptyBlock(pos.above(2))
+						&& !seedReader.isEmptyBlock(pos.above(3)))) {
 			state = getLowerLayerBlock(seedReader, pos);
 		}
 
 		// Wenn über dem jetzigem Block Grass ist dann nutze hier statt Grass, Erde
-		Block upBlock = seedReader.getBlockState(pos.up()).getBlock();
+		Block upBlock = seedReader.getBlockState(pos.above()).getBlock();
 		if ((upBlock == Blocks.GRASS_BLOCK || upBlock == Blocks.GRASS_PATH)
 				&& (state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock() == Blocks.GRASS_PATH)) {
-			state = Blocks.DIRT.getDefaultState();
+			state = Blocks.DIRT.defaultBlockState();
 		}
 
-		seedReader.setBlockState(pos, state, 2);
+		seedReader.setBlock(pos, state, 2);
 	}
 }

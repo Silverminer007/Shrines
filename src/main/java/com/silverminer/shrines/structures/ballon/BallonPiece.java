@@ -60,7 +60,7 @@ public class BallonPiece {
 
 		@Override
 		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
 		}
 
 		public BlockPos getOffsetPos(Random rand) {
@@ -97,8 +97,8 @@ public class BallonPiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.BALLON.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.up(2));
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.above(2));
 					if (tileentity instanceof BarrelTileEntity) {
 						((BarrelTileEntity) tileentity).setLootTable(ShrinesLootTables.BALLON, rand.nextLong());
 					}

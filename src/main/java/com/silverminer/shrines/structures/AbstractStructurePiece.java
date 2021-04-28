@@ -47,8 +47,8 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 		this.setup(templateManager);
 	}
 
-	private void setup(TemplateManager templateManager) {
-		Template template = templateManager.getTemplateDefaulted(this.location);
+	public void setup(TemplateManager templateManager) {
+		Template template = templateManager.getOrCreate(this.location);
 		PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation)
 				.setMirror(Mirror.NONE).addProcessor(this.getProcessor());
 		this.setup(template, this.templatePosition, placementsettings);
@@ -57,22 +57,22 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 	/**
 	 * (abstract) Helper method to read subclass data from NBT
 	 */
-	protected void readAdditional(CompoundNBT tagCompound) {
-		super.readAdditional(tagCompound);
+	protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+		super.addAdditionalSaveData(tagCompound);
 		tagCompound.putString("Template", this.location.toString());
 		tagCompound.putString("Rot", this.rotation.name());
 	}
 
-	public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
+	public boolean postProcess(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
 			Random rand, MutableBoundingBox mbb, ChunkPos chunkPos, BlockPos blockPos) {
 		PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation)
 				.setMirror(Mirror.NONE).addProcessor(this.getProcessor());
 		BlockPos blockpos1 = this.templatePosition
-				.add(Template.transformedBlockPos(placementsettings, new BlockPos(3, 0, 0)));
+				.offset(Template.calculateRelativePosition(placementsettings, new BlockPos(3, 0, 0)));
 		int i = this.getHeight(world, blockpos1);
 		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
 		BlockPos blockpos2 = this.templatePosition;
-		boolean flag = super.func_230383_a_(world, structureManager, chunkGen, rand, mbb, chunkPos, this.templatePosition);
+		boolean flag = super.postProcess(world, structureManager, chunkGen, rand, mbb, chunkPos, this.templatePosition);
 		
 		this.templatePosition = blockpos2;
 		return flag;
@@ -92,6 +92,6 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 	}
 
 	public StructureProcessor getProcessor() {
-		return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+		return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
 	}
 }

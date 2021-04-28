@@ -78,16 +78,16 @@ public class HarbourHelper {
 	 * @return true if the BoundingBoxes are intersecting
 	 */
 	public static boolean areBoundingBoxesIntersecting(MutableBoundingBox mmb1, MutableBoundingBox structurebb) {
-		return mmb1.maxX >= structurebb.minX && mmb1.minX <= structurebb.maxX && mmb1.maxZ >= structurebb.minZ
-				&& mmb1.minZ <= structurebb.maxZ;
+		return mmb1.x1 >= structurebb.x0 && mmb1.x0 <= structurebb.x1 && mmb1.z1 >= structurebb.z0
+				&& mmb1.z0 <= structurebb.z1;
 	}
 
 	public static boolean checkFlatness(MutableBoundingBox mbb, ChunkGenerator chunkGenerator) {
 		int minheight = 256;
 		int maxheight = 0;
-		for (int x = mbb.minX; x < mbb.maxX; x++) {
-			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
-				int height = chunkGenerator.getHeight(x / 16, z / 16, Heightmap.Type.WORLD_SURFACE_WG);
+		for (int x = mbb.x0; x < mbb.x1; x++) {
+			for (int z = mbb.z0; z < mbb.z1; z++) {
+				int height = chunkGenerator.getBaseHeight(x / 16, z / 16, Heightmap.Type.WORLD_SURFACE_WG);
 				minheight = Math.min(minheight, height);
 				maxheight = Math.max(maxheight, height);
 			}
@@ -99,10 +99,10 @@ public class HarbourHelper {
 		MutableBoundingBox mbb = MutableBoundingBox.createProper(pos.getX(), 0, pos.getZ(), pos.getX() + 100, 0,
 				pos.getZ() + 100);
 		ArrayList<Integer> heigth = new ArrayList<Integer>();
-		for (int x = mbb.minX; x < mbb.maxX; x++) {
-			for (int z = mbb.minZ; z < mbb.maxZ; z++) {
-				int surface = chunkGenerator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE);
-				boolean water = chunkGenerator.func_230348_a_(x / 16, z / 16)
+		for (int x = mbb.x0; x < mbb.x1; x++) {
+			for (int z = mbb.z0; z < mbb.z1; z++) {
+				int surface = chunkGenerator.getBaseHeight(x, z, Heightmap.Type.WORLD_SURFACE);
+				boolean water = chunkGenerator.getBaseColumn(x / 16, z / 16)
 						.getBlockState(new BlockPos(x, surface + 1, z)).getBlock() == Blocks.WATER;
 				heigth.add(water ? chunkGenerator.getSeaLevel() - 1 : surface - 1);
 			}
