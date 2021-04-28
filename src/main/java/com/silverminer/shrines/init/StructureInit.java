@@ -2,6 +2,9 @@ package com.silverminer.shrines.init;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.ImmutableList;
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.AbstractStructure;
@@ -30,67 +33,68 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class StructureInit {
+	protected static final Logger LOGGER = LogManager.getLogger(StructureInit.class);
 	public static final ArrayList<AbstractStructure<NoFeatureConfig>> STRUCTURES_LIST = new ArrayList<AbstractStructure<NoFeatureConfig>>();
 	public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister
 			.create(ForgeRegistries.STRUCTURE_FEATURES, Shrines.MODID);
 
 	public static final RegistryObject<NetherShrineStructure> NETHER_SHRINE = register("nether_shrine",
-			new NetherShrineStructure(NoFeatureConfig.field_236558_a_));
+			new NetherShrineStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<WaterShrineStructure> WATER_SHRINE = register("water_shrine",
-			new WaterShrineStructure(NoFeatureConfig.field_236558_a_));
+			new WaterShrineStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<BeesStructure> BEES = register("bees",
-			new BeesStructure(NoFeatureConfig.field_236558_a_));
+			new BeesStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<SmallTempelStructure> SMALL_TEMPEL = register("small_tempel",
-			new SmallTempelStructure(NoFeatureConfig.field_236558_a_));
+			new SmallTempelStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<HighTempelStructure> HIGH_TEMPEL = register("high_tempel",
-			new HighTempelStructure(NoFeatureConfig.field_236558_a_));
+			new HighTempelStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<BallonStructure> BALLON = register("ballon",
-			new BallonStructure(NoFeatureConfig.field_236558_a_));
+			new BallonStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<NetherPyramidStructure> NETHER_PYRAMID = register("nether_pyramid",
-			new NetherPyramidStructure(NoFeatureConfig.field_236558_a_));
+			new NetherPyramidStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<PlayerhouseStructure> PLAYER_HOUSE = register("player_house",
-			new PlayerhouseStructure(NoFeatureConfig.field_236558_a_));
+			new PlayerhouseStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<MineralTempleStructure> MINERAL_TEMPLE = register("mineral_temple",
-			new MineralTempleStructure(NoFeatureConfig.field_236558_a_));
+			new MineralTempleStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<FloodedTempleStructure> FLOODED_TEMPLE = register("flooded_temple",
-			new FloodedTempleStructure(NoFeatureConfig.field_236558_a_));
+			new FloodedTempleStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<HarbourStructure> HARBOUR = register("harbour",
-			new HarbourStructure(NoFeatureConfig.field_236558_a_));
+			new HarbourStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<InfestedPrisonStructure> INFESTED_PRISON = register("infested_prison",
-			new InfestedPrisonStructure(NoFeatureConfig.field_236558_a_));
+			new InfestedPrisonStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<AbandonedWitchHouseStructure> WITCH_HOUSE = register("witch_house",
-			new AbandonedWitchHouseStructure(NoFeatureConfig.field_236558_a_));
+			new AbandonedWitchHouseStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<JungleTowerStructure> JUNGLE_TOWER = register("jungle_tower",
-			new JungleTowerStructure(NoFeatureConfig.field_236558_a_));
+			new JungleTowerStructure(NoFeatureConfig.CODEC));
 
 	public static final RegistryObject<EndTempleStructure> END_TEMPLE = register("end_temple",
-			new EndTempleStructure(NoFeatureConfig.field_236558_a_));
-	
+			new EndTempleStructure(NoFeatureConfig.CODEC));
+
 	public static final RegistryObject<GuardianMeetingStructure> GUARDIAN_MEETING = register("guardian_meeting",
-			new GuardianMeetingStructure(NoFeatureConfig.field_236558_a_));
+			new GuardianMeetingStructure(NoFeatureConfig.CODEC));
 
 	private static <T extends AbstractStructure<NoFeatureConfig>> RegistryObject<T> register(String name, T structure) {
-		if (!Structure.NAME_STRUCTURE_BIMAP.containsValue(structure)) {
-			Structure.NAME_STRUCTURE_BIMAP.putIfAbsent(new ResourceLocation(Shrines.MODID, name).toString(), structure);
+		if (!Structure.STRUCTURES_REGISTRY.containsValue(structure)) {
+			Structure.STRUCTURES_REGISTRY.putIfAbsent(new ResourceLocation(Shrines.MODID, name).toString(), structure);
 		}
-		if (!Structure.STRUCTURE_DECORATION_STAGE_MAP.containsValue(structure.getDecorationStage())) {
-			Structure.STRUCTURE_DECORATION_STAGE_MAP.putIfAbsent(structure, structure.getDecorationStage());
+		if (!Structure.STEP.containsValue(structure.step())) {
+			Structure.STEP.putIfAbsent(structure, structure.step());
 		}
 
-		Structure.field_236384_t_ = ImmutableList.<Structure<?>>builder().addAll(Structure.field_236384_t_)
+		Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder().addAll(Structure.NOISE_AFFECTING_FEATURES)
 				.add(structure).build();
 
 		STRUCTURES_LIST.add(structure);

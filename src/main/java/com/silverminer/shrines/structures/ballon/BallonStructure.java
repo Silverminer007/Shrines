@@ -24,7 +24,7 @@ public class BallonStructure extends AbstractStructure<NoFeatureConfig> {
 	}
 
 	@Override
-	public GenerationStage.Decoration getDecorationStage() {
+	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
 	}
 
@@ -46,14 +46,14 @@ public class BallonStructure extends AbstractStructure<NoFeatureConfig> {
 		}
 
 		@Override
-		public void func_230364_a_(DynamicRegistries registries, ChunkGenerator chunkGenerator,
+		public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
-			Rotation rotation = Rotation.randomRotation(this.rand);
-			BallonPiece.generate(templateManager, blockpos, rotation, this.components, this.rand);
-			this.recalculateStructureSize();
+			Rotation rotation = Rotation.getRandom(this.random);
+			BallonPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			this.calculateBoundingBox();
 		}
 	}
 }

@@ -53,8 +53,8 @@ public class WaterShrinePiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.WATER_SHRINE.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.WATER.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.WATER.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof ChestTileEntity) {
 						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.WATER_SHRINE, rand.nextLong());
 					}

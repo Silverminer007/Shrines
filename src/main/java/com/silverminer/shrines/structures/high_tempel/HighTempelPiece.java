@@ -45,8 +45,8 @@ public class HighTempelPiece {
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
 			if (Config.STRUCTURES.HIGH_TEMPEL.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof ChestTileEntity) {
 						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.HIGH_TEMPEL, rand.nextLong());
 					}

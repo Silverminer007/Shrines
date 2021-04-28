@@ -54,7 +54,7 @@ public class GuardianMeetingPiece {
 
 		@Override
 		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
 		}
 
 		public Block getDefaultPlank() {
@@ -87,8 +87,8 @@ public class GuardianMeetingPiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.GUARDIAN_MEETING.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.GUARDIAN_MEETING,
 								rand.nextLong());

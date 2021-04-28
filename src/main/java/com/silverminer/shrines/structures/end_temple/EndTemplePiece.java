@@ -48,7 +48,7 @@ public class EndTemplePiece {
 
 		@Override
 		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
 		}
 
 		@Override
@@ -61,8 +61,8 @@ public class EndTemplePiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.END_TEMPLE.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.END_TEMPLE,
 								rand.nextLong());

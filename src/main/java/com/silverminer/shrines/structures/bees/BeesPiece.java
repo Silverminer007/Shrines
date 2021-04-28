@@ -25,7 +25,7 @@ public class BeesPiece {
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random) {
-		pieces.add(new BeesPiece.Piece(templateManager, location, pos.add(0, -1, 0), rotation, 0));
+		pieces.add(new BeesPiece.Piece(templateManager, location, pos.offset(0, -1, 0), rotation, 0));
 	}
 
 	public static class Piece extends ColorStructurePiece {
@@ -48,8 +48,8 @@ public class BeesPiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.BEES.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof ChestTileEntity) {
 						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.BEES, rand.nextLong());
 					}

@@ -66,8 +66,8 @@ public class PlayerhousePiece {
 			this.v = cNBT.getInt("version");
 		}
 
-		protected void readAdditional(CompoundNBT tagCompound) {
-			super.readAdditional(tagCompound);
+		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+			super.addAdditionalSaveData(tagCompound);
 			tagCompound.putInt("version", this.v);
 		}
 
@@ -94,12 +94,12 @@ public class PlayerhousePiece {
 			if (Config.STRUCTURES.PLAYER_HOUSE.LOOT_CHANCE.get() > rand.nextDouble()) {
 				boolean chest2 = "chest_2".equals(function);
 				if ("chest".equals(function) || chest2) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 					TileEntity tileentity;
 					if (chest2) {
-						tileentity = worldIn.getTileEntity(pos.down(5));
+						tileentity = worldIn.getBlockEntity(pos.below(5));
 					} else {
-						tileentity = worldIn.getTileEntity(pos.down());
+						tileentity = worldIn.getBlockEntity(pos.below());
 					}
 					if (rand.nextInt(6) == 0) {
 						if (rand.nextInt(2) == 0) {
@@ -121,8 +121,8 @@ public class PlayerhousePiece {
 					}
 				}
 				if ("chest_furnace".equals(function)) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (rand.nextInt(2) == 0) {
 						if (tileentity instanceof ChestTileEntity) {
 							((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.FURNACE, rand.nextLong());

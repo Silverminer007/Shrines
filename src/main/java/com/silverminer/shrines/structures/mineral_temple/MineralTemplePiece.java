@@ -55,8 +55,8 @@ public class MineralTemplePiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.MINERAL_TEMPLE.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if ("chest".equals(function)) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof ChestTileEntity) {
 						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.MINERAL_TEMPLE, rand.nextLong());
 					}

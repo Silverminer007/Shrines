@@ -69,16 +69,16 @@ public class InfestedPrisonPiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.INFESTED_PRISON.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down(2));
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below(2));
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.INFECTED_PRISON,
 								rand.nextLong());
 					}
 				}
 				if (function.equals("chest_cobweb")) {
-					worldIn.setBlockState(pos, Blocks.COBWEB.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down(2));
+					worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below(2));
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.INFECTED_PRISON,
 								rand.nextLong());

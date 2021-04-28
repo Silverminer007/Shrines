@@ -64,7 +64,7 @@ public class HarbourBallonPiece {
 
 		@Override
 		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
 		}
 
 		public BlockPos getOffsetPos(Random rand) {
@@ -101,8 +101,8 @@ public class HarbourBallonPiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.BALLON.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.up(2));
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.above(2));
 					if (tileentity instanceof BarrelTileEntity) {
 						((BarrelTileEntity) tileentity).setLootTable(ShrinesLootTables.BALLON, rand.nextLong());
 					}
@@ -111,25 +111,25 @@ public class HarbourBallonPiece {
 		}
 
 		@Override
-		public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
+		public boolean postProcess(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
 				Random rand, MutableBoundingBox mbb, ChunkPos chunkPos, BlockPos pos) {
 			BlockPos ecke = new BlockPos(0, 0, 0);
 			for (int i = 1; i < 100; i = (int) Math.ceil(i * 1.25)) {
 				for (int s = 1; s >= -1; s = s - 2) {
-					ecke = pos.add(i * s, 0, i * s);
+					ecke = pos.offset(i * s, 0, i * s);
 					for (int x = 0; x <= (Math.abs(i * s * 2)); x = x + 1) {
 						BlockPos position = new BlockPos(ecke.getX() + (x * -s), 120, ecke.getZ());
 						if (s == 1)
-							world.setBlockState(position, Blocks.DIAMOND_BLOCK.getDefaultState(), 3);
+							world.setBlock(position, Blocks.DIAMOND_BLOCK.defaultBlockState(), 3);
 						else
-							world.setBlockState(position, Blocks.GOLD_BLOCK.getDefaultState(), 3);
+							world.setBlock(position, Blocks.GOLD_BLOCK.defaultBlockState(), 3);
 					}
 					for (int z = 0; z <= (Math.abs(i * s * 2)); z = z + 1) {
 						BlockPos position = new BlockPos(ecke.getX(), 120, ecke.getZ() + (z * -s));
 						if (s == 1)
-							world.setBlockState(position, Blocks.NETHERITE_BLOCK.getDefaultState(), 3);
+							world.setBlock(position, Blocks.NETHERITE_BLOCK.defaultBlockState(), 3);
 						else
-							world.setBlockState(position, Blocks.IRON_BLOCK.getDefaultState(), 3);
+							world.setBlock(position, Blocks.IRON_BLOCK.defaultBlockState(), 3);
 					}
 				}
 			}

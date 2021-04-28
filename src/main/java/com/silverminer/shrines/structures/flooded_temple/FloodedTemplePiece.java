@@ -46,11 +46,11 @@ public class FloodedTemplePiece {
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
 			if (Config.STRUCTURES.FLOODED_TEMPLE.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					if (worldIn.getBlockState(pos.up()).getBlock() == Blocks.AIR)
-						worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					if (worldIn.getBlockState(pos.below()).getBlock() == Blocks.AIR)
+						worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 					else
-						worldIn.setBlockState(pos, Blocks.COBWEB.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+						worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof ChestTileEntity) {
 						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.FLOODED_TEMPLE, rand.nextLong());
 					}

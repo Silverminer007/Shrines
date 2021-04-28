@@ -31,9 +31,11 @@ public class StructureConfig {
 	public final LootableStructureGenConfig INFESTED_PRISON;
 	public final LootableStructureGenConfig WITCH_HOUSE;
 	public final LootableStructureGenConfig JUNGLE_TOWER;
+	public final LootableStructureGenConfig GUARDIAN_MEETING;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
 	public final LootableStructureGenConfig END_TEMPLE;
-	public final LootableStructureGenConfig GUARDIAN_MEETING;
+
+	public final LootableStructureGenConfig CUSTOM;
 
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		BALLON = new LootableStructureGenConfig.LootableConfigBuilder("Ballon", "ballon", 143665).setLootChance(0.25D)
@@ -88,6 +90,7 @@ public class StructureConfig {
 				.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
 				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands")
 				.build(SERVER_BUILDER);
+		CUSTOM = null;
 	}
 
 	public static class StructureGenConfig {
@@ -356,7 +359,7 @@ public class StructureConfig {
 
 		for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
 			for (Biome.Category category : categories) {
-				if (biome.getCategory() == category) {
+				if (biome.getBiomeCategory() == category) {
 					biomes.add(Objects.requireNonNull(biome.getRegistryName()).toString());
 				}
 			}

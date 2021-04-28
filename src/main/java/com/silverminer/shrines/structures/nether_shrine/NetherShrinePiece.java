@@ -60,8 +60,8 @@ public class NetherShrinePiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.NETHER_SHRINE.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if ("chest1".equals(function) || "chest2".equals(function)) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof ChestTileEntity) {
 						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomNetherLoot(rand),
 								rand.nextLong());
@@ -77,7 +77,7 @@ public class NetherShrinePiece {
 
 		@Override
 		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.AIR_AND_STRUCTURE_BLOCK;
+			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
 		}
 
 		public float getStoneChangeChance() {

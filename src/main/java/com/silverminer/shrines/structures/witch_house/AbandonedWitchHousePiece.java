@@ -66,24 +66,24 @@ public class AbandonedWitchHousePiece {
 				MutableBoundingBox sbb) {
 			if (Config.STRUCTURES.WITCH_HOUSE.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("chest")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down(3));
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below(3));
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.WITCH_HOUSE,
 								rand.nextLong());
 					}
 				}
 				if (function.equals("chest_cobweb")) {
-					worldIn.setBlockState(pos, Blocks.COBWEB.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.WITCH_HOUSE,
 								rand.nextLong());
 					}
 				}
 				if (function.equals("chest_op")) {
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-					TileEntity tileentity = worldIn.getTileEntity(pos.down());
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
 					if (tileentity instanceof LockableLootTileEntity) {
 						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.WITCH_HOUSE,
 								rand.nextLong());
