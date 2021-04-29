@@ -1,12 +1,12 @@
 # Adding custom structures
 
-you would love to see your builded structures appearing in new worlds? You're right here!
+You'd love to see your own structures appear in new worlds? We've got your back!
 
 To add a custom structure using the [Shrines mod](https://www.curseforge.com/minecraft/mc-mods/shrines-structures) there are two ways, but both start same:
 
 1. First build your structure!
 2. Decide how your structure should be named
-3. Export your structure to file using structure-blocks (vanilla)
+3. Export your structure to a file using structure-blocks (vanilla)
 4. Start minecraft at least one time with the latest version of the mod
 
 Here you have to decide:
@@ -88,6 +88,6 @@ Here you have to decide:
 
 ### Multiple .nbt files
 
-To have multiple .nbt files in one structure isn't hard to do. You have to add one line (for each additional file) to your config file of the structure. Search there for option "Pieces:". After this line, there should be a line like "[|name of your structure|, [0,0,0]]". Add a "," at the end of this line to mark, that there is one more possible file. Copy this line as often as you need. Change the content of |name of your structure| for each line to the name of one of your .nbt files. Make sure that the last line doesn't have a ",". That would cause syntax errors
+To have multiple .nbt files in one structure isn't hard to do. You have to add one line (for each additional file) to your config file of the structure. Search there for the option "Pieces:". After this line, there should be a line named "[|name of your structure|, [0,0,0]]". Add a "," at the end of this line to mark, that there is one more possible file. Copy this line as often as you need. Change the content of |name of your structure| for each line to the name of one of your .nbt files. Make sure that the last line doesn't have a ",". That would cause syntax errors
 
-The content of the second brackets ([0,0,0]) is an offset position from the original generation position, so there you can the distance between the .nbt files. (Note that it isn't the 'distance' between them, but it helps to create the correct distance between them
+The content of the second brackets ([0,0,0]) is an offset position from the original generation position, so you can adjust the distance between the .nbt files. (Note that it isn't the 'distance' between them, but it helps to create the correct distance between them
