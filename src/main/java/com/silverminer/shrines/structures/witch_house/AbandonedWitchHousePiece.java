@@ -14,7 +14,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -64,31 +63,21 @@ public class AbandonedWitchHousePiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			if (Config.STRUCTURES.WITCH_HOUSE.LOOT_CHANCE.get() > rand.nextDouble()) {
-				if (function.equals("chest")) {
-					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.below(3));
-					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.WITCH_HOUSE,
-								rand.nextLong());
-					}
-				}
-				if (function.equals("chest_cobweb")) {
-					worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
-					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.WITCH_HOUSE,
-								rand.nextLong());
-					}
-				}
-				if (function.equals("chest_op")) {
-					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
-					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.WITCH_HOUSE,
-								rand.nextLong());
-					}
-				}
+			boolean loot = Config.STRUCTURES.WITCH_HOUSE.LOOT_CHANCE.get() > rand.nextDouble();
+			if (function.equals("chest")) {
+				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(3),
+						loot ? ShrinesLootTables.WITCH_HOUSE : ShrinesLootTables.EMPTY);
+			}
+			if (function.equals("chest_cobweb")) {
+				worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+						loot ? ShrinesLootTables.WITCH_HOUSE : ShrinesLootTables.EMPTY);
+			}
+			if (function.equals("chest_op")) {
+				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+						loot ? ShrinesLootTables.WITCH_HOUSE : ShrinesLootTables.EMPTY);
 			}
 		}
 	}

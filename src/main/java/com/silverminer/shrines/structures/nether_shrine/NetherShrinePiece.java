@@ -12,8 +12,7 @@ import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -58,15 +57,11 @@ public class NetherShrinePiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			if (Config.STRUCTURES.NETHER_SHRINE.LOOT_CHANCE.get() > rand.nextDouble()) {
-				if ("chest1".equals(function) || "chest2".equals(function)) {
-					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
-					if (tileentity instanceof ChestTileEntity) {
-						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomNetherLoot(rand),
-								rand.nextLong());
-					}
-				}
+			boolean loot = Config.STRUCTURES.NETHER_SHRINE.LOOT_CHANCE.get() > rand.nextDouble();
+			if ("chest1".equals(function) || "chest2".equals(function)) {
+				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+						loot ? ShrinesLootTables.getRandomNetherLoot(rand) : ShrinesLootTables.EMPTY);
 			}
 		}
 

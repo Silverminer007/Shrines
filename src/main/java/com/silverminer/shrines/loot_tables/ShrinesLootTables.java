@@ -76,6 +76,8 @@ public class ShrinesLootTables {
 	public static final ResourceLocation BALLON = new ResourceLocation("shrines:chests/ballon");
 	public static final ResourceLocation GUARDIAN_MEETING = new ResourceLocation("shrines:chests/guardian_meeting");
 
+	public static final ResourceLocation EMPTY = new ResourceLocation("");
+
 	
    
 

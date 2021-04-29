@@ -10,8 +10,7 @@ import com.silverminer.shrines.structures.StructurePieceTypes;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -44,17 +43,14 @@ public class FloodedTemplePiece {
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
-			if (Config.STRUCTURES.FLOODED_TEMPLE.LOOT_CHANCE.get() > rand.nextDouble()) {
-				if (function.equals("chest")) {
-					if (worldIn.getBlockState(pos.below()).getBlock() == Blocks.AIR)
-						worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					else
-						worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
-					if (tileentity instanceof ChestTileEntity) {
-						((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.FLOODED_TEMPLE, rand.nextLong());
-					}
-				}
+			boolean loot = Config.STRUCTURES.FLOODED_TEMPLE.LOOT_CHANCE.get() > rand.nextDouble();
+			if (function.equals("chest")) {
+				if (worldIn.getBlockState(pos.below()).getBlock() == Blocks.AIR)
+					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				else
+					worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+						loot ? ShrinesLootTables.FLOODED_TEMPLE : ShrinesLootTables.EMPTY);
 			}
 		}
 

@@ -31,6 +31,7 @@ public class Shrines {
 	public static final String MODID = "shrines";
 
 	public static final Logger LOGGER = LogManager.getLogger(Shrines.class);
+	public static final boolean USECUSTOMSTRUCTURES = true;
 
 	public static HashMap<String, List<String>> customStructures = new HashMap<String, List<String>>();
 
@@ -44,7 +45,8 @@ public class Shrines {
 
 		// Config
 		Config.register(ModLoadingContext.get());
-		loadCustomStructures();
+		if (Shrines.USECUSTOMSTRUCTURES)
+			loadCustomStructures();
 	}
 
 	public void loadCustomStructures() {

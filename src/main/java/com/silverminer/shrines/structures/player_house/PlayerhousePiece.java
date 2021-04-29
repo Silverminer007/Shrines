@@ -13,8 +13,7 @@ import com.silverminer.shrines.structures.StructurePieceTypes;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -91,47 +90,34 @@ public class PlayerhousePiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			if (Config.STRUCTURES.PLAYER_HOUSE.LOOT_CHANCE.get() > rand.nextDouble()) {
-				boolean chest2 = "chest_2".equals(function);
-				if ("chest".equals(function) || chest2) {
-					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					TileEntity tileentity;
-					if (chest2) {
-						tileentity = worldIn.getBlockEntity(pos.below(5));
-					} else {
-						tileentity = worldIn.getBlockEntity(pos.below());
-					}
-					if (rand.nextInt(6) == 0) {
-						if (rand.nextInt(2) == 0) {
-							if (tileentity instanceof ChestTileEntity) {
-								((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.HOUSE_OP,
-										rand.nextLong());
-							}
-						} else {
-							if (tileentity instanceof ChestTileEntity) {
-								((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.HOUSE_OP_2,
-										rand.nextLong());
-							}
-						}
-					} else {
-						if (tileentity instanceof ChestTileEntity) {
-							((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.getRandomVillageLoot(rand),
-									rand.nextLong());
-						}
-					}
+			boolean loot = Config.STRUCTURES.PLAYER_HOUSE.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean chest2 = "chest_2".equals(function);
+			if ("chest".equals(function) || chest2) {
+				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				BlockPos position;
+				if (chest2) {
+					position = pos.below(5);
+				} else {
+					position = pos.below();
 				}
-				if ("chest_furnace".equals(function)) {
-					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
+				if (rand.nextInt(6) == 0) {
 					if (rand.nextInt(2) == 0) {
-						if (tileentity instanceof ChestTileEntity) {
-							((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.FURNACE, rand.nextLong());
-						}
+						LockableLootTileEntity.setLootTable(worldIn, rand, position, loot ? ShrinesLootTables.HOUSE_OP : ShrinesLootTables.EMPTY);
 					} else {
-						if (tileentity instanceof ChestTileEntity) {
-							((ChestTileEntity) tileentity).setLootTable(ShrinesLootTables.FURNACE_2, rand.nextLong());
-						}
+						LockableLootTileEntity.setLootTable(worldIn, rand, position, loot ? ShrinesLootTables.HOUSE_OP_2 : ShrinesLootTables.EMPTY);
 					}
+				} else {
+					LockableLootTileEntity.setLootTable(worldIn, rand, position, loot ? ShrinesLootTables.getRandomVillageLoot(rand) : ShrinesLootTables.EMPTY);
+				}
+			}
+			if ("chest_furnace".equals(function)) {
+				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				if (rand.nextInt(2) == 0) {
+					LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+							loot ? ShrinesLootTables.FURNACE : ShrinesLootTables.EMPTY);
+				} else {
+					LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+							loot ? ShrinesLootTables.FURNACE_2 : ShrinesLootTables.EMPTY);
 				}
 			}
 		}

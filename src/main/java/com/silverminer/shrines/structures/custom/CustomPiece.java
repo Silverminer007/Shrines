@@ -19,7 +19,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -105,14 +104,10 @@ public class CustomPiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			if (Config.STRUCTURES.BALLON.LOOT_CHANCE.get() > rand.nextDouble()) {
-				if (function.equals("chest")) {
-					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.above(2));
-					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.BALLON, rand.nextLong());
-					}
-				}
+			boolean loot = Config.STRUCTURES.BALLON.LOOT_CHANCE.get() > rand.nextDouble();
+			if (function.equals("chest")) {
+				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+					LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(), loot ? ShrinesLootTables.BALLON : ShrinesLootTables.EMPTY);
 			}
 		}
 	}
