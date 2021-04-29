@@ -3,7 +3,8 @@ package com.silverminer.shrines;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -33,7 +34,8 @@ public class Shrines {
 	public static final Logger LOGGER = LogManager.getLogger(Shrines.class);
 	public static final boolean USECUSTOMSTRUCTURES = true;
 
-	public static HashMap<String, List<String>> customStructures = new HashMap<String, List<String>>();
+	public static LinkedHashMap<String, List<String>> customStructures = new LinkedHashMap<String, List<String>>();
+	public static ArrayList<String> customsToDelete = new ArrayList<String>();
 
 	public Shrines() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
@@ -89,34 +91,9 @@ public class Shrines {
 				if (!st.exists()) {
 					st.createNewFile();
 					FileWriter fw = new FileWriter(st);
-					fw.write("Seed:" + String.valueOf(new Random().nextInt(Integer.MAX_VALUE)));
-					fw.write("\n");
-					fw.write("Generate:true");
-					fw.write("\n");
-					fw.write("Spawn Chance:0.6");
-					fw.write("\n");
-					fw.write("Needs Ground:true");
-					fw.write("\n");
-					fw.write("Distance:50");
-					fw.write("\n");
-					fw.write("Seperation:8");
-					fw.write("\n");
-					fw.write(
-							"#Put in here all biomes that you want your structure to spawn in. DEFAULT and ALL are also supported; Sepperate them by \",\"");
-					fw.write("\n");
-					fw.write("Biome Categories:[DEFAULT]");
-					fw.write("\n");
-					fw.write(
-							"#Put here all biomes that you want your structure NOT to spawn in. Use minecraft name keys");
-					fw.write("\n");
-					fw.write("Biome Blacklist:[]");
-					fw.write("\n");
-					fw.write("Use Random Varianting:true");
-					fw.write("\n");
-					fw.write("Pieces:");
-					fw.write("\n");
-					fw.write("[" + n + ", [0,0,0]]");
-					fw.write("\n");
+					for (String s : getDefaultConfig(n)) {
+						fw.write(s + "\n");
+					}
 					fw.close();
 				}
 				List<String> config = Files.readAllLines(st.toPath());
@@ -126,5 +103,33 @@ public class Shrines {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static final ArrayList<String> defaultConfig = new ArrayList<String>();
+
+	public static ArrayList<String> getDefaultConfig(String name) {
+		return getDefaultConfig(name, new Random().nextInt(Integer.MAX_VALUE));
+	}
+
+	public static ArrayList<String> getDefaultConfig(String name, int seed) {
+		if (defaultConfig.isEmpty()) {
+			defaultConfig.add("Seed:" + String.valueOf(seed));
+			defaultConfig.add("Generate:true");
+			defaultConfig.add("Spawn Chance:0.6");
+			defaultConfig.add("Needs Ground:true");
+			defaultConfig.add("Distance:50");
+			defaultConfig.add("Seperation:8");
+			defaultConfig.add(
+					"#Put in here all biomes that you want your structure to spawn in. DEFAULT and ALL are also supported; Sepperate them by \",\"");
+			defaultConfig.add("Biome Categories:[DEFAULT]");
+			defaultConfig
+					.add("#Put here all biomes that you want your structure NOT to spawn in. Use minecraft name keys");
+			defaultConfig.add("Biome Blacklist:[]");
+			defaultConfig.add("Use Random Varianting:true");
+			defaultConfig.add("Pieces:");
+			defaultConfig.add("pieces");//Only place holder for later default piece
+		}
+		defaultConfig.set(defaultConfig.size() - 1, "[" + name + ", [0,0,0]]");
+		return defaultConfig;
 	}
 }

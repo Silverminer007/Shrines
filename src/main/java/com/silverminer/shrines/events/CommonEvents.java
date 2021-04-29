@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.Shrines;
+import com.silverminer.shrines.commands.ShrinesCommand;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.ModStructureFeatures;
 import com.silverminer.shrines.structures.Generator;
@@ -20,6 +21,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -166,30 +168,45 @@ public class CommonEvents {
 					File structures = new File(path, "structures.txt");
 					if (!structures.exists()) {
 						structures.createNewFile();
-						FileWriter fw = new FileWriter(structures);
-						for (String key : Shrines.customStructures.keySet()) {
-							fw.write(key + "\n");
-							File st = new File(path, "shrines");
-							st = new File(st, key);
-							if (!st.isDirectory()) {
-								st.mkdirs();
-							}
-							st = new File(st, key + ".txt");
-							if (!st.exists()) {
-								st.createNewFile();
-								FileWriter cfw = new FileWriter(st);
-								for (String v : Shrines.customStructures.get(key)) {
-									cfw.write(v + "\n");
-								}
-								cfw.close();
-							}
-						}
-						fw.close();
 					}
+					for(String key : Shrines.customsToDelete) {
+						File st = new File(path, "shrines");
+						st = new File(st, key);
+						if (!st.isDirectory()) {
+							continue;
+						}
+						st.delete();
+					}
+					FileWriter fw = new FileWriter(structures);
+					for (String key : Shrines.customStructures.keySet()) {
+						LOGGER.debug("Writing config options of custom structure with name {}", key);
+						fw.write(key + "\n");
+						File st = new File(path, "shrines");
+						st = new File(st, key);
+						if (!st.isDirectory()) {
+							st.mkdirs();
+						}
+						st = new File(st, key + ".txt");
+						if (!st.exists()) {
+							st.createNewFile();
+						}
+						FileWriter cfw = new FileWriter(st);
+						for (String v : Shrines.customStructures.get(key)) {
+							cfw.write(v + "\n");
+						}
+						cfw.close();
+					}
+					fw.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
+		}
+
+		@SubscribeEvent
+		public static void registerCommands(RegisterCommandsEvent event) {
+			LOGGER.debug("Registering shrines commands");
+			ShrinesCommand.register(event.getDispatcher());
 		}
 	}
 }
