@@ -156,37 +156,39 @@ public class CommonEvents {
 
 		@SubscribeEvent
 		public static void onServerStop(FMLServerStoppingEvent event) {
-			File path = event.getServer().getFile("");
-			try {
-				path = new File(path, "shrines-saves").getCanonicalFile();
-				LOGGER.info("Saving config options on path: {}", path);
-				if (!path.exists())
-					path.mkdirs();
-				File structures = new File(path, "structures.txt");
-				if (!structures.exists()) {
-					structures.createNewFile();
-					FileWriter fw = new FileWriter(structures);
-					for (String key : Shrines.customStructures.keySet()) {
-						fw.write(key + "\n");
-						File st = new File(path, "shrines");
-						st = new File(st, key);
-						if (!st.isDirectory()) {
-							st.mkdirs();
-						}
-						st = new File(st, key + ".txt");
-						if (!st.exists()) {
-							st.createNewFile();
-							FileWriter cfw = new FileWriter(st);
-							for (String v : Shrines.customStructures.get(key)) {
-								cfw.write(v + "\n");
+			if (Shrines.USECUSTOMSTRUCTURES) {
+				File path = event.getServer().getFile("");
+				try {
+					path = new File(path, "shrines-saves").getCanonicalFile();
+					LOGGER.info("Saving config options on path: {}", path);
+					if (!path.exists())
+						path.mkdirs();
+					File structures = new File(path, "structures.txt");
+					if (!structures.exists()) {
+						structures.createNewFile();
+						FileWriter fw = new FileWriter(structures);
+						for (String key : Shrines.customStructures.keySet()) {
+							fw.write(key + "\n");
+							File st = new File(path, "shrines");
+							st = new File(st, key);
+							if (!st.isDirectory()) {
+								st.mkdirs();
 							}
-							cfw.close();
+							st = new File(st, key + ".txt");
+							if (!st.exists()) {
+								st.createNewFile();
+								FileWriter cfw = new FileWriter(st);
+								for (String v : Shrines.customStructures.get(key)) {
+									cfw.write(v + "\n");
+								}
+								cfw.close();
+							}
 						}
+						fw.close();
 					}
-					fw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}

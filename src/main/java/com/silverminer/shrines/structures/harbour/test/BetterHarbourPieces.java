@@ -154,42 +154,25 @@ public class BetterHarbourPieces {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			super.handleDataMarker(function, pos, worldIn, rand, sbb);
+			boolean loot = Config.STRUCTURES.HARBOUR.LOOT_CHANCE.get() > rand.nextDouble();
 			if (Config.STRUCTURES.HARBOUR.LOOT_CHANCE.get() > rand.nextDouble()) {
 				if (function.equals("warehouse1_1")) {
 					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
-					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
-					}
+					LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(), loot ? ShrinesLootTables.HARBOUR : ShrinesLootTables.EMPTY);
 				}
 				if (function.equals("warehouse1_2") || function.equals("warehouse1_3")) {
 					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					TileEntity tileentity = worldIn.getBlockEntity(pos.below());
-					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
-					}
-					tileentity = worldIn.getBlockEntity(pos.below(2));
-					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
-					}
-					tileentity = worldIn.getBlockEntity(pos.below(3));
-					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR, rand.nextLong());
-					}
+					LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(1), loot ? ShrinesLootTables.HARBOUR : ShrinesLootTables.EMPTY);
+					LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(2), loot ? ShrinesLootTables.HARBOUR : ShrinesLootTables.EMPTY);
+					LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(3), loot ? ShrinesLootTables.HARBOUR : ShrinesLootTables.EMPTY);
 				}
 				if (function.equals("chest_tavern")) {
 					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 					TileEntity tileentity = worldIn.getBlockEntity(pos.below(2));
 					if (tileentity instanceof LockableLootTileEntity) {
-						((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR_TAVERN,
-								rand.nextLong());
+						LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(2), loot ? ShrinesLootTables.HARBOUR_TAVERN : ShrinesLootTables.EMPTY);
 					} else {
-						tileentity = worldIn.getBlockEntity(pos.below(3));
-						if (tileentity instanceof LockableLootTileEntity) {
-							((LockableLootTileEntity) tileentity).setLootTable(ShrinesLootTables.HARBOUR_TAVERN,
-									rand.nextLong());
-						}
+						LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(3), loot ? ShrinesLootTables.HARBOUR_TAVERN : ShrinesLootTables.EMPTY);
 					}
 				}
 			}
