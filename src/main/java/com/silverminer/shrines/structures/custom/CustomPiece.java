@@ -1,6 +1,7 @@
 package com.silverminer.shrines.structures.custom;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -41,9 +42,10 @@ public class CustomPiece {
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random, boolean useRandomVarianting, HashMap<String, BlockPos> parts,
 			String name) {
-		for (String piece : parts.keySet()) {
+		for (int i = 0; i< parts.size(); i++) {
+			String piece = (String) parts.keySet().toArray()[i];
 			pieces.add(new CustomPiece.Piece(templateManager, new ResourceLocation(Shrines.MODID, name + "/" + piece),
-					pos.offset(parts.get(piece)), rotation, 0, random, useRandomVarianting));
+					pos.offset(new ArrayList<BlockPos>(parts.values()).get(i)), rotation, 0, random, useRandomVarianting));
 		}
 	}
 
