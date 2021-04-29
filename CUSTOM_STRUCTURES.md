@@ -78,7 +78,7 @@ Here you have to decide:
 > Biome Blacklist:[]
 > Use Random Varianting:true
 > Pieces:
-> [>name of your structure|, [0,0,0]]
+> [|name of your structure|, [0,0,0]]
 
 5.8 Make sure to change seed (See Commands/5.1 for more information) and |name of your structure|
 
