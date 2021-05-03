@@ -1,0 +1,17 @@
+{
+	"commands.shrines.help": "Restart your game to make changes aktive\n%s",
+	"commands.shrines.help.help": "Help",
+	"commands.shrines.help.tooltip": "Opens a link to a help website",
+	"commands.shrines.add.failed": "Failed to add new structure, because %s already exists",
+	"commands.shrines.add.success": "Successfully added new structure [%s]\n%s\nRestart to make changes aktive",
+	"commands.shrines.add.success.help": "Use this to configure",
+	"commands.shrines.add.success.help.tooltip": "Click here to get configure command",
+	"commands.shrines.remove.failed": "Failed to remove [%s] because there was no custom structure with this name",
+	"commands.shrines.remove.success": "Succesfully removed custom structure %s\nRestart your game to make the changes aktive",
+	"commands.shrines.configure.failed.structure": "Failed to configure structure [%s] because it doesn't exists",
+	"commands.shrines.configure.failed.option": "Failed to configure  %s because %s is not a valid option",
+	"commands.shrines.configure.success": "Succesfully configured [%s]",
+	"commands.shrines.query.structure": "Actually there are %s custom structures [%s\n]",
+	"commands.shrines.query.option.failed": "Failed to query config of %s because no such structure exists",
+	"commands.shrines.query.option.success": "Config of %s [\n%s]"
+}
