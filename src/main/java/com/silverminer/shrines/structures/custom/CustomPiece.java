@@ -1,8 +1,6 @@
 package com.silverminer.shrines.structures.custom;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -14,6 +12,7 @@ import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
+import com.silverminer.shrines.structures.custom.helper.PieceData;
 import com.silverminer.shrines.utils.ModTemplateManager;
 
 import net.minecraft.block.Blocks;
@@ -40,12 +39,12 @@ public class CustomPiece {
 	protected static final Logger LOGGER = LogManager.getLogger(CustomPiece.class);
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-			List<StructurePiece> pieces, Random random, boolean useRandomVarianting, HashMap<String, BlockPos> parts,
+			List<StructurePiece> pieces, Random random, boolean useRandomVarianting, List<PieceData> parts,
 			String name) {
-		for (int i = 0; i< parts.size(); i++) {
-			String piece = (String) parts.keySet().toArray()[i];
+		for (PieceData pd : parts) {
+			String piece = pd.path;
 			pieces.add(new CustomPiece.Piece(templateManager, new ResourceLocation(Shrines.MODID, name + "/" + piece),
-					pos.offset(new ArrayList<BlockPos>(parts.values()).get(i)), rotation, 0, random, useRandomVarianting));
+					pos.offset(pd.offset), rotation, 0, random, useRandomVarianting));
 		}
 	}
 

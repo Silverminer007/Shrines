@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ImmutableList;
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.custom.CustomStructure;
+import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -32,9 +34,9 @@ public class CustomStructureInit {
 	@SubscribeEvent
 	public static void registerStructures(Register<Structure<?>> event) {
 		LOGGER.debug("Registering custom structures");
-		for (String name : Shrines.customStructures.keySet()) {
-			name = name.toLowerCase(Locale.ROOT);
-			CustomStructure cS = new CustomStructure(NoFeatureConfig.CODEC, name, Shrines.customStructures.get(name));
+		for (CustomStructureData csd : Utils.customsStructs) {
+			String name = csd.getName().toLowerCase(Locale.ROOT);
+			CustomStructure cS = new CustomStructure(NoFeatureConfig.CODEC, name, csd);
 			cS.setRegistryName(Shrines.MODID, name);
 			if (!Structure.STRUCTURES_REGISTRY.containsValue(cS)) {
 				Structure.STRUCTURES_REGISTRY.putIfAbsent(new ResourceLocation(Shrines.MODID, name).toString(), cS);

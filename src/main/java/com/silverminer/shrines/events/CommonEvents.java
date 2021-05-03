@@ -15,6 +15,8 @@ import com.silverminer.shrines.init.ModStructureFeatures;
 import com.silverminer.shrines.structures.Generator;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 import com.silverminer.shrines.structures.custom.CustomStructure;
+import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -169,16 +171,21 @@ public class CommonEvents {
 					if (!structures.exists()) {
 						structures.createNewFile();
 					}
-					for(String key : Shrines.customsToDelete) {
+					for(String key : Utils.customsToDelete) {
 						File st = new File(path, "shrines");
 						st = new File(st, key);
 						if (!st.isDirectory()) {
 							continue;
 						}
+						for(File f : st.listFiles()) {
+							f.delete();
+						}
 						st.delete();
+						LOGGER.info("Deleted {} from disk", st);
 					}
 					FileWriter fw = new FileWriter(structures);
-					for (String key : Shrines.customStructures.keySet()) {
+					for (CustomStructureData data : Utils.customsStructs) {
+						String key = data.getName();
 						LOGGER.debug("Writing config options of custom structure with name {}", key);
 						fw.write(key + "\n");
 						File st = new File(path, "shrines");
@@ -191,9 +198,7 @@ public class CommonEvents {
 							st.createNewFile();
 						}
 						FileWriter cfw = new FileWriter(st);
-						for (String v : Shrines.customStructures.get(key)) {
-							cfw.write(v + "\n");
-						}
+						cfw.write(data.toStringReadAble());
 						cfw.close();
 					}
 					fw.close();
