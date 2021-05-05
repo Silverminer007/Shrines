@@ -68,7 +68,10 @@ public class Utils {
 					fw.write(csd.toString().replaceAll(";", ";\n"));
 					fw.close();
 				}
-				String data = Files.readString(st.toPath());
+				String data = "";
+				for(String s : Files.readAllLines(st.toPath())) {
+					data += s + "\n";
+				}
 				csd.fromString(data);
 				Utils.customsStructs.add(csd);
 				LOGGER.info("Read config of [{}] from file: {}", n, csd.toString());

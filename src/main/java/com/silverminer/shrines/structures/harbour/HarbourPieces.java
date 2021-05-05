@@ -71,7 +71,7 @@ public class HarbourPieces {
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
 		int height = getStartHeigth(pos, chunkGenerator) - 6;
-		pos = new BlockPos(pos.getX(), height, pos.getZ());
+		pos = new BlockPos(pos.getX(), 0, pos.getZ());
 		LOG.info("Generating Harbourpieces on: {}, with height: {}", pos, height);
 		pieces.add(new HarbourPieces.HarbourPiece(templateManager, GROUND.get(0),
 				pos.offset(new BlockPos(0, 0, 0).rotate(rotation)), rotation, 0, random, height));

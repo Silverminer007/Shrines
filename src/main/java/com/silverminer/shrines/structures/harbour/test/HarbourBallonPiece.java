@@ -50,12 +50,10 @@ public class HarbourBallonPiece {
 	}
 
 	public static class Piece extends ColorStructurePiece {
-		protected BlockPos offsetPos = BlockPos.ZERO;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn, Random rand) {
 			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true);
-			this.offsetPos = new BlockPos(0, 5 + rand.nextInt(25), 0);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
@@ -65,10 +63,6 @@ public class HarbourBallonPiece {
 		@Override
 		public StructureProcessor getProcessor() {
 			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
-		}
-
-		public BlockPos getOffsetPos(Random rand) {
-			return this.offsetPos;
 		}
 
 		public boolean overwriteWool() {

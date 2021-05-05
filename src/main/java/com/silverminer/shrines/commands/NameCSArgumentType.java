@@ -2,6 +2,7 @@ package com.silverminer.shrines.commands;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 import com.google.common.collect.Lists;
@@ -15,14 +16,11 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.Utils;
 
+import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocationException;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class NameCSArgumentType implements ArgumentType<String> {
-
-	private static final SimpleCommandExceptionType ERROR_INVALID = new SimpleCommandExceptionType(
-			new StringTextComponent("Name Argument was invalid"));
 
 	protected NameCSArgumentType() {
 	}
@@ -31,12 +29,18 @@ public class NameCSArgumentType implements ArgumentType<String> {
 		return new NameCSArgumentType();
 	}
 
-	public static String getName(final CommandContext<?> context, final String name) throws CommandSyntaxException {
-		String s = context.getArgument(name, String.class);
+	public static String getName(final CommandContext<CommandSource> context, final String name)
+			throws CommandSyntaxException {
+		String str = context.getArgument(name, String.class);
+		String s = str.toLowerCase(Locale.ROOT);
+		if (!s.equals(str))
+			context.getSource()
+					.sendFailure(new TranslationTextComponent("commands.shrines.failure.lower_case", "structure-name"));
 		if (Utils.customsStructs.stream().map(CustomStructureData::getName).anyMatch(n -> n.equals(s))) {
 			return s;
 		} else {
-			throw new SimpleCommandExceptionType(new StringTextComponent("Name Argument was invalid")).create();
+			throw new SimpleCommandExceptionType(
+					new TranslationTextComponent("commands.shrines.failure.no_name_match", name)).create();
 		}
 	}
 
@@ -53,15 +57,8 @@ public class NameCSArgumentType implements ArgumentType<String> {
 		while (reader.canRead() && isAllowedChar(reader.peek())) {
 			reader.skip();
 		}
-
 		String s = reader.getString().substring(i, reader.getCursor());
-
-		try {
-			return s;
-		} catch (ResourceLocationException resourcelocationexception) {
-			reader.setCursor(i);
-			throw ERROR_INVALID.createWithContext(reader);
-		}
+		return s;
 	}
 
 	public static boolean isAllowedChar(char ch) {

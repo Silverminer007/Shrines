@@ -8,24 +8,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.Shrines;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 import com.silverminer.shrines.structures.custom.helper.PieceData;
 import com.silverminer.shrines.utils.ModTemplateManager;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
@@ -39,32 +33,36 @@ public class CustomPiece {
 	protected static final Logger LOGGER = LogManager.getLogger(CustomPiece.class);
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-			List<StructurePiece> pieces, Random random, boolean useRandomVarianting, List<PieceData> parts,
-			String name) {
+			List<StructurePiece> pieces, Random random, boolean useRandomVarianting, List<PieceData> parts, String name,
+			boolean ignore_air) {
 		for (PieceData pd : parts) {
 			String piece = pd.path;
 			pieces.add(new CustomPiece.Piece(templateManager, new ResourceLocation(Shrines.MODID, name + "/" + piece),
-					pos.offset(pd.offset), rotation, 0, random, useRandomVarianting));
+					pos.offset(pd.offset.rotate(rotation)), rotation, 0, random, useRandomVarianting, ignore_air));
 		}
 	}
 
 	public static class Piece extends ColorStructurePiece {
 		public boolean useRandomVarianting = false;
 		public int heightOffset = 0;
+		public boolean ignore_air = true;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, Random rand, boolean useRandomVarianting) {
+				int componentTypeIn, Random rand, boolean useRandomVarianting, boolean ignore_air) {
 			super(StructurePieceTypes.CUSTOM, templateManager, location, pos, rotation, componentTypeIn, true);
 			this.useRandomVarianting = useRandomVarianting;
 			this.heightOffset = pos.getY();
+			this.ignore_air = ignore_air;
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.CUSTOM, templateManager, cNBT);
 			this.useRandomVarianting = cNBT.getBoolean("varianting");
 			this.heightOffset = cNBT.getInt("height");
+			this.ignore_air = cNBT.getBoolean("ignore_air");
 		}
 
+		@Override
 		public void setup(TemplateManager templateManager) {
 			MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
 			try {
@@ -82,34 +80,25 @@ public class CustomPiece {
 			super.addAdditionalSaveData(tagCompound);
 			tagCompound.putBoolean("varianting", this.useRandomVarianting);
 			tagCompound.putInt("height", this.heightOffset);
+			tagCompound.putBoolean("ignore_air", this.ignore_air);
 		}
 
+		@Override
 		protected int getHeight(ISeedReader world, BlockPos blockpos1) {
-			return super.getHeight(world, blockpos1) + this.heightOffset;
+			return super.getHeight(world, blockpos1) + this.heightOffset - 1;
 		}
 
 		@Override
 		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
-		}
-
-		public BlockPos getOffsetPos(Random rand) {
-			return BlockPos.ZERO;
+			if (this.ignore_air)
+				return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
+			else
+				return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
 		}
 
 		@Override
 		protected boolean useRandomVarianting() {
 			return this.useRandomVarianting;
-		}
-
-		@Override
-		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
-				MutableBoundingBox sbb) {
-			boolean loot = Config.STRUCTURES.BALLON.LOOT_CHANCE.get() > rand.nextDouble();
-			if (function.equals("chest")) {
-				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(), loot ? ShrinesLootTables.BALLON : ShrinesLootTables.EMPTY);
-			}
 		}
 	}
 }

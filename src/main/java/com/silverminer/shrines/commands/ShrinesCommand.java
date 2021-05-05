@@ -10,6 +10,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.silverminer.shrines.structures.custom.helper.ConfigOption;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.utils.OptionParsingResult;
 import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.command.CommandSource;
@@ -29,7 +30,7 @@ public class ShrinesCommand {
 
 		RequiredArgumentBuilder<CommandSource, String> options = Commands.argument("structure-name",
 				NameCSArgumentType.name());
-		for (ConfigOption<?> co : Utils.customsStructs.get(0).CONFIGS) {
+		for (ConfigOption<?> co : new CustomStructureData("dummy", 0).CONFIGS) {
 			options = options.then(Commands.literal(co.getName())
 					.then(Commands.argument("value", co.getArgument()).executes(
 							ctx -> configure(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
@@ -126,11 +127,15 @@ public class ShrinesCommand {
 		if (data == null) {
 			message = new TranslationTextComponent("commands.shrines.configure.failed.structure", name);
 		} else {
-			boolean flag = data.fromString(option, value.toString());
-			if (flag)
+			OptionParsingResult res = data.fromString(option, value.toString());
+			if (res.isSuccess())
 				message = new TranslationTextComponent("commands.shrines.configure.success", name);
-			else
-				message = new TranslationTextComponent("commands.shrines.configure.failed.option", name, option);
+			else {
+				if (res.getMessage() == null)
+					message = new TranslationTextComponent("commands.shrines.configure.failed.option", name, option);
+				else
+					message = res.getMessage();
+			}
 		}
 		ctx.sendSuccess(message, false);
 		return 0;

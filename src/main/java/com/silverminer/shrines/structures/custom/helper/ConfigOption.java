@@ -1,5 +1,6 @@
 package com.silverminer.shrines.structures.custom.helper;
 
+import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -8,8 +9,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.silverminer.shrines.utils.OptionParsingResult;
 
 import net.minecraft.command.CommandSource;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class ConfigOption<T> {
 	protected static final Logger LOGGER = LogManager.getLogger(ConfigOption.class);
@@ -28,11 +31,50 @@ public class ConfigOption<T> {
 		this.argument_to_string = argument_to_string;
 	}
 
-	public void fromString(String s) {
+	public OptionParsingResult fromString(String s, CustomStructureData csd) {
+		T v;
 		if (s.startsWith(getName() + ":")) {
-			this.setValue(this.fromString.apply(s.replace(this.getName() + ":", "")));
+			v = this.fromString.apply(s.replace(this.getName() + ":", ""));
 		} else {
-			this.setValue(this.fromString.apply(s));
+			v = this.fromString.apply(s);
+		}
+		if (v == null) {
+			return new OptionParsingResult(false,
+					new TranslationTextComponent("commands.shrines.configure.failed.wrong_value", s, this.getName()));
+		} else if (csd.distance.equals(this)) {
+			if (((Integer) v) <= csd.seperation.getValue()) {
+				return new OptionParsingResult(false, new TranslationTextComponent(
+						"commands.shrines.configure.failed.dist_larger_sep", v, csd.seperation.getValue()));
+			}
+		} else if (csd.seperation.equals(this)) {
+			if (((Integer) v) >= csd.distance.getValue()) {
+				return new OptionParsingResult(false, new TranslationTextComponent(
+						"commands.shrines.configure.failed.sep_smaller_dist", v, csd.distance.getValue()));
+			}
+		} else if (csd.spawn_chance.equals(this)) {
+			Double d = (Double) v;
+			if (d < 0.0 || d > 1.0) {
+				return new OptionParsingResult(false,
+						new TranslationTextComponent("commands.shrines.configure.failed.chance_out_of_range", v));
+			}
+		}
+		else if (csd.seed.equals(this)) {
+			Integer i = (Integer) v;
+			if (i < 0) {
+				return this.fromString(String.valueOf(i * -1), csd).setMessage(new TranslationTextComponent("commands.shrines.configure.failed.seed_set_positive"));
+			} else if (i == 0) {
+				return this.fromString(String.valueOf(new Random().nextInt(Integer.MAX_VALUE)), csd).setMessage(new TranslationTextComponent("commands.shrines.configure.failed.seed_set_random"));
+			}
+		}
+		this.setValue(v);
+		return new OptionParsingResult(true, null);
+	}
+
+	public boolean equals(Object o) {
+		if (o instanceof ConfigOption) {
+			return ((ConfigOption<?>) o).getName() == this.getName();
+		} else {
+			return false;
 		}
 	}
 

@@ -132,30 +132,6 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 		return true;
 	}
 
-	@Override
-	public ChunkPos getPotentialFeatureChunk(StructureSeparationSettings settings, long seed,
-			SharedSeedRandom sharedSeedRand, int x, int z) {
-		int spacing = this.getDistance();
-		int separation = this.getSeparation();
-
-		int k = Math.floorDiv(x, spacing);
-		int l = Math.floorDiv(z, spacing);
-
-		sharedSeedRand.setLargeFeatureWithSalt(seed, k, l, this.getSeedModifier());
-
-		int i1;
-		int j1;
-		if (this.linearSeparation()) {
-			i1 = sharedSeedRand.nextInt(spacing - separation);
-			j1 = sharedSeedRand.nextInt(spacing - separation);
-		} else {
-			i1 = (sharedSeedRand.nextInt(spacing - separation) + sharedSeedRand.nextInt(spacing - separation)) / 2;
-			j1 = (sharedSeedRand.nextInt(spacing - separation) + sharedSeedRand.nextInt(spacing - separation)) / 2;
-		}
-
-		return new ChunkPos(k * spacing + i1, l * spacing + j1);
-	}
-
 	public boolean isEndStructure() {
 		return false;
 	}

@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
@@ -45,25 +46,32 @@ public class BallonPiece {
 	}
 
 	public static class Piece extends ColorStructurePiece {
-		protected BlockPos offsetPos = BlockPos.ZERO;
+		protected int heightOffset = 0;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn, Random rand) {
 			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true);
-			this.offsetPos = new BlockPos(0, 5 + rand.nextInt(25), 0);
+			this.heightOffset = 5 + rand.nextInt(25);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.BALLON, templateManager, cNBT);
+			this.heightOffset = cNBT.getInt("height");
+		}
+
+		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+			super.addAdditionalSaveData(tagCompound);
+			tagCompound.putInt("height", this.heightOffset);
+		}
+
+		@Override
+		protected int getHeight(ISeedReader world, BlockPos blockpos1) {
+			return super.getHeight(world, blockpos1) + this.heightOffset - 1;
 		}
 
 		@Override
 		public StructureProcessor getProcessor() {
 			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
-		}
-
-		public BlockPos getOffsetPos(Random rand) {
-			return this.offsetPos;
 		}
 
 		public boolean overwriteWool() {
@@ -97,7 +105,8 @@ public class BallonPiece {
 			boolean loot = Config.STRUCTURES.BALLON.LOOT_CHANCE.get() > rand.nextDouble();
 			if (function.equals("chest")) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-					LockableLootTileEntity.setLootTable(worldIn, rand, pos.above(2), loot ? ShrinesLootTables.BALLON : ShrinesLootTables.EMPTY);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.above(2),
+						loot ? ShrinesLootTables.BALLON : ShrinesLootTables.EMPTY);
 			}
 		}
 	}

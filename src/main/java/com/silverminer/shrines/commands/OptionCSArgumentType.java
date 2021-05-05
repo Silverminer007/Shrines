@@ -1,6 +1,7 @@
 package com.silverminer.shrines.commands;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 import com.mojang.brigadier.StringReader;
@@ -12,14 +13,11 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 
+import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocationException;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class OptionCSArgumentType implements ArgumentType<String> {
-
-	private static final SimpleCommandExceptionType ERROR_INVALID = new SimpleCommandExceptionType(
-			new StringTextComponent("Option Argument was invalid"));
 
 	protected OptionCSArgumentType() {
 	}
@@ -28,12 +26,16 @@ public class OptionCSArgumentType implements ArgumentType<String> {
 		return new OptionCSArgumentType();
 	}
 
-	public static String getOption(final CommandContext<?> context, final String name) throws CommandSyntaxException {
-		String s = context.getArgument(name, String.class);
+	public static String getOption(final CommandContext<CommandSource> context, final String name) throws CommandSyntaxException {
+		String str = context.getArgument(name, String.class);
+		String s = str.toLowerCase(Locale.ROOT);
+		if (!s.equals(str))
+			context.getSource()
+					.sendFailure(new TranslationTextComponent("commands.shrines.failure.lower_case", "structure-name"));
 		if (CustomStructureData.OPTIONS.stream().anyMatch(n -> n.equals(s))) {
 			return s;
 		} else {
-			throw new SimpleCommandExceptionType(new StringTextComponent("Option Argument was invalid")).create();
+			throw new SimpleCommandExceptionType(new TranslationTextComponent("commands.shrines.failure.option", s)).create();
 		}
 	}
 
@@ -52,13 +54,7 @@ public class OptionCSArgumentType implements ArgumentType<String> {
 		}
 
 		String s = reader.getString().substring(i, reader.getCursor());
-
-		try {
-			return s;
-		} catch (ResourceLocationException resourcelocationexception) {
-			reader.setCursor(i);
-			throw ERROR_INVALID.createWithContext(reader);
-		}
+		return s;
 	}
 
 	public static boolean isAllowedChar(char ch) {

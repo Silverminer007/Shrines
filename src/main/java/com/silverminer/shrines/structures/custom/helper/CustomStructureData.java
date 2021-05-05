@@ -11,6 +11,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.silverminer.shrines.utils.OptionParsingResult;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -37,12 +38,14 @@ public class CustomStructureData {
 			IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
 	public ConfigOption<List<Biome.Category>> categories = add(new ConfigOption<List<Biome.Category>>("categories",
 			Lists.newArrayList(Biome.Category.PLAINS, Biome.Category.TAIGA, Biome.Category.FOREST),
-			CustomStructureData::readCategories, StringArgumentType.word(), StringArgumentType::getString));
+			CustomStructureData::readCategories, StringArgumentType.greedyString(), StringArgumentType::getString));
 	public ConfigOption<List<String>> blacklist = add(new ConfigOption<List<String>>("blacklist", Lists.newArrayList(),
-			CustomStructureData::readBlackList, StringArgumentType.word(), StringArgumentType::getString));
+			CustomStructureData::readBlackList, StringArgumentType.greedyString(), StringArgumentType::getString));
 	public ConfigOption<List<PieceData>> pieces = add(
 			new ConfigOption<List<PieceData>>("pieces", Lists.newArrayList(new PieceData("resource", BlockPos.ZERO)),
-					CustomStructureData::readPieces, StringArgumentType.word(), StringArgumentType::getString));
+					CustomStructureData::readPieces, StringArgumentType.greedyString(), StringArgumentType::getString));
+	public ConfigOption<Boolean> ignore_air = add(new ConfigOption<Boolean>("ignore_air", true,
+			Boolean::valueOf, BoolArgumentType.bool(), BoolArgumentType::getBool));
 
 	public CustomStructureData(String name, Random rand) {
 		this(name, rand.nextInt(Integer.MAX_VALUE));
@@ -50,7 +53,8 @@ public class CustomStructureData {
 
 	public CustomStructureData(String name, int seed) {
 		this.name = name;
-		this.seed = add(new ConfigOption<Integer>("seed", seed, Integer::valueOf, IntegerArgumentType.integer(0), IntegerArgumentType::getInteger));
+		this.seed = add(new ConfigOption<Integer>("seed", seed, Integer::valueOf, IntegerArgumentType.integer(0),
+				IntegerArgumentType::getInteger));
 	}
 
 	public <T> ConfigOption<T> add(ConfigOption<T> option) {
@@ -99,19 +103,22 @@ public class CustomStructureData {
 		}
 	}
 
-	public boolean fromString(String option, String value) {
+	public OptionParsingResult fromString(String option, String value) {
 		for (ConfigOption<?> co : CONFIGS) {
 			if (co.getName().equals(option)) {
-				co.fromString(value);
-				return true;
+				OptionParsingResult res = co.fromString(value, this);
+				if (res.isSuccess())
+					return res;
 			}
 		}
-		return false;
+		return new OptionParsingResult(false, null);
 	}
 
 	public static List<Biome.Category> readCategories(String s) {
 		if (s.startsWith("[") && s.endsWith("]")) {
 			s = s.substring(1, s.length() - 1);
+		}
+		try {
 			List<String> cats = Lists.newArrayList();
 			while ((s.contains(","))) {
 				int idx = s.lastIndexOf(",");
@@ -133,8 +140,10 @@ public class CustomStructureData {
 				}
 			}
 			return categories;
-		} else
-			return Lists.newArrayList();
+		} catch (Throwable t) {
+			LOGGER.warn("Failed to parse [{}] to Categories", s);
+			return null;
+		}
 	}
 
 	public static List<String> readBlackList(String s) {
@@ -156,8 +165,8 @@ public class CustomStructureData {
 		if (s.startsWith("[") && s.endsWith("]")) {
 			s = s.substring(1, s.length() - 1);
 			List<String> cats = Lists.newArrayList();
-			while ((s.contains(";"))) {
-				int idx = s.lastIndexOf(";");
+			while ((s.contains("+"))) {
+				int idx = s.lastIndexOf("+");
 				cats.add(s.substring(idx + 1));
 				s = s.substring(0, idx);
 			}
