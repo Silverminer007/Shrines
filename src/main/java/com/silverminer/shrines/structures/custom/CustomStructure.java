@@ -106,13 +106,13 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 0, j);
+			BlockPos blockpos = new BlockPos(i, 1, j);
 			Rotation rotation = Rotation.getRandom(this.random);
 			if (!(this.getFeature() instanceof CustomStructure))
 				return;
 			CustomStructure cS = (CustomStructure) this.getFeature();
 			CustomPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, cS.csd.use_random_varianting.getValue(),
-					cS.csd.pieces.getValue(), cS.name);
+					cS.csd.pieces.getValue(), cS.name, cS.csd.ignore_air.getValue());
 			this.calculateBoundingBox();
 		}
 	}

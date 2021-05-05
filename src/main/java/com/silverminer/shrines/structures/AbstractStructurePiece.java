@@ -82,10 +82,6 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 		return world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
 	}
 
-	public BlockPos getOffsetPos(Random rand) {
-		return BlockPos.ZERO;
-	}
-
 	@Override
 	protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 			MutableBoundingBox sbb) {

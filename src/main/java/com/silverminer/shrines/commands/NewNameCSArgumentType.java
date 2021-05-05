@@ -2,6 +2,7 @@ package com.silverminer.shrines.commands;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -16,14 +17,11 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.Utils;
 
+import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocationException;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class NewNameCSArgumentType implements ArgumentType<String> {
-
-	private static final SimpleCommandExceptionType ERROR_INVALID = new SimpleCommandExceptionType(
-			new StringTextComponent("Name Argument was invalid"));
 	private static final List<String> EXAMPLES = Lists.newArrayList("example", "custom", "structure", "insert_the_new_name");
 
 	protected NewNameCSArgumentType() {
@@ -33,13 +31,17 @@ public class NewNameCSArgumentType implements ArgumentType<String> {
 		return new NewNameCSArgumentType();
 	}
 
-	public static String getName(final CommandContext<?> context, final String name) throws CommandSyntaxException {
-		String s = context.getArgument(name, String.class);
+	public static String getName(final CommandContext<CommandSource> context, final String name) throws CommandSyntaxException {
+		String str = context.getArgument(name, String.class);
+		String s = str.toLowerCase(Locale.ROOT);
+		if (!s.equals(str))
+			context.getSource()
+					.sendFailure(new TranslationTextComponent("commands.shrines.failure.lower_case", "structure-name"));
 		if (!Utils.customsStructs.stream().map(CustomStructureData::getName).anyMatch(n -> n.equals(s))) {
 			return s;
 		} else {
 			throw new SimpleCommandExceptionType(
-					new StringTextComponent("Name Argument was invalid, there is already such an structure")).create();
+					new TranslationTextComponent("commands.shrines.failure.name_match", name)).create();
 		}
 	}
 
@@ -60,12 +62,7 @@ public class NewNameCSArgumentType implements ArgumentType<String> {
 
 		String s = reader.getString().substring(i, reader.getCursor());
 
-		try {
-			return s;
-		} catch (ResourceLocationException resourcelocationexception) {
-			reader.setCursor(i);
-			throw ERROR_INVALID.createWithContext(reader);
-		}
+		return s;
 	}
 
 	public static boolean isAllowedChar(char ch) {

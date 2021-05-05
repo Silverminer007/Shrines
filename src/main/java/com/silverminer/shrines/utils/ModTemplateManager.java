@@ -2,11 +2,8 @@ package com.silverminer.shrines.utils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -64,9 +61,11 @@ public class ModTemplateManager {
 		} else {
 			Path path = this.createAndValidatePathToStructure(p_195428_1_, ".nbt");
 
+			LOGGER.debug("Loading custom structure piece from {}", path);
 			try (InputStream inputstream = new FileInputStream(path.toFile())) {
 				return this.readStructure(inputstream);
 			} catch (FileNotFoundException filenotfoundexception) {
+				LOGGER.warn("Couldn't load structure from {}, because of {}", path, filenotfoundexception);
 				return null;
 			} catch (IOException ioexception) {
 				LOGGER.error("Couldn't load structure from {}", path, ioexception);
@@ -89,35 +88,6 @@ public class ModTemplateManager {
 		template.load(NBTUtil.update(this.fixerUpper, DefaultTypeReferences.STRUCTURE, p_227458_1_,
 				p_227458_1_.getInt("DataVersion")));
 		return template;
-	}
-
-	public boolean save(ResourceLocation p_195429_1_) {
-		Template template = this.structureRepository.get(p_195429_1_);
-		if (template == null) {
-			return false;
-		} else {
-			Path path = this.createAndValidatePathToStructure(p_195429_1_, ".nbt");
-			Path path1 = path.getParent();
-			if (path1 == null) {
-				return false;
-			} else {
-				try {
-					Files.createDirectories(Files.exists(path1) ? path1.toRealPath() : path1);
-				} catch (IOException ioexception) {
-					LOGGER.error("Failed to create parent directory: {}", (Object) path1);
-					return false;
-				}
-
-				CompoundNBT compoundnbt = template.save(new CompoundNBT());
-
-				try (OutputStream outputstream = new FileOutputStream(path.toFile())) {
-					CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
-					return true;
-				} catch (Throwable throwable) {
-					return false;
-				}
-			}
-		}
 	}
 
 	public Path createPathToStructure(ResourceLocation p_209509_1_, String p_209509_2_) {
