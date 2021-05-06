@@ -44,8 +44,8 @@ public class CustomStructureData {
 	public ConfigOption<List<PieceData>> pieces = add(
 			new ConfigOption<List<PieceData>>("pieces", Lists.newArrayList(new PieceData("resource", BlockPos.ZERO)),
 					CustomStructureData::readPieces, StringArgumentType.greedyString(), StringArgumentType::getString));
-	public ConfigOption<Boolean> ignore_air = add(new ConfigOption<Boolean>("ignore_air", true,
-			Boolean::valueOf, BoolArgumentType.bool(), BoolArgumentType::getBool));
+	public ConfigOption<Boolean> ignore_air = add(new ConfigOption<Boolean>("ignore_air", true, Boolean::valueOf,
+			BoolArgumentType.bool(), BoolArgumentType::getBool));
 
 	public CustomStructureData(String name, Random rand) {
 		this(name, rand.nextInt(Integer.MAX_VALUE));
@@ -107,8 +107,7 @@ public class CustomStructureData {
 		for (ConfigOption<?> co : CONFIGS) {
 			if (co.getName().equals(option)) {
 				OptionParsingResult res = co.fromString(value, this);
-				if (res.isSuccess())
-					return res;
+				return res;
 			}
 		}
 		return new OptionParsingResult(false, null);
