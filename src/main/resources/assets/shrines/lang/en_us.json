@@ -12,7 +12,7 @@
 	"commands.shrines.configure.failed.option": "Failed to configure %s because %s is not a valid option",
 	"commands.shrines.configure.failed.wrong_value": "Failed to configure, because [%s] is not a valid value for option [%s]",
 	"commands.shrines.configure.failed.dist_larger_sep": "Failed to configure, because distance [%s] must be larger than seperation [%s]",
-	"commands.shrines.configure.failed.sep_smaller_dist": "Failed to configure, because seperation [%s] must be larger than distance [%s]",
+	"commands.shrines.configure.failed.sep_smaller_dist": "Failed to configure, because seperation [%s] must be smaller than distance [%s]",
 	"commands.shrines.configure.failed.chance_out_of_range": "Failed to configure, because spawn_chance [%s] is out of range (0.0 - 1.0)",
 	"commands.shrines.configure.failed.seed_set_positive": "Inverted seed because it was negative",
 	"commands.shrines.configure.failed.seed_set_random": "Used random seed because seed was 0",
