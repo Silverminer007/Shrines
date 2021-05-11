@@ -43,7 +43,7 @@ public class CustomStructureData {
 			CustomStructureData::readBlackList, StringArgumentType.greedyString(), StringArgumentType::getString));
 	public ConfigOption<List<PieceData>> pieces = add(
 			new ConfigOption<List<PieceData>>("pieces", Lists.newArrayList(new PieceData("resource", BlockPos.ZERO)),
-					CustomStructureData::readPieces, StringArgumentType.greedyString(), StringArgumentType::getString));
+					CustomStructureData::readPieces, StringArgumentType.greedyString(), StringArgumentType::getString, false));
 	public ConfigOption<Boolean> ignore_air = add(new ConfigOption<Boolean>("ignore_air", true, Boolean::valueOf,
 			BoolArgumentType.bool(), BoolArgumentType::getBool));
 
@@ -58,7 +58,7 @@ public class CustomStructureData {
 	}
 
 	public <T> ConfigOption<T> add(ConfigOption<T> option) {
-		if (!OPTIONS.contains(option.getName())) {
+		if (!OPTIONS.contains(option.getName()) && option.getUseInCommand()) {
 			OPTIONS.add(option.getName());
 		}
 		if (!CONFIGS.contains(option)) {
