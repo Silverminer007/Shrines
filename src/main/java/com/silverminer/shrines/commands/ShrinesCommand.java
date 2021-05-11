@@ -2,12 +2,16 @@ package com.silverminer.shrines.commands;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.silverminer.shrines.structures.custom.helper.ConfigOption;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.OptionParsingResult;
@@ -15,6 +19,8 @@ import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.BlockPosArgument;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -22,7 +28,9 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
 public class ShrinesCommand {
-	public static void register(CommandDispatcher<CommandSource> p_198528_0_) {
+	protected static final Logger LOGGER = LogManager.getLogger(ShrinesCommand.class);
+
+	public static void register(CommandDispatcher<CommandSource> dispatcher) {
 		LiteralArgumentBuilder<CommandSource> literalargumentbuilder = Commands.literal("shrines-structures")
 				.requires((ctx) -> {
 					return ctx.hasPermission(2);
@@ -31,6 +39,9 @@ public class ShrinesCommand {
 		RequiredArgumentBuilder<CommandSource, String> options = Commands.argument("structure-name",
 				NameCSArgumentType.name());
 		for (ConfigOption<?> co : new CustomStructureData("dummy", 0).CONFIGS) {
+			if (!co.getUseInCommand()) {
+				continue;
+			}
 			options = options.then(Commands.literal(co.getName())
 					.then(Commands.argument("value", co.getArgument()).executes(
 							ctx -> configure(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
@@ -61,8 +72,25 @@ public class ShrinesCommand {
 						.then(Commands.argument("structure-name", NameCSArgumentType.name()).executes(
 								ctx -> query(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name")))));
 
+		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("add-piece").then(Commands
+				.argument("structure-name", NameCSArgumentType.name())
+				.then(Commands.argument("firstCorner", BlockPosArgument.blockPos()).then(Commands
+						.argument("secondCorner", BlockPosArgument.blockPos())
+						.executes(ctx -> addPiece(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+								BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
+								BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), false))
+						.then(Commands.literal("instantadd")
+								.executes(ctx -> addPiece(ctx.getSource(),
+										NameCSArgumentType.getName(ctx, "structure-name"),
+										BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
+										BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), true)))))));
+
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("configure").then(options));
-		p_198528_0_.register(literalargumentbuilder);
+
+		LiteralCommandNode<CommandSource> commandNode = dispatcher.register(literalargumentbuilder);
+		LOGGER.info("Command node: {}", commandNode);
+		dispatcher.register((Commands.literal("sh-st").requires(ctx -> ctx.hasPermission(2))
+				.redirect(literalargumentbuilder.build())));
 	}
 
 	public static int help(CommandSource ctx) throws CommandSyntaxException {
@@ -162,6 +190,10 @@ public class ShrinesCommand {
 					data.toStringReadAble());
 		}
 		ctx.sendSuccess(output, false);
+		return 0;
+	}
+
+	public static int addPiece(CommandSource ctx, String name, BlockPos pos1, BlockPos pos2, boolean instadd) {
 		return 0;
 	}
 }

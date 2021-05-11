@@ -21,14 +21,21 @@ public class ConfigOption<T> {
 	private Function<String, T> fromString;
 	private ArgumentType<?> argument;
 	private BiFunction<CommandContext<CommandSource>, String, ?> argument_to_string;
+	private final boolean command;
 
 	public <U> ConfigOption(String name, T value, Function<String, T> fromString, ArgumentType<U> argument,
 			BiFunction<CommandContext<CommandSource>, String, U> argument_to_string) {
+		this(name, value, fromString, argument, argument_to_string, true);
+	}
+
+	public <U> ConfigOption(String name, T value, Function<String, T> fromString, ArgumentType<U> argument,
+			BiFunction<CommandContext<CommandSource>, String, U> argument_to_string, boolean command) {
 		this.name = name;
 		this.value = value;
 		this.fromString = fromString;
 		this.argument = argument;
 		this.argument_to_string = argument_to_string;
+		this.command = command;
 	}
 
 	public OptionParsingResult fromString(String s, CustomStructureData csd) {
@@ -57,13 +64,14 @@ public class ConfigOption<T> {
 				return new OptionParsingResult(false,
 						new TranslationTextComponent("commands.shrines.configure.failed.chance_out_of_range", v));
 			}
-		}
-		else if (csd.seed.equals(this)) {
+		} else if (csd.seed.equals(this)) {
 			Integer i = (Integer) v;
 			if (i < 0) {
-				return this.fromString(String.valueOf(i * -1), csd).setMessage(new TranslationTextComponent("commands.shrines.configure.failed.seed_set_positive"));
+				return this.fromString(String.valueOf(i * -1), csd).setMessage(
+						new TranslationTextComponent("commands.shrines.configure.failed.seed_set_positive"));
 			} else if (i == 0) {
-				return this.fromString(String.valueOf(new Random().nextInt(Integer.MAX_VALUE)), csd).setMessage(new TranslationTextComponent("commands.shrines.configure.failed.seed_set_random"));
+				return this.fromString(String.valueOf(new Random().nextInt(Integer.MAX_VALUE)), csd)
+						.setMessage(new TranslationTextComponent("commands.shrines.configure.failed.seed_set_random"));
 			}
 		}
 		this.setValue(v);
@@ -76,6 +84,10 @@ public class ConfigOption<T> {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean getUseInCommand() {
+		return this.command;
 	}
 
 	public void setValue(T v) {
