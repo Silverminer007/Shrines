@@ -1,6 +1,5 @@
 package com.silverminer.shrines;
 
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,8 +7,12 @@ import org.apache.logging.log4j.Logger;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.StructureInit;
 import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.network.proxy.ClientProxy;
+import com.silverminer.shrines.utils.network.proxy.IProxy;
+import com.silverminer.shrines.utils.network.proxy.ServerProxy;
 
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -21,7 +24,9 @@ public class Shrines {
 	public static final String MODID = "shrines";
 
 	public static final Logger LOGGER = LogManager.getLogger(Shrines.class);
-	public static final boolean USECUSTOMSTRUCTURES = true;
+	@SuppressWarnings("deprecation")
+	public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(),
+			() -> () -> new ServerProxy());
 
 	public Shrines() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
@@ -33,7 +38,6 @@ public class Shrines {
 
 		// Config
 		Config.register(ModLoadingContext.get());
-		if (Shrines.USECUSTOMSTRUCTURES)
-			Utils.loadCustomStructures();
+		Utils.loadCustomStructures();
 	}
 }

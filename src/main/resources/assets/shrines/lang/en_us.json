@@ -23,5 +23,15 @@
 	"commands.shrines.failure.no_name_match": "ERROR: Name argument was invalid; there is no structure with name [%s]",
 	"commands.shrines.failure.name_match": "ERROR: Name argument was invalid; there is already a structure with name [%s]",
 	"commands.shrines.failure.option": "ERROR: Option argument was invalid; there is no option with name [%s]",
-	"commands.shrines.failure.lower_case": "Your given %s was not in lower case but should be, using lower case version now"
+	"commands.shrines.failure.lower_case": "Your given %s was not in lower case but should be, using lower case version now",
+	"commands.shrines.resource.failed.world_not_present": "FAILED: World is not present",
+	"commands.shrines.resource.failed.structure": "FAILED: No such structure [%s] exists",
+	"commands.shrines.resource.failed.save": "FAILED: Can't save pieces",
+	"commands.shrines.resource.success.added": "SUCCESS: Added structure pieces and activated them. Restart the game and your changes will be active",
+	"commands.shrines.resource.success.prepared": "SUCCESS: Prepared structure piece bounds of %s and drawed them (if you have this mod on client)\nDo you wish to use these bounds?\n%s or %s",
+	"commands.shrines.resource.success.prepared.yes": "[Yes]",
+	"commands.shrines.resource.success.prepared.yes.help": "Runs a command that saves your pieces and add them to your structure",
+	"commands.shrines.resource.success.prepared.configure": "[Configure]",
+	"commands.shrines.resource.success.prepared.configure.help": "Suggests a command to change bound size of your structure",
+	"commands.shrines.resource.failed.calculate": "FAILED: Bound calculation failed"
 }

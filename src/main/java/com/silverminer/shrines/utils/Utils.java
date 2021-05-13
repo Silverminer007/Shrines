@@ -4,46 +4,42 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.Maps;
+import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
+import com.silverminer.shrines.structures.custom.helper.ResourceData;
 
 public class Utils {
 	public static final Logger LOGGER = LogManager.getLogger(Utils.class);
+	/**
+	 * Logical Side: SERVER Never use on client! They are not sync
+	 */
 	public static ArrayList<String> customsToDelete = new ArrayList<String>();
+	/**
+	 * Logical Side: SERVER Never use on client! They are not sync
+	 */
 	public static ArrayList<CustomStructureData> customsStructs = new ArrayList<CustomStructureData>();
-	
+
+	/**
+	 * Logical Side: CLIENT Never use on server! They are not sync
+	 */
+	public static final HashMap<String, ArrayList<ResourceData>> BOUNDS_TO_DRAW = Maps.newHashMap();
+
+	public static File getLocationOf(String structure_name) {
+		return FileUtils.getFile(Shrines.proxy.getBaseDir(), "shrines-saves", structure_name);
+	}
+
 	public static void loadCustomStructures() {
 		try {
-			DistExecutor.SafeSupplier<String> client = new DistExecutor.SafeSupplier<String>() {
-				private static final long serialVersionUID = 1L;
-
-				@SuppressWarnings("resource")
-				@Override
-				public String get() {
-					return Minecraft.getInstance().gameDirectory.getAbsolutePath();
-				}
-			};
-			DistExecutor.SafeSupplier<String> server = new DistExecutor.SafeSupplier<String>() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String get() {
-					return ((MinecraftServer) LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER)).getFile("")
-							.getAbsolutePath();
-				}
-			};
-			String path = DistExecutor.safeRunForDist(() -> client, () -> server);
+			String path = Shrines.proxy.getBaseDir().getAbsolutePath();
 			File f = new File(path, "shrines-saves").getCanonicalFile();
 			if (!f.exists())
 				f.mkdirs();
@@ -69,7 +65,7 @@ public class Utils {
 					fw.close();
 				}
 				String data = "";
-				for(String s : Files.readAllLines(st.toPath())) {
+				for (String s : Files.readAllLines(st.toPath())) {
 					data += s + "\n";
 				}
 				csd.fromString(data);

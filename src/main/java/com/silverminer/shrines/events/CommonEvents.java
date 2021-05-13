@@ -17,6 +17,7 @@ import com.silverminer.shrines.structures.StructurePieceTypes;
 import com.silverminer.shrines.structures.custom.CustomStructure;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -24,11 +25,13 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
@@ -38,12 +41,17 @@ public class CommonEvents {
 	@EventBusSubscriber(modid = Shrines.MODID, bus = Bus.MOD)
 	public static class ModEventBus {
 		@SubscribeEvent
-		public static void commonSetupEvent(FMLLoadCompleteEvent event) {
+		public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
 			event.enqueueWork(() -> {
 				LOGGER.debug("Registering structure pieces and structures to dimensions");
 				Generator.setupWorldGen();
 				StructurePieceTypes.regsiter();
 			});
+		}
+
+		@SubscribeEvent
+		public static void commonSetupEvent(FMLCommonSetupEvent event) {
+			ShrinesPacketHandler.register();
 		}
 	}
 
@@ -159,52 +167,57 @@ public class CommonEvents {
 		}
 
 		@SubscribeEvent
+		public static void onPlayerJoin(PlayerLoggedInEvent event) {
+			for (CustomStructureData csd : Utils.customsStructs) {
+				csd.sendToClient(event.getPlayer());
+			}
+		}
+
+		@SubscribeEvent
 		public static void onServerStop(FMLServerStoppingEvent event) {
-			if (Shrines.USECUSTOMSTRUCTURES) {
-				File path = event.getServer().getFile("");
-				try {
-					path = new File(path, "shrines-saves").getCanonicalFile();
-					LOGGER.info("Saving config options on path: {}", path);
-					if (!path.exists())
-						path.mkdirs();
-					File structures = new File(path, "structures.txt");
-					if (!structures.exists()) {
-						structures.createNewFile();
-					}
-					for(String key : Utils.customsToDelete) {
-						File st = new File(path, "shrines");
-						st = new File(st, key);
-						if (!st.isDirectory()) {
-							continue;
-						}
-						for(File f : st.listFiles()) {
-							f.delete();
-						}
-						st.delete();
-						LOGGER.info("Deleted {} from disk", st);
-					}
-					FileWriter fw = new FileWriter(structures);
-					for (CustomStructureData data : Utils.customsStructs) {
-						String key = data.getName();
-						LOGGER.debug("Writing config options of custom structure with name {}", key);
-						fw.write(key + "\n");
-						File st = new File(path, "shrines");
-						st = new File(st, key);
-						if (!st.isDirectory()) {
-							st.mkdirs();
-						}
-						st = new File(st, key + ".txt");
-						if (!st.exists()) {
-							st.createNewFile();
-						}
-						FileWriter cfw = new FileWriter(st);
-						cfw.write(data.toStringReadAble());
-						cfw.close();
-					}
-					fw.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+			File path = event.getServer().getFile("");
+			try {
+				path = new File(path, "shrines-saves").getCanonicalFile();
+				LOGGER.info("Saving config options on path: {}", path);
+				if (!path.exists())
+					path.mkdirs();
+				File structures = new File(path, "structures.txt");
+				if (!structures.exists()) {
+					structures.createNewFile();
 				}
+				for (String key : Utils.customsToDelete) {
+					File st = new File(path, "shrines");
+					st = new File(st, key);
+					if (!st.isDirectory()) {
+						continue;
+					}
+					for (File f : st.listFiles()) {
+						f.delete();
+					}
+					st.delete();
+					LOGGER.info("Deleted {} from disk", st);
+				}
+				FileWriter fw = new FileWriter(structures);
+				for (CustomStructureData data : Utils.customsStructs) {
+					String key = data.getName();
+					LOGGER.debug("Writing config options of custom structure with name {}", key);
+					fw.write(key + "\n");
+					File st = new File(path, "shrines");
+					st = new File(st, key);
+					if (!st.isDirectory()) {
+						st.mkdirs();
+					}
+					st = new File(st, key + ".txt");
+					if (!st.exists()) {
+						st.createNewFile();
+					}
+					FileWriter cfw = new FileWriter(st);
+					cfw.write(data.toStringReadAble());
+					cfw.close();
+				}
+				fw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
