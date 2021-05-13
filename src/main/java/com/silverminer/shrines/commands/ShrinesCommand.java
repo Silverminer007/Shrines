@@ -32,8 +32,7 @@ public class ShrinesCommand {
 	/**
 	 * TODO Add option to reset settings to last save state
 	 * TODO add save command option
-	 * TODO Fix biome blacklist gives wrong success notes
-	 * TODO Add german and spanish translations
+	 * TODO Add german and spanish translations -> S1fy
 	 * @param dispatcher
 	 */
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
@@ -272,6 +271,33 @@ public class ShrinesCommand {
 		} else {
 			ctx.sendFailure(message);
 		}
+		return 0;
+	}
+
+	public static int reset(CommandSource ctx, boolean nowarn) {
+		ITextComponent message;
+		if(!nowarn) {
+			ITextComponent accept = new TranslationTextComponent("commands.shrines.reset.warn.accept").withStyle((style) -> {
+				return style.withColor(TextFormatting.RED)
+						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+								"/shrines-structures reset nowarn"))
+						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+								new TranslationTextComponent("commands.shrines.reset.warn.accept.help")));
+			});
+			message = new TranslationTextComponent("commands.shrines.reset.warn", accept);
+		} else {
+			Utils.customsStructs.clear();
+			Utils.loadCustomStructures();
+			message = new TranslationTextComponent("commands.shrines.reset.cleared");
+		}
+		ctx.sendSuccess(message, false);
+		return 0;
+	}
+
+	public static int save(CommandSource ctx) {
+		Utils.saveStructures();
+		ITextComponent message = new TranslationTextComponent("commands.shrines.saved");
+		ctx.sendSuccess(message, false);
 		return 0;
 	}
 }
