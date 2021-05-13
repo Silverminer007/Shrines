@@ -1,3 +1,14 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures.custom.helper;
 
 import java.io.IOException;
@@ -174,7 +185,7 @@ public class CustomStructureData {
 		return new PiecesToDrawPacket(this.PIECES_ON_FLY, this.getName());
 	}
 
-	public boolean savePieces(ServerWorld serverWorld, MinecraftServer server, String author) {
+	public boolean savePieces(ServerWorld serverWorld, MinecraftServer server, String author, boolean includeEntities) {
 		ModTemplateManager templatemanager;
 		try {
 			templatemanager = new ModTemplateManager(Utils.getLocationOf("").getCanonicalFile().toPath(),
@@ -197,7 +208,7 @@ public class CustomStructureData {
 				return false;
 			}
 
-			template.fillFromWorld(serverWorld, c0, c1.subtract(c0), false, Blocks.STRUCTURE_VOID);
+			template.fillFromWorld(serverWorld, c0, c1.subtract(c0), includeEntities, Blocks.STRUCTURE_VOID);
 			template.setAuthor(author);
 			try {
 				if (!templatemanager.save(location)) {

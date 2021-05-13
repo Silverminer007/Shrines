@@ -1,3 +1,14 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.commands;
 
 import java.util.Random;
@@ -30,9 +41,8 @@ public class ShrinesCommand {
 	protected static final Logger LOGGER = LogManager.getLogger(ShrinesCommand.class);
 
 	/**
-	 * TODO Add option to reset settings to last save state
-	 * TODO add save command option
 	 * TODO Add german and spanish translations -> S1fy
+	 * 
 	 * @param dispatcher
 	 */
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
@@ -76,19 +86,22 @@ public class ShrinesCommand {
 						.then(Commands.argument("structure-name", NameCSArgumentType.name()).executes(
 								ctx -> query(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name")))));
 
-		// TODO Add more options like include entities
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("set-resource").then(Commands
 				.argument("structure-name", NameCSArgumentType.name())
-				.then(Commands.argument("firstCorner", BlockPosArgument.blockPos()).then(Commands
-						.argument("secondCorner", BlockPosArgument.blockPos())
-						.executes(ctx -> addPieces(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
-								BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
-								BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), false))
-						.then(Commands.literal("instantadd")
-								.executes(ctx -> addPieces(ctx.getSource(),
-										NameCSArgumentType.getName(ctx, "structure-name"),
-										BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
-										BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), true)))))));
+				.then(Commands.argument("firstCorner", BlockPosArgument.blockPos())
+						.then(Commands.argument("secondCorner", BlockPosArgument.blockPos())
+								.then(Commands.argument("include-entities", BoolArgumentType.bool())
+										.executes(ctx -> addPieces(ctx.getSource(),
+												NameCSArgumentType.getName(ctx, "structure-name"),
+												BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
+												BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), false,
+												BoolArgumentType.getBool(ctx, "include-entities")))
+										.then(Commands.literal("instantadd")
+												.executes(ctx -> addPieces(ctx.getSource(),
+														NameCSArgumentType.getName(ctx, "structure-name"),
+														BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
+														BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), true,
+														BoolArgumentType.getBool(ctx, "include-entities")))))))));
 
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("configure").then(options));
 
@@ -217,7 +230,8 @@ public class ShrinesCommand {
 		return 0;
 	}
 
-	public static int addPieces(CommandSource ctx, String name, BlockPos pos1, BlockPos pos2, boolean instadd) {
+	public static int addPieces(CommandSource ctx, String name, BlockPos pos1, BlockPos pos2, boolean instadd,
+			boolean includeEntities) {
 		ITextComponent message;
 		boolean success = false;
 		if (ctx.getLevel() == null) {
@@ -235,7 +249,7 @@ public class ShrinesCommand {
 						} catch (CommandSyntaxException e) {
 							author = "admin";
 						}
-						if (!data.savePieces(ctx.getLevel(), ctx.getServer(), author)) {
+						if (!data.savePieces(ctx.getLevel(), ctx.getServer(), author, includeEntities)) {
 							message = new TranslationTextComponent("commands.shrines.resource.failed.save", name);
 						} else {
 							data.addBounds();
@@ -243,21 +257,31 @@ public class ShrinesCommand {
 							success = true;
 						}
 					} else {
-						ITextComponent yes = new TranslationTextComponent("commands.shrines.resource.success.prepared.yes").withStyle((style) -> {
-							return style.withColor(TextFormatting.GREEN)
-									.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-											"/shrines-structures set-resource " + name + " " + pos1.getX() + " " + pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " " + pos2.getY() + " " + pos2.getZ() + " instantadd"))
-									.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-											new TranslationTextComponent("commands.shrines.resource.success.prepared.yes.help")));
-						});
-						ITextComponent configure = new TranslationTextComponent("commands.shrines.resource.success.prepared.configure").withStyle((style) -> {
-							return style.withColor(TextFormatting.YELLOW)
-									.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-											"/shrines-structures set-resource " + name + " " + pos1.getX() + " " + pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " " + pos2.getY() + " " + pos2.getZ()))
-									.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-											new TranslationTextComponent("commands.shrines.resource.success.prepared.configure.help")));
-						});
-						message = new TranslationTextComponent("commands.shrines.resource.success.prepared", name, yes, configure);
+						ITextComponent yes = new TranslationTextComponent(
+								"commands.shrines.resource.success.prepared.yes").withStyle((style) -> {
+									return style.withColor(TextFormatting.GREEN)
+											.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+													"/shrines-structures set-resource " + name + " " + pos1.getX() + " "
+															+ pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " "
+															+ pos2.getY() + " " + pos2.getZ() + " " + includeEntities
+															+ " instantadd"))
+											.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+													new TranslationTextComponent(
+															"commands.shrines.resource.success.prepared.yes.help")));
+								});
+						ITextComponent configure = new TranslationTextComponent(
+								"commands.shrines.resource.success.prepared.configure").withStyle((style) -> {
+									return style.withColor(TextFormatting.YELLOW)
+											.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+													"/shrines-structures set-resource " + name + " " + pos1.getX() + " "
+															+ pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " "
+															+ pos2.getY() + " " + pos2.getZ() + " " + includeEntities))
+											.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+													new TranslationTextComponent(
+															"commands.shrines.resource.success.prepared.configure.help")));
+								});
+						message = new TranslationTextComponent("commands.shrines.resource.success.prepared", name, yes,
+								configure);
 						success = true;
 					}
 					data.sendToClients();
@@ -276,14 +300,15 @@ public class ShrinesCommand {
 
 	public static int reset(CommandSource ctx, boolean nowarn) {
 		ITextComponent message;
-		if(!nowarn) {
-			ITextComponent accept = new TranslationTextComponent("commands.shrines.reset.warn.accept").withStyle((style) -> {
-				return style.withColor(TextFormatting.RED)
-						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-								"/shrines-structures reset nowarn"))
-						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new TranslationTextComponent("commands.shrines.reset.warn.accept.help")));
-			});
+		if (!nowarn) {
+			ITextComponent accept = new TranslationTextComponent("commands.shrines.reset.warn.accept")
+					.withStyle((style) -> {
+						return style.withColor(TextFormatting.RED)
+								.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+										"/shrines-structures reset nowarn"))
+								.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+										new TranslationTextComponent("commands.shrines.reset.warn.accept.help")));
+					});
 			message = new TranslationTextComponent("commands.shrines.reset.warn", accept);
 		} else {
 			Utils.customsStructs.clear();
