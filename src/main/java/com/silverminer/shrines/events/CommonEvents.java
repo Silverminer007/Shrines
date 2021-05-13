@@ -1,8 +1,5 @@
 package com.silverminer.shrines.events;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -175,50 +172,7 @@ public class CommonEvents {
 
 		@SubscribeEvent
 		public static void onServerStop(FMLServerStoppingEvent event) {
-			File path = event.getServer().getFile("");
-			try {
-				path = new File(path, "shrines-saves").getCanonicalFile();
-				LOGGER.info("Saving config options on path: {}", path);
-				if (!path.exists())
-					path.mkdirs();
-				File structures = new File(path, "structures.txt");
-				if (!structures.exists()) {
-					structures.createNewFile();
-				}
-				for (String key : Utils.customsToDelete) {
-					File st = new File(path, "shrines");
-					st = new File(st, key);
-					if (!st.isDirectory()) {
-						continue;
-					}
-					for (File f : st.listFiles()) {
-						f.delete();
-					}
-					st.delete();
-					LOGGER.info("Deleted {} from disk", st);
-				}
-				FileWriter fw = new FileWriter(structures);
-				for (CustomStructureData data : Utils.customsStructs) {
-					String key = data.getName();
-					LOGGER.debug("Writing config options of custom structure with name {}", key);
-					fw.write(key + "\n");
-					File st = new File(path, "shrines");
-					st = new File(st, key);
-					if (!st.isDirectory()) {
-						st.mkdirs();
-					}
-					st = new File(st, key + ".txt");
-					if (!st.exists()) {
-						st.createNewFile();
-					}
-					FileWriter cfw = new FileWriter(st);
-					cfw.write(data.toStringReadAble());
-					cfw.close();
-				}
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Utils.saveStructures();
 		}
 
 		@SubscribeEvent

@@ -30,6 +30,7 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CustomStructureData {
 	protected static final Logger LOGGER = LogManager.getLogger(CustomStructureData.class);
@@ -285,37 +286,51 @@ public class CustomStructureData {
 	public static List<String> readBlackList(String s) {
 		if (s.startsWith("[") && s.endsWith("]")) {
 			s = s.substring(1, s.length() - 1);
-			List<String> list = Lists.newArrayList();
-			while ((s.contains(","))) {
-				int idx = s.lastIndexOf(",");
-				list.add(s.substring(idx + 1));
-				s = s.substring(0, idx);
+		}
+		List<String> list = Lists.newArrayList();
+		while ((s.contains(","))) {
+			int idx = s.lastIndexOf(",");
+			String s1 = s.substring(idx + 1);
+			if (!validateBiome(s1)) {
+				return null;
 			}
+			list.add(s1);
+			s = s.substring(0, idx);
+		}
+		if (validateBiome(s))
 			list.add(s);
-			return list;
-		} else
-			return Lists.newArrayList();
+		else
+			return null;
+		return list;
+	}
+
+	public static boolean validateBiome(String s) {
+		for (ResourceLocation b : ForgeRegistries.BIOMES.getKeys()) {
+			if (b.toString().equals(s)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static List<PieceData> readPieces(String s) {
 		if (s.startsWith("[") && s.endsWith("]")) {
 			s = s.substring(1, s.length() - 1);
-			List<String> cats = Lists.newArrayList();
-			while ((s.contains("+"))) {
-				int idx = s.lastIndexOf("+");
-				cats.add(s.substring(idx + 1));
-				s = s.substring(0, idx);
+		}
+		List<String> cats = Lists.newArrayList();
+		while ((s.contains("+"))) {
+			int idx = s.lastIndexOf("+");
+			cats.add(s.substring(idx + 1));
+			s = s.substring(0, idx);
+		}
+		cats.add(s);
+		List<PieceData> categories = Lists.newArrayList();
+		for (String cat : cats) {
+			PieceData c = PieceData.fromString(cat);
+			if (c != null) {
+				categories.add(c);
 			}
-			cats.add(s);
-			List<PieceData> categories = Lists.newArrayList();
-			for (String cat : cats) {
-				PieceData c = PieceData.fromString(cat);
-				if (c != null) {
-					categories.add(c);
-				}
-			}
-			return categories;
-		} else
-			return Lists.newArrayList();
+		}
+		return categories;
 	}
 }

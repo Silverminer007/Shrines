@@ -33,5 +33,10 @@
 	"commands.shrines.resource.success.prepared.yes.help": "Runs a command that saves your pieces and add them to your structure",
 	"commands.shrines.resource.success.prepared.configure": "[Configure]",
 	"commands.shrines.resource.success.prepared.configure.help": "Suggests a command to change bound size of your structure",
-	"commands.shrines.resource.failed.calculate": "FAILED: Bound calculation failed"
+	"commands.shrines.resource.failed.calculate": "FAILED: Bound calculation failed",
+	"commands.shrines.reset.cleared": "SUCCESS: Reseted structure data to last saved state",
+	"commands.shrines.reset.warn": "WARN: You're going to reset all your settings! You can't get them back.\nAre you sure? [%s]",
+	"commands.shrines.reset.warn.accept": "Yes",
+	"commands.shrines.reset.warn.accept.help": "Click here to reset all settings to state of last save",
+	"commands.shrines.saved": "SUCCESS: Saved actual settings"
 }
