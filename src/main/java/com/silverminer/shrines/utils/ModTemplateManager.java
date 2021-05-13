@@ -2,8 +2,11 @@ package com.silverminer.shrines.utils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -37,11 +40,11 @@ public class ModTemplateManager {
 		LOGGER.info("Constructing mod template manager with file: {}", this.generatedDir);
 	}
 
-	public Template getOrCreate(ResourceLocation p_200220_1_) {
-		Template template = this.get(p_200220_1_);
+	public Template getOrCreate(ResourceLocation location) {
+		Template template = this.get(location);
 		if (template == null) {
 			template = new Template();
-			this.structureRepository.put(p_200220_1_, template);
+			this.structureRepository.put(location, template);
 		}
 		return template;
 	}
@@ -109,6 +112,35 @@ public class ModTemplateManager {
 				return path;
 			} else {
 				throw new ResourceLocationException("Invalid resource path: " + path);
+			}
+		}
+	}
+
+	public boolean save(ResourceLocation location) {
+		Template template = this.structureRepository.get(location);
+		if (template == null) {
+			return false;
+		} else {
+			Path path = this.createAndValidatePathToStructure(location, ".nbt");
+			Path path1 = path.getParent();
+			if (path1 == null) {
+				return false;
+			} else {
+				try {
+					Files.createDirectories(Files.exists(path1) ? path1.toRealPath() : path1);
+				} catch (IOException ioexception) {
+					LOGGER.error("Failed to create parent directory: {}", (Object) path1);
+					return false;
+				}
+
+				CompoundNBT compoundnbt = template.save(new CompoundNBT());
+
+				try (OutputStream outputstream = new FileOutputStream(path.toFile())) {
+					CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
+					return true;
+				} catch (Throwable throwable) {
+					return false;
+				}
 			}
 		}
 	}

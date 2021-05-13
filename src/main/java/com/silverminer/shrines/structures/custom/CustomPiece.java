@@ -12,6 +12,7 @@ import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 import com.silverminer.shrines.structures.custom.helper.PieceData;
 import com.silverminer.shrines.utils.ModTemplateManager;
+import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
@@ -66,7 +67,7 @@ public class CustomPiece {
 		public void setup(TemplateManager templateManager) {
 			MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
 			try {
-				Template template = new ModTemplateManager(server.getFile("shrines-saves").getCanonicalFile().toPath(),
+				Template template = new ModTemplateManager(Utils.getLocationOf("").getCanonicalFile().toPath(),
 						server.getFixerUpper()).getOrCreate(this.location);
 				PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation)
 						.setMirror(Mirror.NONE).addProcessor(this.getProcessor());
