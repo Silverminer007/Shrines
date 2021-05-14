@@ -9,12 +9,13 @@
  * You should have received a copy of the MPL (Mozilla Public License 2.0)
  * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
-package com.silverminer.shrines.commands;
+package com.silverminer.shrines.commands.arguments;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.StringReader;
@@ -31,33 +32,34 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class NameCSArgumentType implements ArgumentType<String> {
+public class NewNameCSArgumentType implements ArgumentType<String> {
+	private static final List<String> EXAMPLES = Lists.newArrayList("example", "custom", "structure", "insert_the_new_name");
 
-	protected NameCSArgumentType() {
+	protected NewNameCSArgumentType() {
 	}
 
-	public static NameCSArgumentType name() {
-		return new NameCSArgumentType();
+	public static NewNameCSArgumentType name() {
+		return new NewNameCSArgumentType();
 	}
 
-	public static String getName(final CommandContext<CommandSource> context, final String name)
-			throws CommandSyntaxException {
+	public static String getName(final CommandContext<CommandSource> context, final String name) throws CommandSyntaxException {
 		String str = context.getArgument(name, String.class);
 		String s = str.toLowerCase(Locale.ROOT);
 		if (!s.equals(str))
 			context.getSource()
 					.sendFailure(new TranslationTextComponent("commands.shrines.failure.lower_case", "structure-name"));
-		if (Utils.customsStructs.stream().map(CustomStructureData::getName).anyMatch(n -> n.equals(s))) {
+		if (!Utils.customsStructs.stream().map(CustomStructureData::getName).anyMatch(n -> n.equals(s))) {
 			return s;
 		} else {
 			throw new SimpleCommandExceptionType(
-					new TranslationTextComponent("commands.shrines.failure.no_name_match", name)).create();
+					new TranslationTextComponent("commands.shrines.failure.name_match", name)).create();
 		}
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
-		return cct.getSource() instanceof ISuggestionProvider
-				? ISuggestionProvider.suggest(Utils.customsStructs.stream().map(CustomStructureData::getName), sb)
+		List<String> l = EXAMPLES;
+		l.removeAll(Utils.customsStructs.stream().map(CustomStructureData::getName).collect(Collectors.toList()));
+		return cct.getSource() instanceof ISuggestionProvider ? ISuggestionProvider.suggest(l, sb)
 				: Suggestions.empty();
 	}
 
@@ -68,7 +70,9 @@ public class NameCSArgumentType implements ArgumentType<String> {
 		while (reader.canRead() && isAllowedChar(reader.peek())) {
 			reader.skip();
 		}
+
 		String s = reader.getString().substring(i, reader.getCursor());
+
 		return s;
 	}
 
@@ -79,8 +83,6 @@ public class NameCSArgumentType implements ArgumentType<String> {
 
 	@Override
 	public Collection<String> getExamples() {
-		List<String> s = Lists.newArrayList();
-		Utils.customsStructs.forEach(csd -> s.add(csd.name));
-		return s;
+		return EXAMPLES;
 	}
 }

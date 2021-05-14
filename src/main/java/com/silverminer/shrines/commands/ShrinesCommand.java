@@ -13,6 +13,8 @@ package com.silverminer.shrines.commands;
 
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +24,10 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.silverminer.shrines.commands.arguments.BiomeCSArgumentType;
+import com.silverminer.shrines.commands.arguments.BiomeCategoryCSArgumentType;
+import com.silverminer.shrines.commands.arguments.NameCSArgumentType;
+import com.silverminer.shrines.commands.arguments.NewNameCSArgumentType;
 import com.silverminer.shrines.structures.custom.helper.ConfigOption;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.OptionParsingResult;
@@ -30,12 +36,15 @@ import com.silverminer.shrines.utils.Utils;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.BlockPosArgument;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.world.biome.Biome.Category;
 
 public class ShrinesCommand {
 	protected static final Logger LOGGER = LogManager.getLogger(ShrinesCommand.class);
@@ -104,6 +113,53 @@ public class ShrinesCommand {
 														BoolArgumentType.getBool(ctx, "include-entities")))))))));
 
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("configure").then(options));
+
+		literalargumentbuilder = literalargumentbuilder
+				.then(Commands.literal("save").executes(ctx -> save(ctx.getSource())));
+
+		literalargumentbuilder = literalargumentbuilder
+				.then(Commands.literal("reset").executes(ctx -> reset(ctx.getSource(), false))
+						.then(Commands.literal("nowarn").executes(ctx -> reset(ctx.getSource(), true))));
+
+		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("load").then(Commands
+				.argument("structure-name", NameCSArgumentType.name())
+				.then(Commands.argument("position", BlockPosArgument.blockPos())
+						.executes(ctx -> load(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+								BlockPosArgument.getLoadedBlockPos(ctx, "position"), Rotation.NONE))
+						.then(Commands.literal("0").executes(
+								ctx -> load(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+										BlockPosArgument.getLoadedBlockPos(ctx, "position"), Rotation.NONE)))
+						.then(Commands.literal("90").executes(
+								ctx -> load(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+										BlockPosArgument.getLoadedBlockPos(ctx, "position"), Rotation.CLOCKWISE_90)))
+						.then(Commands.literal("180").executes(
+								ctx -> load(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+										BlockPosArgument.getLoadedBlockPos(ctx, "position"), Rotation.CLOCKWISE_180)))
+						.then(Commands.literal("270").executes(ctx -> load(ctx.getSource(),
+								NameCSArgumentType.getName(ctx, "structure-name"),
+								BlockPosArgument.getLoadedBlockPos(ctx, "position"), Rotation.COUNTERCLOCKWISE_90))))));
+
+		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("blacklist").then(Commands
+				.argument("structure-name", NameCSArgumentType.name())
+				.then(Commands.literal("add").then(Commands.argument("biome", BiomeCSArgumentType.biome(true))
+						.executes(ctx -> blacklist(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+								BiomeListAction.ADD, ctx.getArgument("biome", ResourceLocation.class)))))
+				.then(Commands.literal("remove").then(Commands.argument("biome", BiomeCSArgumentType.biome(false))
+						.executes(ctx -> blacklist(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+								BiomeListAction.REMOVE, ctx.getArgument("biome", ResourceLocation.class)))))
+				.then(Commands.literal("query").executes(ctx -> blacklist(ctx.getSource(),
+						NameCSArgumentType.getName(ctx, "structure-name"), BiomeListAction.QUERY, null)))));
+
+		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("whitelist").then(Commands
+				.argument("structure-name", NameCSArgumentType.name())
+				.then(Commands.literal("add").then(Commands.argument("biome", BiomeCategoryCSArgumentType.category(true))
+						.executes(ctx -> whitelist(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+								BiomeListAction.ADD, BiomeCategoryCSArgumentType.getCategory(ctx, "biome")))))
+				.then(Commands.literal("remove").then(Commands.argument("biome", BiomeCategoryCSArgumentType.category(false))
+						.executes(ctx -> whitelist(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+								BiomeListAction.REMOVE, BiomeCategoryCSArgumentType.getCategory(ctx, "biome")))))
+				.then(Commands.literal("query").executes(ctx -> whitelist(ctx.getSource(),
+						NameCSArgumentType.getName(ctx, "structure-name"), BiomeListAction.QUERY, null)))));
 
 		dispatcher.register(literalargumentbuilder);
 		dispatcher.register((Commands.literal("shrines-structures").requires(ctx -> ctx.hasPermission(2))
@@ -239,7 +295,7 @@ public class ShrinesCommand {
 		} else {
 			CustomStructureData data = Utils.getData(name);
 			if (data == null) {
-				message = new TranslationTextComponent("commands.shrines.resource.failed.structure", name);
+				message = new TranslationTextComponent("commands.shrines.failed.structure", name);
 			} else {
 				if (data.calculateBounds(pos1, pos2)) {
 					if (instadd) {
@@ -324,5 +380,132 @@ public class ShrinesCommand {
 		ITextComponent message = new TranslationTextComponent("commands.shrines.saved");
 		ctx.sendSuccess(message, false);
 		return 0;
+	}
+
+	public static int load(CommandSource ctx, String structure, BlockPos position, Rotation rotation) {
+		ITextComponent message;
+		boolean success = false;
+		CustomStructureData data = Utils.getData(structure);
+		if (data == null) {
+			message = new TranslationTextComponent("commands.shrines.failed.structure", structure);
+		} else {
+			if (data.loadPieces(ctx.getLevel(), ctx.getServer(), position, rotation)) {
+				message = new TranslationTextComponent("commands.shrines.load.success", structure, position);
+				success = true;
+			} else {
+				message = new TranslationTextComponent("commands.shrines.load.failed", structure, position);
+			}
+		}
+		if (success) {
+			ctx.sendSuccess(message, true);
+		} else {
+			ctx.sendFailure(message);
+		}
+		return 0;
+	}
+
+	public static int blacklist(CommandSource ctx, String structure, BiomeListAction action,
+			@Nullable ResourceLocation biome) {
+		ITextComponent message;
+		boolean success = false;
+		CustomStructureData data = Utils.getData(structure);
+		if (data == null) {
+			message = new TranslationTextComponent("commands.shrines.failed.structure", structure);
+		} else {
+			switch (action) {
+			case ADD:
+				if (biome == null) {
+					message = new TranslationTextComponent("commands.shrines.biomelist.failed.invalid_biome");
+				} else {
+					if (!data.blacklist.getValue().contains(biome.toString())) {
+						data.blacklist.getValue().add(biome.toString());
+						message = new TranslationTextComponent("commands.shrines.blacklist.success.add", biome);
+						success = true;
+					} else {
+						message = new TranslationTextComponent("commands.shrines.blacklist.failed.add", biome);
+					}
+				}
+				break;
+			case REMOVE:
+				if (biome == null) {
+					message = new TranslationTextComponent("commands.shrines.blacklist.failed.invalid_biome");
+				} else {
+					if (data.blacklist.getValue().remove(biome.toString())) {
+						message = new TranslationTextComponent("commands.shrines.blacklist.success.remove", biome);
+						success = true;
+					} else {
+						message = new TranslationTextComponent("commands.shrines.blacklist.failed.remove", biome);
+					}
+				}
+				break;
+			case QUERY:
+				message = new TranslationTextComponent("commands.shrines.blacklist.success.query", structure,
+						data.blacklist.getValue());
+				success = true;
+				break;
+			default:
+				message = new TranslationTextComponent("commands.shrines.biomelist.failed.noaction");
+			}
+		}
+		if (success) {
+			ctx.sendSuccess(message, true);
+		} else {
+			ctx.sendFailure(message);
+		}
+		return 0;
+	}
+
+	public static int whitelist(CommandSource ctx, String structure, BiomeListAction action, Category category) {
+		ITextComponent message;
+		boolean success = false;
+		CustomStructureData data = Utils.getData(structure);
+		if (data == null) {
+			message = new TranslationTextComponent("commands.shrines.failed.structure", structure);
+		} else {
+			switch (action) {
+			case ADD:
+				if (category == null) {
+					message = new TranslationTextComponent("commands.shrines.biomelist.failed.invalid_biome");
+				} else {
+					if (!data.categories.getValue().contains(category)) {
+						data.categories.getValue().add(category);
+						message = new TranslationTextComponent("commands.shrines.whitelist.success.add", category);
+						success = true;
+					} else {
+						message = new TranslationTextComponent("commands.shrines.whitelist.failed.add", category);
+					}
+				}
+				break;
+			case REMOVE:
+				if (category == null) {
+					message = new TranslationTextComponent("commands.shrines.whitelist.failed.invalid_biome");
+				} else {
+					if (data.categories.getValue().remove(category)) {
+						message = new TranslationTextComponent("commands.shrines.whitelist.success.remove", category);
+						success = true;
+					} else {
+						message = new TranslationTextComponent("commands.shrines.whitelist.failed.remove", category);
+					}
+				}
+				break;
+			case QUERY:
+				message = new TranslationTextComponent("commands.shrines.whitelist.success.query", structure,
+						data.categories.getValue());
+				success = true;
+				break;
+			default:
+				message = new TranslationTextComponent("commands.shrines.biomelist.failed.noaction");
+			}
+		}
+		if (success) {
+			ctx.sendSuccess(message, true);
+		} else {
+			ctx.sendFailure(message);
+		}
+		return 0;
+	}
+
+	public static enum BiomeListAction {
+		ADD, REMOVE, QUERY;
 	}
 }
