@@ -34,11 +34,16 @@ import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.ResourceLocationException;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -65,9 +70,9 @@ public class CustomStructureData {
 			IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
 	public ConfigOption<List<Biome.Category>> categories = add(new ConfigOption<List<Biome.Category>>("categories",
 			Lists.newArrayList(Biome.Category.PLAINS, Biome.Category.TAIGA, Biome.Category.FOREST),
-			CustomStructureData::readCategories, StringArgumentType.greedyString(), StringArgumentType::getString));
+			CustomStructureData::readCategories, StringArgumentType.greedyString(), StringArgumentType::getString, false));
 	public ConfigOption<List<String>> blacklist = add(new ConfigOption<List<String>>("blacklist", Lists.newArrayList(),
-			CustomStructureData::readBlackList, StringArgumentType.greedyString(), StringArgumentType::getString));
+			CustomStructureData::readBlackList, StringArgumentType.greedyString(), StringArgumentType::getString, false));
 	public ConfigOption<List<PieceData>> pieces = add(new ConfigOption<List<PieceData>>("pieces",
 			Lists.newArrayList(new PieceData("resource", BlockPos.ZERO)), CustomStructureData::readPieces,
 			StringArgumentType.greedyString(), StringArgumentType::getString, false));
@@ -220,6 +225,41 @@ public class CustomStructureData {
 			}
 		}
 		return true;
+	}
+
+	public boolean loadPieces(ServerWorld serverWorld, MinecraftServer server, BlockPos loadPos, Rotation rot) {
+		ModTemplateManager templatemanager;
+		for (PieceData pd : this.pieces.getValue()) {
+			ResourceLocation location = new ResourceLocation(Shrines.MODID, name + "/" + pd.path);
+			try {
+				templatemanager = new ModTemplateManager(Utils.getLocationOf("").getCanonicalFile().toPath(),
+						server.getFixerUpper());
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+
+			Template template;
+			try {
+				template = templatemanager.get(location);
+			} catch (ResourceLocationException resourcelocationexception) {
+				return false;
+			}
+
+			if (template == null)
+				return false;
+			BlockPos blockpos = loadPos.offset(pd.offset);
+
+			PlacementSettings placementsettings = (new PlacementSettings()).setMirror(Mirror.NONE)
+					.setRotation(rot).setIgnoreEntities(false).setChunkPos((ChunkPos) null);
+
+			template.placeInWorldChunk(serverWorld, blockpos, placementsettings, createRandom(this.seed.getValue()));
+		}
+		return true;
+	}
+
+	private static Random createRandom(long seed) {
+		return seed == 0L ? new Random(Util.getMillis()) : new Random(seed);
 	}
 
 	public void addBounds() {

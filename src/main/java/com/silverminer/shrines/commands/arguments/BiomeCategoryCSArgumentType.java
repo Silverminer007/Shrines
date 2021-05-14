@@ -9,12 +9,15 @@
  * You should have received a copy of the MPL (Mozilla Public License 2.0)
  * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
-package com.silverminer.shrines.commands;
+package com.silverminer.shrines.commands.arguments;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -23,36 +26,41 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 
-public class OptionCSArgumentType implements ArgumentType<String> {
+public class BiomeCategoryCSArgumentType implements ArgumentType<String> {
+	private final boolean newCat;
 
-	protected OptionCSArgumentType() {
+	protected BiomeCategoryCSArgumentType(boolean newCat) {
+		this.newCat = newCat;
 	}
 
-	public static OptionCSArgumentType option() {
-		return new OptionCSArgumentType();
+	public static BiomeCategoryCSArgumentType category(boolean newCat) {
+		return new BiomeCategoryCSArgumentType(newCat);
 	}
 
-	public static String getOption(final CommandContext<CommandSource> context, final String name) throws CommandSyntaxException {
+	public static Biome.Category getCategory(final CommandContext<CommandSource> context, final String name)
+			throws CommandSyntaxException {
 		String str = context.getArgument(name, String.class);
-		String s = str.toLowerCase(Locale.ROOT);
-		if (!s.equals(str))
-			context.getSource()
-					.sendFailure(new TranslationTextComponent("commands.shrines.failure.lower_case", "structure-name"));
-		if (CustomStructureData.OPTIONS.stream().anyMatch(n -> n.equals(s))) {
-			return s;
+		String s = str.toUpperCase(Locale.ROOT);
+		Biome.Category c = Biome.Category.valueOf(s);
+		if (c != null) {
+			return c;
 		} else {
-			throw new SimpleCommandExceptionType(new TranslationTextComponent("commands.shrines.failure.option", s)).create();
+			throw new SimpleCommandExceptionType(new TranslationTextComponent("commands.shrines.failure.category"))
+					.create();
 		}
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
 		return cct.getSource() instanceof ISuggestionProvider
-				? ISuggestionProvider.suggest(CustomStructureData.OPTIONS.stream(), sb)
+				? ISuggestionProvider.suggest(getValidCategories(cct, this.newCat), sb)
 				: Suggestions.empty();
 	}
 
@@ -73,8 +81,18 @@ public class OptionCSArgumentType implements ArgumentType<String> {
 				|| ch == '-';
 	}
 
+	public static List<String> getValidCategories(CommandContext<?> ctx, boolean newCat) {
+		List<Category> cats = Lists.newArrayList(Biome.Category.values());
+		CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class));
+		if (data != null)
+			cats.removeIf(cat -> newCat ? data.categories.getValue().contains(cat)
+					: !data.categories.getValue().contains(cat));
+		return cats.stream().map(Biome.Category::getName).collect(Collectors.toList());
+	}
+
 	@Override
 	public Collection<String> getExamples() {
-		return CustomStructureData.OPTIONS;
+		return Lists.newArrayList(Biome.Category.values()).stream().map(Biome.Category::getName)
+				.collect(Collectors.toList());
 	}
 }
