@@ -1,7 +1,7 @@
 {
-	"commands.shrines.help": "Restart your game to make changes aktive\n%s",
-	"commands.shrines.help.help": "Help",
-	"commands.shrines.help.tooltip": "Opens a link to a help website",
+	"commands.shrines.help": "reiniciar el juego para activar los cambios",
+	"commands.shrines.help.help": "ayuda",
+	"commands.shrines.help.tooltip": "Abre un enlace a un sitio web de ayuda",
 	"commands.shrines.add.failed": "Failed to add new structure, because %s already exists",
 	"commands.shrines.add.success": "Successfully added new structure [%s]\n%s\nRestart to make changes aktive",
 	"commands.shrines.add.success.help": "Use this to configure",
