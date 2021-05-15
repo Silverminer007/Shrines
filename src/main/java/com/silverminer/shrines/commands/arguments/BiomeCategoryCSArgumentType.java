@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -30,6 +31,8 @@ import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.command.arguments.IArgumentSerializer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.Category;
@@ -94,5 +97,20 @@ public class BiomeCategoryCSArgumentType implements ArgumentType<String> {
 	public Collection<String> getExamples() {
 		return Lists.newArrayList(Biome.Category.values()).stream().map(Biome.Category::getName)
 				.collect(Collectors.toList());
+	}
+
+	public static class Serializer implements IArgumentSerializer<BiomeCategoryCSArgumentType> {
+		public void serializeToNetwork(BiomeCategoryCSArgumentType args, PacketBuffer pkt) {
+			pkt.writeBoolean(args.newCat);
+		}
+
+		public BiomeCategoryCSArgumentType deserializeFromNetwork(PacketBuffer pkt) {
+			return BiomeCategoryCSArgumentType.category(pkt.readBoolean());
+		}
+
+		@Override
+		public void serializeToJson(BiomeCategoryCSArgumentType args, JsonObject json) {
+			json.addProperty("newCat", args.newCat);
+		}
 	}
 }

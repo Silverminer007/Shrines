@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -22,7 +23,9 @@ import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.command.arguments.IArgumentSerializer;
 import net.minecraft.command.arguments.ResourceLocationArgument;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -50,5 +53,20 @@ public class BiomeCSArgumentType extends ResourceLocationArgument {
 			biomes.removeIf(biome -> newBiome ? data.blacklist.getValue().contains(biome.toString())
 					: !data.blacklist.getValue().contains(biome.toString()));
 		return biomes.stream().map(ResourceLocation::toString).collect(Collectors.toList());
+	}
+
+	public static class Serializer implements IArgumentSerializer<BiomeCSArgumentType> {
+		public void serializeToNetwork(BiomeCSArgumentType args, PacketBuffer pkt) {
+			pkt.writeBoolean(args.newBiome);
+		}
+
+		public BiomeCSArgumentType deserializeFromNetwork(PacketBuffer pkt) {
+			return BiomeCSArgumentType.biome(pkt.readBoolean());
+		}
+
+		@Override
+		public void serializeToJson(BiomeCSArgumentType args, JsonObject json) {
+			json.addProperty("newBiome", args.newBiome);
+		}
 	}
 }
