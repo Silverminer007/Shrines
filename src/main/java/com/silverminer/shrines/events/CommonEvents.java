@@ -18,6 +18,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.commands.ShrinesCommand;
+import com.silverminer.shrines.commands.arguments.BiomeCSArgumentType;
+import com.silverminer.shrines.commands.arguments.BiomeCategoryCSArgumentType;
+import com.silverminer.shrines.commands.arguments.NameCSArgumentType;
+import com.silverminer.shrines.commands.arguments.OptionCSArgumentType;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.ModStructureFeatures;
 import com.silverminer.shrines.structures.Generator;
@@ -27,6 +31,7 @@ import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
+import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -54,6 +59,11 @@ public class CommonEvents {
 				LOGGER.debug("Registering structure pieces and structures to dimensions");
 				Generator.setupWorldGen();
 				StructurePieceTypes.regsiter();
+				ArgumentTypes.register("biome_category", BiomeCategoryCSArgumentType.class,
+						new BiomeCategoryCSArgumentType.Serializer());
+				ArgumentTypes.register("biome", BiomeCSArgumentType.class, new BiomeCSArgumentType.Serializer());
+				ArgumentTypes.register("name", NameCSArgumentType.class, new NameCSArgumentType.Serializer());
+				ArgumentTypes.register("option", OptionCSArgumentType.class, new OptionCSArgumentType.Serializer());
 			});
 		}
 
@@ -176,6 +186,7 @@ public class CommonEvents {
 
 		@SubscribeEvent
 		public static void onPlayerJoin(PlayerLoggedInEvent event) {
+			// TODO sync here everything istadt of only sending bounds
 			for (CustomStructureData csd : Utils.customsStructs) {
 				csd.sendToClient(event.getPlayer());
 			}

@@ -13,15 +13,12 @@ package com.silverminer.shrines.utils.network.proxy;
 
 import java.io.File;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 public class ServerProxy implements IProxy {
 
 	@Override
 	public File getBaseDir() {
-		return ((MinecraftServer) LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER)).getFile("");
+		return FMLPaths.GAMEDIR.get().toFile();
 	}
-
 }

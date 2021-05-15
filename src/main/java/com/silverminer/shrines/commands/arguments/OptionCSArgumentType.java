@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -26,6 +27,8 @@ import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.command.arguments.IArgumentSerializer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class OptionCSArgumentType implements ArgumentType<String> {
@@ -78,5 +81,18 @@ public class OptionCSArgumentType implements ArgumentType<String> {
 	@Override
 	public Collection<String> getExamples() {
 		return CustomStructureData.OPTIONS;
+	}
+
+	public static class Serializer implements IArgumentSerializer<OptionCSArgumentType> {
+		public void serializeToNetwork(OptionCSArgumentType p_197072_1_, PacketBuffer p_197072_2_) {
+		}
+
+		public OptionCSArgumentType deserializeFromNetwork(PacketBuffer p_197071_1_) {
+			return OptionCSArgumentType.option();
+		}
+
+		@Override
+		public void serializeToJson(OptionCSArgumentType p_212244_1_, JsonObject p_212244_2_) {
+		}
 	}
 }

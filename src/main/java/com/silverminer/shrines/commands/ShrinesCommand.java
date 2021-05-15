@@ -27,7 +27,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.silverminer.shrines.commands.arguments.BiomeCSArgumentType;
 import com.silverminer.shrines.commands.arguments.BiomeCategoryCSArgumentType;
 import com.silverminer.shrines.commands.arguments.NameCSArgumentType;
-import com.silverminer.shrines.commands.arguments.NewNameCSArgumentType;
 import com.silverminer.shrines.structures.custom.helper.ConfigOption;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.OptionParsingResult;
@@ -51,7 +50,9 @@ public class ShrinesCommand {
 
 	/**
 	 * TODO Add german and spanish translations -> S1fy
-	 * 
+	 * TODO sync customstructures to clients to improve command suggestions
+	 * TODO Fix issue structure data is also loaded on client side and used too. Needs to split between logical sides to prevent wrong 
+	 * TODO Add sync command option to force sync data between client and server
 	 * @param dispatcher
 	 */
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
@@ -72,12 +73,12 @@ public class ShrinesCommand {
 		}
 
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("add")
-				.then(Commands.argument("structure-name", NewNameCSArgumentType.name())
-						.executes(ctx -> add(ctx.getSource(), NewNameCSArgumentType.getName(ctx, "structure-name"),
+				.then(Commands.argument("structure-name", NameCSArgumentType.name())
+						.executes(ctx -> add(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
 								new Random().nextInt(Integer.MAX_VALUE)))
 						.then(Commands.argument("seed", IntegerArgumentType.integer())
 								.executes(ctx -> add(ctx.getSource(),
-										NewNameCSArgumentType.getName(ctx, "structure-name"),
+										NameCSArgumentType.getName(ctx, "structure-name"),
 										IntegerArgumentType.getInteger(ctx, "seed"))))));
 
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("remove").then(Commands
@@ -182,13 +183,7 @@ public class ShrinesCommand {
 		int ret = 0;
 		ITextComponent message;
 		boolean success = false;
-		CustomStructureData data = null;
-		for (CustomStructureData csd : Utils.customsStructs) {
-			if (csd.getName() == name) {
-				data = csd;
-				break;
-			}
-		}
+		CustomStructureData data = Utils.getData(name);
 		if (data != null) {
 			message = new TranslationTextComponent("commands.shrines.add.failed", name);
 			ret = -1;
