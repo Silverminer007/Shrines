@@ -2,6 +2,7 @@ package com.silverminer.shrines.utils;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +14,14 @@ import org.apache.logging.log4j.Logger;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 public class Utils {
 	public static final Logger LOGGER = LogManager.getLogger(Utils.class);
 	public static ArrayList<String> customsToDelete = new ArrayList<String>();
 	public static ArrayList<CustomStructureData> customsStructs = new ArrayList<CustomStructureData>();
-	
+
 	public static void loadCustomStructures() {
 		try {
 			DistExecutor.SafeSupplier<String> client = new DistExecutor.SafeSupplier<String>() {
@@ -39,8 +38,12 @@ public class Utils {
 
 				@Override
 				public String get() {
-					return ((MinecraftServer) LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER)).getFile("")
-							.getAbsolutePath();
+					try {
+						return FMLPaths.GAMEDIR.get().toFile().getCanonicalFile().getAbsolutePath();
+					} catch (IOException e) {
+						e.printStackTrace();
+						return "";
+					}
 				}
 			};
 			String path = DistExecutor.safeRunForDist(() -> client, () -> server);
@@ -69,7 +72,7 @@ public class Utils {
 					fw.close();
 				}
 				String data = "";
-				for(String s : Files.readAllLines(st.toPath())) {
+				for (String s : Files.readAllLines(st.toPath())) {
 					data += s + "\n";
 				}
 				csd.fromString(data);
