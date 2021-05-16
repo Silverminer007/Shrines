@@ -88,8 +88,7 @@ public class PiecesToDrawPacket {
 
 				@Override
 				public void run() {
-					Utils.BOUNDS_TO_DRAW.remove(structure);
-					Utils.BOUNDS_TO_DRAW.put(structure, bounds);
+					Utils.getData(structure, false);
 					LOGGER.info("Recived bounds from server {}", bounds);
 				}
 			};

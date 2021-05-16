@@ -48,7 +48,7 @@ public class BiomeCSArgumentType extends ResourceLocationArgument {
 
 	public static List<String> getValidBiomes(CommandContext<?> ctx, boolean newBiome) {
 		List<ResourceLocation> biomes = ForgeRegistries.BIOMES.getKeys().stream().collect(Collectors.toList());
-		CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class));
+		CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class), false);
 		if (data != null)
 			biomes.removeIf(biome -> newBiome ? data.blacklist.getValue().contains(biome.toString())
 					: !data.blacklist.getValue().contains(biome.toString()));

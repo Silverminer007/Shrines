@@ -34,12 +34,18 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class NameCSArgumentType implements ArgumentType<String> {
+	private final boolean newName;
 
-	protected NameCSArgumentType() {
+	protected NameCSArgumentType(boolean newName) {
+		this.newName = newName;
 	}
 
-	public static NameCSArgumentType name() {
-		return new NameCSArgumentType();
+	public static NameCSArgumentType oldName() {
+		return new NameCSArgumentType(false);
+	}
+
+	public static NameCSArgumentType newName() {
+		return new NameCSArgumentType(true);
 	}
 
 	public static String getName(final CommandContext<CommandSource> context, final String name)
@@ -53,9 +59,17 @@ public class NameCSArgumentType implements ArgumentType<String> {
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
-		return cct.getSource() instanceof ISuggestionProvider
-				? ISuggestionProvider.suggest(Utils.customsStructs.stream().map(CustomStructureData::getName), sb)
-				: Suggestions.empty();
+		if (this.newName) {
+			return cct.getSource() instanceof ISuggestionProvider
+					? ISuggestionProvider.suggest(Utils.DATAS_FROM_SERVER.stream().map(CustomStructureData::getName),
+							sb)
+					: Suggestions.empty();
+		} else {
+			return cct.getSource() instanceof ISuggestionProvider
+					? ISuggestionProvider.suggest(Utils.DATAS_FROM_SERVER.stream().map(CustomStructureData::getName),
+							sb)
+					: Suggestions.empty();
+		}
 	}
 
 	@Override
@@ -82,15 +96,20 @@ public class NameCSArgumentType implements ArgumentType<String> {
 	}
 
 	public static class Serializer implements IArgumentSerializer<NameCSArgumentType> {
-		public void serializeToNetwork(NameCSArgumentType p_197072_1_, PacketBuffer p_197072_2_) {
+		public void serializeToNetwork(NameCSArgumentType args, PacketBuffer buf) {
+			buf.writeBoolean(args.newName);
 		}
 
-		public NameCSArgumentType deserializeFromNetwork(PacketBuffer p_197071_1_) {
-			return NameCSArgumentType.name();
+		public NameCSArgumentType deserializeFromNetwork(PacketBuffer buf) {
+			if (buf.readBoolean())
+				return NameCSArgumentType.newName();
+			else
+				return NameCSArgumentType.oldName();
 		}
 
 		@Override
-		public void serializeToJson(NameCSArgumentType p_212244_1_, JsonObject p_212244_2_) {
+		public void serializeToJson(NameCSArgumentType args, JsonObject json) {
+			json.addProperty("newName", args.newName);
 		}
 	}
 }

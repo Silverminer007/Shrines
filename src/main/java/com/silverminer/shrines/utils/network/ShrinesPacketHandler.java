@@ -27,7 +27,7 @@ public class ShrinesPacketHandler {
 
 	protected static final Logger LOGGER = LogManager.getLogger(ShrinesPacketHandler.class);
 
-	public static final String PROTOCOL_VERSION = "1.0";
+	public static final String PROTOCOL_VERSION = "2.0";
 
 	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
 			.named(new ResourceLocation(Shrines.MODID, "main_channel")).clientAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -38,6 +38,8 @@ public class ShrinesPacketHandler {
 		int id = 0;
 		CHANNEL.registerMessage(id++, PiecesToDrawPacket.class, PiecesToDrawPacket::encode,
 				PiecesToDrawPacket::decode, PiecesToDrawPacket::handle);
+		CHANNEL.registerMessage(id++, CustomStructuresPacket.class, CustomStructuresPacket::encode,
+				CustomStructuresPacket::decode, CustomStructuresPacket::handle);
 	}
 
 	public static void sendTo(Object message, PlayerEntity player) {

@@ -30,6 +30,7 @@ public class ConfigOption<T> {
 	private final String name;
 	private T value;
 	private Function<String, T> fromString;
+	private Function<T, String> toString;
 	private ArgumentType<?> argument;
 	private BiFunction<CommandContext<CommandSource>, String, ?> argument_to_string;
 	private final boolean command;
@@ -41,12 +42,18 @@ public class ConfigOption<T> {
 
 	public <U> ConfigOption(String name, T value, Function<String, T> fromString, ArgumentType<U> argument,
 			BiFunction<CommandContext<CommandSource>, String, U> argument_to_string, boolean command) {
+		this(name, value, fromString, String::valueOf, argument, argument_to_string, true);
+	}
+
+	public <U> ConfigOption(String name, T value, Function<String, T> fromString, Function<T, String> toString, ArgumentType<U> argument,
+			BiFunction<CommandContext<CommandSource>, String, U> argument_to_string, boolean command) {
 		this.name = name;
 		this.value = value;
 		this.fromString = fromString;
 		this.argument = argument;
 		this.argument_to_string = argument_to_string;
 		this.command = command;
+		this.toString = toString;
 	}
 
 	public OptionParsingResult fromString(String s, CustomStructureData csd) {
@@ -106,7 +113,7 @@ public class ConfigOption<T> {
 	}
 
 	public String toString() {
-		return this.name + ":" + String.valueOf(this.value);
+		return this.name + ":" + this.toString.apply(this.getValue());
 	}
 
 	public T getValue() {

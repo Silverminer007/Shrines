@@ -53,5 +53,8 @@
 	"commands.shrines.blacklist.success.query": "Blacklisted biomes of [%s]: %s",
 	"commands.shrines.whitelist.success.query": "Whitelisted biomes of [%s]: %s",
 	"commands.shrines.biomelist.failed.noaction": "FAILED: No action choosen",
-	"commands.shrines.failure.category": "Such an biome category doesn't exist"
+	"commands.shrines.failure.category": "Such an biome category doesn't exist",
+	"commands.shrines.sync": "SUCCESS: Sync data to client(s)",
+	"commands.shrines.query.option.value.success": "[%s] value of option [%s]: %s",
+	"commands.shrines.query.option.value.failed": "Failed to read option [%s] of [%s] because no such option exists"
 }
