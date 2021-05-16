@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.structures.custom.helper.ResourceData;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;

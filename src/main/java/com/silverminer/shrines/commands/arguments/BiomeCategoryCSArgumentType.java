@@ -27,7 +27,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;

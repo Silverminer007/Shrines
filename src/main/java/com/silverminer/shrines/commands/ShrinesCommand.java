@@ -31,8 +31,8 @@ import com.silverminer.shrines.commands.arguments.NameCSArgumentType;
 import com.silverminer.shrines.commands.arguments.OptionCSArgumentType;
 import com.silverminer.shrines.structures.custom.helper.ConfigOption;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.utils.OptionParsingResult;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.OptionParsingResult;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -54,7 +54,9 @@ public class ShrinesCommand {
 	protected static final Logger LOGGER = LogManager.getLogger(ShrinesCommand.class);
 
 	/**
-	 * TODO Add german and spanish translations -> S1fy
+	 * TODO Add spanish translations -> S1fy
+	 * 
+	 * TODO Test distance and seperation usage
 	 * 
 	 * @param dispatcher
 	 */
@@ -118,7 +120,16 @@ public class ShrinesCommand {
 														NameCSArgumentType.getName(ctx, "structure-name"),
 														BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
 														BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), true,
-														BoolArgumentType.getBool(ctx, "include-entities")))))))));
+														BoolArgumentType.getBool(ctx, "include-entities")))))
+								.executes(
+										ctx -> addPieces(
+												ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+												BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
+												BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), false, false))
+								.then(Commands.literal("instantadd").executes(ctx -> addPieces(ctx.getSource(),
+										NameCSArgumentType.getName(ctx, "structure-name"),
+										BlockPosArgument.getLoadedBlockPos(ctx, "firstCorner"),
+										BlockPosArgument.getLoadedBlockPos(ctx, "secondCorner"), true, false)))))));
 
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("configure").then(options));
 
@@ -357,10 +368,10 @@ public class ShrinesCommand {
 								"commands.shrines.resource.success.prepared.yes").withStyle((style) -> {
 									return style.withColor(TextFormatting.GREEN)
 											.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-													"/shrines-structures save-resource " + name + " " + pos1.getX() + " "
-															+ pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " "
-															+ pos2.getY() + " " + pos2.getZ() + " " + includeEntities
-															+ " instantadd"))
+													"/shrines-structures save-resource " + name + " " + pos1.getX()
+															+ " " + pos1.getY() + " " + pos1.getZ() + " " + pos2.getX()
+															+ " " + pos2.getY() + " " + pos2.getZ() + " "
+															+ includeEntities + " instantadd"))
 											.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 													new TranslationTextComponent(
 															"commands.shrines.resource.success.prepared.yes.help")));
@@ -369,7 +380,7 @@ public class ShrinesCommand {
 								"commands.shrines.resource.success.prepared.configure").withStyle((style) -> {
 									return style.withColor(TextFormatting.YELLOW)
 											.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-													"/shrines-structures set-resource " + name + " " + pos1.getX() + " "
+													"/shrines-structures save-resource " + name + " " + pos1.getX() + " "
 															+ pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " "
 															+ pos2.getY() + " " + pos2.getZ() + " " + includeEntities))
 											.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,

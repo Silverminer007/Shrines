@@ -9,7 +9,7 @@
  * You should have received a copy of the MPL (Mozilla Public License 2.0)
  * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
-package com.silverminer.shrines.utils;
+package com.silverminer.shrines.utils.custom_structures;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -40,7 +40,7 @@ public class CustomStructureProperties extends PropertyManager<CustomStructurePr
 	public CustomStructureProperties(Properties p, Path path) {
 		super(p);
 		this.autosave = this.get("autosave", true);
-		this.keep_bounds = this.get("keep_bounds", false);
+		this.keep_bounds = this.get("keep_bounds", true);
 		this.bound_color = this.get("bound_color", 0xffffff);
 		this.path = path;
 	}

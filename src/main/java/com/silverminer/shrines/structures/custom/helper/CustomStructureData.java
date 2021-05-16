@@ -25,9 +25,9 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.silverminer.shrines.Shrines;
-import com.silverminer.shrines.utils.ModTemplateManager;
-import com.silverminer.shrines.utils.OptionParsingResult;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.ModTemplateManager;
+import com.silverminer.shrines.utils.custom_structures.OptionParsingResult;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.CustomStructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 

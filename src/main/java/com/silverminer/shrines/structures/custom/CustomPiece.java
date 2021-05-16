@@ -22,8 +22,8 @@ import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 import com.silverminer.shrines.structures.custom.helper.PieceData;
-import com.silverminer.shrines.utils.ModTemplateManager;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.ModTemplateManager;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
