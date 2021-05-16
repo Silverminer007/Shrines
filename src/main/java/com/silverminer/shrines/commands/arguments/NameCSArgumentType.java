@@ -25,7 +25,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
@@ -59,16 +59,13 @@ public class NameCSArgumentType implements ArgumentType<String> {
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
-		if (this.newName) {
+		if (!this.newName) {
 			return cct.getSource() instanceof ISuggestionProvider
 					? ISuggestionProvider.suggest(Utils.DATAS_FROM_SERVER.stream().map(CustomStructureData::getName),
 							sb)
 					: Suggestions.empty();
 		} else {
-			return cct.getSource() instanceof ISuggestionProvider
-					? ISuggestionProvider.suggest(Utils.DATAS_FROM_SERVER.stream().map(CustomStructureData::getName),
-							sb)
-					: Suggestions.empty();
+			return Suggestions.empty();
 		}
 	}
 

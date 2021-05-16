@@ -22,14 +22,14 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.structures.custom.helper.ResourceData;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeBuffers;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,30 +43,31 @@ public class ClientEvents {
 	public static class ForgeEventBus {
 		@SubscribeEvent
 		/**
-		 * TODO Fix bound is fliccering around with camera rotation 
-		 * TODO Fix: Bound is using wrong color
-		 * 
+		 * TODO Fix bound is fliccering around with camera rotation
+		 * TODO Save bounds on fly
 		 * @param event
 		 */
 		public static void renderWorldLast(RenderWorldLastEvent event) {
 			RenderSystem.depthMask(false);
 			Minecraft mc = Minecraft.getInstance();
-			double renderPosX = mc.getEntityRenderDispatcher().camera.getPosition().x();
-			double renderPosY = mc.getEntityRenderDispatcher().camera.getPosition().y();
-			double renderPosZ = mc.getEntityRenderDispatcher().camera.getPosition().z();
+			Vector3d vec = mc.gameRenderer.getMainCamera().getPosition();
+			double renderPosX = vec.x();
+			double renderPosY = vec.y();
+			double renderPosZ = vec.z();
 			MatrixStack ms = event.getMatrixStack();
-			RenderTypeBuffers rtb = mc.renderBuffers();
-			IRenderTypeBuffer.Impl impl = rtb.bufferSource();
-			IRenderTypeBuffer irendertypebuffer1 = impl;
+			IRenderTypeBuffer irendertypebuffer1 = mc.renderBuffers().bufferSource();
 			IVertexBuilder vb = irendertypebuffer1.getBuffer(RenderType.lines());
 			ms.pushPose();
 			ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 			Color c = new Color(Utils.properties.bound_color);
+			float red = c.getRed() / 255.0f;
+			float green = c.getGreen() / 255.0f;
+			float blue = c.getBlue() / 255.0f;
 			for (CustomStructureData data : Utils.DATAS_FROM_SERVER) {
 				for (ResourceData rd : data.PIECES_ON_FLY) {
 					MutableBoundingBox mbb = rd.getBounds();
 					WorldRenderer.renderLineBox(ms, vb, mbb.x0, mbb.y0, mbb.z0, mbb.x1, mbb.y1, mbb.z1,
-							c.getRed() / 255.0f, c.getGreen() / 255.0f, c.getBlue() / 255.0f, 1.0f);
+							red, green, blue, 1.0f);
 				}
 			}
 			ms.popPose();

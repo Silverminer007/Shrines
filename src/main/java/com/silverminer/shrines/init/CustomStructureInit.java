@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.custom.CustomStructure;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.NoFeatureConfig;

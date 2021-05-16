@@ -9,7 +9,7 @@
  * You should have received a copy of the MPL (Mozilla Public License 2.0)
  * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
-package com.silverminer.shrines.utils;
+package com.silverminer.shrines.utils.custom_structures;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

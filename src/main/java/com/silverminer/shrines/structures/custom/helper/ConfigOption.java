@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.silverminer.shrines.utils.OptionParsingResult;
+import com.silverminer.shrines.utils.custom_structures.OptionParsingResult;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.text.TranslationTextComponent;

@@ -28,7 +28,7 @@ import com.silverminer.shrines.structures.Generator;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 import com.silverminer.shrines.structures.custom.CustomStructure;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.command.arguments.ArgumentTypes;

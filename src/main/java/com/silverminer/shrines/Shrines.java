@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.StructureInit;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.proxy.ClientProxy;
 import com.silverminer.shrines.utils.network.proxy.IProxy;
 import com.silverminer.shrines.utils.network.proxy.ServerProxy;
