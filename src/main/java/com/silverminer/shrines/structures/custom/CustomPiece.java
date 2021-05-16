@@ -46,11 +46,13 @@ public class CustomPiece {
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random, boolean useRandomVarianting, List<PieceData> parts, String name,
-			boolean ignore_air) {
+			boolean ignore_air, int heightBase) {
 		for (PieceData pd : parts) {
 			String piece = pd.path;
+			BlockPos offset = new BlockPos(pd.offset.getX(), 0, pd.offset.getZ());
+			int height = heightBase + pd.offset.getY();
 			pieces.add(new CustomPiece.Piece(templateManager, new ResourceLocation(Shrines.MODID, name + "/" + piece),
-					pos.offset(pd.offset.rotate(rotation)), rotation, 0, random, useRandomVarianting, ignore_air));
+					pos.offset(offset.rotate(rotation)), rotation, 0, random, useRandomVarianting, ignore_air, height));
 		}
 	}
 
@@ -60,10 +62,10 @@ public class CustomPiece {
 		public boolean ignore_air = true;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, Random rand, boolean useRandomVarianting, boolean ignore_air) {
+				int componentTypeIn, Random rand, boolean useRandomVarianting, boolean ignore_air, int height) {
 			super(StructurePieceTypes.CUSTOM, templateManager, location, pos, rotation, componentTypeIn, true);
 			this.useRandomVarianting = useRandomVarianting;
-			this.heightOffset = pos.getY();
+			this.heightOffset = height;
 			this.ignore_air = ignore_air;
 		}
 
@@ -97,7 +99,7 @@ public class CustomPiece {
 
 		@Override
 		protected int getHeight(ISeedReader world, BlockPos blockpos1) {
-			return super.getHeight(world, blockpos1) + this.heightOffset - 1;
+			return this.heightOffset;
 		}
 
 		@Override

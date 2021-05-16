@@ -11,6 +11,7 @@
  */
 package com.silverminer.shrines.commands;
 
+import java.util.Collection;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.silverminer.shrines.commands.arguments.BiomeCSArgumentType;
 import com.silverminer.shrines.commands.arguments.BiomeCategoryCSArgumentType;
 import com.silverminer.shrines.commands.arguments.NameCSArgumentType;
+import com.silverminer.shrines.commands.arguments.OptionCSArgumentType;
 import com.silverminer.shrines.structures.custom.helper.ConfigOption;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.OptionParsingResult;
@@ -35,6 +37,9 @@ import com.silverminer.shrines.utils.Utils;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.BlockPosArgument;
+import net.minecraft.command.arguments.EntityArgument;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -50,9 +55,7 @@ public class ShrinesCommand {
 
 	/**
 	 * TODO Add german and spanish translations -> S1fy
-	 * TODO sync customstructures to clients to improve command suggestions
-	 * TODO Fix issue structure data is also loaded on client side and used too. Needs to split between logical sides to prevent wrong 
-	 * TODO Add sync command option to force sync data between client and server
+	 * 
 	 * @param dispatcher
 	 */
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
@@ -61,7 +64,7 @@ public class ShrinesCommand {
 		});
 
 		RequiredArgumentBuilder<CommandSource, String> options = Commands.argument("structure-name",
-				NameCSArgumentType.name());
+				NameCSArgumentType.oldName());
 		for (ConfigOption<?> co : new CustomStructureData("dummy", 0).CONFIGS) {
 			if (!co.getUseInCommand()) {
 				continue;
@@ -72,17 +75,18 @@ public class ShrinesCommand {
 									co.getName(), co.getCommandValue(ctx, co.getName())))));
 		}
 
-		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("add")
-				.then(Commands.argument("structure-name", NameCSArgumentType.name())
-						.executes(ctx -> add(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
-								new Random().nextInt(Integer.MAX_VALUE)))
-						.then(Commands.argument("seed", IntegerArgumentType.integer())
-								.executes(ctx -> add(ctx.getSource(),
-										NameCSArgumentType.getName(ctx, "structure-name"),
-										IntegerArgumentType.getInteger(ctx, "seed"))))));
+		literalargumentbuilder = literalargumentbuilder
+				.then(Commands.literal("add")
+						.then(Commands.argument("structure-name", NameCSArgumentType.newName())
+								.executes(ctx -> add(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+										new Random().nextInt(Integer.MAX_VALUE)))
+								.then(Commands.argument("seed", IntegerArgumentType.integer())
+										.executes(ctx -> add(ctx.getSource(),
+												NameCSArgumentType.getName(ctx, "structure-name"),
+												IntegerArgumentType.getInteger(ctx, "seed"))))));
 
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("remove").then(Commands
-				.argument("structure-name", NameCSArgumentType.name())
+				.argument("structure-name", NameCSArgumentType.oldName())
 				.executes(ctx -> remove(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"), false))
 				.then(Commands.argument("fromDisk", BoolArgumentType.bool())
 						.executes(ctx -> remove(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
@@ -91,13 +95,16 @@ public class ShrinesCommand {
 		literalargumentbuilder = literalargumentbuilder
 				.then(Commands.literal("help").executes(ctx -> help(ctx.getSource())));
 
-		literalargumentbuilder = literalargumentbuilder
-				.then(Commands.literal("query").executes(ctx -> query(ctx.getSource()))
-						.then(Commands.argument("structure-name", NameCSArgumentType.name()).executes(
-								ctx -> query(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name")))));
+		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("query")
+				.executes(ctx -> query(ctx.getSource()))
+				.then(Commands.argument("structure-name", NameCSArgumentType.oldName())
+						.executes(ctx -> query(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name")))
+						.then(Commands.argument("option", OptionCSArgumentType.option()).executes(
+								ctx -> query(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
+										OptionCSArgumentType.getOption(ctx, "option"))))));
 
-		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("set-resource").then(Commands
-				.argument("structure-name", NameCSArgumentType.name())
+		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("save-resource").then(Commands
+				.argument("structure-name", NameCSArgumentType.oldName())
 				.then(Commands.argument("firstCorner", BlockPosArgument.blockPos())
 						.then(Commands.argument("secondCorner", BlockPosArgument.blockPos())
 								.then(Commands.argument("include-entities", BoolArgumentType.bool())
@@ -119,11 +126,16 @@ public class ShrinesCommand {
 				.then(Commands.literal("save").executes(ctx -> save(ctx.getSource())));
 
 		literalargumentbuilder = literalargumentbuilder
+				.then(Commands.literal("sync").executes(ctx -> sync(ctx.getSource(), null))
+						.then(Commands.argument("clients", EntityArgument.players())
+								.executes(ctx -> sync(ctx.getSource(), EntityArgument.getPlayers(ctx, "clients")))));
+
+		literalargumentbuilder = literalargumentbuilder
 				.then(Commands.literal("reset").executes(ctx -> reset(ctx.getSource(), false))
 						.then(Commands.literal("nowarn").executes(ctx -> reset(ctx.getSource(), true))));
 
-		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("load").then(Commands
-				.argument("structure-name", NameCSArgumentType.name())
+		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("load-resource").then(Commands
+				.argument("structure-name", NameCSArgumentType.oldName())
 				.then(Commands.argument("position", BlockPosArgument.blockPos())
 						.executes(ctx -> load(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
 								BlockPosArgument.getLoadedBlockPos(ctx, "position"), Rotation.NONE))
@@ -141,7 +153,7 @@ public class ShrinesCommand {
 								BlockPosArgument.getLoadedBlockPos(ctx, "position"), Rotation.COUNTERCLOCKWISE_90))))));
 
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("blacklist").then(Commands
-				.argument("structure-name", NameCSArgumentType.name())
+				.argument("structure-name", NameCSArgumentType.oldName())
 				.then(Commands.literal("add").then(Commands.argument("biome", BiomeCSArgumentType.biome(true))
 						.executes(ctx -> blacklist(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
 								BiomeListAction.ADD, ctx.getArgument("biome", ResourceLocation.class)))))
@@ -152,11 +164,13 @@ public class ShrinesCommand {
 						NameCSArgumentType.getName(ctx, "structure-name"), BiomeListAction.QUERY, null)))));
 
 		literalargumentbuilder = literalargumentbuilder.then(Commands.literal("whitelist").then(Commands
-				.argument("structure-name", NameCSArgumentType.name())
-				.then(Commands.literal("add").then(Commands.argument("biome", BiomeCategoryCSArgumentType.category(true))
+				.argument("structure-name", NameCSArgumentType.oldName())
+				.then(Commands.literal("add").then(Commands
+						.argument("biome", BiomeCategoryCSArgumentType.category(true))
 						.executes(ctx -> whitelist(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
 								BiomeListAction.ADD, BiomeCategoryCSArgumentType.getCategory(ctx, "biome")))))
-				.then(Commands.literal("remove").then(Commands.argument("biome", BiomeCategoryCSArgumentType.category(false))
+				.then(Commands.literal("remove").then(Commands
+						.argument("biome", BiomeCategoryCSArgumentType.category(false))
 						.executes(ctx -> whitelist(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
 								BiomeListAction.REMOVE, BiomeCategoryCSArgumentType.getCategory(ctx, "biome")))))
 				.then(Commands.literal("query").executes(ctx -> whitelist(ctx.getSource(),
@@ -183,7 +197,7 @@ public class ShrinesCommand {
 		int ret = 0;
 		ITextComponent message;
 		boolean success = false;
-		CustomStructureData data = Utils.getData(name);
+		CustomStructureData data = Utils.getData(name, true);
 		if (data != null) {
 			message = new TranslationTextComponent("commands.shrines.add.failed", name);
 			ret = -1;
@@ -199,6 +213,7 @@ public class ShrinesCommand {
 					});
 			message = new TranslationTextComponent("commands.shrines.add.success", name, conf);
 			success = true;
+			CustomStructureData.sendToClients();
 		}
 		if (success)
 			ctx.sendSuccess(message, false);
@@ -219,6 +234,7 @@ public class ShrinesCommand {
 			}
 			success = true;
 		}
+		CustomStructureData.sendToClients();
 		if (success)
 			ctx.sendSuccess(message, false);
 		else
@@ -228,7 +244,7 @@ public class ShrinesCommand {
 
 	public static int configure(CommandSource ctx, String name, String option, Object value)
 			throws CommandSyntaxException {
-		CustomStructureData data = Utils.getData(name);
+		CustomStructureData data = Utils.getData(name, true);
 		ITextComponent message;
 		boolean success = false;
 		if (data == null) {
@@ -244,6 +260,7 @@ public class ShrinesCommand {
 				else
 					message = res.getMessage();
 			}
+			CustomStructureData.sendToClients();
 		}
 		if (success)
 			ctx.sendSuccess(message, false);
@@ -266,13 +283,41 @@ public class ShrinesCommand {
 	public static int query(CommandSource ctx, String name) throws CommandSyntaxException {
 		ITextComponent message;
 		boolean success = false;
-		CustomStructureData data = Utils.getData(name);
+		CustomStructureData data = Utils.getData(name, true);
 		if (data == null) {
 			message = new TranslationTextComponent("commands.shrines.query.option.failed", name);
 		} else {
 			message = new TranslationTextComponent("commands.shrines.query.option.success", name,
 					data.toStringReadAble());
 			success = true;
+		}
+		if (success)
+			ctx.sendSuccess(message, false);
+		else
+			ctx.sendFailure(message);
+		return 0;
+	}
+
+	public static int query(CommandSource ctx, String name, String option) throws CommandSyntaxException {
+		ITextComponent message;
+		boolean success = false;
+		CustomStructureData data = Utils.getData(name, true);
+		if (data == null) {
+			message = new TranslationTextComponent("commands.shrines.query.option.failed", name);
+		} else {
+			ConfigOption<?> configOption = null;
+			for (ConfigOption<?> co : data.CONFIGS) {
+				if (co.getName().equals(option)) {
+					configOption = co;
+				}
+			}
+			if (configOption != null) {
+				message = new TranslationTextComponent("commands.shrines.query.option.value.success", name, option,
+						configOption.getValue());
+				success = true;
+			} else {
+				message = new TranslationTextComponent("commands.shrines.query.option.value.failed", option, name);
+			}
 		}
 		if (success)
 			ctx.sendSuccess(message, false);
@@ -288,7 +333,7 @@ public class ShrinesCommand {
 		if (ctx.getLevel() == null) {
 			message = new TranslationTextComponent("commands.shrines.resource.failed.world_not_present");
 		} else {
-			CustomStructureData data = Utils.getData(name);
+			CustomStructureData data = Utils.getData(name, true);
 			if (data == null) {
 				message = new TranslationTextComponent("commands.shrines.failed.structure", name);
 			} else {
@@ -312,7 +357,7 @@ public class ShrinesCommand {
 								"commands.shrines.resource.success.prepared.yes").withStyle((style) -> {
 									return style.withColor(TextFormatting.GREEN)
 											.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-													"/shrines-structures set-resource " + name + " " + pos1.getX() + " "
+													"/shrines-structures save-resource " + name + " " + pos1.getX() + " "
 															+ pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " "
 															+ pos2.getY() + " " + pos2.getZ() + " " + includeEntities
 															+ " instantadd"))
@@ -335,7 +380,7 @@ public class ShrinesCommand {
 								configure);
 						success = true;
 					}
-					data.sendToClients();
+					CustomStructureData.sendToClients();
 				} else {
 					message = new TranslationTextComponent("commands.shrines.resource.failed.calculate", name);
 				}
@@ -364,6 +409,7 @@ public class ShrinesCommand {
 		} else {
 			Utils.customsStructs.clear();
 			Utils.loadCustomStructures();
+			CustomStructureData.sendToClients();
 			message = new TranslationTextComponent("commands.shrines.reset.cleared");
 		}
 		ctx.sendSuccess(message, false);
@@ -377,10 +423,23 @@ public class ShrinesCommand {
 		return 0;
 	}
 
+	public static int sync(CommandSource ctx, Collection<ServerPlayerEntity> clients) throws CommandSyntaxException {
+		if (clients != null) {
+			for (PlayerEntity pe : clients) {
+				CustomStructureData.sendToClient(pe);
+			}
+		} else {
+			CustomStructureData.sendToClients();
+		}
+		ITextComponent message = new TranslationTextComponent("commands.shrines.sync");
+		ctx.sendSuccess(message, false);
+		return 0;
+	}
+
 	public static int load(CommandSource ctx, String structure, BlockPos position, Rotation rotation) {
 		ITextComponent message;
 		boolean success = false;
-		CustomStructureData data = Utils.getData(structure);
+		CustomStructureData data = Utils.getData(structure, true);
 		if (data == null) {
 			message = new TranslationTextComponent("commands.shrines.failed.structure", structure);
 		} else {
@@ -403,7 +462,7 @@ public class ShrinesCommand {
 			@Nullable ResourceLocation biome) {
 		ITextComponent message;
 		boolean success = false;
-		CustomStructureData data = Utils.getData(structure);
+		CustomStructureData data = Utils.getData(structure, true);
 		if (data == null) {
 			message = new TranslationTextComponent("commands.shrines.failed.structure", structure);
 		} else {
@@ -441,6 +500,7 @@ public class ShrinesCommand {
 			default:
 				message = new TranslationTextComponent("commands.shrines.biomelist.failed.noaction");
 			}
+			CustomStructureData.sendToClients();
 		}
 		if (success) {
 			ctx.sendSuccess(message, true);
@@ -453,7 +513,7 @@ public class ShrinesCommand {
 	public static int whitelist(CommandSource ctx, String structure, BiomeListAction action, Category category) {
 		ITextComponent message;
 		boolean success = false;
-		CustomStructureData data = Utils.getData(structure);
+		CustomStructureData data = Utils.getData(structure, true);
 		if (data == null) {
 			message = new TranslationTextComponent("commands.shrines.failed.structure", structure);
 		} else {
@@ -491,6 +551,7 @@ public class ShrinesCommand {
 			default:
 				message = new TranslationTextComponent("commands.shrines.biomelist.failed.noaction");
 			}
+			CustomStructureData.sendToClients();
 		}
 		if (success) {
 			ctx.sendSuccess(message, true);

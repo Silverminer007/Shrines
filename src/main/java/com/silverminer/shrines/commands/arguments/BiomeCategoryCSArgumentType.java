@@ -86,7 +86,7 @@ public class BiomeCategoryCSArgumentType implements ArgumentType<String> {
 
 	public static List<String> getValidCategories(CommandContext<?> ctx, boolean newCat) {
 		List<Category> cats = Lists.newArrayList(Biome.Category.values());
-		CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class));
+		CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class), false);
 		if (data != null)
 			cats.removeIf(cat -> newCat ? data.categories.getValue().contains(cat)
 					: !data.categories.getValue().contains(cat));

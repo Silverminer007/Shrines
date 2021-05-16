@@ -40,8 +40,8 @@ public class Shrines {
 	/**
 	 */
 	public Shrines() {
-		/*ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
-				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));*/
+		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
+				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 

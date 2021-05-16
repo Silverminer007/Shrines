@@ -28,11 +28,13 @@ import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.utils.ModTemplateManager;
 import com.silverminer.shrines.utils.OptionParsingResult;
 import com.silverminer.shrines.utils.Utils;
-import com.silverminer.shrines.utils.network.PiecesToDrawPacket;
+import com.silverminer.shrines.utils.network.CustomStructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.IntArrayNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -52,7 +54,7 @@ public class CustomStructureData {
 	protected static final Logger LOGGER = LogManager.getLogger(CustomStructureData.class);
 	public static final List<String> OPTIONS = Lists.newArrayList();
 
-	public final String name;
+	public String name;
 
 	public final List<ConfigOption<?>> CONFIGS = Lists.newArrayList();
 	public ConfigOption<Boolean> generate = add(new ConfigOption<Boolean>("generate", true, Boolean::valueOf,
@@ -65,19 +67,24 @@ public class CustomStructureData {
 			Boolean::valueOf, BoolArgumentType.bool(), BoolArgumentType::getBool));
 	public ConfigOption<Integer> distance = add(new ConfigOption<Integer>("distance", 50, Integer::valueOf,
 			IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
-	public ConfigOption<Integer> seed;
+	public ConfigOption<Integer> seed = add(new ConfigOption<Integer>("seed", 0, Integer::valueOf,
+			IntegerArgumentType.integer(0), IntegerArgumentType::getInteger));
 	public ConfigOption<Integer> seperation = add(new ConfigOption<Integer>("seperation", 8, Integer::valueOf,
 			IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
 	public ConfigOption<List<Biome.Category>> categories = add(new ConfigOption<List<Biome.Category>>("categories",
 			Lists.newArrayList(Biome.Category.PLAINS, Biome.Category.TAIGA, Biome.Category.FOREST),
-			CustomStructureData::readCategories, StringArgumentType.greedyString(), StringArgumentType::getString, false));
-	public ConfigOption<List<String>> blacklist = add(new ConfigOption<List<String>>("blacklist", Lists.newArrayList(),
-			CustomStructureData::readBlackList, StringArgumentType.greedyString(), StringArgumentType::getString, false));
+			CustomStructureData::readCategories, StringArgumentType.greedyString(), StringArgumentType::getString,
+			false));
+	public ConfigOption<List<String>> blacklist = add(
+			new ConfigOption<List<String>>("blacklist", Lists.newArrayList(), CustomStructureData::readBlackList,
+					StringArgumentType.greedyString(), StringArgumentType::getString, false));
 	public ConfigOption<List<PieceData>> pieces = add(new ConfigOption<List<PieceData>>("pieces",
 			Lists.newArrayList(new PieceData("resource", BlockPos.ZERO)), CustomStructureData::readPieces,
 			StringArgumentType.greedyString(), StringArgumentType::getString, false));
 	public ConfigOption<Boolean> ignore_air = add(new ConfigOption<Boolean>("ignore_air", true, Boolean::valueOf,
 			BoolArgumentType.bool(), BoolArgumentType::getBool));
+	public ConfigOption<Integer> base_height_offset = add(new ConfigOption<Integer>("base_height_offset", 0, Integer::valueOf,
+			IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
 	public final ArrayList<ResourceData> PIECES_ON_FLY = Lists.newArrayList();
 
 	public CustomStructureData(String name, Random rand) {
@@ -86,8 +93,11 @@ public class CustomStructureData {
 
 	public CustomStructureData(String name, int seed) {
 		this.name = name;
-		this.seed = add(new ConfigOption<Integer>("seed", seed, Integer::valueOf, IntegerArgumentType.integer(0),
-				IntegerArgumentType::getInteger));
+		this.seed.setValue(seed);
+	}
+
+	private CustomStructureData() {
+		this("", 0);
 	}
 
 	public <T> ConfigOption<T> add(ConfigOption<T> option) {
@@ -178,16 +188,47 @@ public class CustomStructureData {
 		return true;
 	}
 
-	public void sendToClients() {
-		ShrinesPacketHandler.sendToAll(this.parsePieces());
+	public static CompoundNBT write(CustomStructureData csd) {
+		CompoundNBT tag = new CompoundNBT();
+		tag.putString("config", csd.toString());
+		tag.putString("name", csd.name);
+		tag.putInt("bounds", csd.PIECES_ON_FLY.size());
+		int i = 0;
+		for (ResourceData rd : csd.PIECES_ON_FLY) {
+			tag.putString("name" + i, rd.getName());
+			tag.put("bounds" + i, rd.getBounds().createTag());
+			i++;
+		}
+		return tag;
 	}
 
-	public void sendToClient(PlayerEntity pe) {
-		ShrinesPacketHandler.sendTo(this.parsePieces(), pe);
+	public static CustomStructureData read(CompoundNBT tag) {
+		CustomStructureData csd = new CustomStructureData();
+		if (tag == null) {
+			LOGGER.error("ERROR: Server sended empty structure data");
+			return csd;
+		}
+		csd.fromString(tag.getString("config"));
+		csd.name = tag.getString("name");
+		int bounds = tag.getInt("bounds");
+		csd.PIECES_ON_FLY.clear();
+		for (int i = 0; i < bounds; i++) {
+			csd.PIECES_ON_FLY.add(new ResourceData(tag.getString("name" + i),
+					new MutableBoundingBox(((IntArrayNBT) tag.get("bounds" + i)).getAsIntArray())));
+		}
+		return csd;
 	}
 
-	public PiecesToDrawPacket parsePieces() {
-		return new PiecesToDrawPacket(this.PIECES_ON_FLY, this.getName());
+	public static void sendToClients() {
+		ShrinesPacketHandler.sendToAll(toPacket());
+	}
+
+	public static void sendToClient(PlayerEntity pe) {
+		ShrinesPacketHandler.sendTo(toPacket(), pe);
+	}
+
+	public static CustomStructuresPacket toPacket() {
+		return new CustomStructuresPacket(Utils.customsStructs);
 	}
 
 	public boolean savePieces(ServerWorld serverWorld, MinecraftServer server, String author, boolean includeEntities) {
@@ -250,8 +291,8 @@ public class CustomStructureData {
 				return false;
 			BlockPos blockpos = loadPos.offset(pd.offset);
 
-			PlacementSettings placementsettings = (new PlacementSettings()).setMirror(Mirror.NONE)
-					.setRotation(rot).setIgnoreEntities(false).setChunkPos((ChunkPos) null);
+			PlacementSettings placementsettings = (new PlacementSettings()).setMirror(Mirror.NONE).setRotation(rot)
+					.setIgnoreEntities(false).setChunkPos((ChunkPos) null);
 
 			template.placeInWorldChunk(serverWorld, blockpos, placementsettings, createRandom(this.seed.getValue()));
 		}
@@ -269,7 +310,8 @@ public class CustomStructureData {
 			pds.add(pd);
 		}
 		this.pieces.setValue(pds);
-		this.PIECES_ON_FLY.clear();
+		if (!Utils.properties.keep_bounds)
+			this.PIECES_ON_FLY.clear();
 	}
 
 	public void fromString(String config) {
@@ -369,12 +411,19 @@ public class CustomStructureData {
 			s = s.substring(1, s.length() - 1);
 		}
 		List<String> cats = Lists.newArrayList();
-		while ((s.contains("+"))) {
-			int idx = s.lastIndexOf("+");
-			cats.add(s.substring(idx + 1));
-			s = s.substring(0, idx);
+		String[] parts = s.split(",");
+		if (!(parts.length % 4 == 0)) {
+			LOGGER.info("Something went wrong reading pieces: Comma count didn't match");
+			return null;
 		}
-		cats.add(s);
+		for (int i = 0; i < parts.length / 4; i++) {
+			int idx = i * 4;
+			cats.add(parts[idx]  + "," + parts[idx + 1] + "," + parts[idx + 2] + "," + parts[idx + 3]);
+		}
+		/*
+		 * while (s.contains("+")) { int idx = s.lastIndexOf("+");
+		 * cats.add(s.substring(idx + 1)); s = s.substring(0, idx); } cats.add(s);
+		 */
 		List<PieceData> categories = Lists.newArrayList();
 		for (String cat : cats) {
 			PieceData c = PieceData.fromString(cat);

@@ -16,7 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -24,10 +23,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.structures.custom.helper.ResourceData;
 
 public class Utils {
 	public static final Logger LOGGER = LogManager.getLogger(Utils.class);
@@ -43,7 +41,9 @@ public class Utils {
 	/**
 	 * Logical Side: CLIENT Never use on server! They are not sync
 	 */
-	public static final HashMap<String, ArrayList<ResourceData>> BOUNDS_TO_DRAW = Maps.newHashMap();
+	public static ArrayList<CustomStructureData> DATAS_FROM_SERVER = Lists.newArrayList();
+
+	public static CustomStructureProperties properties;
 
 	public static File getLocationOf(String structure_name) {
 		return FileUtils.getFile(Shrines.proxy.getBaseDir(), "shrines-saves", structure_name);
@@ -51,10 +51,20 @@ public class Utils {
 
 	public static void loadCustomStructures() {
 		try {
-			String path = Shrines.proxy.getBaseDir().getAbsolutePath();
-			File f = new File(path, "shrines-saves").getCanonicalFile();
+			File f = new File(Shrines.proxy.getBaseDir(), "shrines-saves").getCanonicalFile();
 			if (!f.exists())
 				f.mkdirs();
+
+			// PROPERTIES START
+			File properties = new File(f, "shrines.properties");
+			if (!properties.exists())
+				properties.createNewFile();
+			Utils.properties = CustomStructureProperties.load(properties.toPath());
+			if (Utils.properties != null) {
+				Utils.properties.save();
+			}
+			// PROPERTIES END
+
 			File structures = new File(f, "structures.txt");
 			if (!structures.exists())
 				structures.createNewFile();
@@ -92,6 +102,9 @@ public class Utils {
 
 	public static void saveStructures() {
 		File path = Shrines.proxy.getBaseDir();
+		if (Utils.properties != null) {
+			Utils.properties.save();
+		}
 		try {
 			path = new File(path, "shrines-saves").getCanonicalFile();
 			LOGGER.info("Saving config options on path: {}", path);
@@ -137,12 +150,21 @@ public class Utils {
 		}
 	}
 
-	public static CustomStructureData getData(String name) {
-		for (CustomStructureData csd : Utils.customsStructs) {
-			if (csd.getName().equals(name)) {
-				return csd;
+	public static CustomStructureData getData(String name, boolean server) {
+		if (server) {
+			for (CustomStructureData csd : Utils.customsStructs) {
+				if (csd.getName().equals(name)) {
+					return csd;
+				}
 			}
+			return null;
+		} else {
+			for (CustomStructureData csd : Utils.DATAS_FROM_SERVER) {
+				if (csd.getName().equals(name)) {
+					return csd;
+				}
+			}
+			return null;
 		}
-		return null;
 	}
 }

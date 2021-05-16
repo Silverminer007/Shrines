@@ -11,7 +11,7 @@
  */
 package com.silverminer.shrines.events;
 
-import java.util.ArrayList;
+import java.awt.Color;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +20,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.silverminer.shrines.Shrines;
+import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.structures.custom.helper.ResourceData;
 import com.silverminer.shrines.utils.Utils;
 
@@ -42,12 +43,8 @@ public class ClientEvents {
 	public static class ForgeEventBus {
 		@SubscribeEvent
 		/**
-		 * TODO Fix bound is fliccering around with camera rotation
+		 * TODO Fix bound is fliccering around with camera rotation 
 		 * TODO Fix: Bound is using wrong color
-		 * TODO Fix multiple bound: They're overlapping
-		 * TODO Add properties file with options:
-		 * TODO - Bound color
-		 * TODO - remove bounds after add
 		 * 
 		 * @param event
 		 */
@@ -64,10 +61,12 @@ public class ClientEvents {
 			IVertexBuilder vb = irendertypebuffer1.getBuffer(RenderType.lines());
 			ms.pushPose();
 			ms.translate(-renderPosX, -renderPosY, -renderPosZ);
-			for (ArrayList<ResourceData> datas : Utils.BOUNDS_TO_DRAW.values()) {
-				for (ResourceData rd : datas) {
+			Color c = new Color(Utils.properties.bound_color);
+			for (CustomStructureData data : Utils.DATAS_FROM_SERVER) {
+				for (ResourceData rd : data.PIECES_ON_FLY) {
 					MutableBoundingBox mbb = rd.getBounds();
-					WorldRenderer.renderLineBox(ms, vb, mbb.x0, mbb.y0, mbb.z0, mbb.x1, mbb.y1, mbb.z1, 0.1F, 0.1F, 0.1F, 1.0F);
+					WorldRenderer.renderLineBox(ms, vb, mbb.x0, mbb.y0, mbb.z0, mbb.x1, mbb.y1, mbb.z1,
+							c.getRed() / 255.0f, c.getGreen() / 255.0f, c.getBlue() / 255.0f, 1.0f);
 				}
 			}
 			ms.popPose();

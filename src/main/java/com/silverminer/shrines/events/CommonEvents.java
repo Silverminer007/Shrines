@@ -186,15 +186,13 @@ public class CommonEvents {
 
 		@SubscribeEvent
 		public static void onPlayerJoin(PlayerLoggedInEvent event) {
-			// TODO sync here everything istadt of only sending bounds
-			for (CustomStructureData csd : Utils.customsStructs) {
-				csd.sendToClient(event.getPlayer());
-			}
+			CustomStructureData.sendToClient(event.getPlayer());
 		}
 
 		@SubscribeEvent
 		public static void onWorldSaved(WorldEvent.Save event) {
-			Utils.saveStructures();
+			if (Utils.properties.autosave)
+				Utils.saveStructures();
 		}
 
 		@SubscribeEvent
