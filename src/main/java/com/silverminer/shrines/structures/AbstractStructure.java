@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.Shrines;
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
 import com.silverminer.shrines.init.StructureInit;
 
@@ -73,11 +74,11 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	}
 
 	public int getDistance() {
-		return this.getConfig().DISTANCE.get();
+		return (int) (this.getConfig().DISTANCE.get() * Config.STRUCTURES.DISTANCE_FACTOR.get());
 	}
 
 	public int getSeparation() {
-		return this.getConfig().SEPARATION.get();
+		return (int) (this.getConfig().SEPARATION.get() * Config.STRUCTURES.SEPERATION_FACTOR.get());
 	}
 
 	public int getSeedModifier() {

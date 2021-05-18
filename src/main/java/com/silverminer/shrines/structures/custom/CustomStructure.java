@@ -68,11 +68,11 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 	}
 
 	public int getDistance() {
-		return csd.distance.getValue();
+		return (int) (csd.distance.getValue() * Config.STRUCTURES.DISTANCE_FACTOR.get());
 	}
 
 	public int getSeparation() {
-		return csd.seperation.getValue();
+		return (int) (csd.seperation.getValue() * Config.STRUCTURES.SEPERATION_FACTOR.get());
 	}
 
 	public int getSeedModifier() {

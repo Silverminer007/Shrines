@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.utils.saves.BoundSaveData;
 
 public class Utils {
 	public static final Logger LOGGER = LogManager.getLogger(Utils.class);
@@ -45,6 +46,9 @@ public class Utils {
 
 	public static CustomStructureProperties properties;
 
+	public static BoundSaveData boundDataSave;
+	
+	
 	public static File getLocationOf(String structure_name) {
 		return FileUtils.getFile(Shrines.proxy.getBaseDir(), "shrines-saves", structure_name);
 	}

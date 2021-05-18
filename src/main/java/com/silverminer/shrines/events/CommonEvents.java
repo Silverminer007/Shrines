@@ -30,13 +30,17 @@ import com.silverminer.shrines.structures.custom.CustomStructure;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.saves.BoundSaveData;
 
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -190,15 +194,39 @@ public class CommonEvents {
 		}
 
 		@SubscribeEvent
+		public static void registerCommands(RegisterCommandsEvent event) {
+			LOGGER.debug("Registering shrines commands");
+			ShrinesCommand.register(event.getDispatcher());
+		}
+
+		@SubscribeEvent
 		public static void onWorldSaved(WorldEvent.Save event) {
 			if (Utils.properties.autosave)
 				Utils.saveStructures();
 		}
 
 		@SubscribeEvent
-		public static void registerCommands(RegisterCommandsEvent event) {
-			LOGGER.debug("Registering shrines commands");
-			ShrinesCommand.register(event.getDispatcher());
+		public static void onWorldStopped(WorldEvent.Unload event) {
+			IWorld iworld = event.getWorld();
+
+			if (!(iworld instanceof World))
+				return;
+			if (!((World) iworld).isClientSide() && ((World) iworld).dimension() == World.OVERWORLD) {
+				Utils.customsStructs.forEach(csd -> csd.PIECES_ON_FLY.clear());
+			}
+		}
+
+		@SubscribeEvent
+		public static void onWorldLoad(WorldEvent.Load event) {
+			LOGGER.info("Loading bound data from file");
+			IWorld iworld = event.getWorld();
+
+			if (!(iworld instanceof World))
+				return;
+			World world = (World) iworld;
+			if (!world.isClientSide() && world.dimension() == World.OVERWORLD && world instanceof ServerWorld) {
+				Utils.boundDataSave = BoundSaveData.get((ServerWorld) world);
+			}
 		}
 	}
 }
