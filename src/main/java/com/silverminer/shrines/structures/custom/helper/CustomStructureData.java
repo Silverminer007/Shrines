@@ -34,9 +34,9 @@ import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.IntArrayNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.ResourceLocationException;
 import net.minecraft.util.Rotation;
@@ -44,6 +44,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
@@ -83,8 +84,9 @@ public class CustomStructureData {
 			StringArgumentType.greedyString(), StringArgumentType::getString, false));
 	public ConfigOption<Boolean> ignore_air = add(new ConfigOption<Boolean>("ignore_air", true, Boolean::valueOf,
 			BoolArgumentType.bool(), BoolArgumentType::getBool));
-	public ConfigOption<Integer> base_height_offset = add(new ConfigOption<Integer>("base_height_offset", 0, Integer::valueOf,
-			IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
+	public ConfigOption<Integer> base_height_offset = add(new ConfigOption<Integer>("base_height_offset", 0,
+			Integer::valueOf, IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
+	// Remember to mark Utils#boundDataSave as dirty to make sure that it is saved
 	public final ArrayList<ResourceData> PIECES_ON_FLY = Lists.newArrayList();
 
 	public CustomStructureData(String name, Random rand) {
@@ -126,8 +128,9 @@ public class CustomStructureData {
 		return this.toString().replaceAll(";", ";\n");
 	}
 
-	public boolean calculateBounds(BlockPos c1, BlockPos c2) {
+	public boolean calculateBounds(BlockPos c1, BlockPos c2, RegistryKey<World> dimension) {
 		PIECES_ON_FLY.clear();
+		Utils.boundDataSave.setDirty();
 		if (c1.getX() > c2.getX()) {
 			int x = c1.getX();
 			c1 = new BlockPos(c2.getX(), c1.getY(), c1.getZ());
@@ -178,7 +181,7 @@ public class CustomStructureData {
 					PIECES_ON_FLY.add(new ResourceData(
 							this.name + i++, MutableBoundingBox.createProper(corner1.getX(), corner1.getY(),
 									corner1.getZ(), corner2.getX(), corner2.getY(), corner2.getZ()),
-							corner1.subtract(c1)));
+							dimension, corner1.subtract(c1)));
 				}
 			}
 		}
@@ -195,9 +198,7 @@ public class CustomStructureData {
 		tag.putInt("bounds", csd.PIECES_ON_FLY.size());
 		int i = 0;
 		for (ResourceData rd : csd.PIECES_ON_FLY) {
-			tag.putString("name" + i, rd.getName());
-			tag.put("bounds" + i, rd.getBounds().createTag());
-			i++;
+			tag.put("bounds" + i++, rd.save());
 		}
 		return tag;
 	}
@@ -213,9 +214,9 @@ public class CustomStructureData {
 		int bounds = tag.getInt("bounds");
 		csd.PIECES_ON_FLY.clear();
 		for (int i = 0; i < bounds; i++) {
-			csd.PIECES_ON_FLY.add(new ResourceData(tag.getString("name" + i),
-					new MutableBoundingBox(((IntArrayNBT) tag.get("bounds" + i)).getAsIntArray())));
+			csd.PIECES_ON_FLY.add(ResourceData.load(tag.getCompound("bounds" + i)));
 		}
+		Utils.boundDataSave.setDirty();
 		return csd;
 	}
 
@@ -310,8 +311,10 @@ public class CustomStructureData {
 			pds.add(pd);
 		}
 		this.pieces.setValue(pds);
-		if (!Utils.properties.keep_bounds)
+		if (!Utils.properties.keep_bounds) {
 			this.PIECES_ON_FLY.clear();
+			Utils.boundDataSave.setDirty();
+		}
 	}
 
 	public void fromString(String config) {
@@ -418,12 +421,8 @@ public class CustomStructureData {
 		}
 		for (int i = 0; i < parts.length / 4; i++) {
 			int idx = i * 4;
-			cats.add(parts[idx]  + "," + parts[idx + 1] + "," + parts[idx + 2] + "," + parts[idx + 3]);
+			cats.add(parts[idx] + "," + parts[idx + 1] + "," + parts[idx + 2] + "," + parts[idx + 3]);
 		}
-		/*
-		 * while (s.contains("+")) { int idx = s.lastIndexOf("+");
-		 * cats.add(s.substring(idx + 1)); s = s.substring(0, idx); } cats.add(s);
-		 */
 		List<PieceData> categories = Lists.newArrayList();
 		for (String cat : cats) {
 			PieceData c = PieceData.fromString(cat);

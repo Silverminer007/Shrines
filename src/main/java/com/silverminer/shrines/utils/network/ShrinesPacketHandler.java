@@ -36,8 +36,6 @@ public class ShrinesPacketHandler {
 
 	public static void register() {
 		int id = 0;
-		CHANNEL.registerMessage(id++, PiecesToDrawPacket.class, PiecesToDrawPacket::encode,
-				PiecesToDrawPacket::decode, PiecesToDrawPacket::handle);
 		CHANNEL.registerMessage(id++, CustomStructuresPacket.class, CustomStructuresPacket::encode,
 				CustomStructuresPacket::decode, CustomStructuresPacket::handle);
 	}

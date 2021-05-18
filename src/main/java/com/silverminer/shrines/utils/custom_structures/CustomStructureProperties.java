@@ -33,6 +33,7 @@ public class CustomStructureProperties extends PropertyManager<CustomStructurePr
 	public final boolean autosave;
 	public final boolean keep_bounds;
 	public final int bound_color;
+	public final boolean save_bounds;
 
 	/**
 	 * @param properties
@@ -42,6 +43,7 @@ public class CustomStructureProperties extends PropertyManager<CustomStructurePr
 		this.autosave = this.get("autosave", true);
 		this.keep_bounds = this.get("keep_bounds", true);
 		this.bound_color = this.get("bound_color", 0xffffff);
+		this.save_bounds = this.get("save_bounds", true);
 		this.path = path;
 	}
 

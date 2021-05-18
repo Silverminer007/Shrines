@@ -56,8 +56,6 @@ public class ShrinesCommand {
 	/**
 	 * TODO Add spanish translations -> S1fy
 	 * 
-	 * TODO Test distance and seperation usage
-	 * 
 	 * @param dispatcher
 	 */
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
@@ -348,7 +346,7 @@ public class ShrinesCommand {
 			if (data == null) {
 				message = new TranslationTextComponent("commands.shrines.failed.structure", name);
 			} else {
-				if (data.calculateBounds(pos1, pos2)) {
+				if (data.calculateBounds(pos1, pos2, ctx.getLevel().dimension())) {
 					if (instadd) {
 						String author;
 						try {

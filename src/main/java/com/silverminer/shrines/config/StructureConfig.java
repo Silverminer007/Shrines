@@ -48,6 +48,9 @@ public class StructureConfig {
 
 	public final LootableStructureGenConfig CUSTOM;
 
+	public final ForgeConfigSpec.DoubleValue DISTANCE_FACTOR;
+	public final ForgeConfigSpec.DoubleValue SEPERATION_FACTOR;
+
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		BALLON = new LootableStructureGenConfig.LootableConfigBuilder("Ballon", "ballon", 143665).setLootChance(0.25D)
 				.setDistance(50).setSeparation(8).setNeedsGround(false).build(SERVER_BUILDER);
@@ -102,6 +105,10 @@ public class StructureConfig {
 				.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands")
 				.build(SERVER_BUILDER);
 		CUSTOM = null;
+		DISTANCE_FACTOR = SERVER_BUILDER.comment("Distance Factor (Default 1.0) Is multiplied on the structures distance. Allows changing distance of every structure at once")
+				.defineInRange("structures.distance_factor", 1.0, 0.0, 100.0);
+		SEPERATION_FACTOR = SERVER_BUILDER.comment("Seperation Factor (Default 1.0) Is multiplied on the structures seperation. Allows changing seperation of every structure at once")
+				.defineInRange("structures.seperation_factor", 1.0, 0.0, 100.0);
 	}
 
 	public static class StructureGenConfig {
