@@ -34,6 +34,7 @@ public class CustomStructureProperties extends PropertyManager<CustomStructurePr
 	public final boolean keep_bounds;
 	public final int bound_color;
 	public final boolean save_bounds;
+	public final boolean use_experimental;
 
 	/**
 	 * @param properties
@@ -44,6 +45,7 @@ public class CustomStructureProperties extends PropertyManager<CustomStructurePr
 		this.keep_bounds = this.get("keep_bounds", true);
 		this.bound_color = this.get("bound_color", 0xffffff);
 		this.save_bounds = this.get("save_bounds", true);
+		this.use_experimental = this.get("use_experimental", false);
 		this.path = path;
 	}
 

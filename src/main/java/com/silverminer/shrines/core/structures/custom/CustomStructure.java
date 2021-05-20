@@ -18,6 +18,7 @@ import com.mojang.serialization.Codec;
 import com.silverminer.shrines.core.structures.AbstractStructure;
 import com.silverminer.shrines.core.structures.AbstractStructureStart;
 import com.silverminer.shrines.core.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.core.utils.StructureUtils;
 import com.silverminer.shrines.forge.config.Config;
 import com.silverminer.shrines.forge.config.StructureConfig.StructureGenConfig;
 
@@ -30,7 +31,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
@@ -123,9 +123,9 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 			if (!(this.getFeature() instanceof CustomStructure))
 				return;
 			CustomStructure cS = (CustomStructure) this.getFeature();
-			int height = chunkGenerator.getFirstFreeHeight(i, j, Heightmap.Type.WORLD_SURFACE) + cS.csd.base_height_offset.getValue();
+			int height = StructureUtils.getAverageHeight(new BlockPos(i, 0, j).offset(-24, 0, -24), chunkGenerator, 3) + cS.csd.base_height_offset.getValue();
 			CustomPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, cS.csd.use_random_varianting.getValue(),
-					cS.csd.pieces.getValue(), cS.name, cS.csd.ignore_air.getValue(), height);
+					cS.csd.pieces.getValue(), cS.name, cS.csd.ignore_air.getValue(), height, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

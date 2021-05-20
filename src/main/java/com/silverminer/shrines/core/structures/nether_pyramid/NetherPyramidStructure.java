@@ -63,7 +63,7 @@ public class NetherPyramidStructure extends AbstractStructure<NoFeatureConfig> {
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			NetherPyramidPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			NetherPyramidPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

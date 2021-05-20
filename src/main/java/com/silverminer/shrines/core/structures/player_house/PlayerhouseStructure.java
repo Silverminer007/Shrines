@@ -61,9 +61,9 @@ public class PlayerhouseStructure extends AbstractStructure<NoFeatureConfig> {
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 0, j);
+			BlockPos blockpos = new BlockPos(i, 1, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			PlayerhousePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			PlayerhousePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

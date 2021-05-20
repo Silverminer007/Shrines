@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.silverminer.shrines.core.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.core.structures.ColorStructurePiece;
 import com.silverminer.shrines.core.structures.StructurePieceTypes;
+import com.silverminer.shrines.core.utils.StructureUtils;
 import com.silverminer.shrines.forge.config.Config;
 
 import net.minecraft.block.Block;
@@ -50,21 +51,23 @@ public class HarbourBallonPiece {
 			new ResourceLocation("shrines:ballon/ballon2_4"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-			List<StructurePiece> pieces, Random random) {
+			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+		int height = StructureUtils.getAverageHeight(pos.offset(-24, 0, -24), chunkGenerator, 3);
 		boolean flag = false;
 		if (flag)
 			pieces.add(new HarbourBallonPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-					rotation, 0, random));
+					rotation, 0, random, height));
 		else
 			// Test function for single variant
-			pieces.add(new HarbourBallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random));
+			pieces.add(
+					new HarbourBallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random, height));
 	}
 
 	public static class Piece extends ColorStructurePiece {
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, Random rand) {
-			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true);
+				int componentTypeIn, Random rand, int height) {
+			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true, height);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {

@@ -32,10 +32,11 @@ public abstract class ShrinesMod {
 	protected IFunctionProvider functionProvider;
 
 	/**
-	 * TODO 1.8.1-Beta2 Update player house to be compactible with lootr -> Only at evry second
-	 * chest there is a structure block 
-	 * TODO 1.8.1-Beta2 Move table to extra nbt to be added
-	 * (simplifly)
+	 * TODO 1.8.2 Move color structure piece from superclass to object for support of multiple pieces having the same materials
+	 * TODO 1.8.2 Improve spacing of structure (make check for other structures)
+	 * TODO 1.8.3 Add screen interface for setting up custom structures
+	 * TODO 1.9.0 Improve Harbour generation -> IDEA: Adding it on oceans and making an island Harbour
+	 * 
 	 */
 	public ShrinesMod() {
 		instance = this;

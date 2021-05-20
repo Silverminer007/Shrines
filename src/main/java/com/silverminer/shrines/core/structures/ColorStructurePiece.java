@@ -99,8 +99,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 	protected final ArrayList<BlockPos> CHANGED_POS = new ArrayList<BlockPos>();
 
 	public ColorStructurePiece(IStructurePieceType pieceType, TemplateManager templateManager,
-			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn, boolean defaultValue) {
-		super(pieceType, templateManager, location, pos, rotation, componentTypeIn);
+			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn, boolean defaultValue, int height) {
+		super(pieceType, templateManager, location, pos, rotation, componentTypeIn, height);
 		this.defaultValue = defaultValue;
 		this.addOresOfMoreOre();
 	}

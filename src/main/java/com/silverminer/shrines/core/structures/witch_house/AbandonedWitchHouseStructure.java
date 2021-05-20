@@ -63,7 +63,8 @@ public class AbandonedWitchHouseStructure extends AbstractStructure<NoFeatureCon
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			AbandonedWitchHousePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			AbandonedWitchHousePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random,
+					chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}
