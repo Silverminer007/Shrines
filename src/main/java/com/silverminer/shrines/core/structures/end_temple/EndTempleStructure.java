@@ -91,7 +91,7 @@ public class EndTempleStructure extends AbstractStructure<NoFeatureConfig> {
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			EndTemplePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			EndTemplePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

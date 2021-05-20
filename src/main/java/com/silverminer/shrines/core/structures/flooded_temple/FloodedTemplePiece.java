@@ -17,6 +17,7 @@ import java.util.Random;
 import com.silverminer.shrines.core.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.core.structures.ColorStructurePiece;
 import com.silverminer.shrines.core.structures.StructurePieceTypes;
+import com.silverminer.shrines.core.utils.StructureUtils;
 import com.silverminer.shrines.forge.config.Config;
 
 import net.minecraft.block.Blocks;
@@ -26,7 +27,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
@@ -36,14 +39,15 @@ public class FloodedTemplePiece {
 	private static final ResourceLocation location = new ResourceLocation("shrines:flooded_temple/flooded_temple");
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-			List<StructurePiece> pieces, Random random) {
-		pieces.add(new FloodedTemplePiece.Piece(templateManager, location, pos, rotation, 0));
+			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+		int height = StructureUtils.getAverageHeight(pos.offset(-16, 0, -16), chunkGenerator, 2);
+		pieces.add(new FloodedTemplePiece.Piece(templateManager, location, pos, rotation, 0, height));
 	}
 
 	public static class Piece extends ColorStructurePiece {
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn) {
-			super(StructurePieceTypes.FLOODED_TEMPLE, templateManager, location, pos, rotation, componentTypeIn, true);
+				int componentTypeIn, int height) {
+			super(StructurePieceTypes.FLOODED_TEMPLE, templateManager, location, pos, rotation, componentTypeIn, true, height);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
@@ -84,6 +88,10 @@ public class FloodedTemplePiece {
 
 		public boolean overwriteGlazedTerracotta() {
 			return false;
+		}
+
+		protected int getHeight(ISeedReader world, BlockPos blockpos1) {
+			return super.getHeight(world, blockpos1) - 1;
 		}
 	}
 }

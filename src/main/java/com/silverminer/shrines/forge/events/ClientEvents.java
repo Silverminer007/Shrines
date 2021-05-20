@@ -46,7 +46,7 @@ public class ClientEvents {
 		@SubscribeEvent
 		/**
 		 * Render Bounding box to make issue check more easy
-		 * 
+		 * TODO 1.8.1-Beta2 Move render lines to custom render type for better staging(render over water) and line width
 		 * @param event
 		 */
 		public static void renderWorldLast(RenderWorldLastEvent event) {

@@ -241,18 +241,15 @@ public class HarbourPieces {
 	}
 
 	public static class HarbourPiece extends ColorStructurePiece {
-		protected int height;
 
 		public HarbourPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
 				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
 			super(StructurePieceTypes.HARBOUR_GROUND, templateManagerIn, locationIn, posIn, rotationIn, componentTypeIn,
-					false);
-			this.height = height;
+					false, height);
 		}
 
 		public HarbourPiece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.HARBOUR_GROUND, templateManager, cNBT);
-			this.height = cNBT.getInt("height");
 		}
 
 		/**
@@ -260,7 +257,6 @@ public class HarbourPieces {
 		 */
 		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
 			super.addAdditionalSaveData(tagCompound);
-			tagCompound.putInt("height", this.height);
 		}
 
 		public StructureProcessor getProcessor() {
@@ -270,10 +266,6 @@ public class HarbourPieces {
 		@Override
 		protected boolean useRandomVarianting() {
 			return Config.STRUCTURES.HARBOUR.USE_RANDOM_VARIANTING.get();
-		}
-
-		protected int getHeight(ISeedReader world, BlockPos pos) {
-			return this.height;
 		}
 
 		@Override
@@ -298,7 +290,7 @@ public class HarbourPieces {
 		public VillagerPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
 				Rotation rotationIn, int componentTypeIn, Random rand) {
 			super(StructurePieceTypes.HARBOUR_VILLAGER, templateManagerIn, locationIn, posIn, rotationIn,
-					componentTypeIn);
+					componentTypeIn, 0);
 		}
 
 		public VillagerPiece(TemplateManager templateManager, CompoundNBT cNBT) {
@@ -315,7 +307,7 @@ public class HarbourPieces {
 					.setMirror(Mirror.NONE).addProcessor(this.getProcessor());
 			BlockPos blockpos1 = this.templatePosition
 					.offset(Template.calculateRelativePosition(placementsettings, new BlockPos(3, 0, 0)));
-			int i = this.getHeight(world, blockpos1);
+			int i = world.getHeightmapPos(Heightmap.Type.WORLD_SURFACE, blockpos1).getY();
 			this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
 			BlockPos blockpos2 = this.templatePosition;
 			if (world.getBlockState(blockpos2).getBlock() == Blocks.AIR
@@ -329,18 +321,15 @@ public class HarbourPieces {
 	}
 
 	public static class HarbourBuildingPiece extends ColorStructurePiece {
-		protected int height;
 
 		public HarbourBuildingPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
 				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
 			super(StructurePieceTypes.HARBOUR_HOUSE, templateManagerIn, locationIn, posIn, rotationIn, componentTypeIn,
-					true);
-			this.height = height;
+					true, height);
 		}
 
 		public HarbourBuildingPiece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.HARBOUR_HOUSE, templateManager, cNBT);
-			this.height = cNBT.getInt("height");
 			this.diamonds = cNBT.getInt("diamonds");
 		}
 
@@ -349,7 +338,6 @@ public class HarbourPieces {
 		 */
 		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
 			super.addAdditionalSaveData(tagCompound);
-			tagCompound.putInt("height", this.height);
 			tagCompound.putInt("diamonds", this.diamonds);
 		}
 
@@ -437,7 +425,7 @@ public class HarbourPieces {
 		}
 
 		protected int getHeight(ISeedReader world, BlockPos pos) {
-			return this.height + 7;
+			return super.getHeight(world, pos) + 7;
 		}
 
 		protected int diamonds = 0;

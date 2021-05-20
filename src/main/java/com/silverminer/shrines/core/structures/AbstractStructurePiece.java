@@ -16,6 +16,8 @@ import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.silverminer.shrines.core.utils.custom_structures.Utils;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -41,13 +43,16 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 
 	protected final ResourceLocation location;
 	protected final Rotation rotation;
+	protected final int height;
 
 	public AbstractStructurePiece(IStructurePieceType pieceType, TemplateManager templateManager,
-			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn) {
+			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn, int height) {
 		super(pieceType, componentTypeIn);
 		this.location = location;
 		this.templatePosition = pos;
 		this.rotation = rotation;
+		this.height = height;
+		LOGGER.info("Height: {}", height);
 		this.setup(templateManager);
 	}
 
@@ -55,6 +60,7 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 		super(pieceType, cNBT);
 		this.location = new ResourceLocation(cNBT.getString("Template"));
 		this.rotation = Rotation.valueOf(cNBT.getString("Rot"));
+		this.height = cNBT.getInt("height");
 		this.setup(templateManager);
 	}
 
@@ -72,6 +78,7 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 		super.addAdditionalSaveData(tagCompound);
 		tagCompound.putString("Template", this.location.toString());
 		tagCompound.putString("Rot", this.rotation.name());
+		tagCompound.putInt("height", this.height);
 	}
 
 	public boolean postProcess(ISeedReader world, StructureManager structureManager, ChunkGenerator chunkGen,
@@ -84,13 +91,17 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 		this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
 		BlockPos blockpos2 = this.templatePosition;
 		boolean flag = super.postProcess(world, structureManager, chunkGen, rand, mbb, chunkPos, this.templatePosition);
-		
+
 		this.templatePosition = blockpos2;
 		return flag;
 	}
 
 	protected int getHeight(ISeedReader world, BlockPos blockpos1) {
-		return world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
+		if (Utils.properties.use_experimental) {
+			return this.height;
+		} else {
+			return world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
+		}
 	}
 
 	@Override

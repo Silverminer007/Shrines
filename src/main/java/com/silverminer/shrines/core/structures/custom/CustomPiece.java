@@ -31,7 +31,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
@@ -46,33 +46,31 @@ public class CustomPiece {
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random, boolean useRandomVarianting, List<PieceData> parts, String name,
-			boolean ignore_air, int heightBase) {
+			boolean ignore_air, int heightBase, ChunkGenerator chunkGenerator) {
 		for (PieceData pd : parts) {
 			String piece = pd.path;
 			BlockPos offset = new BlockPos(pd.offset.getX(), 0, pd.offset.getZ());
 			int height = heightBase + pd.offset.getY();
-			pieces.add(new CustomPiece.Piece(templateManager, new ResourceLocation(ShrinesMod.MODID, name + "/" + piece),
-					pos.offset(offset.rotate(rotation)), rotation, 0, random, useRandomVarianting, ignore_air, height));
+			pieces.add(new CustomPiece.Piece(templateManager,
+					new ResourceLocation(ShrinesMod.MODID, name + "/" + piece), pos.offset(offset.rotate(rotation)),
+					rotation, 0, random, useRandomVarianting, ignore_air, height));
 		}
 	}
 
 	public static class Piece extends ColorStructurePiece {
 		public boolean useRandomVarianting = false;
-		public int heightOffset = 0;
 		public boolean ignore_air = true;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
 				int componentTypeIn, Random rand, boolean useRandomVarianting, boolean ignore_air, int height) {
-			super(StructurePieceTypes.CUSTOM, templateManager, location, pos, rotation, componentTypeIn, true);
+			super(StructurePieceTypes.CUSTOM, templateManager, location, pos, rotation, componentTypeIn, true, height);
 			this.useRandomVarianting = useRandomVarianting;
-			this.heightOffset = height;
 			this.ignore_air = ignore_air;
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.CUSTOM, templateManager, cNBT);
 			this.useRandomVarianting = cNBT.getBoolean("varianting");
-			this.heightOffset = cNBT.getInt("height");
 			this.ignore_air = cNBT.getBoolean("ignore_air");
 		}
 
@@ -93,13 +91,7 @@ public class CustomPiece {
 		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
 			super.addAdditionalSaveData(tagCompound);
 			tagCompound.putBoolean("varianting", this.useRandomVarianting);
-			tagCompound.putInt("height", this.heightOffset);
 			tagCompound.putBoolean("ignore_air", this.ignore_air);
-		}
-
-		@Override
-		protected int getHeight(ISeedReader world, BlockPos blockpos1) {
-			return this.heightOffset;
 		}
 
 		@Override

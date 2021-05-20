@@ -130,18 +130,15 @@ public class BetterHarbourPieces {
 	}
 
 	public static class HarbourBuildingPiece extends ColorStructurePiece {
-		protected int height;
 
 		public HarbourBuildingPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
 				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
 			super(StructurePieceTypes.BETTER_HARBOUR, templateManagerIn, locationIn, posIn, rotationIn, componentTypeIn,
-					true);
-			this.height = height;
+					true, height);
 		}
 
 		public HarbourBuildingPiece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.BETTER_HARBOUR, templateManager, cNBT);
-			this.height = cNBT.getInt("height");
 			this.diamonds = cNBT.getInt("diamonds");
 		}
 
@@ -150,7 +147,6 @@ public class BetterHarbourPieces {
 		 */
 		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
 			super.addAdditionalSaveData(tagCompound);
-			tagCompound.putInt("height", this.height);
 			tagCompound.putInt("diamonds", this.diamonds);
 		}
 
@@ -199,7 +195,7 @@ public class BetterHarbourPieces {
 		}
 
 		protected int getHeight(ISeedReader world, BlockPos pos) {
-			return this.height + 7;
+			return super.getHeight(world, pos) + 7;
 		}
 
 		protected int diamonds = 0;

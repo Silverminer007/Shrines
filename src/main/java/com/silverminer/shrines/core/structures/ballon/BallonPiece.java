@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.silverminer.shrines.core.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.core.structures.ColorStructurePiece;
 import com.silverminer.shrines.core.structures.StructurePieceTypes;
+import com.silverminer.shrines.core.utils.StructureUtils;
 import com.silverminer.shrines.forge.config.Config;
 
 import net.minecraft.block.Block;
@@ -31,6 +32,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
@@ -46,22 +48,23 @@ public class BallonPiece {
 			new ResourceLocation("shrines:ballon/ballon2_4"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-			List<StructurePiece> pieces, Random random) {
+			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+		int height = StructureUtils.getAverageHeight(pos.offset(-8, 0, -8), chunkGenerator, 1);
 		boolean flag = true;
 		if (flag)
 			pieces.add(new BallonPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-					rotation, 0, random));
+					rotation, 0, random, height));
 		else
 			// Test function for single variant
-			pieces.add(new BallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random));
+			pieces.add(new BallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random, height));
 	}
 
 	public static class Piece extends ColorStructurePiece {
 		protected int heightOffset = 0;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, Random rand) {
-			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true);
+				int componentTypeIn, Random rand, int height) {
+			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true, height);
 			this.heightOffset = 5 + rand.nextInt(25);
 		}
 

@@ -63,7 +63,7 @@ public class InfestedPrisonStructure extends AbstractStructure<NoFeatureConfig> 
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, 0, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			InfestedPrisonPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			InfestedPrisonPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.silverminer.shrines.core.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.core.structures.ColorStructurePiece;
 import com.silverminer.shrines.core.structures.StructurePieceTypes;
+import com.silverminer.shrines.core.utils.StructureUtils;
 import com.silverminer.shrines.forge.config.Config;
 
 import net.minecraft.block.Blocks;
@@ -29,6 +30,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IServerWorld;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
@@ -39,17 +41,18 @@ public class JungleTowerPiece {
 			.newArrayList(new ResourceLocation("shrines:jungle_tower/jungle_tower"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-			List<StructurePiece> pieces, Random random) {
+			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+		int height = StructureUtils.getAverageHeight(pos.offset(-16, 0, -16), chunkGenerator, 2);
 		pieces.add(new JungleTowerPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-				rotation, 0, false));
+				rotation, 0, false, height));
 	}
 
 	public static class Piece extends ColorStructurePiece {
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, boolean defaultValue) {
+				int componentTypeIn, boolean defaultValue, int height) {
 			super(StructurePieceTypes.JUNGLE_TOWER, templateManager, location, pos, rotation, componentTypeIn,
-					defaultValue);
+					defaultValue, height);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
