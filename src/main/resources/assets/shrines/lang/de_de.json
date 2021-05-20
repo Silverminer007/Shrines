@@ -34,10 +34,6 @@
 	"commands.shrines.resource.success.prepared.configure": "[Konfigurieren]",
 	"commands.shrines.resource.success.prepared.configure.help": "Bereitet einen Befehl vor, um die Grenzen der Teile deines Bauwerks zu \u00e4ndern",
 	"commands.shrines.resource.failed.calculate": "FEHLER: Grenzen kalkulation schlug fehl",
-	"commands.shrines.reset.cleared": "ERFOLG: Bauwerk daten wurden auf den letzten speicherstand zur\u00fcckgesetzt",
-	"commands.shrines.reset.warn": "WARNUNG: Du bist dabei alle Einstellungen zum letzten speicherstand zur\u00fcck zu setzen. Du kannst diese nicht zur\u00fcck holen\nBist du sicher? [%s]",
-	"commands.shrines.reset.warn.accept": "Ja",
-	"commands.shrines.reset.warn.accept.help": "Klicke hier um alle \u00e4nderungen zur\u00fcck zu setzen",
 	"commands.shrines.saved": "ERFOLG: Aktuelle einstellungen wurden gespeichert",
 	"commands.shrines.load.success": "ERFOLG: Bauwerk [%s] wurde nach [%s] geladen",
 	"commands.shrines.load.failed": "FEHLER: Konnte Bauwerk  [%s] nicht nach [%s] laden",
@@ -54,7 +50,6 @@
 	"commands.shrines.whitelist.success.query": "Gewhitelistete Biome von [%s]: %s",
 	"commands.shrines.biomelist.failed.noaction": "FEHLER: Keine Aktion ausgewählt",
 	"commands.shrines.failure.category": "Keine solche biome Kategorie existiert",
-	"commands.shrines.sync": "ERFOLG: Daten wurden zu(m) clienten syncronisiert",
 	"commands.shrines.query.option.value.success": "[%s] wert der option [%s]: %s",
 	"commands.shrines.query.option.value.failed": "FEHLER: Konnte die option [%s] von [%s] nicht lesen, da sie nicht existiert"
 }

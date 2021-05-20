@@ -13,8 +13,8 @@ package com.silverminer.shrines.init;
 
 import java.util.ArrayList;
 
-import com.silverminer.shrines.Shrines;
-import com.silverminer.shrines.structures.custom.CustomStructure;
+import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.core.structures.custom.CustomStructure;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.WorldGenRegistries;
@@ -85,7 +85,7 @@ public class ModStructureFeatures {
 			loadUsersStructures();
 		}
 		return WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,
-				new ResourceLocation(Shrines.MODID, name), structureFeature);
+				new ResourceLocation(ShrinesMod.MODID, name), structureFeature);
 	}
 
 	private static void loadUsersStructures() {

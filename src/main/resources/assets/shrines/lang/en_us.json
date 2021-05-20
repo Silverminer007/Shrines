@@ -34,10 +34,6 @@
 	"commands.shrines.resource.success.prepared.configure": "[Configure]",
 	"commands.shrines.resource.success.prepared.configure.help": "Suggests a command to change bound size of your structure",
 	"commands.shrines.resource.failed.calculate": "FAILED: Bound calculation failed",
-	"commands.shrines.reset.cleared": "SUCCESS: Reseted structure data to last saved state",
-	"commands.shrines.reset.warn": "WARN: You're going to reset all your settings! You can't get them back.\nAre you sure? [%s]",
-	"commands.shrines.reset.warn.accept": "Yes",
-	"commands.shrines.reset.warn.accept.help": "Click here to reset all settings to state of last save",
 	"commands.shrines.saved": "SUCCESS: Saved actual settings",
 	"commands.shrines.load.success": "SUCCESS: Loaded structure [%s] to position [%s]",
 	"commands.shrines.load.failed": "FAILED: Can't load structure [%s] to position [%s]",
@@ -54,7 +50,6 @@
 	"commands.shrines.whitelist.success.query": "Whitelisted biomes of [%s]: %s",
 	"commands.shrines.biomelist.failed.noaction": "FAILED: No action choosen",
 	"commands.shrines.failure.category": "Such an biome category doesn't exist",
-	"commands.shrines.sync": "SUCCESS: Sync data to client(s)",
 	"commands.shrines.query.option.value.success": "[%s] value of option [%s]: %s",
 	"commands.shrines.query.option.value.failed": "Failed to read option [%s] of [%s] because no such option exists"
 }

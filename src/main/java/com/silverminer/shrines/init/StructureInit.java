@@ -17,24 +17,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
-import com.silverminer.shrines.Shrines;
-import com.silverminer.shrines.structures.AbstractStructure;
-import com.silverminer.shrines.structures.ballon.BallonStructure;
-import com.silverminer.shrines.structures.bees.BeesStructure;
-import com.silverminer.shrines.structures.end_temple.EndTempleStructure;
-import com.silverminer.shrines.structures.flooded_temple.FloodedTempleStructure;
-import com.silverminer.shrines.structures.guardian_meeting.GuardianMeetingStructure;
-import com.silverminer.shrines.structures.harbour.HarbourStructure;
-import com.silverminer.shrines.structures.high_tempel.HighTempelStructure;
-import com.silverminer.shrines.structures.jungle_tower.JungleTowerStructure;
-import com.silverminer.shrines.structures.mineral_temple.MineralTempleStructure;
-import com.silverminer.shrines.structures.nether_pyramid.NetherPyramidStructure;
-import com.silverminer.shrines.structures.nether_shrine.NetherShrineStructure;
-import com.silverminer.shrines.structures.player_house.PlayerhouseStructure;
-import com.silverminer.shrines.structures.prison.InfestedPrisonStructure;
-import com.silverminer.shrines.structures.small_tempel.SmallTempelStructure;
-import com.silverminer.shrines.structures.water_shrine.WaterShrineStructure;
-import com.silverminer.shrines.structures.witch_house.AbandonedWitchHouseStructure;
+import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.core.structures.AbstractStructure;
+import com.silverminer.shrines.core.structures.ballon.BallonStructure;
+import com.silverminer.shrines.core.structures.bees.BeesStructure;
+import com.silverminer.shrines.core.structures.end_temple.EndTempleStructure;
+import com.silverminer.shrines.core.structures.flooded_temple.FloodedTempleStructure;
+import com.silverminer.shrines.core.structures.guardian_meeting.GuardianMeetingStructure;
+import com.silverminer.shrines.core.structures.harbour.HarbourStructure;
+import com.silverminer.shrines.core.structures.high_tempel.HighTempelStructure;
+import com.silverminer.shrines.core.structures.jungle_tower.JungleTowerStructure;
+import com.silverminer.shrines.core.structures.mineral_temple.MineralTempleStructure;
+import com.silverminer.shrines.core.structures.nether_pyramid.NetherPyramidStructure;
+import com.silverminer.shrines.core.structures.nether_shrine.NetherShrineStructure;
+import com.silverminer.shrines.core.structures.player_house.PlayerhouseStructure;
+import com.silverminer.shrines.core.structures.prison.InfestedPrisonStructure;
+import com.silverminer.shrines.core.structures.small_tempel.SmallTempelStructure;
+import com.silverminer.shrines.core.structures.water_shrine.WaterShrineStructure;
+import com.silverminer.shrines.core.structures.witch_house.AbandonedWitchHouseStructure;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -47,7 +47,7 @@ public class StructureInit {
 	protected static final Logger LOGGER = LogManager.getLogger(StructureInit.class);
 	public static final ArrayList<AbstractStructure<NoFeatureConfig>> STRUCTURES_LIST = new ArrayList<AbstractStructure<NoFeatureConfig>>();
 	public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister
-			.create(ForgeRegistries.STRUCTURE_FEATURES, Shrines.MODID);
+			.create(ForgeRegistries.STRUCTURE_FEATURES, ShrinesMod.MODID);
 
 	public static final RegistryObject<NetherShrineStructure> NETHER_SHRINE = register("nether_shrine",
 			new NetherShrineStructure(NoFeatureConfig.CODEC));
@@ -99,7 +99,7 @@ public class StructureInit {
 
 	private static <T extends AbstractStructure<NoFeatureConfig>> RegistryObject<T> register(String name, T structure) {
 		if (!Structure.STRUCTURES_REGISTRY.containsValue(structure)) {
-			Structure.STRUCTURES_REGISTRY.putIfAbsent(new ResourceLocation(Shrines.MODID, name).toString(), structure);
+			Structure.STRUCTURES_REGISTRY.putIfAbsent(new ResourceLocation(ShrinesMod.MODID, name).toString(), structure);
 		}
 		if (!Structure.STEP.containsValue(structure.step())) {
 			Structure.STEP.putIfAbsent(structure, structure.step());
