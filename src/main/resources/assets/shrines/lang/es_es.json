@@ -28,7 +28,7 @@
 	"commands.shrines.failed.structure": "FALL\u00d3: No existe tal estructura [%s]",
 	"commands.shrines.resource.failed.save": "FALL\u00d3: No se pueden guardar las piezas",
 	"commands.shrines.resource.success.added": "\u00c9XITO: Has a\u00f1adido piezas de estructura y las has activado. Reinicia el juego y tus cambios estar\u00e1n activos",
-	"commands.shrines.resource.success.prepared": "\u00c9XITO: Preparados los l\u00edmites de la pieza de estructura de %s y dibujados (si tiene este mod en el cliente)\N¿Desea utilizar estos límites?\n%s or %s",
+	"commands.shrines.resource.success.prepared": "\u00c9XITO: Preparados los l\u00edmites de la pieza de estructura de %s y dibujados (si tiene este mod en el cliente)\n¿Desea utilizar estos límites?\n%s or %s",
 	"commands.shrines.resource.success.prepared.yes": "[S\u00ed]",
 	"commands.shrines.resource.success.prepared.yes.help": "Ejecuta un comando que guarda tus piezas y las a\u00f1ade a tu estructura",
 	"commands.shrines.resource.success.prepared.configure": "[Configurar]",

@@ -50,7 +50,6 @@ public class ShrinesCommand {
 	protected static final Logger LOGGER = LogManager.getLogger(ShrinesCommand.class);
 
 	/**
-	 * TODO 1.8.1-Beta1 Add spanish translations -> S1fy
 	 * 
 	 * @param dispatcher
 	 */
