@@ -14,9 +14,9 @@ package com.silverminer.shrines;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.silverminer.shrines.core.utils.proxy.ClientProxy;
-import com.silverminer.shrines.core.utils.proxy.ForgeServerProxy;
 import com.silverminer.shrines.forge.config.Config;
 import com.silverminer.shrines.forge.utils.ForgeFunctionProvider;
+import com.silverminer.shrines.forge.utils.proxy.ForgeServerProxy;
 import com.silverminer.shrines.init.StructureInit;
 
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -38,9 +38,6 @@ public class ForgeShrines extends ShrinesMod {
 		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		StructureInit.STRUCTURES.register(modEventBus);
-
-		// Config
-		Config.register(ModLoadingContext.get());
 	}
 
 	@Override
@@ -51,5 +48,11 @@ public class ForgeShrines extends ShrinesMod {
 	@Override
 	public void setFunctionProvider() {
 		this.functionProvider = new ForgeFunctionProvider();
+	}
+
+	@Override
+	public void registerConfig() {
+		// Config
+		Config.register(ModLoadingContext.get());
 	}
 }

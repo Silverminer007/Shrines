@@ -37,6 +37,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ClientEvents {
 	protected static final Logger LOGGER = LogManager.getLogger(ClientEvents.class);
@@ -46,7 +47,7 @@ public class ClientEvents {
 		@SubscribeEvent
 		/**
 		 * Render Bounding box to make issue check more easy
-		 * TODO 1.8.1-Beta2 Move render lines to custom render type for better staging(render over water) and line width
+		 * 
 		 * @param event
 		 */
 		public static void renderWorldLast(RenderWorldLastEvent event) {
@@ -69,7 +70,7 @@ public class ClientEvents {
 			// Translate coordinates from players system to world system
 			ActiveRenderInfo activerenderinfo = mc.gameRenderer.getMainCamera();
 			Vector3d vec = activerenderinfo.getPosition();
-			//Vector3d vec = mc.player.getPosition(partialTicks);
+			// Vector3d vec = mc.player.getPosition(partialTicks);
 
 			double renderPosX = vec.x();
 			double renderPosY = vec.y();
@@ -101,6 +102,20 @@ public class ClientEvents {
 			}
 			ms.popPose();
 			buffer.endBatch(RenderType.lines());
+		}
+	}
+
+	@EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.MOD, value = Dist.CLIENT)
+	public static class ModEventBus {
+		@SubscribeEvent
+		public static void clientSetupEvent(FMLClientSetupEvent event) {
+			// Key bind for Shrines custom structures -> 1.8.3
+			/**Minecraft mc = event.getMinecraftSupplier().get();
+			KeyBinding[] keyMappings = mc.options.keyMappings;
+			KeyBinding customStructuresScreen = new KeyBinding("key.customStructuresScreen", 88,
+					"key.categories.shrines");
+			keyMappings = ArrayUtils.addAll(keyMappings, customStructuresScreen);
+			mc.options.keyMappings = keyMappings;*/
 		}
 	}
 }

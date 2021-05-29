@@ -37,7 +37,7 @@ public class ShrinesPacketHandler {
 	public static void register() {
 		int id = 0;
 		CHANNEL.registerMessage(id++, CustomStructuresPacket.class, CustomStructuresPacket::encode,
-				CustomStructuresPacket::decode, CustomStructuresPacket::handle);
+				CustomStructuresPacket::decode, Handles.HandleCustomStructures::handleCustomStructures);
 	}
 
 	public static void sendTo(Object message, PlayerEntity player) {

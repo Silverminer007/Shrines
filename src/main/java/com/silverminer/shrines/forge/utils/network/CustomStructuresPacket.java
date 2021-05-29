@@ -12,24 +12,19 @@
 package com.silverminer.shrines.forge.utils.network;
 
 import java.util.ArrayList;
-import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.core.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.core.utils.custom_structures.Utils;
 
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
 
 public class CustomStructuresPacket {
 	protected static final Logger LOGGER = LogManager.getLogger(CustomStructuresPacket.class);
 
-	private final ArrayList<CustomStructureData> datas;
+	public final ArrayList<CustomStructureData> datas;
 	public CustomStructuresPacket(ArrayList<CustomStructureData> datas) {
 		this.datas = datas;
 	}
@@ -48,28 +43,5 @@ public class CustomStructuresPacket {
 			datas.add(CustomStructureData.read(buf.readNbt()));
 		}
 		return new CustomStructuresPacket(datas);
-	}
-
-	public static void handle(CustomStructuresPacket pkt, Supplier<NetworkEvent.Context> contextSupplier) {
-		NetworkEvent.Context context = contextSupplier.get();
-		context.enqueueWork(
-				() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Handle.handleClient(pkt.datas)));
-		context.setPacketHandled(true);
-	}
-
-	public static class Handle {
-
-		public static DistExecutor.SafeRunnable handleClient(ArrayList<CustomStructureData> datas) {
-			return new DistExecutor.SafeRunnable() {
-
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void run() {
-					Utils.DATAS_FROM_SERVER = datas;
-					LOGGER.info("Recived structures from server {}", datas);
-				}
-			};
-		}
 	}
 }
