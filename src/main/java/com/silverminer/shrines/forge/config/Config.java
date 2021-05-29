@@ -43,8 +43,9 @@ public class Config {
 		config.setConfig(file);
 	}
 
-	public static void register(final ModLoadingContext context) {
+	public static StructureConfig register(final ModLoadingContext context) {
 		context.registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG);
 		Config.loadConfig(SERVER_CONFIG, FMLPaths.CONFIGDIR.get().resolve(ShrinesMod.MODID + "-server.toml").toString());
+		return STRUCTURES;
 	}
 }

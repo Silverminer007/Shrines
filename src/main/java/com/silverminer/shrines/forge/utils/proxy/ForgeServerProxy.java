@@ -9,9 +9,11 @@
  * You should have received a copy of the MPL (Mozilla Public License 2.0)
  * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
-package com.silverminer.shrines.core.utils.proxy;
+package com.silverminer.shrines.forge.utils.proxy;
 
 import java.io.File;
+
+import com.silverminer.shrines.core.utils.proxy.IProxy;
 
 import net.minecraftforge.fml.loading.FMLPaths;
 

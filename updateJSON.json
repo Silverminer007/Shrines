@@ -18,7 +18,7 @@
 		"1.16.5-1.7.0": "Added Harbour - see Beta log for details",
 		"1.16.5-1.7.1": "Added the new End Temple by Tikofan; Fixed issue, structures can't be found on servers",
 		"1.16.5-1.8.0": "Changed Mappings to default mojang mappings; Added custom structure API; Made lootr (by noobandius) compactible; Added command to configure/add/remove/query custom structures; Improved Harbour generation a bit",
-		"1.16.5-1.8.1": "Added set-resource command option -> draws bounds on client; Added alias for shrines command (sh-st); added save option; Added reset option; Added load option; Moved blacklist and whitelist to better command options; Added new config option for all structures; Added properties file for changing custom structure properties and enabling latest experimental features"
+		"1.16.5-1.8.1": "Added save-resource command option -> draws bounds on client; Added alias for shrines command (sh-st); added save option; Added reset option; Added load option; Moved blacklist and whitelist to better command options; Added new config option for all structures; Added properties file for changing custom structure properties and enabling latest experimental features"
 	},
 	"1.16.4": {
 		"1.16.4-1.4.0": "Updated from 1.16.3 to 1.16.4",

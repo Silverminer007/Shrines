@@ -16,8 +16,6 @@ import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.silverminer.shrines.core.utils.custom_structures.Utils;
-
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -28,7 +26,6 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
@@ -97,11 +94,7 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 	}
 
 	protected int getHeight(ISeedReader world, BlockPos blockpos1) {
-		if (Utils.properties.use_experimental) {
-			return this.height;
-		} else {
-			return world.getHeight(Heightmap.Type.WORLD_SURFACE_WG, blockpos1.getX(), blockpos1.getZ());
-		}
+		return this.height;
 	}
 
 	@Override
