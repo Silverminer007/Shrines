@@ -18,23 +18,24 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.core.structures.AbstractStructure;
-import com.silverminer.shrines.core.structures.ballon.BallonStructure;
-import com.silverminer.shrines.core.structures.bees.BeesStructure;
-import com.silverminer.shrines.core.structures.end_temple.EndTempleStructure;
-import com.silverminer.shrines.core.structures.flooded_temple.FloodedTempleStructure;
-import com.silverminer.shrines.core.structures.guardian_meeting.GuardianMeetingStructure;
-import com.silverminer.shrines.core.structures.harbour.HarbourStructure;
-import com.silverminer.shrines.core.structures.high_tempel.HighTempelStructure;
-import com.silverminer.shrines.core.structures.jungle_tower.JungleTowerStructure;
-import com.silverminer.shrines.core.structures.mineral_temple.MineralTempleStructure;
-import com.silverminer.shrines.core.structures.nether_pyramid.NetherPyramidStructure;
-import com.silverminer.shrines.core.structures.nether_shrine.NetherShrineStructure;
-import com.silverminer.shrines.core.structures.player_house.PlayerhouseStructure;
-import com.silverminer.shrines.core.structures.prison.InfestedPrisonStructure;
-import com.silverminer.shrines.core.structures.small_tempel.SmallTempelStructure;
-import com.silverminer.shrines.core.structures.water_shrine.WaterShrineStructure;
-import com.silverminer.shrines.core.structures.witch_house.AbandonedWitchHouseStructure;
+import com.silverminer.shrines.structures.AbstractStructure;
+import com.silverminer.shrines.structures.ballon.BallonStructure;
+import com.silverminer.shrines.structures.bees.BeesStructure;
+import com.silverminer.shrines.structures.end_temple.EndTempleStructure;
+import com.silverminer.shrines.structures.flooded_temple.FloodedTempleStructure;
+import com.silverminer.shrines.structures.guardian_meeting.GuardianMeetingStructure;
+import com.silverminer.shrines.structures.harbour.HarbourStructure;
+import com.silverminer.shrines.structures.high_tempel.HighTempelStructure;
+import com.silverminer.shrines.structures.jungle_tower.JungleTowerStructure;
+import com.silverminer.shrines.structures.mineral_temple.MineralTempleStructure;
+import com.silverminer.shrines.structures.nether_pyramid.NetherPyramidStructure;
+import com.silverminer.shrines.structures.nether_shrine.NetherShrineStructure;
+import com.silverminer.shrines.structures.oriental_sanctuary.OrientalSanctuaryStructure;
+import com.silverminer.shrines.structures.player_house.PlayerhouseStructure;
+import com.silverminer.shrines.structures.prison.InfestedPrisonStructure;
+import com.silverminer.shrines.structures.small_tempel.SmallTempelStructure;
+import com.silverminer.shrines.structures.water_shrine.WaterShrineStructure;
+import com.silverminer.shrines.structures.witch_house.AbandonedWitchHouseStructure;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -96,6 +97,9 @@ public class StructureInit {
 
 	public static final RegistryObject<GuardianMeetingStructure> GUARDIAN_MEETING = register("guardian_meeting",
 			new GuardianMeetingStructure(NoFeatureConfig.CODEC));
+
+	public static final RegistryObject<OrientalSanctuaryStructure> ORIENTAL_SANCTUARY = register("oriental_sanctuary",
+			new OrientalSanctuaryStructure(NoFeatureConfig.CODEC));
 
 	private static <T extends AbstractStructure<NoFeatureConfig>> RegistryObject<T> register(String name, T structure) {
 		if (!Structure.STRUCTURES_REGISTRY.containsValue(structure)) {

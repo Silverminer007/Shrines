@@ -14,7 +14,7 @@ package com.silverminer.shrines.init;
 import java.util.ArrayList;
 
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.core.structures.custom.CustomStructure;
+import com.silverminer.shrines.structures.custom.CustomStructure;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.WorldGenRegistries;
@@ -73,8 +73,10 @@ public class ModStructureFeatures {
 			"end_temple", StructureInit.END_TEMPLE.get().configured(IFeatureConfig.NONE));
 
 	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> GUARDIAN_MEETING = register(
-			"guardian_meeting",
-			StructureInit.GUARDIAN_MEETING.get().configured(IFeatureConfig.NONE));
+			"guardian_meeting", StructureInit.GUARDIAN_MEETING.get().configured(IFeatureConfig.NONE));
+
+	public static final StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> ORIENTAL_SANCTUARY = register(
+			"oriental_sanctuary", StructureInit.ORIENTAL_SANCTUARY.get().configured(IFeatureConfig.NONE));
 
 	private static boolean hasReadUsersStructures = false;
 

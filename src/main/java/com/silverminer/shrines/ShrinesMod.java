@@ -14,9 +14,9 @@ package com.silverminer.shrines;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.silverminer.shrines.core.utils.IFunctionProvider;
-import com.silverminer.shrines.core.utils.custom_structures.Utils;
-import com.silverminer.shrines.core.utils.proxy.IProxy;
+import com.silverminer.shrines.utils.IFunctionProvider;
+import com.silverminer.shrines.utils.custom_structures.Utils;
+import com.silverminer.shrines.utils.proxy.IProxy;
 
 /**
  * @author Silverminer
@@ -32,13 +32,16 @@ public abstract class ShrinesMod {
 	protected IFunctionProvider functionProvider;
 
 	/**
+	 * TODO Mc1.17 -> Change names of structures
 	 * TODO 1.8.1 Config GUI
-	 * TODO 1.8.1 Structures generation height fix
+	 * TODO 1.8.1 Structures generation height fix -> InteJason -> All structures
 	 * TODO 1.8.1 Preview for load
+	 * TODO Check Jigsaw structure system: Jigsaw Manager (Aurelj)
 	 * TODO 1.8.2 Move color structure piece from superclass to object for support of multiple pieces having the same materials
 	 * TODO 1.8.2 Improve spacing of structure (make check for other structures)
 	 * TODO 1.8.3 Add screen interface for setting up custom structures
-	 * TODO 1.9.0 Improve Harbour generation -> IDEA: Adding it on oceans and making an island Harbour
+	 * 
+	 * NOTE: Test command: /execute positioned ~10000 ~ ~ run locate 
 	 * 
 	 */
 	public ShrinesMod() {

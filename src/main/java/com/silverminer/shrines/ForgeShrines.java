@@ -13,11 +13,11 @@ package com.silverminer.shrines;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.silverminer.shrines.core.utils.proxy.ClientProxy;
-import com.silverminer.shrines.forge.config.Config;
-import com.silverminer.shrines.forge.utils.ForgeFunctionProvider;
-import com.silverminer.shrines.forge.utils.proxy.ForgeServerProxy;
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.StructureInit;
+import com.silverminer.shrines.utils.ForgeFunctionProvider;
+import com.silverminer.shrines.utils.proxy.ClientProxy;
+import com.silverminer.shrines.utils.proxy.ForgeServerProxy;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
