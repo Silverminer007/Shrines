@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.oriental_sanctuary;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class OrientalSanctuaryStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder ORIENTALSANCTUARY_CONFIG = new ConfigBuilder("Oriental Sanctuary", 143665,
+			Type.NORMAL).setDistance(50).setSeparation(14);
 
 	public OrientalSanctuaryStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "oriental_sanctuary");
+		super(codec, 3, "oriental_sanctuary", ORIENTALSANCTUARY_CONFIG);
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class OrientalSanctuaryStructure extends AbstractStructure<NoFeatureConfi
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return OrientalSanctuaryStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.ORIENTAL_SANCTUARY;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
@@ -63,7 +60,8 @@ public class OrientalSanctuaryStructure extends AbstractStructure<NoFeatureConfi
 			int j = chunkZ * 16;
 			BlockPos blockpos = new BlockPos(i, -1, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			OrientalSanctuaryPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
+			OrientalSanctuaryPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random,
+					chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

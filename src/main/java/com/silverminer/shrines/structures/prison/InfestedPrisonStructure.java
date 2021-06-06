@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.prison;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class InfestedPrisonStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder INFESTEDPRISON_CONFIG = new ConfigBuilder("Infested Prison", 567483014,
+			Type.LOOTABLE).setDistance(60).setSeparation(11);
 
 	public InfestedPrisonStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "infested_prison");
+		super(codec, 3, "infested_prison", INFESTEDPRISON_CONFIG);
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class InfestedPrisonStructure extends AbstractStructure<NoFeatureConfig> 
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return InfestedPrisonStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.INFESTED_PRISON;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

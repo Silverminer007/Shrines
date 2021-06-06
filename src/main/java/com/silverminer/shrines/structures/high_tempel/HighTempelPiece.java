@@ -14,7 +14,7 @@ package com.silverminer.shrines.structures.high_tempel;
 import java.util.List;
 import java.util.Random;
 
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
@@ -61,7 +61,7 @@ public class HighTempelPiece {
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
-			boolean loot = Config.STRUCTURES.HIGH_TEMPEL.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("high_tempel").getConfig().getLootChance() > rand.nextDouble();
 			if (function.equals("chest")) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
@@ -71,7 +71,7 @@ public class HighTempelPiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.HIGH_TEMPEL.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("high_tempel").getConfig().getUseRandomVarianting();
 		}
 
 		public Block getDefaultPlank() {

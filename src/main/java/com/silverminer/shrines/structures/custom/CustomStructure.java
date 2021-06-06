@@ -17,8 +17,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
@@ -43,7 +41,7 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 	private CustomStructureData csd;
 
 	public CustomStructure(Codec<NoFeatureConfig> codec, String name, CustomStructureData csd) {
-		super(codec, 3, name);
+		super(codec, 3, name, csd);
 		this.csd = csd;
 	}
 
@@ -59,31 +57,6 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return CustomStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.CUSTOM;
-	}
-
-	public int getDistance() {
-		return (int) (csd.distance.getValue() * Config.STRUCTURES.DISTANCE_FACTOR.get());
-	}
-
-	public int getSeparation() {
-		return (int) (csd.seperation.getValue() * Config.STRUCTURES.SEPERATION_FACTOR.get());
-	}
-
-	public int getSeedModifier() {
-		return csd.seed.getValue();
-	}
-
-	public double getSpawnChance() {
-		return csd.spawn_chance.getValue();
-	}
-
-	public boolean needsGround() {
-		return csd.needs_ground.getValue();
 	}
 
 	/**

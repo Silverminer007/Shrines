@@ -13,14 +13,17 @@ package com.silverminer.shrines.events;
 
 import java.awt.Color;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.client.gui.config.ShrinesStructuresScreen;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.structures.custom.helper.ResourceData;
+import com.silverminer.shrines.utils.KeyUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.client.Minecraft;
@@ -28,11 +31,13 @@ import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -70,7 +75,6 @@ public class ClientEvents {
 			// Translate coordinates from players system to world system
 			ActiveRenderInfo activerenderinfo = mc.gameRenderer.getMainCamera();
 			Vector3d vec = activerenderinfo.getPosition();
-			// Vector3d vec = mc.player.getPosition(partialTicks);
 
 			double renderPosX = vec.x();
 			double renderPosY = vec.y();
@@ -103,19 +107,27 @@ public class ClientEvents {
 			ms.popPose();
 			buffer.endBatch(RenderType.lines());
 		}
+
+		@SubscribeEvent
+		public static void onKeyInput(InputEvent.KeyInputEvent event) {
+			int keyCode = event.getKey();
+			int scanCode = event.getScanCode();
+			if(KeyUtils.structuresScreen.matches(keyCode, scanCode) && Minecraft.getInstance().screen == null) {
+				Minecraft.getInstance().setScreen(new ShrinesStructuresScreen(null));
+			}
+		}
 	}
 
 	@EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.MOD, value = Dist.CLIENT)
 	public static class ModEventBus {
 		@SubscribeEvent
 		public static void clientSetupEvent(FMLClientSetupEvent event) {
-			// Key bind for Shrines custom structures -> 1.8.3
-			/**Minecraft mc = event.getMinecraftSupplier().get();
+			Minecraft mc = event.getMinecraftSupplier().get();
 			KeyBinding[] keyMappings = mc.options.keyMappings;
-			KeyBinding customStructuresScreen = new KeyBinding("key.customStructuresScreen", 88,
+			KeyUtils.structuresScreen = new KeyBinding("key.customStructuresScreen", 75,
 					"key.categories.shrines");
-			keyMappings = ArrayUtils.addAll(keyMappings, customStructuresScreen);
-			mc.options.keyMappings = keyMappings;*/
+			keyMappings = ArrayUtils.addAll(keyMappings, KeyUtils.structuresScreen);
+			mc.options.keyMappings = keyMappings;
 		}
 	}
 }

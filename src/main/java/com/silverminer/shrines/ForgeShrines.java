@@ -13,18 +13,20 @@ package com.silverminer.shrines;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.silverminer.shrines.client.gui.config.ShrinesStructuresScreen;
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.init.StructureInit;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.utils.ForgeFunctionProvider;
 import com.silverminer.shrines.utils.proxy.ClientProxy;
 import com.silverminer.shrines.utils.proxy.ForgeServerProxy;
 
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 
 @Mod(value = ShrinesMod.MODID)
@@ -34,10 +36,6 @@ public class ForgeShrines extends ShrinesMod {
 		super();
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
 				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-
-		final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-		StructureInit.STRUCTURES.register(modEventBus);
 	}
 
 	@Override
@@ -52,7 +50,18 @@ public class ForgeShrines extends ShrinesMod {
 
 	@Override
 	public void registerConfig() {
+		// Make sure structures are initialized before config will be loaded
+		NewStructureInit.initStructures();
 		// Config
 		Config.register(ModLoadingContext.get());
+		// Setup config UI
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
+					() -> ForgeShrines::getConfigGui);
+		});
+	}
+
+	public static Screen getConfigGui(Minecraft mc, Screen parent) {
+		return new ShrinesStructuresScreen(parent);
 	}
 }

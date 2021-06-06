@@ -17,7 +17,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
@@ -92,7 +92,7 @@ public class NetherShrinePiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			boolean loot = Config.STRUCTURES.NETHER_SHRINE.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("nether_shrine").getConfig().getLootChance() > rand.nextDouble();
 			if ("chest1".equals(function) || "chest2".equals(function)) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
@@ -102,7 +102,7 @@ public class NetherShrinePiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.NETHER_SHRINE.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("nether_shrine").getConfig().getUseRandomVarianting();
 		}
 
 		@Override

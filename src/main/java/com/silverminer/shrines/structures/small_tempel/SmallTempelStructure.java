@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.small_tempel;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,10 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class SmallTempelStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder SMALLTEMPLE_CONFIG = new ConfigBuilder("Small Tempel", 4765321, Type.LOOTABLE).setDistance(75).setSeparation(13);
 
 	public SmallTempelStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "small_tempel");
+		super(codec, 3, "small_tempel", SMALLTEMPLE_CONFIG);
 	}
 
 	@Override
@@ -42,11 +43,6 @@ public class SmallTempelStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return SmallTempelStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.SMALL_TEMPEL;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

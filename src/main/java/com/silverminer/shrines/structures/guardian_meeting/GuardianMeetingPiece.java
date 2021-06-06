@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
@@ -80,13 +80,13 @@ public class GuardianMeetingPiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.GUARDIAN_MEETING.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("guardian_meeting").getConfig().getUseRandomVarianting();
 		}
 
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			boolean loot = Config.STRUCTURES.GUARDIAN_MEETING.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("guardian_meeting").getConfig().getLootChance() > rand.nextDouble();
 			if (function.equals("chest")) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),

@@ -14,7 +14,7 @@ package com.silverminer.shrines.structures.water_shrine;
 import java.util.List;
 import java.util.Random;
 
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
@@ -63,13 +63,13 @@ public class WaterShrinePiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.WATER_SHRINE.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("water_shrine").getConfig().getUseRandomVarianting();
 		}
 
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			boolean loot = Config.STRUCTURES.WATER_SHRINE.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("water_shrine").getConfig().getLootChance() > rand.nextDouble();
 			if (function.equals("chest")) {
 				worldIn.setBlock(pos, Blocks.WATER.defaultBlockState(), 3);
 				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),

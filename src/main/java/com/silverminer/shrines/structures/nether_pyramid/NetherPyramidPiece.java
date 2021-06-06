@@ -14,7 +14,7 @@ package com.silverminer.shrines.structures.nether_pyramid;
 import java.util.List;
 import java.util.Random;
 
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
@@ -59,7 +59,7 @@ public class NetherPyramidPiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			boolean loot = Config.STRUCTURES.NETHER_PYRAMID.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("nether_pyramid").getConfig().getLootChance() > rand.nextDouble();
 			if ("chest_left".equals(function) || "chest_right".equals(function) || "chest_d1".equals(function)
 					|| "chest_d2".equals(function) || "chest_d3".equals(function) || "chest_d4".equals(function)) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
@@ -70,7 +70,7 @@ public class NetherPyramidPiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.NETHER_PYRAMID.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("nether_pyramid").getConfig().getUseRandomVarianting();
 		}
 
 		public boolean overwriteStone() {

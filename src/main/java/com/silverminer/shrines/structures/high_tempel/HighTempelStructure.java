@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.high_tempel;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class HighTempelStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder HIGHTEMPLE_CONFIG = new ConfigBuilder("High Tempel", 536987987, Type.LOOTABLE)
+			.setDistance(85).setSeparation(18);
 
 	public HighTempelStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "high_tempel");
+		super(codec, 3, "high_tempel", HIGHTEMPLE_CONFIG);
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class HighTempelStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return HighTempelStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.HIGH_TEMPEL;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

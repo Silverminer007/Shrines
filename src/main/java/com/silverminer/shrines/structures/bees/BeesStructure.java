@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.bees;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class BeesStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder BEES_CONFIG = new ConfigBuilder("Bees", 779806245, Type.LOOTABLE)
+			.setDistance(70).setSeparation(12).setUseRandomVarianting(false);
 
 	public BeesStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "bees");
+		super(codec, 3, "bees", BEES_CONFIG);
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class BeesStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return BeesStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.BEES;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

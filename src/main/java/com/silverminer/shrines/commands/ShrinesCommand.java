@@ -494,7 +494,7 @@ public class ShrinesCommand {
 			switch (action) {
 			case ADD:
 				if (dimension == null) {
-					message = new TranslationTextComponent("commands.shrines.biomelist.failed.invalid_biome");
+					message = new TranslationTextComponent("commands.shrines.dimensions.failed.invalid_dimension");
 				} else {
 					if (!data.dimensions.getValue().contains(dimension.toString())) {
 						data.dimensions.getValue().add(dimension.toString());
@@ -507,7 +507,7 @@ public class ShrinesCommand {
 				break;
 			case REMOVE:
 				if (dimension == null) {
-					message = new TranslationTextComponent("commands.shrines.dimension.failed.invalid_biome");
+					message = new TranslationTextComponent("commands.shrines.dimension.failed.invalid_dimension");
 				} else {
 					if (data.dimensions.getValue().remove(dimension.toString())) {
 						message = new TranslationTextComponent("commands.shrines.dimension.success.remove", dimension);

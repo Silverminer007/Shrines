@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.ballon;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class BallonStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder BALLON_CONFIG = new ConfigBuilder("Ballon", 143665, Type.LOOTABLE).setLootChance(0.25D)
+			.setDistance(50).setSeparation(8).setNeedsGround(false);
 
 	public BallonStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "ballon");
+		super(codec, 3, "ballon", BALLON_CONFIG);
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class BallonStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return BallonStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.BALLON;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

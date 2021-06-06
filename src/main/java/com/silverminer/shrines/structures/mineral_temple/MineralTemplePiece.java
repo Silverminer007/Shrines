@@ -14,7 +14,7 @@ package com.silverminer.shrines.structures.mineral_temple;
 import java.util.List;
 import java.util.Random;
 
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
@@ -65,13 +65,13 @@ public class MineralTemplePiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.MINERAL_TEMPLE.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("mineral_temple").getConfig().getUseRandomVarianting();
 		}
 
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			boolean loot = Config.STRUCTURES.MINERAL_TEMPLE.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("mineral_temple").getConfig().getLootChance() > rand.nextDouble();
 			if ("chest".equals(function)) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),

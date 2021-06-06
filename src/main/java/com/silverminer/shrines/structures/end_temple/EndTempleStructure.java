@@ -13,9 +13,10 @@ package com.silverminer.shrines.structures.end_temple;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -26,6 +27,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
@@ -36,9 +38,13 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class EndTempleStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder ENDTEMPLE_CONFIG = new ConfigBuilder("End Temple", 32 ^ 478392, Type.LOOTABLE)
+			.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
+			.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands")
+			.setDimension(Lists.newArrayList("end"));
 
 	public EndTempleStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "end_temple");
+		super(codec, 3, "end_temple", ENDTEMPLE_CONFIG);
 	}
 
 	@Override
@@ -51,15 +57,11 @@ public class EndTempleStructure extends AbstractStructure<NoFeatureConfig> {
 		return EndTempleStructure.Start::new;
 	}
 
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.END_TEMPLE;
-	}
-
 	public boolean validateGeneration(ChunkGenerator generator, BiomeProvider provider, long seed,
 			SharedSeedRandom rand, int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config,
 			@Nullable Structure<?>... exeptStructure) {
-		boolean flag = super.validateGeneration(generator, provider, seed, rand, chunkX, chunkZ, biome, pos, config, exeptStructure);
+		boolean flag = super.validateGeneration(generator, provider, seed, rand, chunkX, chunkZ, biome, pos, config,
+				exeptStructure);
 		int offset = this.getSize() * 16;
 
 		int xStart = (chunkX << 4);

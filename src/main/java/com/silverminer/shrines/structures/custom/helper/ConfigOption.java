@@ -11,7 +11,6 @@
  */
 package com.silverminer.shrines.structures.custom.helper;
 
-import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -20,14 +19,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.silverminer.shrines.utils.custom_structures.OptionParsingResult;
+import com.silverminer.shrines.config.IConfigOption;
 
 import net.minecraft.command.CommandSource;
-import net.minecraft.util.text.TranslationTextComponent;
 
-public class ConfigOption<T> {
+public class ConfigOption<T> implements IConfigOption<T> {
 	protected static final Logger LOGGER = LogManager.getLogger(ConfigOption.class);
 	private final String name;
+	private final T defaultValue;
 	private T value;
 	private Function<String, T> fromString;
 	private Function<T, String> toString;
@@ -45,10 +44,12 @@ public class ConfigOption<T> {
 		this(name, value, fromString, String::valueOf, argument, argument_to_string, command);
 	}
 
-	public <U> ConfigOption(String name, T value, Function<String, T> fromString, Function<T, String> toString, ArgumentType<U> argument,
-			BiFunction<CommandContext<CommandSource>, String, U> argument_to_string, boolean command) {
+	public <U> ConfigOption(String name, T value, Function<String, T> fromString, Function<T, String> toString,
+			ArgumentType<U> argument, BiFunction<CommandContext<CommandSource>, String, U> argument_to_string,
+			boolean command) {
 		this.name = name;
 		this.value = value;
+		this.defaultValue = value;
 		this.fromString = fromString;
 		this.argument = argument;
 		this.argument_to_string = argument_to_string;
@@ -56,49 +57,13 @@ public class ConfigOption<T> {
 		this.toString = toString;
 	}
 
-	public OptionParsingResult fromString(String s, CustomStructureData csd) {
-		T v;
-		if (s.startsWith(getName() + ":")) {
-			v = this.fromString.apply(s.replace(this.getName() + ":", ""));
-		} else {
-			v = this.fromString.apply(s);
-		}
-		if (v == null) {
-			return new OptionParsingResult(false,
-					new TranslationTextComponent("commands.shrines.configure.failed.wrong_value", s, this.getName()));
-		} else if (csd.distance.equals(this)) {
-			if (((Integer) v) <= csd.seperation.getValue()) {
-				return new OptionParsingResult(false, new TranslationTextComponent(
-						"commands.shrines.configure.failed.dist_larger_sep", v, csd.seperation.getValue()));
-			}
-		} else if (csd.seperation.equals(this)) {
-			if (((Integer) v) >= csd.distance.getValue()) {
-				return new OptionParsingResult(false, new TranslationTextComponent(
-						"commands.shrines.configure.failed.sep_smaller_dist", v, csd.distance.getValue()));
-			}
-		} else if (csd.spawn_chance.equals(this)) {
-			Double d = (Double) v;
-			if (d < 0.0 || d > 1.0) {
-				return new OptionParsingResult(false,
-						new TranslationTextComponent("commands.shrines.configure.failed.chance_out_of_range", v));
-			}
-		} else if (csd.seed.equals(this)) {
-			Integer i = (Integer) v;
-			if (i < 0) {
-				return this.fromString(String.valueOf(i * -1), csd).setMessage(
-						new TranslationTextComponent("commands.shrines.configure.failed.seed_set_positive"));
-			} else if (i == 0) {
-				return this.fromString(String.valueOf(new Random().nextInt(Integer.MAX_VALUE)), csd)
-						.setMessage(new TranslationTextComponent("commands.shrines.configure.failed.seed_set_random"));
-			}
-		}
-		this.setValue(v);
-		return new OptionParsingResult(true, null);
+	public Function<String, T> getFromString(String option) {
+		return fromString;
 	}
 
 	public boolean equals(Object o) {
-		if (o instanceof ConfigOption) {
-			return ((ConfigOption<?>) o).getName() == this.getName();
+		if (o instanceof IConfigOption) {
+			return ((IConfigOption<?>) o).getName() == this.getName();
 		} else {
 			return false;
 		}
@@ -140,5 +105,10 @@ public class ConfigOption<T> {
 			LOGGER.error(t);
 		}
 		return null;
+	}
+
+	@Override
+	public T getDefaultValue() {
+		return defaultValue;
 	}
 }
