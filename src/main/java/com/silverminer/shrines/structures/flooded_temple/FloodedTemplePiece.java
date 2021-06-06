@@ -14,7 +14,7 @@ package com.silverminer.shrines.structures.flooded_temple;
 import java.util.List;
 import java.util.Random;
 
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
@@ -62,7 +62,7 @@ public class FloodedTemplePiece {
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
-			boolean loot = Config.STRUCTURES.FLOODED_TEMPLE.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("flooded_temple").getConfig().getLootChance() > rand.nextDouble();
 			if (function.equals("chest")) {
 				if (worldIn.getBlockState(pos.below()).getBlock() == Blocks.AIR)
 					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
@@ -75,7 +75,7 @@ public class FloodedTemplePiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.FLOODED_TEMPLE.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("flooded_temple").getConfig().getUseRandomVarianting();
 		}
 
 		public StructureProcessor getProcessor() {

@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.water_shrine;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class WaterShrineStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder WATERSHRINE_CONFIG = new ConfigBuilder("Water Shrine", 643168754,
+			Type.LOOTABLE).setDistance(80).setSeparation(15);
 
 	public WaterShrineStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "water_shrine");
+		super(codec, 3, "water_shrine", WATERSHRINE_CONFIG);
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class WaterShrineStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return WaterShrineStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.WATER_SHRINE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

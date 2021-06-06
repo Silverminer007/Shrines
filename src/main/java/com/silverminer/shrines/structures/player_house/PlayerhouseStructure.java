@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.player_house;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,10 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class PlayerhouseStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder PLAYERHOUSE_CONFIG = new ConfigBuilder("Player House", 751963298, Type.LOOTABLE).setDistance(80).setSeparation(15);
 
 	public PlayerhouseStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "player_house");
+		super(codec, 3, "player_house", PLAYERHOUSE_CONFIG);
 	}
 
 	@Override
@@ -42,11 +43,6 @@ public class PlayerhouseStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return PlayerhouseStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.PLAYER_HOUSE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

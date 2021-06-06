@@ -14,7 +14,7 @@ package com.silverminer.shrines.structures;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.silverminer.shrines.init.StructureInit;
+import com.silverminer.shrines.init.NewStructureInit;
 
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
@@ -30,8 +30,8 @@ public class Generator {
 	public static final Logger LOGGER = LogManager.getLogger(Generator.class);
 
 	public static void setupWorldGen() {
-		LOGGER.debug("Generating {} Structures", StructureInit.STRUCTURES_LIST.size());
-		for (AbstractStructure<?> structure : StructureInit.STRUCTURES_LIST) {
+		LOGGER.debug("Generating {} Structures", NewStructureInit.STRUCTURES.size());
+		for (AbstractStructure<?> structure : NewStructureInit.STRUCTURES.values()) {
 			try {
 				for (String dim : structure.getDimensions()) {
 					register(RegistryKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, new ResourceLocation(dim)),

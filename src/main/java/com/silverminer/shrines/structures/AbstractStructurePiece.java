@@ -46,7 +46,7 @@ public abstract class AbstractStructurePiece extends TemplateStructurePiece {
 			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn, int height) {
 		super(pieceType, componentTypeIn);
 		this.location = location;
-		this.templatePosition = pos;
+		this.templatePosition = new BlockPos(pos.getX(), 0, pos.getZ());
 		this.rotation = rotation;
 		this.height = height;
 		LOGGER.info("Height: {}", height);

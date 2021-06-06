@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
@@ -111,7 +111,7 @@ public class PlayerhousePiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.PLAYER_HOUSE.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("player_house").getConfig().getUseRandomVarianting();
 		}
 
 		protected int getHeight(ISeedReader world, BlockPos blockpos1) {
@@ -121,7 +121,7 @@ public class PlayerhousePiece {
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			boolean loot = Config.STRUCTURES.PLAYER_HOUSE.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("player_house").getConfig().getLootChance() > rand.nextDouble();
 			boolean chest2 = "chest_2".equals(function);
 			if ("chest".equals(function) || chest2) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);

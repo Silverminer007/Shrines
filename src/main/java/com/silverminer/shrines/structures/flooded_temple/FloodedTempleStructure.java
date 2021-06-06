@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.flooded_temple;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -29,9 +30,12 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class FloodedTempleStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder FLOODEDTEMPLE_CONFIG = new ConfigBuilder("Flooded Temple", 54315143,
+			Type.LOOTABLE).setDistance(50).setSeparation(10).setUseRandomVarianting(false).removeBiome(Category.DESERT)
+			.removeBiome(Category.MESA);
 
 	public FloodedTempleStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "flooded_temple");
+		super(codec, 3, "flooded_temple", FLOODEDTEMPLE_CONFIG);
 	}
 
 	@Override
@@ -42,11 +46,6 @@ public class FloodedTempleStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return FloodedTempleStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.FLOODED_TEMPLE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

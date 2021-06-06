@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
 import com.silverminer.shrines.utils.StructureUtils;
@@ -78,7 +78,7 @@ public class OrientalSanctuaryPiece {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.ORIENTAL_SANCTUARY.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("oriental_sanctuary").getConfig().getUseRandomVarianting();
 		}
 
 		public boolean overwriteStone() {

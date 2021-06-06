@@ -23,8 +23,9 @@ import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
-import com.silverminer.shrines.init.StructureInit;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.IStructureConfig;
+import com.silverminer.shrines.init.NewStructureInit;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
@@ -36,17 +37,21 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public abstract class AbstractStructure<C extends IFeatureConfig> extends Structure<C> {
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractStructure.class);
 	public final int size;
 
 	public final String name;
+	public IStructureConfig structureConfig;
 
-	public AbstractStructure(Codec<C> codec, int sizeIn, String nameIn) {
+	public AbstractStructure(Codec<C> codec, int sizeIn, String nameIn, IStructureConfig config) {
 		super(codec);
 		this.size = sizeIn;
 		this.name = nameIn;
+		structureConfig = config;
+		this.setRegistryName(this.getFeatureName());
 	}
 
 	@Override
@@ -76,30 +81,39 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	}
 
 	public int getDistance() {
-		return (int) (this.getConfig().DISTANCE.get() * Config.STRUCTURES.DISTANCE_FACTOR.get());
+		return (int) (this.getConfig().getDistance() * Config.SETTINGS.DISTANCE_FACTOR.get());
 	}
 
 	public int getSeparation() {
-		return (int) (this.getConfig().SEPARATION.get() * Config.STRUCTURES.SEPERATION_FACTOR.get());
+		return (int) (this.getConfig().getSeparation() * Config.SETTINGS.SEPERATION_FACTOR.get());
 	}
 
 	public int getSeedModifier() {
-		return this.getConfig().SEED.get();
+		return this.getConfig().getSeed();
 	}
 
 	public double getSpawnChance() {
-		return this.getConfig().SPAWN_CHANCE.get();
+		return this.getConfig().getSpawnChance();
 	}
 
 	public boolean needsGround() {
-		return this.getConfig().NEEDS_GROUND.get();
+		return this.getConfig().getNeedsGround();
 	}
 
-	public List<? extends String> getDimensions(){
-		return this.getConfig().DIMENSIONS.get();
+	public List<? extends String> getDimensions() {
+		return this.getConfig().getDimensions();
 	}
 
-	public abstract StructureGenConfig getConfig();
+	public IStructureConfig getConfig() {
+		return this.structureConfig;
+	}
+
+	public void buildConfig(final ForgeConfigSpec.Builder BUILDER) {
+		if (this.structureConfig instanceof ConfigBuilder) {
+			LOGGER.info("Building Config");
+			this.structureConfig = ((ConfigBuilder) this.structureConfig).build(BUILDER);
+		}
+	}
 
 	@Override
 	protected boolean isFeatureChunk(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
@@ -120,7 +134,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 				}
 			}
 
-		rand.setLargeFeatureSeed(seed, chunkX, chunkZ);
+			rand.setLargeFeatureSeed(seed, chunkX, chunkZ);
 			return rand.nextDouble() < getSpawnChance();
 //					&& checkForOtherStructures(generator, provider, seed, rand,chunkX, chunkZ, biome, pos, config, exeptStructure);
 		}
@@ -131,7 +145,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	protected boolean checkForOtherStructures(ChunkGenerator generator, BiomeProvider provider, long seed,
 			SharedSeedRandom rand, int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config,
 			@Nullable Structure<?>... exeptStructure) {
-		for (AbstractStructure<?> s : StructureInit.STRUCTURES_LIST) {
+		for (AbstractStructure<?> s : NewStructureInit.STRUCTURES.values()) {
 			if (exeptStructure != null)
 				for (Structure<?> es : exeptStructure) {
 					if (es.equals(s))

@@ -19,7 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.AbstractStructurePiece;
 import com.silverminer.shrines.structures.ColorStructurePiece;
@@ -173,7 +173,7 @@ public class HarbourPieces {
 				pos.offset(new BlockPos(87, 0, 62).rotate(rotation)), rotation.getRotated(Rotation.NONE), 0, random,
 				height));
 		LOG.debug("Starting villager generation");
-		if (Config.STRUCTURES.HARBOUR.SPAWN_VILLAGERS.get()) {
+		if (NewStructureInit.STRUCTURES.get("harbour").getConfig().getSpawnVillagers()) {
 			int maxV = 20 + random.nextInt(20);
 			boolean zombie = random.nextInt(10) == 0;
 			for (int i = 0; i < maxV; i++) {
@@ -265,7 +265,7 @@ public class HarbourPieces {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.HARBOUR.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("harbour").getConfig().getUseRandomVarianting();
 		}
 
 		@Override
@@ -353,7 +353,7 @@ public class HarbourPieces {
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
-			boolean loot = Config.STRUCTURES.HARBOUR.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("harbour").getConfig().getLootChance() > rand.nextDouble();
 			if (function.equals("warehouse1_1")) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
@@ -417,7 +417,7 @@ public class HarbourPieces {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.HARBOUR.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("harbour").getConfig().getUseRandomVarianting();
 		}
 
 		public boolean overwriteWool() {

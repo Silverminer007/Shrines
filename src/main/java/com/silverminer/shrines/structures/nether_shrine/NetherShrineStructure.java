@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.nether_shrine;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -29,9 +30,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class NetherShrineStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder NETHERSHRINE_CONFIG = new ConfigBuilder("Nether Shrine", 653267, Type.LOOTABLE)
+			.setDistance(80).setSeparation(15).addDimension("nether").addBiome(Category.NETHER);
 
 	public NetherShrineStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "nether_shrine");
+		super(codec, 3, "nether_shrine", NETHERSHRINE_CONFIG);
 	}
 
 	@Override
@@ -42,11 +45,6 @@ public class NetherShrineStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return NetherShrineStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.NETHER_SHRINE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

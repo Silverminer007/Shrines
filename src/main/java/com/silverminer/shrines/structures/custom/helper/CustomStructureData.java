@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,13 +26,15 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.config.IConfigOption;
+import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.utils.custom_structures.ModTemplateManager;
-import com.silverminer.shrines.utils.custom_structures.OptionParsingResult;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.CustomStructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
@@ -46,12 +49,15 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class CustomStructureData {
+public class CustomStructureData implements IStructureConfig {
 	protected static final Logger LOGGER = LogManager.getLogger(CustomStructureData.class);
 	public static final List<String> OPTIONS = Lists.newArrayList();
 
@@ -79,9 +85,9 @@ public class CustomStructureData {
 	public ConfigOption<List<String>> blacklist = add(
 			new ConfigOption<List<String>>("blacklist", Lists.newArrayList(), CustomStructureData::readBlackList,
 					StringArgumentType.greedyString(), StringArgumentType::getString, false));
-	public ConfigOption<List<String>> dimensions = add(
-			new ConfigOption<List<String>>("dimensions", Lists.newArrayList("overworld"), CustomStructureData::readDimensions,
-					StringArgumentType.greedyString(), StringArgumentType::getString, false));
+	public ConfigOption<List<String>> dimensions = add(new ConfigOption<List<String>>("dimensions",
+			Lists.newArrayList("overworld"), CustomStructureData::readDimensions, StringArgumentType.greedyString(),
+			StringArgumentType::getString, false));
 	public ConfigOption<List<PieceData>> pieces = add(new ConfigOption<List<PieceData>>("pieces",
 			Lists.newArrayList(new PieceData("resource", BlockPos.ZERO)), CustomStructureData::readPieces,
 			StringArgumentType.greedyString(), StringArgumentType::getString, false));
@@ -101,7 +107,11 @@ public class CustomStructureData {
 		this.seed.setValue(seed);
 	}
 
-	private CustomStructureData() {
+	/**
+	 * Do not use in general: Only for creating new entries. Setting seed and name
+	 * is required!
+	 */
+	public CustomStructureData() {
 		this("", 0);
 	}
 
@@ -340,20 +350,38 @@ public class CustomStructureData {
 		}
 	}
 
-	public OptionParsingResult fromString(String option, String value) {
-		for (ConfigOption<?> co : CONFIGS) {
-			if (co.getName().equals(option)) {
-				OptionParsingResult res = co.fromString(value, this);
-				return res;
+	/**
+	 * Logical Side: Client
+	 * @param key
+	 * @return
+	 */
+	public static List<String> getPossibleValuesForKey(String key) {
+		switch (key) {
+		case "blacklist":
+			return ForgeRegistries.BIOMES.getEntries().stream().map(b -> b.getKey().location().toString())
+					.collect(Collectors.toList());
+		case "dimensions":
+			try {
+				Minecraft server = LogicalSidedProvider.INSTANCE.get(LogicalSide.CLIENT);
+				List<String> dimensions = server.getConnection().levels().stream().map(level -> level.location().toString())
+						.collect(Collectors.toList());
+				return dimensions;
+			} catch (Throwable t) {
+				return Lists.newArrayList();
 			}
+		case "categories":
+			return Lists.newArrayList(Category.values()).stream().map(cat -> cat.toString())
+					.collect(Collectors.toList());
+		default:
+			return Lists.newArrayList();
 		}
-		return new OptionParsingResult(false, null);
 	}
 
 	public static List<Biome.Category> readCategories(String s) {
 		if (s.startsWith("[") && s.endsWith("]")) {
 			s = s.substring(1, s.length() - 1);
 		}
+		s = s.replaceAll(" ", "").replaceAll("\n", "");
 		try {
 			List<String> cats = Lists.newArrayList();
 			while ((s.contains(","))) {
@@ -386,20 +414,13 @@ public class CustomStructureData {
 		if (s.startsWith("[") && s.endsWith("]")) {
 			s = s.substring(1, s.length() - 1);
 		}
-		List<String> list = Lists.newArrayList();
-		while ((s.contains(","))) {
-			int idx = s.lastIndexOf(",");
-			String s1 = s.substring(idx + 1);
-			if (!validateBiome(s1)) {
-				return null;
-			}
-			list.add(s1);
-			s = s.substring(0, idx);
+		s = s.replaceAll(" ", "").replaceAll("\n", "");
+		List<String> list = Lists.newArrayList(s.split(","));
+		List<String> newList = Lists.newArrayList();
+		for (String s1 : list) {
+			if (validateBiome(s1))
+				newList.add(s1);
 		}
-		if (validateBiome(s))
-			list.add(s);
-		else
-			return null;
 		return list;
 	}
 
@@ -416,6 +437,7 @@ public class CustomStructureData {
 		if (s.startsWith("[") && s.endsWith("]")) {
 			s = s.substring(1, s.length() - 1);
 		}
+		s = s.replaceAll(" ", "").replaceAll("\n", "");
 		List<String> cats = Lists.newArrayList();
 		String[] parts = s.split(",");
 		if (!(parts.length % 4 == 0)) {
@@ -440,6 +462,92 @@ public class CustomStructureData {
 		if (s.startsWith("[") && s.endsWith("]")) {
 			s = s.substring(1, s.length() - 1);
 		}
+		s = s.replaceAll(" ", "").replaceAll("\n", "");
 		return Lists.newArrayList(s.split(","));
+	}
+
+	@Override
+	public boolean getGenerate() {
+		return this.generate.getValue();
+	}
+
+	@Override
+	public double getSpawnChance() {
+		return this.spawn_chance.getValue();
+	}
+
+	@Override
+	public boolean getNeedsGround() {
+		return this.needs_ground.getValue();
+	}
+
+	@Override
+	public int getDistance() {
+		return this.distance.getValue();
+	}
+
+	@Override
+	public int getSeparation() {
+		return this.seperation.getValue();
+	}
+
+	@Override
+	public int getSeed() {
+		return this.seed.getValue();
+	}
+
+	@Override
+	public List<? extends Category> getWhitelist() {
+		return this.categories.getValue();
+	}
+
+	@Override
+	public List<? extends String> getBlacklist() {
+		return this.blacklist.getValue();
+	}
+
+	@Override
+	public List<? extends String> getDimensions() {
+		return this.dimensions.getValue();
+	}
+
+	@Override
+	public boolean getUseRandomVarianting() {
+		return this.use_random_varianting.getValue();
+	}
+
+	@Override
+	public double getLootChance() {
+		throw new RuntimeException("Tried to access loot chance of custom structure but there is no");
+	}
+
+	@Override
+	public boolean getSpawnVillagers() {
+		throw new RuntimeException("Tried to access spawn villagers of custom structure but there is no");
+	}
+
+	@Override
+	public int compareTo(IStructureConfig o) {
+		return this.getName().compareTo(o.getName());
+	}
+
+	@Override
+	public boolean isBuiltIn() {
+		return false;
+	}
+
+	@Override
+	public boolean getActive() {
+		return this.getGenerate();
+	}
+
+	@Override
+	public void setActive(boolean value) {
+		this.generate.setValue(value);
+	}
+
+	@Override
+	public List<? extends IConfigOption<?>> getAllOptions() {
+		return this.CONFIGS;
 	}
 }

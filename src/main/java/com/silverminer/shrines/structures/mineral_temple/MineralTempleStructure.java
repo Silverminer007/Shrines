@@ -12,8 +12,8 @@
 package com.silverminer.shrines.structures.mineral_temple;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -29,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class MineralTempleStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder MINERALTEMPLE_CONFIG = new ConfigBuilder("Mineral Temple", 576143753,
+			Type.LOOTABLE).setDistance(50).setSeparation(10).setUseRandomVarianting(false);
 
 	public MineralTempleStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "mineral_temple");
+		super(codec, 3, "mineral_temple", MINERALTEMPLE_CONFIG);
 	}
 
 	@Override
@@ -42,11 +44,6 @@ public class MineralTempleStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return MineralTempleStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.MINERAL_TEMPLE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

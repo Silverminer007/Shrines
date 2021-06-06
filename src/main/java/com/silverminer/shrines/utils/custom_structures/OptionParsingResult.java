@@ -12,6 +12,7 @@
 package com.silverminer.shrines.utils.custom_structures;
 
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class OptionParsingResult {
 	private final boolean success;
@@ -23,7 +24,10 @@ public class OptionParsingResult {
 	}
 
 	public ITextComponent getMessage() {
-		return message;
+		if (this.message != null)
+			return message;
+		else
+			return new StringTextComponent("");
 	}
 
 	public boolean isSuccess() {

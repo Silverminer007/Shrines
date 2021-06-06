@@ -23,10 +23,10 @@ import com.silverminer.shrines.commands.arguments.BiomeCategoryCSArgumentType;
 import com.silverminer.shrines.commands.arguments.NameCSArgumentType;
 import com.silverminer.shrines.commands.arguments.OptionCSArgumentType;
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.init.ModStructureFeatures;
+import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.Generator;
 import com.silverminer.shrines.structures.StructurePieceTypes;
-import com.silverminer.shrines.structures.custom.CustomStructure;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
@@ -37,9 +37,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
@@ -83,101 +82,11 @@ public class CommonEvents {
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
 			LOGGER.debug("Loading Biome and registering structures. Biome: {}", event.getName());
-			if (!Config.STRUCTURES.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
-				if (Config.STRUCTURES.BALLON.GENERATE.get()
-						&& checkBiome(Config.STRUCTURES.BALLON.BIOME_CATEGORIES.get(),
-								Config.STRUCTURES.BALLON.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.BALLON);
-				}
-				if (Config.STRUCTURES.BEES.GENERATE.get() && checkBiome(Config.STRUCTURES.BEES.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.BEES.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.BEES);
-				}
-				if (Config.STRUCTURES.HIGH_TEMPEL.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.HIGH_TEMPEL.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.HIGH_TEMPEL.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.HIGH_TEMPEL);
-				}
-				if (Config.STRUCTURES.MINERAL_TEMPLE.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.MINERAL_TEMPLE.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.MINERAL_TEMPLE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.MINERAL_TEMPLE);
-				}
-				if (Config.STRUCTURES.FLOODED_TEMPLE.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.FLOODED_TEMPLE.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.FLOODED_TEMPLE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.FLOODED_TEMPLE);
-				}
-				if (Config.STRUCTURES.NETHER_PYRAMID.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.NETHER_PYRAMID.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.NETHER_PYRAMID.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.NETHER_PYRAMID);
-				}
-				if (Config.STRUCTURES.NETHER_SHRINE.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.NETHER_SHRINE.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.NETHER_SHRINE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.NETHER_SHRINE);
-				}
-				if (Config.STRUCTURES.PLAYER_HOUSE.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.PLAYER_HOUSE.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.PLAYER_HOUSE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.PLAYER_HOUSE);
-				}
-				if (Config.STRUCTURES.SMALL_TEMPEL.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.SMALL_TEMPEL.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.SMALL_TEMPEL.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.SMALL_TEMPEL);
-				}
-				if (Config.STRUCTURES.WATER_SHRINE.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.WATER_SHRINE.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.WATER_SHRINE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.WATER_SHRINE);
-				}
-				if (Config.STRUCTURES.HARBOUR.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.HARBOUR.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.HARBOUR.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.HARBOUR);
-				}
-				if (Config.STRUCTURES.INFESTED_PRISON.GENERATE.get()
-						&& checkBiome(Config.STRUCTURES.INFESTED_PRISON.BIOME_CATEGORIES.get(),
-								Config.STRUCTURES.INFESTED_PRISON.BIOME_BLACKLIST.get(), event.getName(),
-								event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.INFESTED_PRISON);
-				}
-				if (Config.STRUCTURES.WITCH_HOUSE.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.WITCH_HOUSE.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.WITCH_HOUSE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.WITCH_HOUSE);
-				}
-				if (Config.STRUCTURES.JUNGLE_TOWER.GENERATE.get() && checkBiome(
-						Config.STRUCTURES.JUNGLE_TOWER.BIOME_CATEGORIES.get(),
-						Config.STRUCTURES.JUNGLE_TOWER.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.JUNGLE_TOWER);
-				}
-				if (Config.STRUCTURES.GUARDIAN_MEETING.GENERATE.get()
-						&& checkBiome(Config.STRUCTURES.GUARDIAN_MEETING.BIOME_CATEGORIES.get(),
-								Config.STRUCTURES.GUARDIAN_MEETING.BIOME_BLACKLIST.get(), event.getName(),
-								event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.GUARDIAN_MEETING);
-				}
-				if (Config.STRUCTURES.ORIENTAL_SANCTUARY.GENERATE.get()
-						&& checkBiome(Config.STRUCTURES.ORIENTAL_SANCTUARY.BIOME_CATEGORIES.get(),
-								Config.STRUCTURES.ORIENTAL_SANCTUARY.BIOME_BLACKLIST.get(), event.getName(),
-								event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.ORIENTAL_SANCTUARY);
-				}
-				if (Config.STRUCTURES.END_TEMPLE.GENERATE.get()
-						&& checkBiome(Config.STRUCTURES.END_TEMPLE.BIOME_CATEGORIES.get(),
-								Config.STRUCTURES.END_TEMPLE.BIOME_BLACKLIST.get(), event.getName(), event.getCategory())) {
-					event.getGeneration().addStructureStart(ModStructureFeatures.END_TEMPLE);
-				}
-				for (StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> s : ModStructureFeatures.USERS_STRUCTURES) {
-					if (s.feature instanceof CustomStructure) {
-						CustomStructure cS = (CustomStructure) s.feature;
-						if (cS.validateSpawn(event.getName(), event.getCategory())) {
-							event.getGeneration().addStructureStart(s);
-						}
-					}
+			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
+				for (AbstractStructure<NoFeatureConfig> struct : NewStructureInit.STRUCTURES.values()) {
+					if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
+							struct.getConfig().getBlacklist(), event.getName(), event.getCategory()))
+						event.getGeneration().addStructureStart(struct.configured(IFeatureConfig.NONE));
 				}
 			}
 		}
