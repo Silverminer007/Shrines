@@ -118,5 +118,9 @@
 	"config.shrines.seperation_factor.tooltip": "This is multilied on the seperation of every structure. Allows to change spawn seperation of every structure at once",
 
 	"_comment_general": "",
-	"shrines.general.cooming_soon": "Cooming soon!"
+	"shrines.general.cooming_soon": "Cooming soon!",
+
+	"_comment_keys": "",
+	"key.categories.shrines": "Shrines",
+	"key.customStructuresScreen": "Open structures screen"
 }

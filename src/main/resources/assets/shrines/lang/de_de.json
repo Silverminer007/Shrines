@@ -118,5 +118,9 @@
 	"config.shrines.seperation_factor.tooltip": "Die Entfernung der einzelnen Bauwerk wird mit diesem wert mutipliziert. Das erlaubt es die entfernung aller Bauwerke mit einem Mal zu regulieren",
 
 	"_comment_general": "",
-	"shrines.general.cooming_soon": "Kommt bald!"
+	"shrines.general.cooming_soon": "Kommt bald!",
+
+	"_comment_keys": "",
+	"key.categories.shrines": "Shrines",
+	"key.customStructuresScreen": "\u00f6ffne Shrines Bauwerke Men\u00fc"
 }
