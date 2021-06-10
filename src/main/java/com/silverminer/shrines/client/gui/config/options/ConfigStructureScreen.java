@@ -12,17 +12,18 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.silverminer.shrines.client.gui.config.buttons.CheckboxButtonEx;
-import com.silverminer.shrines.client.gui.config.buttons.ValidationStatusButton;
 import com.silverminer.shrines.client.gui.config.options.ConfigStructureScreen.ModOptionList.Entry;
 import com.silverminer.shrines.client.gui.config.options.ConfigStructureScreen.ModOptionList.NameEntry;
 import com.silverminer.shrines.client.gui.config.options.ConfigStructureScreen.ModOptionList.OptionEntry;
-import com.silverminer.shrines.client.gui.config.resource.CoomingSoonScreen;
+import com.silverminer.shrines.client.gui.config.resource.AddResourceScreen;
+import com.silverminer.shrines.client.gui.config.widgets.buttons.CheckboxButtonEx;
+import com.silverminer.shrines.client.gui.config.widgets.buttons.ValidationStatusButton;
 import com.silverminer.shrines.config.IConfigOption;
 import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.structures.custom.helper.ConfigOption;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.structures.custom.helper.PieceData;
+import com.silverminer.shrines.utils.StructureUtils;
 import com.silverminer.shrines.utils.custom_structures.OptionParsingResult;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 
@@ -74,6 +75,7 @@ public class ConfigStructureScreen extends Screen {
 	@Override
 	public void init(Minecraft mc, int width, int height) {
 		super.init(mc, width, height);
+		this.configSpecs = StructureUtils.getConfigOf(this.configSpecs.getName(), false);
 
 		int titleHeight = mc.font.wordWrapHeight(title.getString(), width - 2 * PADDING);
 		int paddedTitleHeight = titleHeight + PADDING * 2;
@@ -83,9 +85,10 @@ public class ConfigStructureScreen extends Screen {
 		this.saveButton = addButton(width - 60 - PADDING, 0, 60, paddedTitleHeight, new StringTextComponent("Save"),
 				button -> {
 					this.optionList.commitChanges();
-					if (this.configSpecs instanceof CustomStructureData) {// Only custom structures need special save;
-																			// Buildin ones can save after every
-																			// change(with commitChanges)
+					// Only custom structures need special save;
+					// Mods ones can save after every
+					// change(with commitChanges)
+					if (this.configSpecs instanceof CustomStructureData) {
 						CustomStructureData csd = (CustomStructureData) this.configSpecs;
 						for (Entry e : this.optionList.children()) {
 							if (e instanceof NameEntry) {
@@ -95,11 +98,11 @@ public class ConfigStructureScreen extends Screen {
 								csd.fromString(oe.getOption().getName(), oe.getOption().getValue().toString());
 							}
 						}
+						// TODO Check for need of syncing data from client to server
 						if (this.isNew) {
-							Utils.customsStructs.add(csd);
+							Utils.addStructure(csd, false);
 						} else {
-							Utils.customsStructs.set(Utils.customsStructs.indexOf(Utils.getData(csd.getName(), true)),
-									csd);
+							Utils.replace(csd, false);
 						}
 						Utils.saveStructures();
 					}
@@ -169,16 +172,16 @@ public class ConfigStructureScreen extends Screen {
 			}
 			for (IConfigOption<?> spec : configSpecs.getAllOptions()) {
 				if (spec.getValue() instanceof Boolean)
-					this.addEntry(new BooleanOptionEntry((IConfigOption<Boolean>) spec, configSpecs));
+					this.addEntry(new BooleanOptionEntry((IConfigOption<Boolean>) spec, configSpecs.getName()));
 				else if (spec.getValue() instanceof List<?>) {
 					if (spec instanceof ConfigOption<?> && isCustom) {
 						ConfigOption<?> co = (ConfigOption<?>) spec;
 						if (co.equals(csd.pieces)) {
-							this.addEntry(new PiecesOptionEntry((ConfigOption<List<PieceData>>) co, csd));
+							this.addEntry(new PiecesOptionEntry((ConfigOption<List<PieceData>>) co, csd.getName()));
 							continue;
 						}
 					}
-					this.addEntry(new ScreenedOptionEntry((IConfigOption<List<?>>) spec, configSpecs));
+					this.addEntry(new ScreenedOptionEntry((IConfigOption<List<?>>) spec, configSpecs.getName()));
 				} else
 					this.addEntry(new TextFieldOptionEntry(spec));
 			}
@@ -398,11 +401,11 @@ public class ConfigStructureScreen extends Screen {
 			private ValidationStatusButton validatedButton;
 			private List<IGuiEventListener> children;
 			private String tooltipText;
-			private IStructureConfig data;
+			private String structure;
 
-			public BooleanOptionEntry(IConfigOption<Boolean> valueSpec, IStructureConfig configSpecs) {
+			public BooleanOptionEntry(IConfigOption<Boolean> valueSpec, String structure) {
 				this.valueSpec = valueSpec;
-				this.data = configSpecs;
+				this.structure = structure;
 				Boolean configValue = valueSpec.getValue();
 
 				this.validatedButton = new ValidationStatusButton(0, 0, button -> {
@@ -468,7 +471,8 @@ public class ConfigStructureScreen extends Screen {
 
 			@Override
 			public void commitChanges() {
-				this.valueSpec.fromString(String.valueOf(this.checkBox.getValue()), this.data);
+				this.valueSpec.fromString(String.valueOf(this.checkBox.getValue()),
+						StructureUtils.getConfigOf(structure, false));
 			}
 
 			@Override
@@ -598,7 +602,7 @@ public class ConfigStructureScreen extends Screen {
 			@Override
 			public void commitChanges() {
 				String text = this.editBox.getValue();
-				this.valueSpec.fromString(text, configSpecs);
+				this.valueSpec.fromString(text, StructureUtils.getConfigOf(configSpecs.getName(), false));
 			}
 
 			@Override
@@ -618,7 +622,7 @@ public class ConfigStructureScreen extends Screen {
 			private boolean validateTextFieldInput(String text) {
 				boolean flag = false;
 				try {
-					OptionParsingResult o = this.valueSpec.fromString(text, configSpecs);
+					OptionParsingResult o = this.valueSpec.fromString(text, StructureUtils.getConfigOf(configSpecs.getName(), false));
 					flag = o.isSuccess();
 				} catch (Throwable e) {
 					this.validatedButton.setValid(flag);
@@ -648,7 +652,7 @@ public class ConfigStructureScreen extends Screen {
 			private List<IGuiEventListener> children;
 			private String tooltipText;
 
-			public ScreenedOptionEntry(IConfigOption<List<?>> spec, IStructureConfig configSpecs) {
+			public ScreenedOptionEntry(IConfigOption<List<?>> spec, String structure) {
 				this.valueSpec = spec;
 
 				furtherScreenButton = new Button(0, 0, 100, 20, new StringTextComponent(this.valueSpec.getName()),
@@ -743,14 +747,14 @@ public class ConfigStructureScreen extends Screen {
 			private List<IGuiEventListener> children;
 			private String tooltipText;
 
-			public PiecesOptionEntry(ConfigOption<List<PieceData>> valueSpec, CustomStructureData fullData) {
+			public PiecesOptionEntry(ConfigOption<List<PieceData>> valueSpec, String structure) {
 				this.valueSpec = valueSpec;
 
 				furtherScreenButton = new Button(0, 0, 100, 20, new StringTextComponent(this.valueSpec.getName()),
 						(button) -> {
 							if (this.valueSpec.getValue() instanceof List<?>) {
-								//ConfigStructureScreen.this.minecraft.setScreen(new AddResourceScreen(this.valueSpec));
-								ConfigStructureScreen.this.minecraft.setScreen(new CoomingSoonScreen());
+								ConfigStructureScreen.this.minecraft.setScreen(new AddResourceScreen(
+										ConfigStructureScreen.this, Utils.getData(structure, false)));
 							}
 						});
 				this.furtherScreenButton.active = ConfigStructureScreen.this.minecraft.level != null;

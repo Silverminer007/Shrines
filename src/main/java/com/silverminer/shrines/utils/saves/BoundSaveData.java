@@ -44,7 +44,6 @@ public class BoundSaveData extends WorldSavedData {
 		for (int i = 0; i < count; i++) {
 			CompoundNBT tag = nbt.getCompound(String.valueOf(i));
 			CustomStructureData csd = Utils.getData(tag.getString("structure"), true);
-			int idx = Utils.customsStructs.indexOf(csd);
 			if (csd == null) {
 				LOG.info("Failed to load structure {}", tag.getString("structure"));
 				continue;
@@ -55,15 +54,15 @@ public class BoundSaveData extends WorldSavedData {
 				CompoundNBT resource = tag.getCompound(String.valueOf(j));
 				csd.PIECES_ON_FLY.add(ResourceData.load(resource));
 			}
-			Utils.customsStructs.set(idx, csd);
+			Utils.replace(csd, true);
 		}
-		CustomStructureData.sendToClients();
+		Utils.onChanged(true);
 	}
 
 	@Override
 	public CompoundNBT save(CompoundNBT nbt) {
 		int i = 0;
-		for (CustomStructureData csd : Utils.customsStructs) {
+		for (CustomStructureData csd : Utils.getStructures(true)) {
 			CompoundNBT tag = new CompoundNBT();
 			int j = 0;
 			for (ResourceData rd : csd.PIECES_ON_FLY) {
@@ -74,7 +73,6 @@ public class BoundSaveData extends WorldSavedData {
 			nbt.put(String.valueOf(i++), tag);
 		}
 		nbt.putInt("structures", i);
-		CustomStructureData.sendToClients();
 		return nbt;
 	}
 

@@ -82,7 +82,7 @@ public class NewStructureInit {
 
 	public static void initCustomStructures() {
 		LOGGER.debug("Registering custom structures");
-		for (CustomStructureData csd : Utils.customsStructs) {
+		for (CustomStructureData csd : Utils.getStructures(true)) {
 			String name = csd.getName().toLowerCase(Locale.ROOT);
 			CustomStructure cS = new CustomStructure(NoFeatureConfig.CODEC, name, csd);
 			Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()

@@ -26,31 +26,89 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.utils.network.CCustomStructuresPacket;
+import com.silverminer.shrines.utils.network.IPacket;
+import com.silverminer.shrines.utils.network.SCustomStructuresPacket;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.saves.BoundSaveData;
 
 public class Utils {
-	public static final Logger LOGGER = LogManager.getLogger(Utils.class);
+	protected static final Logger LOGGER = LogManager.getLogger(Utils.class);
 	/**
 	 * Logical Side: SERVER Never use on client! They are not sync
 	 */
-	public static ArrayList<String> customsToDelete = new ArrayList<String>();
+	private static ArrayList<String> customsToDelete = new ArrayList<String>();
 	/**
 	 * Logical Side: SERVER Never use on client! They are not sync
 	 */
-	public static ArrayList<CustomStructureData> customsStructs = new ArrayList<CustomStructureData>();
+	private static ArrayList<CustomStructureData> customsStructs = new ArrayList<CustomStructureData>();
 
 	/**
 	 * Logical Side: CLIENT Never use on server! They are not sync
 	 */
-	public static ArrayList<CustomStructureData> DATAS_FROM_SERVER = Lists.newArrayList();
+	private static ArrayList<CustomStructureData> DATAS_FROM_SERVER = Lists.newArrayList();
+
+	private static boolean send = true;
 
 	public static CustomStructureProperties properties;
 
 	public static BoundSaveData boundDataSave;
-	
-	
-	public static File getLocationOf(String structure_name) {
-		return FileUtils.getFile(ShrinesMod.getInstance().getProxy().getBaseDir(), "shrines-saves", structure_name);
+
+	public static File getSaveLocation() {
+		return FileUtils.getFile(ShrinesMod.getInstance().getProxy().getBaseDir(), "shrines-saves");
+	}
+
+	public static File getLocationOf(String structure) {
+		return FileUtils.getFile(ShrinesMod.getInstance().getProxy().getBaseDir(), "shrines-saves", "shrines",
+				structure);
+	}
+
+	public static ArrayList<CustomStructureData> getStructures(boolean server) {
+		if (server) {
+			return Utils.customsStructs;
+		} else {
+			return Utils.DATAS_FROM_SERVER;
+		}
+	}
+
+	public static void setStructures(ArrayList<CustomStructureData> structures, boolean server) {
+		if (server) {
+			Utils.customsStructs = structures;
+		} else {
+			Utils.DATAS_FROM_SERVER = structures;
+		}
+	}
+
+	public static boolean addStructure(CustomStructureData csd, boolean server) {
+		if (getData(csd.getName(), server) != null) {
+			return false;
+		} else {
+			boolean flag;
+			if (server) {
+				flag = Utils.customsStructs.add(csd);
+			} else {
+				flag = Utils.DATAS_FROM_SERVER.add(csd);
+			}
+			Utils.onChanged(server);
+			return flag;
+		}
+	}
+
+	public static boolean remove(String name, boolean delete, boolean server) {
+		return Utils.remove(Utils.getData(name, server), delete, server);
+	}
+
+	public static boolean remove(CustomStructureData structure, boolean delete, boolean server) {
+		if (delete)
+			Utils.customsToDelete.add(structure.getName());
+		boolean flag;
+		if (server) {
+			flag = Utils.customsStructs.remove(structure);
+		} else {
+			flag = Utils.DATAS_FROM_SERVER.remove(structure);
+		}
+		Utils.onChanged(server);
+		return flag;
 	}
 
 	public static void loadCustomStructures() {
@@ -170,5 +228,50 @@ public class Utils {
 			}
 			return null;
 		}
+	}
+
+	public static boolean replace(CustomStructureData csd, boolean server) {
+		CustomStructureData oldData = getData(csd.getName(), server);
+		if (oldData == null) {
+			return false;
+		}
+		if (server) {
+			int idx = Utils.customsStructs.indexOf(oldData);
+			Utils.customsStructs.set(idx, csd);
+		} else {
+			int idx = Utils.DATAS_FROM_SERVER.indexOf(oldData);
+			Utils.DATAS_FROM_SERVER.set(idx, csd);
+		}
+		Utils.onChanged(server);
+		return true;
+	}
+
+	public static void onChanged(boolean server) {
+		if(!send) {
+			return;
+		}
+		if (server) {
+			sendToClients();
+		} else {
+			sendToServer();
+		}
+	}
+
+	public static void setSend(boolean send) {
+		Utils.send = send;
+	}
+	private static void sendToClients() {
+		ShrinesPacketHandler.sendToAll(toPacket(false));
+	}
+
+	private static void sendToServer() {
+		ShrinesPacketHandler.sendToServer(toPacket(true));
+	}
+
+	private static IPacket toPacket(boolean server) {
+		if (server)
+			return new CCustomStructuresPacket(Utils.DATAS_FROM_SERVER);
+		else
+			return new SCustomStructuresPacket(Utils.customsStructs);
 	}
 }

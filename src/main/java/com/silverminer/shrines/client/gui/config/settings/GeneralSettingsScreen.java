@@ -4,9 +4,9 @@ import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.silverminer.shrines.client.gui.config.buttons.CheckboxButtonEx;
-import com.silverminer.shrines.client.gui.config.buttons.ValidationStatusButton;
 import com.silverminer.shrines.client.gui.config.options.SettingsBlacklistScreen;
+import com.silverminer.shrines.client.gui.config.widgets.buttons.CheckboxButtonEx;
+import com.silverminer.shrines.client.gui.config.widgets.buttons.ValidationStatusButton;
 import com.silverminer.shrines.config.Config;
 
 import net.minecraft.client.Minecraft;
