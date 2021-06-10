@@ -94,6 +94,12 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 				this.structures.add(d);
 			}
 		}
+		if (!this.screen.builtInV) {
+			this.structures.removeIf(st -> st.isBuiltIn());
+		}
+		if (!this.screen.customsV) {
+			this.structures.removeIf(st -> !st.isBuiltIn());
+		}
 
 		Collections.sort(this.structures);
 

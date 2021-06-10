@@ -107,6 +107,13 @@
 	"gui.shrines.structures.deleteButton": "L\u00f6schen",
 	"gui.shrines.structures.save": "Speichern",
 	"gui.shrines.structures.back": "Zur\u00fcck",
+	"gui.shrines.structures.resources.choose": "W\u00e4hle die resourcen die dein Bauwerk verwenden soll",
+	"gui.shrines.structures.resources.out_of_range": "Die ausgew\u00e4hlten resourcen sind zu gro\u00df",
+	"gui.shrines.structures.resources.invalid_char": "Die ausgew\u00e4hlten resourcen enthalten ein ung\u00e4ltiges zeichen",
+	"gui.shrines.structures.resource.save.start": "Started to save resources. Work in progress",
+	"gui.shrines.structures.world": "Zeige Welt",
+	"gui.shrines.structures.builtin": "Eingebaute Bauwerke",
+	"gui.shrines.structures.customs": "Eigene Bauwerke",
 
 	"_comment_config": "",
 	"config.input_valid": "Eingabe G\u00fcltig",
