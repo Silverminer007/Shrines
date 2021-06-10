@@ -5,9 +5,9 @@
 		"1.16.3-recommended": "1.16.4-1.8.0",
 		"1.16.4-recommended": "1.16.4-1.8.0",
 		"1.16.5-recommended": "1.16.4-1.8.0",
-		"1.16.3-latest": "1.16.5-1.8.1-Beta1",
-		"1.16.4-latest": "1.16.5-1.8.1-Beta1",
-		"1.16.5-latest": "1.16.5-1.8.1-Beta1"
+		"1.16.3-latest": "1.16.5-1.8.1-Beta3",
+		"1.16.4-latest": "1.16.5-1.8.1-Beta3",
+		"1.16.5-latest": "1.16.5-1.8.1-Beta3"
 	},
 	"1.16.5": {
 		"1.16.5-1.7.0-Beta1": "Made Harbour playable, Added SamhitApple's Structures 'Infested Prison' and 'Abandoned Witch House'",
@@ -19,7 +19,9 @@
 		"1.16.5-1.7.1": "Added the new End Temple by Tikofan; Fixed issue, structures can't be found on servers",
 		"1.16.5-1.8.0": "Changed Mappings to default mojang mappings; Added custom structure API; Made lootr (by noobandius) compactible; Added command to configure/add/remove/query custom structures; Improved Harbour generation a bit",
 		"1.16.5-1.8.1-Beta1": "Added save-resource command option -> draws bounds on client; Added alias for shrines command (sh-st); added save option; Added reset option; Added load option; Moved blacklist and whitelist to better command options; Added new config option for all structures; Added properties file for changing custom structure properties and enabling latest experimental features",
-		"1.16.5-1.8.1-Beta2": "Added new Structure: Oriental Sanctuary by Aurelj; Added new option to config: dimensions; Fixed some generation height bugs; Nether Shrine and pyramid now spawn in the nether too (can be disabled); Added config GUI; Custom structures can now be added using GUI"
+		"1.16.5-1.8.1-Beta2": "Added new Structure: Oriental Sanctuary by Aurelj; Added new option to config: dimensions; Fixed some generation height bugs; Nether Shrine and pyramid now spawn in the nether too (can be disabled); Added config GUI; Custom structures can now be added using GUI; You can assigne resources from the world to your custom structures via GUI",
+		"1.16.5-1.8.1-Beta3": "Added Translations; Added new options to filter structures; Fixed some crashes",
+		"1.16.5-1.8.1-Beta4": ""
 	},
 	"1.16.4": {
 		"1.16.4-1.4.0": "Updated from 1.16.3 to 1.16.4",

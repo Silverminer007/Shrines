@@ -32,7 +32,6 @@ public abstract class ShrinesMod {
 	protected IFunctionProvider functionProvider;
 
 	/**
-	 * TODO 1.8.1 AddResourceScreen fix save button
 	 * TODO 1.8.1 Add translations (Spanish) -> S1fy
 	 * 
 	 * TODO 1.8.2 Change structure system to jigsaw (Aurelj)
@@ -46,7 +45,7 @@ public abstract class ShrinesMod {
 	 * 
 	 * 
 	 * Releases: 
-	 * - 1.8.1 13.06.2021 -> 12.06.21 second beta
+	 * - 1.8.1 13.06.2021
 	 * - 1.8.2 27.06.2021
 	 * - 2.0.0 04.07.2021
 	 * - 2.0.1 Unknown

@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.silverminer.shrines.client.gui.config.options.ConfigStructureScreen;
 import com.silverminer.shrines.client.gui.config.settings.GeneralSettingsScreen;
+import com.silverminer.shrines.client.gui.config.widgets.buttons.CheckboxButtonEx;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.custom_structures.Utils;
@@ -39,6 +40,8 @@ public class ShrinesStructuresScreen extends Screen {
 	private Button disableButton;
 	private Button configureButton;
 	private Button removeButton;
+	public boolean builtInV = true;
+	public boolean customsV = true;
 	protected TextFieldWidget searchBox;
 	private StructuresList list;
 	private static final TranslationTextComponent TITLE = new TranslationTextComponent("gui.shrines.structures.title");
@@ -74,6 +77,12 @@ public class ShrinesStructuresScreen extends Screen {
 				return search;
 			});
 		});
+		this.addButton(
+				new CheckboxButtonEx(10, 3, 10, 20, new TranslationTextComponent("gui.shrines.structures.builtin"),
+						this.builtInV, this::onBuiltinButtonPressed));
+		this.addButton(
+				new CheckboxButtonEx(10, 25, 10, 20, new TranslationTextComponent("gui.shrines.structures.customs"),
+						this.customsV, this::onCustomsButtonPressed));
 		this.list = new StructuresList(this, this.minecraft, this.width, this.height, 48, this.height - 64, 36, () -> {
 			return this.searchBox.getValue();
 		}, this.list);
@@ -103,9 +112,20 @@ public class ShrinesStructuresScreen extends Screen {
 				}));
 		// Settings Button
 		this.addButton(new Button(this.width - 80, 8, 72, 20, SETTINGS, (button) -> {
-			this.minecraft.setScreen(new GeneralSettingsScreen(this, Lists.newArrayList(Config.SERVER_SETTINGS_CONFIG)));
+			this.minecraft
+					.setScreen(new GeneralSettingsScreen(this, Lists.newArrayList(Config.SERVER_SETTINGS_CONFIG)));
 		}));
 		this.updateButtonStatus(false, false);
+	}
+
+	private void onBuiltinButtonPressed(Boolean v) {
+		this.builtInV = v;
+		this.list.refreshList(() -> this.searchBox.getValue());
+	}
+
+	private void onCustomsButtonPressed(Boolean v) {
+		this.customsV = v;
+		this.list.refreshList(() -> this.searchBox.getValue());
 	}
 
 	public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {

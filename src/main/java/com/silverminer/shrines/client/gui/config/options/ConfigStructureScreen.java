@@ -75,7 +75,8 @@ public class ConfigStructureScreen extends Screen {
 	@Override
 	public void init(Minecraft mc, int width, int height) {
 		super.init(mc, width, height);
-		this.configSpecs = StructureUtils.getConfigOf(this.configSpecs.getName(), false);
+		IStructureConfig config = StructureUtils.getConfigOf(this.configSpecs.getName(), false);
+		this.configSpecs = config != null ? config : this.configSpecs;
 
 		int titleHeight = mc.font.wordWrapHeight(title.getString(), width - 2 * PADDING);
 		int paddedTitleHeight = titleHeight + PADDING * 2;

@@ -108,6 +108,13 @@
 	"gui.shrines.structures.deleteButton": "Delete",
 	"gui.shrines.structures.save": "Save",
 	"gui.shrines.structures.back": "Back",
+	"gui.shrines.structures.resources.choose": "Choose resources to use for this structure",
+	"gui.shrines.structures.resources.out_of_range": "The selected resources are out of range",
+	"gui.shrines.structures.resources.invalid_char": "The selected resources contains an invalid chararacter",
+	"gui.shrines.structures.resource.save.start": "Started to save resources. Work in progress",
+	"gui.shrines.structures.world": "Show World",
+	"gui.shrines.structures.builtin": "Buildin Structures",
+	"gui.shrines.structures.customs": "Custom Structures",
 
 	"_comment_config": "",
 	"config.input_valid": "Input Valid",
