@@ -13,10 +13,12 @@ package com.silverminer.shrines.structures.custom.helper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,12 +32,9 @@ import com.silverminer.shrines.config.IConfigOption;
 import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.utils.custom_structures.ModTemplateManager;
 import com.silverminer.shrines.utils.custom_structures.Utils;
-import com.silverminer.shrines.utils.network.CustomStructuresPacket;
-import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Mirror;
@@ -144,6 +143,11 @@ public class CustomStructureData implements IStructureConfig {
 	public boolean calculateBounds(BlockPos c1, BlockPos c2, RegistryKey<World> dimension) {
 		PIECES_ON_FLY.clear();
 		Utils.boundDataSave.setDirty();
+		Integer[] poss = ArrayUtils.toArray(c1.getY(), c2.getY());
+		Arrays.sort(poss);
+		if (poss[0] < 0 || poss[1] > 255) {
+			return false;
+		}
 		if (c1.getX() > c2.getX()) {
 			int x = c1.getX();
 			c1 = new BlockPos(c2.getX(), c1.getY(), c1.getZ());
@@ -158,6 +162,10 @@ public class CustomStructureData implements IStructureConfig {
 			int z = c1.getZ();
 			c1 = new BlockPos(c1.getX(), c1.getY(), c2.getZ());
 			c2 = new BlockPos(c2.getX(), c2.getY(), z);
+		}
+		BlockPos dist = c2.subtract(c1);
+		if (Math.max(dist.getX(), Math.max(dist.getY(), dist.getZ())) > 200) {
+			return false;
 		}
 		int sizeX = c2.getX() - c1.getX();
 		int sizeY = c2.getY() - c1.getY();
@@ -233,22 +241,10 @@ public class CustomStructureData implements IStructureConfig {
 		return csd;
 	}
 
-	public static void sendToClients() {
-		ShrinesPacketHandler.sendToAll(toPacket());
-	}
-
-	public static void sendToClient(PlayerEntity pe) {
-		ShrinesPacketHandler.sendTo(toPacket(), pe);
-	}
-
-	public static CustomStructuresPacket toPacket() {
-		return new CustomStructuresPacket(Utils.customsStructs);
-	}
-
 	public boolean savePieces(ServerWorld serverWorld, MinecraftServer server, String author, boolean includeEntities) {
 		ModTemplateManager templatemanager;
 		try {
-			templatemanager = new ModTemplateManager(Utils.getLocationOf("").getCanonicalFile().toPath(),
+			templatemanager = new ModTemplateManager(Utils.getSaveLocation().getCanonicalFile().toPath(),
 					server.getFixerUpper());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -287,7 +283,7 @@ public class CustomStructureData implements IStructureConfig {
 		for (PieceData pd : this.pieces.getValue()) {
 			ResourceLocation location = new ResourceLocation(ShrinesMod.MODID, name + "/" + pd.path);
 			try {
-				templatemanager = new ModTemplateManager(Utils.getLocationOf("").getCanonicalFile().toPath(),
+				templatemanager = new ModTemplateManager(Utils.getSaveLocation().getCanonicalFile().toPath(),
 						server.getFixerUpper());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -352,6 +348,7 @@ public class CustomStructureData implements IStructureConfig {
 
 	/**
 	 * Logical Side: Client
+	 * 
 	 * @param key
 	 * @return
 	 */
@@ -363,8 +360,8 @@ public class CustomStructureData implements IStructureConfig {
 		case "dimensions":
 			try {
 				Minecraft server = LogicalSidedProvider.INSTANCE.get(LogicalSide.CLIENT);
-				List<String> dimensions = server.getConnection().levels().stream().map(level -> level.location().toString())
-						.collect(Collectors.toList());
+				List<String> dimensions = server.getConnection().levels().stream()
+						.map(level -> level.location().toString()).collect(Collectors.toList());
 				return dimensions;
 			} catch (Throwable t) {
 				return Lists.newArrayList();

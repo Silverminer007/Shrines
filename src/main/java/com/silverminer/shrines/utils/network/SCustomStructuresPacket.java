@@ -18,30 +18,39 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.network.PacketBuffer;
 
-public class CustomStructuresPacket {
-	protected static final Logger LOGGER = LogManager.getLogger(CustomStructuresPacket.class);
+/**
+ * Packet to send from server to client
+ * 
+ * @author Silverminer
+ *
+ */
+public class SCustomStructuresPacket implements IPacket {
+	protected static final Logger LOGGER = LogManager.getLogger(SCustomStructuresPacket.class);
 
 	public final ArrayList<CustomStructureData> datas;
-	public CustomStructuresPacket(ArrayList<CustomStructureData> datas) {
+
+	public SCustomStructuresPacket(ArrayList<CustomStructureData> datas) {
 		this.datas = datas;
+		LOGGER.info("Sending structures to client: {}\n{}", datas, Utils.getData("house3", true).PIECES_ON_FLY);
 	}
 
-	public static void encode(CustomStructuresPacket pkt, PacketBuffer buf) {
+	public static void encode(SCustomStructuresPacket pkt, PacketBuffer buf) {
 		buf.writeInt(pkt.datas.size());
-		for(CustomStructureData csd : pkt.datas) {
+		for (CustomStructureData csd : pkt.datas) {
 			buf.writeNbt(CustomStructureData.write(csd));
 		}
 	}
 
-	public static CustomStructuresPacket decode(PacketBuffer buf) {
+	public static SCustomStructuresPacket decode(PacketBuffer buf) {
 		ArrayList<CustomStructureData> datas = Lists.newArrayList();
 		int size = buf.readInt();
-		for(int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			datas.add(CustomStructureData.read(buf.readNbt()));
 		}
-		return new CustomStructuresPacket(datas);
+		return new SCustomStructuresPacket(datas);
 	}
 }

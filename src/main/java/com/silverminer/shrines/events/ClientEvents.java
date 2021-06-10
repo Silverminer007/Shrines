@@ -21,6 +21,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.client.gui.config.ShrinesStructuresScreen;
+import com.silverminer.shrines.client.gui.config.resource.AddResourceScreen;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.structures.custom.helper.ResourceData;
 import com.silverminer.shrines.utils.KeyUtils;
@@ -94,7 +95,7 @@ public class ClientEvents {
 			float blue = c.getBlue() / 255.0f;
 
 			// Iterate over all bounds to draw
-			for (CustomStructureData data : Utils.DATAS_FROM_SERVER) {
+			for (CustomStructureData data : Utils.getStructures(false)) {
 				for (ResourceData rd : data.PIECES_ON_FLY) {
 					if (rd.getDimension() == dim) {
 						MutableBoundingBox mbb = rd.getBounds();
@@ -112,8 +113,13 @@ public class ClientEvents {
 		public static void onKeyInput(InputEvent.KeyInputEvent event) {
 			int keyCode = event.getKey();
 			int scanCode = event.getScanCode();
-			if(KeyUtils.structuresScreen.matches(keyCode, scanCode) && Minecraft.getInstance().screen == null) {
-				Minecraft.getInstance().setScreen(new ShrinesStructuresScreen(null));
+			if (KeyUtils.structuresScreen.matches(keyCode, scanCode) && Minecraft.getInstance().screen == null) {
+				if (AddResourceScreen.isInPiecesScreen == null) {
+					Minecraft.getInstance().setScreen(new ShrinesStructuresScreen(null));
+				} else {
+					Minecraft.getInstance().setScreen(AddResourceScreen.isInPiecesScreen);
+					LOGGER.info("Structure Data Client {}, and server {}", Utils.getData("house3", false).PIECES_ON_FLY, Utils.getData("house3", true).PIECES_ON_FLY);
+				}
 			}
 		}
 	}
@@ -124,8 +130,7 @@ public class ClientEvents {
 		public static void clientSetupEvent(FMLClientSetupEvent event) {
 			Minecraft mc = event.getMinecraftSupplier().get();
 			KeyBinding[] keyMappings = mc.options.keyMappings;
-			KeyUtils.structuresScreen = new KeyBinding("key.customStructuresScreen", 75,
-					"key.categories.shrines");
+			KeyUtils.structuresScreen = new KeyBinding("key.customStructuresScreen", 75, "key.categories.shrines");
 			keyMappings = ArrayUtils.addAll(keyMappings, KeyUtils.structuresScreen);
 			mc.options.keyMappings = keyMappings;
 		}

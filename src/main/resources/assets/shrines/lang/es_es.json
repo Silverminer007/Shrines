@@ -105,6 +105,8 @@
 	"gui.shrines.structures.removeQuestion": "Are you, sure that you want to delete \"%s\" from disk?",
 	"gui.shrines.structures.removeWarning": "It will be lost forever (A very long time)",
 	"gui.shrines.structures.deleteButton": "Delete",
+	"gui.shrines.structures.save": "Save",
+	"gui.shrines.structures.back": "Back",
 
 	"_comment_config": "",
 	"config.input_valid": "Input Valid",

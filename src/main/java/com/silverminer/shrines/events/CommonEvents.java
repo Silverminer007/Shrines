@@ -27,7 +27,6 @@ import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.Generator;
 import com.silverminer.shrines.structures.StructurePieceTypes;
-import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.saves.BoundSaveData;
@@ -105,7 +104,7 @@ public class CommonEvents {
 
 		@SubscribeEvent
 		public static void onPlayerJoin(PlayerLoggedInEvent event) {
-			CustomStructureData.sendToClient(event.getPlayer());
+			Utils.onChanged(true);
 		}
 
 		@SubscribeEvent
@@ -127,7 +126,7 @@ public class CommonEvents {
 			if (!(iworld instanceof World))
 				return;
 			if (!((World) iworld).isClientSide() && ((World) iworld).dimension() == World.OVERWORLD) {
-				Utils.customsStructs.forEach(csd -> csd.PIECES_ON_FLY.clear());
+				Utils.getStructures(true).forEach(csd -> csd.PIECES_ON_FLY.clear());
 			}
 		}
 

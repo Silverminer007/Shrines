@@ -78,7 +78,7 @@ public class CustomPiece {
 		public void setup(TemplateManager templateManager) {
 			MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
 			try {
-				Template template = new ModTemplateManager(Utils.getLocationOf("").getCanonicalFile().toPath(),
+				Template template = new ModTemplateManager(Utils.getSaveLocation().getCanonicalFile().toPath(),
 						server.getFixerUpper()).getOrCreate(this.location);
 				PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation)
 						.setMirror(Mirror.NONE).addProcessor(this.getProcessor());

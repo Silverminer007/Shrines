@@ -163,10 +163,12 @@ public class ShrinesCommand {
 				.argument("structure-name", NameCSArgumentType.oldName())
 				.then(Commands.literal("add").then(Commands.argument("dimension", DimensionArgument.dimension())
 						.executes(ctx -> dimensions(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
-								BiomeListAction.ADD, DimensionArgument.getDimension(ctx, "dimension").dimension().location().toString()))))
+								BiomeListAction.ADD,
+								DimensionArgument.getDimension(ctx, "dimension").dimension().location().toString()))))
 				.then(Commands.literal("remove").then(Commands.argument("dimension", DimensionArgument.dimension())
 						.executes(ctx -> dimensions(ctx.getSource(), NameCSArgumentType.getName(ctx, "structure-name"),
-								BiomeListAction.REMOVE, DimensionArgument.getDimension(ctx, "dimension").dimension().location().toString()))))
+								BiomeListAction.REMOVE,
+								DimensionArgument.getDimension(ctx, "dimension").dimension().location().toString()))))
 				.then(Commands.literal("query").executes(ctx -> blacklist(ctx.getSource(),
 						NameCSArgumentType.getName(ctx, "structure-name"), BiomeListAction.QUERY, null)))));
 
@@ -209,7 +211,7 @@ public class ShrinesCommand {
 			message = new TranslationTextComponent("commands.shrines.add.failed", name);
 			ret = -1;
 		} else {
-			Utils.customsStructs.add(new CustomStructureData(name, seed));
+			Utils.addStructure(new CustomStructureData(name, seed), true);
 			ITextComponent conf = new TranslationTextComponent("commands.shrines.add.success.help")
 					.withStyle((style) -> {
 						return style.withColor(TextFormatting.GREEN)
@@ -220,7 +222,7 @@ public class ShrinesCommand {
 					});
 			message = new TranslationTextComponent("commands.shrines.add.success", name, conf);
 			success = true;
-			CustomStructureData.sendToClients();
+			Utils.onChanged(true);
 		}
 		if (success)
 			ctx.sendSuccess(message, false);
@@ -232,16 +234,12 @@ public class ShrinesCommand {
 	public static int remove(CommandSource ctx, String name, boolean fromDisk) {
 		ITextComponent message;
 		boolean success = false;
-		if (!Utils.customsStructs.removeIf(csd -> csd.getName().equals(name))) {
+		if (!Utils.remove(name, fromDisk, true)) {
 			message = new TranslationTextComponent("commands.shrines.remove.failed", name);
 		} else {
 			message = new TranslationTextComponent("commands.shrines.remove.success", name);
-			if (fromDisk) {
-				Utils.customsToDelete.add(name);
-			}
 			success = true;
 		}
-		CustomStructureData.sendToClients();
 		if (success)
 			ctx.sendSuccess(message, false);
 		else
@@ -267,7 +265,7 @@ public class ShrinesCommand {
 				else
 					message = res.getMessage();
 			}
-			CustomStructureData.sendToClients();
+			Utils.onChanged(true);
 		}
 		if (success)
 			ctx.sendSuccess(message, false);
@@ -278,11 +276,11 @@ public class ShrinesCommand {
 
 	public static int query(CommandSource ctx) throws CommandSyntaxException {
 		String output = "";
-		for (int i = 0; i < Utils.customsStructs.size(); i++) {
-			output = output + "\n\"" + Utils.customsStructs.get(i).getName() + "\"";
+		for (int i = 0; i < Utils.getStructures(true).size(); i++) {
+			output = output + "\n\"" + Utils.getStructures(true).get(i).getName() + "\"";
 		}
 		ctx.sendSuccess(
-				new TranslationTextComponent("commands.shrines.query.structure", Utils.customsStructs.size(), output),
+				new TranslationTextComponent("commands.shrines.query.structure", Utils.getStructures(true).size(), output),
 				false);
 		return 0;
 	}
@@ -374,11 +372,11 @@ public class ShrinesCommand {
 								});
 						ITextComponent configure = new TranslationTextComponent(
 								"commands.shrines.resource.success.prepared.configure").withStyle((style) -> {
-									return style.withColor(TextFormatting.YELLOW)
-											.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-													"/shrines-structures save-resource " + name + " " + pos1.getX() + " "
-															+ pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " "
-															+ pos2.getY() + " " + pos2.getZ() + " " + includeEntities))
+									return style.withColor(TextFormatting.YELLOW).withClickEvent(new ClickEvent(
+											ClickEvent.Action.SUGGEST_COMMAND,
+											"/shrines-structures save-resource " + name + " " + pos1.getX() + " "
+													+ pos1.getY() + " " + pos1.getZ() + " " + pos2.getX() + " "
+													+ pos2.getY() + " " + pos2.getZ() + " " + includeEntities))
 											.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 													new TranslationTextComponent(
 															"commands.shrines.resource.success.prepared.configure.help")));
@@ -387,7 +385,7 @@ public class ShrinesCommand {
 								configure);
 						success = true;
 					}
-					CustomStructureData.sendToClients();
+					Utils.onChanged(true);
 				} else {
 					message = new TranslationTextComponent("commands.shrines.resource.failed.calculate", name);
 				}
@@ -472,7 +470,7 @@ public class ShrinesCommand {
 			default:
 				message = new TranslationTextComponent("commands.shrines.biomelist.failed.noaction");
 			}
-			CustomStructureData.sendToClients();
+			Utils.onChanged(true);
 		}
 		if (success) {
 			ctx.sendSuccess(message, true);
@@ -482,7 +480,6 @@ public class ShrinesCommand {
 		return 0;
 	}
 
-	// TODO 1.8.1 Add translations (English/German/Spanish)
 	public static int dimensions(CommandSource ctx, String structure, BiomeListAction action,
 			@Nullable String dimension) {
 		ITextComponent message;
@@ -525,7 +522,7 @@ public class ShrinesCommand {
 			default:
 				message = new TranslationTextComponent("commands.shrines.biomelist.failed.noaction");
 			}
-			CustomStructureData.sendToClients();
+			Utils.onChanged(true);
 		}
 		if (success) {
 			ctx.sendSuccess(message, true);
@@ -576,7 +573,7 @@ public class ShrinesCommand {
 			default:
 				message = new TranslationTextComponent("commands.shrines.biomelist.failed.noaction");
 			}
-			CustomStructureData.sendToClients();
+			Utils.onChanged(true);
 		}
 		if (success) {
 			ctx.sendSuccess(message, true);

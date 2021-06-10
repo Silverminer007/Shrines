@@ -11,8 +11,10 @@
  */
 package com.silverminer.shrines.client.gui.config;
 
+import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.client.gui.config.options.ConfigStructureScreen;
 import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.init.NewStructureInit;
@@ -20,6 +22,9 @@ import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +39,8 @@ import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.WorkingScreen;
 import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.Color;
@@ -44,6 +51,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +63,7 @@ import org.apache.logging.log4j.Logger;
 @OnlyIn(Dist.CLIENT)
 public class StructuresList extends ExtendedList<StructuresList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger();
-	private static final ResourceLocation ICON_MISSING = new ResourceLocation("textures/misc/unknown_server.png");
+	public static final ResourceLocation ICON_MISSING = new ResourceLocation("textures/misc/unknown_server.png");
 	private static final ResourceLocation ICON_OVERLAY_LOCATION = new ResourceLocation(
 			"textures/gui/world_selection.png");
 	private final ShrinesStructuresScreen screen;
@@ -79,9 +88,12 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 			return st.getConfig();
 		}).collect(Collectors.toList());
 		this.structures.removeIf(entry -> entry == null);
-		for (CustomStructureData d : Utils.customsStructs)
-			if (!this.structures.contains(d))
+		List<String> structures = this.structures.stream().map(st -> st.getName()).collect(Collectors.toList());
+		for (CustomStructureData d : Utils.getStructures(true)) {
+			if (!structures.contains(d.getName())) {
 				this.structures.add(d);
+			}
+		}
 
 		Collections.sort(this.structures);
 
@@ -122,18 +134,65 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 
 	@OnlyIn(Dist.CLIENT)
 	public final class Entry extends ExtendedList.AbstractListEntry<StructuresList.Entry> implements AutoCloseable {
-		public final ITextComponent ACTIVE = new TranslationTextComponent("gui.shrines.structures.list.active").withStyle(Style.EMPTY.withColor(Color.fromRgb(0x00ff00)));
-		public final ITextComponent INACTIVE = new TranslationTextComponent("gui.shrines.structures.list.inactive").withStyle(Style.EMPTY.withColor(Color.fromRgb(0xff0000)));
+		public final ITextComponent ACTIVE = new TranslationTextComponent("gui.shrines.structures.list.active")
+				.withStyle(Style.EMPTY.withColor(Color.fromRgb(0x00ff00)));
+		public final ITextComponent INACTIVE = new TranslationTextComponent("gui.shrines.structures.list.inactive")
+				.withStyle(Style.EMPTY.withColor(Color.fromRgb(0xff0000)));
 		private final Minecraft minecraft;
 		private final ShrinesStructuresScreen screen;
 		private final IStructureConfig config;
 		private long lastClickTime;
+		private boolean isCustom;
+
+		private final ResourceLocation iconLocation;
+		private File iconFile;
+		@Nullable
+		private final DynamicTexture icon;
 
 		public Entry(StructuresList p_i242066_2_, IStructureConfig cfg) {
 			this.screen = p_i242066_2_.getScreen();
 			this.config = cfg;
 			this.minecraft = Minecraft.getInstance();
-			// TODO Icons for structure entries
+			this.isCustom = cfg instanceof CustomStructureData;
+			if (this.isCustom) {
+				String s = cfg.getName();
+				this.iconLocation = new ResourceLocation(ShrinesMod.MODID,
+						"structures/" + Util.sanitizeName(s, ResourceLocation::validPathChar) + "/"
+								+ Hashing.sha1().hashUnencodedChars(s) + "/icon");
+				this.iconFile = new File(Utils.getLocationOf(s), "icon.png");
+				if (!this.iconFile.isFile()) {
+					this.iconFile = null;
+				}
+
+				this.icon = this.loadServerIcon();
+			} else {
+				this.iconLocation = new ResourceLocation(ShrinesMod.MODID,
+						"textures/structures/" + cfg.getName().replaceAll(" ", "_").toLowerCase(Locale.ROOT) + ".png");
+				this.icon = null;
+				this.iconFile = null;
+			}
+		}
+
+		@Nullable
+		private DynamicTexture loadServerIcon() {
+			boolean flag = this.iconFile != null && this.iconFile.isFile();
+			if (flag) {
+				try (InputStream inputstream = new FileInputStream(this.iconFile)) {
+					NativeImage nativeimage = NativeImage.read(inputstream);
+					Validate.validState(nativeimage.getWidth() == 64, "Must be 64 pixels wide");
+					Validate.validState(nativeimage.getHeight() == 64, "Must be 64 pixels high");
+					DynamicTexture dynamictexture = new DynamicTexture(nativeimage);
+					this.minecraft.getTextureManager().register(this.iconLocation, dynamictexture);
+					return dynamictexture;
+				} catch (Throwable throwable) {
+					LOGGER.error("Invalid icon for structure {}", this.config.getName(), throwable);
+					this.iconFile = null;
+					return null;
+				}
+			} else {
+				this.minecraft.getTextureManager().release(this.iconLocation);
+				return null;
+			}
 		}
 
 		public IStructureConfig getConfig() {
@@ -143,7 +202,8 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 		@SuppressWarnings("deprecation")
 		public void render(MatrixStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_,
 				int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			ITextComponent header = new StringTextComponent(config.getName() + " ").append(config.getGenerate() ? ACTIVE : INACTIVE);
+			ITextComponent header = new StringTextComponent(config.getName() + " ")
+					.append(config.getGenerate() ? ACTIVE : INACTIVE);
 			String s1 = config.getDimensions().toString();
 			String s2 = "Seed:" + config.getSeed() + "  Distance:" + config.getDistance() + "  Seperation:"
 					+ config.getSeparation();
@@ -155,7 +215,8 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 			this.minecraft.font.draw(p_230432_1_, s2, (float) (p_230432_4_ + 32 + 3), (float) (p_230432_3_ + 9 + 9 + 3),
 					8421504);
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.minecraft.getTextureManager().bind(StructuresList.ICON_MISSING);
+			this.minecraft.getTextureManager()
+					.bind(this.icon != null || !this.isCustom ? this.iconLocation : StructuresList.ICON_MISSING);
 			RenderSystem.enableBlend();
 			AbstractGui.blit(p_230432_1_, p_230432_4_, p_230432_3_, 0.0F, 0.0F, 32, 32, 32, 32);
 			RenderSystem.disableBlend();
@@ -202,9 +263,8 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 						return;
 					}
 					CustomStructureData config = (CustomStructureData) this.getConfig();
-					if (!Utils.customsStructs.remove(config))
+					if (!Utils.remove(config, false, false))
 						LOGGER.error("Failed to delete custom structure");
-					Utils.customsToDelete.add(config.getName());
 					NewStructureInit.STRUCTURES.remove(config.getDataName());
 
 					StructuresList.this.refreshList(() -> {

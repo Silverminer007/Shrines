@@ -61,7 +61,7 @@ public class NameCSArgumentType implements ArgumentType<String> {
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
 		if (!this.newName) {
 			return cct.getSource() instanceof ISuggestionProvider
-					? ISuggestionProvider.suggest(Utils.DATAS_FROM_SERVER.stream().map(CustomStructureData::getName),
+					? ISuggestionProvider.suggest(Utils.getStructures(false).stream().map(CustomStructureData::getName),
 							sb)
 					: Suggestions.empty();
 		} else {
@@ -88,7 +88,7 @@ public class NameCSArgumentType implements ArgumentType<String> {
 	@Override
 	public Collection<String> getExamples() {
 		List<String> s = Lists.newArrayList();
-		Utils.customsStructs.forEach(csd -> s.add(csd.name));
+		Utils.getStructures(true).forEach(csd -> s.add(csd.name));
 		return s;
 	}
 

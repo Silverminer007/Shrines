@@ -3,7 +3,7 @@ package com.silverminer.shrines.client.gui.config.options;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.silverminer.shrines.client.gui.config.buttons.CheckboxButtonEx;
+import com.silverminer.shrines.client.gui.config.widgets.buttons.CheckboxButtonEx;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;

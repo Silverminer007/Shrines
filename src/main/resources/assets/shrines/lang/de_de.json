@@ -105,6 +105,8 @@
 	"gui.shrines.structures.removeQuestion": "Bist du sicher, dass du \"%s\" L\u00f6schen m\u00f6chtest?",
 	"gui.shrines.structures.removeWarning": "Es wird f\u00e4r immer weg sein (Eine sehr lange Zeit)",
 	"gui.shrines.structures.deleteButton": "L\u00f6schen",
+	"gui.shrines.structures.save": "Speichern",
+	"gui.shrines.structures.back": "Zur\u00fcck",
 
 	"_comment_config": "",
 	"config.input_valid": "Eingabe G\u00fcltig",

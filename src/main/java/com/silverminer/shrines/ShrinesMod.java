@@ -32,15 +32,24 @@ public abstract class ShrinesMod {
 	protected IFunctionProvider functionProvider;
 
 	/**
-	 * TODO 1.8.1 Add AddResourceScreen add add resources directly from world
-	 * TODO 1.8.1 Structures generation height fix -> InteJason -> All structures
-	 * TODO 1.8.2 Preview for load
-	 * TODO Check Jigsaw structure system: Jigsaw Manager (Aurelj)
-	 * TODO 1.8.3 Move color structure piece from superclass to object for support of multiple pieces having the same materials
-	 * TODO 1.8.4 Improve spacing of structure (make check for other structures)
+	 * TODO 1.8.1 AddResourceScreen fix save button
+	 * TODO 1.8.1 Add translations (Spanish) -> S1fy
 	 * 
-	 * TODO Mc1.17 -> Change names of structures
-	 * TODO Mc1.17 -> Move #isAir to state only version
+	 * TODO 1.8.2 Change structure system to jigsaw (Aurelj)
+	 * TODO 1.8.2 Structures generation height fix -> InteJason -> All structures
+	 * TODO 1.8.2 Move color structure piece from superclass to object for support of multiple pieces having the same materials
+	 * TODO 1.8.2 #8
+	 * 
+	 * TODO 2.0.0 Mc1.17 Update -> Change names of structures -> Move #isAir to state only version
+	 * TODO 2.0.1 Preview for load
+	 * TODO 2.0.1 Improve spacing of structure (make check for other structures) -> #3
+	 * 
+	 * 
+	 * Releases: 
+	 * - 1.8.1 13.06.2021 -> 12.06.21 second beta
+	 * - 1.8.2 27.06.2021
+	 * - 2.0.0 04.07.2021
+	 * - 2.0.1 Unknown
 	 * 
 	 * NOTE: Test command: /execute positioned ~10000 ~ ~ run locate 
 	 * 

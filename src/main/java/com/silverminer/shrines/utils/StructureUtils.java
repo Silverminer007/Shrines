@@ -20,6 +20,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
+import com.silverminer.shrines.config.IStructureConfig;
+import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.structures.AbstractStructure;
+import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,6 +33,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 
 /**
  * @author Silverminer
@@ -154,5 +159,14 @@ public class StructureUtils {
 
 	private static int randomIntInclusive(Random p_236335_0_, int p_236335_1_, int p_236335_2_) {
 		return p_236335_0_.nextInt(p_236335_2_ - p_236335_1_ + 1) + p_236335_1_;
+	}
+
+	public static IStructureConfig getConfigOf(String structure, boolean onServer) {
+		for(AbstractStructure<NoFeatureConfig> st : NewStructureInit.STRUCTURES.values()) {
+			if(st.getConfig().getName().equals(structure)) {
+				return st.getConfig();
+			}
+		}
+		return Utils.getData(structure, onServer);
 	}
 }
