@@ -5,9 +5,9 @@
 		"1.16.3-recommended": "1.16.4-1.8.0",
 		"1.16.4-recommended": "1.16.4-1.8.0",
 		"1.16.5-recommended": "1.16.4-1.8.0",
-		"1.16.3-latest": "1.16.5-1.8.1-Beta1",
-		"1.16.4-latest": "1.16.5-1.8.1-Beta1",
-		"1.16.5-latest": "1.16.5-1.8.1-Beta1"
+		"1.16.3-latest": "1.16.5-1.8.1-Beta3",
+		"1.16.4-latest": "1.16.5-1.8.1-Beta3",
+		"1.16.5-latest": "1.16.5-1.8.1-Beta3"
 	},
 	"1.16.5": {
 		"1.16.5-1.7.0-Beta1": "Made Harbour playable, Added SamhitApple's Structures 'Infested Prison' and 'Abandoned Witch House'",
