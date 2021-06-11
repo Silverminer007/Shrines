@@ -59,6 +59,7 @@ public class ShrinesConfigOption<T> implements IConfigOption<T> {
 	@Override
 	public void setValue(T v) {
 		this.option.set(v);
+		this.option.save();
 	}
 
 	@SuppressWarnings("unchecked")

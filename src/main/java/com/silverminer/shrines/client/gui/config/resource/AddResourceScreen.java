@@ -106,12 +106,11 @@ public class AddResourceScreen extends Screen {
 
 		this.saveButton = this.addButton(new Button(i + 144, j - 50, 77, 20,
 				new TranslationTextComponent("gui.shrines.structures.save"), (button) -> {
-					LOGGER.info("Started Saving structure {}", this.data.PIECES_ON_FLY);
 					Utils.replace(data, false);
 					Utils.onChanged(false);
 					ShrinesPacketHandler.sendToServer(new CSaveCustomStructuresPacket(this.data.getName(),
 							this.minecraft.player.getName().getString(), true,
-							this.minecraft.level.dimension().location()));// TODO Add include entities option
+							this.minecraft.level.dimension().location()));
 					WorkingScreen ws = new WorkingScreen();
 					this.minecraft.setScreen(ws);
 					ws.progressStart(new TranslationTextComponent("gui.shrines.structures.resource.save.start"));

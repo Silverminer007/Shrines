@@ -89,7 +89,7 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 		}).collect(Collectors.toList());
 		this.structures.removeIf(entry -> entry == null);
 		List<String> structures = this.structures.stream().map(st -> st.getName()).collect(Collectors.toList());
-		for (CustomStructureData d : Utils.getStructures(true)) {
+		for (CustomStructureData d : Utils.getStructures(false)) {
 			if (!structures.contains(d.getName())) {
 				this.structures.add(d);
 			}

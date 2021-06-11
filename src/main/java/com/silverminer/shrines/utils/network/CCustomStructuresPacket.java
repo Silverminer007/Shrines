@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.network.PacketBuffer;
 
@@ -35,7 +34,6 @@ public class CCustomStructuresPacket implements IPacket {
 
 	public CCustomStructuresPacket(ArrayList<CustomStructureData> datas) {
 		this.datas = datas;
-		LOGGER.info("Sending structures to server: {}\n{}", datas, Utils.getData("house1", false).PIECES_ON_FLY);
 	}
 
 	public static void encode(CCustomStructuresPacket pkt, PacketBuffer buf) {

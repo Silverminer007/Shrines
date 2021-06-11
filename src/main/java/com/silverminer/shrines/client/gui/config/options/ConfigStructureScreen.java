@@ -99,7 +99,6 @@ public class ConfigStructureScreen extends Screen {
 								csd.fromString(oe.getOption().getName(), oe.getOption().getValue().toString());
 							}
 						}
-						// TODO Check for need of syncing data from client to server
 						if (this.isNew) {
 							Utils.addStructure(csd, false);
 						} else {
@@ -623,7 +622,8 @@ public class ConfigStructureScreen extends Screen {
 			private boolean validateTextFieldInput(String text) {
 				boolean flag = false;
 				try {
-					OptionParsingResult o = this.valueSpec.fromString(text, StructureUtils.getConfigOf(configSpecs.getName(), false));
+					OptionParsingResult o = this.valueSpec.fromString(text,
+							StructureUtils.getConfigOf(configSpecs.getName(), false));
 					flag = o.isSuccess();
 				} catch (Throwable e) {
 					this.validatedButton.setValid(flag);
@@ -754,8 +754,14 @@ public class ConfigStructureScreen extends Screen {
 				furtherScreenButton = new Button(0, 0, 100, 20, new StringTextComponent(this.valueSpec.getName()),
 						(button) -> {
 							if (this.valueSpec.getValue() instanceof List<?>) {
-								ConfigStructureScreen.this.minecraft.setScreen(new AddResourceScreen(
-										ConfigStructureScreen.this, Utils.getData(structure, false)));
+								CustomStructureData csd = Utils.getData(structure, false);
+								if (csd != null)
+									ConfigStructureScreen.this.minecraft
+											.setScreen(new AddResourceScreen(ConfigStructureScreen.this, csd));
+								else {
+									LOG.error("The selcted custom structure deosn't exist. Opened last screen instead. Seems to be an larger bug, please report it!");
+									ConfigStructureScreen.this.minecraft.setScreen(ConfigStructureScreen.this.parent);
+								}
 							}
 						});
 				this.furtherScreenButton.active = ConfigStructureScreen.this.minecraft.level != null;

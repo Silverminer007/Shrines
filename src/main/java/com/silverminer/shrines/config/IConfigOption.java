@@ -16,6 +16,7 @@ import java.util.function.Function;
 
 import com.silverminer.shrines.utils.custom_structures.OptionParsingResult;
 
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
@@ -40,7 +41,10 @@ public interface IConfigOption<T> {
 	public T getDefaultValue();
 
 	default OptionParsingResult fromString(String s, IStructureConfig data, boolean set) {
-		if(s == null || s.isEmpty() || s.isBlank()) {
+		if(data == null) {
+			return new OptionParsingResult(false, new StringTextComponent("Failed to read structure from string, because config instance was null"));
+		}
+		if(s == null || s.replaceAll(" ", "").isEmpty()) {
 			return new OptionParsingResult(false, null);
 		}
 		T v;

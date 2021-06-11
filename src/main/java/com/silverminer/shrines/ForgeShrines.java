@@ -13,15 +13,13 @@ package com.silverminer.shrines;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.silverminer.shrines.client.gui.config.ShrinesStructuresScreen;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.ForgeFunctionProvider;
 import com.silverminer.shrines.utils.proxy.ClientProxy;
 import com.silverminer.shrines.utils.proxy.ForgeServerProxy;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
@@ -57,11 +55,7 @@ public class ForgeShrines extends ShrinesMod {
 		// Setup config UI
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
-					() -> ForgeShrines::getConfigGui);
+					() -> ClientUtils::getConfigGui);
 		});
-	}
-
-	public static Screen getConfigGui(Minecraft mc, Screen parent) {
-		return new ShrinesStructuresScreen(parent);
 	}
 }
