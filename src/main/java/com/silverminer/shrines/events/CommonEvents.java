@@ -104,6 +104,7 @@ public class CommonEvents {
 
 		@SubscribeEvent
 		public static void onPlayerJoin(PlayerLoggedInEvent event) {
+			Utils.setSend(true);
 			Utils.onChanged(true);
 		}
 

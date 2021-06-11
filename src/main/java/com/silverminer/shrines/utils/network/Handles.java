@@ -55,7 +55,6 @@ public class Handles {
 				@Override
 				public void run() {
 					Utils.setStructures(datas, false);
-					LOGGER.info("Recived structures from server {}\n{}", datas, Utils.getData("house3", false).PIECES_ON_FLY);
 				}
 			};
 		}
@@ -99,6 +98,9 @@ public class Handles {
 						MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
 						ServerWorld world = server.getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, dimension));
 						CustomStructureData data = Utils.getData(structure, true);
+						if(data == null) {
+							throw new RuntimeException("Shrines custom structures run out of sync. Tried to save resources to an non existant structure");
+						}
 						if (data.savePieces(world, server, author, entities)) {
 							data.addBounds();
 						}

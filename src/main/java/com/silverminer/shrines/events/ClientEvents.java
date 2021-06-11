@@ -118,7 +118,6 @@ public class ClientEvents {
 					Minecraft.getInstance().setScreen(new ShrinesStructuresScreen(null));
 				} else {
 					Minecraft.getInstance().setScreen(AddResourceScreen.isInPiecesScreen);
-					LOGGER.info("Structure Data Client {}, and server {}", Utils.getData("house3", false).PIECES_ON_FLY, Utils.getData("house3", true).PIECES_ON_FLY);
 				}
 			}
 		}

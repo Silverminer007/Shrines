@@ -99,6 +99,9 @@ public class Utils {
 	}
 
 	public static boolean remove(CustomStructureData structure, boolean delete, boolean server) {
+		if(structure == null) {
+			return false;
+		}
 		if (delete)
 			Utils.customsToDelete.add(structure.getName());
 		boolean flag;
