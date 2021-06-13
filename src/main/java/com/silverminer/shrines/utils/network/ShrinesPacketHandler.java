@@ -28,7 +28,7 @@ public class ShrinesPacketHandler {
 
 	protected static final Logger LOGGER = LogManager.getLogger(ShrinesPacketHandler.class);
 
-	public static final String PROTOCOL_VERSION = "3.0";
+	public static final String PROTOCOL_VERSION = "4.0";
 
 	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
 			.named(new ResourceLocation(ShrinesMod.MODID, "main_channel"))

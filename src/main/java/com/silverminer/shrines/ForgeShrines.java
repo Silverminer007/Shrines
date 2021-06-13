@@ -15,8 +15,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
-import com.silverminer.shrines.utils.ClientUtils;
-import com.silverminer.shrines.utils.ForgeFunctionProvider;
+import com.silverminer.shrines.utils.client.ClientUtils;
+import com.silverminer.shrines.utils.functions.ForgeFunctionProvider;
 import com.silverminer.shrines.utils.proxy.ClientProxy;
 import com.silverminer.shrines.utils.proxy.ForgeServerProxy;
 

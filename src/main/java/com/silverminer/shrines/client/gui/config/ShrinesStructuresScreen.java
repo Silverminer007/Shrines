@@ -41,6 +41,7 @@ public class ShrinesStructuresScreen extends Screen {
 	private Button configureButton;
 	private Button removeButton;
 	public boolean builtInV = true;
+	public CheckboxButtonEx builtInB;
 	public boolean customsV = true;
 	protected TextFieldWidget searchBox;
 	private StructuresList list;
@@ -77,11 +78,14 @@ public class ShrinesStructuresScreen extends Screen {
 				return search;
 			});
 		});
-		this.addButton(
+		this.builtInB = this.addButton(
 				new CheckboxButtonEx(10, 3, 10, 20, new TranslationTextComponent("gui.shrines.structures.builtin"),
 						this.builtInV, this::onBuiltinButtonPressed));
+		boolean isNotMultiplayer = !(!this.minecraft.isLocalServer() || (this.minecraft.getSingleplayerServer() != null && this.minecraft.getSingleplayerServer().isPublished()));
+		this.builtInB.visible = isNotMultiplayer;
+		this.builtInV = isNotMultiplayer;
 		this.addButton(
-				new CheckboxButtonEx(10, 25, 10, 20, new TranslationTextComponent("gui.shrines.structures.customs"),
+				new CheckboxButtonEx(10, isNotMultiplayer ? 25 : 13, 10, 20, new TranslationTextComponent("gui.shrines.structures.customs"),
 						this.customsV, this::onCustomsButtonPressed));
 		this.list = new StructuresList(this, this.minecraft, this.width, this.height, 48, this.height - 64, 36, () -> {
 			return this.searchBox.getValue();

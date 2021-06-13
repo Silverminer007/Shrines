@@ -24,7 +24,7 @@ import com.silverminer.shrines.client.gui.config.ShrinesStructuresScreen;
 import com.silverminer.shrines.client.gui.config.resource.AddResourceScreen;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.structures.custom.helper.ResourceData;
-import com.silverminer.shrines.utils.KeyUtils;
+import com.silverminer.shrines.utils.client.ClientUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.client.Minecraft;
@@ -106,6 +106,7 @@ public class ClientEvents {
 				}
 			}
 			ms.popPose();
+			// This line is important. Without it rendering does curious things
 			buffer.endBatch(RenderType.lines());
 		}
 
@@ -113,7 +114,8 @@ public class ClientEvents {
 		public static void onKeyInput(InputEvent.KeyInputEvent event) {
 			int keyCode = event.getKey();
 			int scanCode = event.getScanCode();
-			if (KeyUtils.structuresScreen.matches(keyCode, scanCode) && Minecraft.getInstance().screen == null) {
+			if (ClientUtils.structuresScreen.matches(keyCode, scanCode) && Minecraft.getInstance().screen == null
+					&& Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasPermissions(2)) {
 				if (AddResourceScreen.isInPiecesScreen == null) {
 					Minecraft.getInstance().setScreen(new ShrinesStructuresScreen(null));
 				} else {
@@ -129,8 +131,8 @@ public class ClientEvents {
 		public static void clientSetupEvent(FMLClientSetupEvent event) {
 			Minecraft mc = event.getMinecraftSupplier().get();
 			KeyBinding[] keyMappings = mc.options.keyMappings;
-			KeyUtils.structuresScreen = new KeyBinding("key.customStructuresScreen", 75, "key.categories.shrines");
-			keyMappings = ArrayUtils.addAll(keyMappings, KeyUtils.structuresScreen);
+			ClientUtils.structuresScreen = new KeyBinding("key.customStructuresScreen", 75, "key.categories.shrines");
+			keyMappings = ArrayUtils.addAll(keyMappings, ClientUtils.structuresScreen);
 			mc.options.keyMappings = keyMappings;
 		}
 	}
