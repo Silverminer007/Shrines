@@ -83,7 +83,7 @@ public interface IConfigOption<T> {
 			}
 		}
 		if (set) {
-			this.setValue(v);
+			this.setValue(v, data.getName());
 		}
 		return new OptionParsingResult(true, null);
 	}
@@ -93,7 +93,7 @@ public interface IConfigOption<T> {
 	 */
 	public Function<String, T> getFromString(String option);
 
-	public void setValue(T v);
+	public void setValue(T v, String structure);
 
 	/**
 	 * @param text

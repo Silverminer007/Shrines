@@ -73,7 +73,7 @@ public class ConfigOption<T> implements IConfigOption<T> {
 		return this.command;
 	}
 
-	public void setValue(T v) {
+	public void setValue(T v, String structure) {
 		this.value = v;
 	}
 

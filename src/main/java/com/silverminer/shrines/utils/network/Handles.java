@@ -13,6 +13,7 @@ package com.silverminer.shrines.utils.network;
 
 import java.util.ArrayList;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,6 +56,7 @@ public class Handles {
 				@Override
 				public void run() {
 					Utils.setStructures(datas, false);
+					LOGGER.info(Utils.getStructures(false).stream().map(st -> st.getName()).collect(Collectors.toList()));
 				}
 			};
 		}

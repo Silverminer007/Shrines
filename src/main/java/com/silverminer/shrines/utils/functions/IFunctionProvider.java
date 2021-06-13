@@ -9,19 +9,17 @@
  * You should have received a copy of the MPL (Mozilla Public License 2.0)
  * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
-package com.silverminer.shrines.utils;
+package com.silverminer.shrines.utils.functions;
 
-import com.silverminer.shrines.client.gui.config.ShrinesStructuresScreen;
+import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.block.Block;
 
 /**
  * @author Silverminer
  *
  */
-public class ClientUtils {
-	public static Screen getConfigGui(Minecraft mc, Screen parent) {
-		return new ShrinesStructuresScreen(parent);
-	}
+public interface IFunctionProvider {
+	List<String> getBiomes();
+	Block getBlockByID(String ID);
 }

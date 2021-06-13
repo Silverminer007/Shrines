@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.utils.ColorLoop;
+import com.silverminer.shrines.utils.client.ColorLoop;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.TranslationTextComponent;

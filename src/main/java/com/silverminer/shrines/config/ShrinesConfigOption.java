@@ -57,7 +57,7 @@ public class ShrinesConfigOption<T> implements IConfigOption<T> {
 	}
 
 	@Override
-	public void setValue(T v) {
+	public void setValue(T v, String structure) {
 		this.option.set(v);
 		this.option.save();
 	}

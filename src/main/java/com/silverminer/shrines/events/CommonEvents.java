@@ -12,6 +12,7 @@
 package com.silverminer.shrines.events;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -106,6 +107,7 @@ public class CommonEvents {
 		public static void onPlayerJoin(PlayerLoggedInEvent event) {
 			Utils.setSend(true);
 			Utils.onChanged(true);
+			LOGGER.info(Utils.getStructures(true).stream().map(st -> st.getName()).collect(Collectors.toList()));
 		}
 
 		@SubscribeEvent

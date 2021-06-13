@@ -103,7 +103,7 @@ public class CustomStructureData implements IStructureConfig {
 
 	public CustomStructureData(String name, int seed) {
 		this.name = name;
-		this.seed.setValue(seed);
+		this.seed.setValue(seed, this.getName());
 	}
 
 	/**
@@ -237,7 +237,6 @@ public class CustomStructureData implements IStructureConfig {
 		for (int i = 0; i < bounds; i++) {
 			csd.PIECES_ON_FLY.add(ResourceData.load(tag.getCompound("bounds" + i)));
 		}
-		Utils.boundDataSave.setDirty();
 		return csd;
 	}
 
@@ -319,7 +318,7 @@ public class CustomStructureData implements IStructureConfig {
 			PieceData pd = new PieceData(rd.getName(), rd.getOffset());
 			pds.add(pd);
 		}
-		this.pieces.setValue(pds);
+		this.pieces.setValue(pds, this.getName());
 		if (!Utils.properties.keep_bounds) {
 			this.PIECES_ON_FLY.clear();
 			Utils.boundDataSave.setDirty();
@@ -540,7 +539,7 @@ public class CustomStructureData implements IStructureConfig {
 
 	@Override
 	public void setActive(boolean value) {
-		this.generate.setValue(value);
+		this.generate.setValue(value, this.getName());
 	}
 
 	@Override

@@ -106,6 +106,7 @@ public class AddResourceScreen extends Screen {
 
 		this.saveButton = this.addButton(new Button(i + 144, j - 50, 77, 20,
 				new TranslationTextComponent("gui.shrines.structures.save"), (button) -> {
+					Utils.boundDataSave.setDirty();
 					Utils.replace(data, false);
 					Utils.onChanged(false);
 					ShrinesPacketHandler.sendToServer(new CSaveCustomStructuresPacket(this.data.getName(),

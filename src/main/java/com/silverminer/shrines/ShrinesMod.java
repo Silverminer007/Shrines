@@ -14,8 +14,8 @@ package com.silverminer.shrines;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.silverminer.shrines.utils.IFunctionProvider;
 import com.silverminer.shrines.utils.custom_structures.Utils;
+import com.silverminer.shrines.utils.functions.IFunctionProvider;
 import com.silverminer.shrines.utils.proxy.IProxy;
 
 /**

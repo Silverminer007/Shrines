@@ -55,7 +55,7 @@
 	"commands.shrines.query.option.value.failed": "Failed to read option [%s] of [%s] because no such option exists",
 	"commands.shrines.dimensions.failed.invalid_dimension": "There is no such dimension",
 	"commands.shrines.dimension.success.add": "SUCCESS: This structure can now spawn in %s",
-	"commands.shrines.dimension.failed.add": "FAILED: This structure can already spawn in %S",
+	"commands.shrines.dimension.failed.add": "FAILED: This structure can already spawn in %s",
 	"commands.shrines.dimension.success.remove": "SUCCES: This structure can no longer spawn in %s",
 	"commands.shrines.dimension.failed.remove": "FAILED: This structure can't spawn in %s'",
 	"commands.shrines.dimension.success.query": "Dimensions where [%s] can spawn in: %s",
