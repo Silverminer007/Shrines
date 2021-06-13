@@ -32,8 +32,6 @@ public abstract class ShrinesMod {
 	protected IFunctionProvider functionProvider;
 
 	/**
-	 * TODO 1.8.1 Add translations (Spanish) -> S1fy
-	 * 
 	 * TODO 1.8.2 Change structure system to jigsaw (Aurelj)
 	 * TODO 1.8.2 Structures generation height fix -> InteJason -> All structures
 	 * TODO 1.8.2 Move color structure piece from superclass to object for support of multiple pieces having the same materials
