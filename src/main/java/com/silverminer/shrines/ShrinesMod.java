@@ -42,10 +42,9 @@ public abstract class ShrinesMod {
 	 * TODO 2.0.1 Improve spacing of structure (make check for other structures) -> #3
 	 * 
 	 * 
-	 * Releases: 
-	 * - 1.8.1 13.06.2021
+	 * Releases:
 	 * - 1.8.2 27.06.2021
-	 * - 2.0.0 04.07.2021
+	 * - 2.0.0 As fast as possible after Forge update
 	 * - 2.0.1 Unknown
 	 * 
 	 * NOTE: Test command: /execute positioned ~10000 ~ ~ run locate 
