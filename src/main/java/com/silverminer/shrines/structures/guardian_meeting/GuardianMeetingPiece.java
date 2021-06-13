@@ -1,3 +1,14 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures.guardian_meeting;
 
 import java.util.ArrayList;
@@ -5,10 +16,11 @@ import java.util.List;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.ColorStructurePiece;
 import com.silverminer.shrines.structures.StructurePieceTypes;
+import com.silverminer.shrines.utils.StructureUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -19,6 +31,7 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IServerWorld;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
@@ -29,22 +42,27 @@ public class GuardianMeetingPiece {
 			.newArrayList(new ResourceLocation("shrines:guardian_meeting/guardian_meeting"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-			List<StructurePiece> pieces, Random random) {
+			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+		int size = 32;
+		MutableBoundingBox mbb = MutableBoundingBox.createProper(-size, 0, -size, size, 0, size);
+		mbb.move(pos);
+		int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb,
+				random);
 		boolean flag = true;
 		if (flag)
 			pieces.add(new GuardianMeetingPiece.Piece(templateManager, location.get(random.nextInt(location.size())),
-					pos, rotation, 0, random));
+					pos, rotation, 0, random, height));
 		else
 			// Test function for single variant
-			pieces.add(new GuardianMeetingPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random));
+			pieces.add(new GuardianMeetingPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random, height));
 	}
 
 	public static class Piece extends ColorStructurePiece {
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, Random rand) {
+				int componentTypeIn, Random rand, int height) {
 			super(StructurePieceTypes.GUARDIAN_MEETING, templateManager, location, pos, rotation, componentTypeIn,
-					true);
+					true, height);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
@@ -60,31 +78,15 @@ public class GuardianMeetingPiece {
 			return Blocks.SPRUCE_PLANKS;
 		}
 
-		public boolean overwriteWool() {
-			return true;
-		}
-
-		public boolean overwriteWood() {
-			return true;
-		}
-
-		public boolean overwritePlanks() {
-			return true;
-		}
-
-		public boolean overwriteSlabs() {
-			return true;
-		}
-
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.GUARDIAN_MEETING.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("guardian_meeting").getConfig().getUseRandomVarianting();
 		}
 
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			boolean loot = Config.STRUCTURES.GUARDIAN_MEETING.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("guardian_meeting").getConfig().getLootChance() > rand.nextDouble();
 			if (function.equals("chest")) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),

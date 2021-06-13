@@ -1,3 +1,14 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures.harbour;
 
 import java.util.ArrayList;
@@ -8,7 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.loot_tables.ShrinesLootTables;
 import com.silverminer.shrines.structures.AbstractStructurePiece;
 import com.silverminer.shrines.structures.ColorStructurePiece;
@@ -162,7 +173,7 @@ public class HarbourPieces {
 				pos.offset(new BlockPos(87, 0, 62).rotate(rotation)), rotation.getRotated(Rotation.NONE), 0, random,
 				height));
 		LOG.debug("Starting villager generation");
-		if (Config.STRUCTURES.HARBOUR.SPAWN_VILLAGERS.get()) {
+		if (NewStructureInit.STRUCTURES.get("harbour").getConfig().getSpawnVillagers()) {
 			int maxV = 20 + random.nextInt(20);
 			boolean zombie = random.nextInt(10) == 0;
 			for (int i = 0; i < maxV; i++) {
@@ -230,18 +241,15 @@ public class HarbourPieces {
 	}
 
 	public static class HarbourPiece extends ColorStructurePiece {
-		protected int height;
 
 		public HarbourPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
 				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
 			super(StructurePieceTypes.HARBOUR_GROUND, templateManagerIn, locationIn, posIn, rotationIn, componentTypeIn,
-					false);
-			this.height = height;
+					false, height);
 		}
 
 		public HarbourPiece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.HARBOUR_GROUND, templateManager, cNBT);
-			this.height = cNBT.getInt("height");
 		}
 
 		/**
@@ -249,7 +257,6 @@ public class HarbourPieces {
 		 */
 		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
 			super.addAdditionalSaveData(tagCompound);
-			tagCompound.putInt("height", this.height);
 		}
 
 		public StructureProcessor getProcessor() {
@@ -258,11 +265,7 @@ public class HarbourPieces {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.HARBOUR.USE_RANDOM_VARIANTING.get();
-		}
-
-		protected int getHeight(ISeedReader world, BlockPos pos) {
-			return this.height;
+			return NewStructureInit.STRUCTURES.get("harbour").getConfig().getUseRandomVarianting();
 		}
 
 		@Override
@@ -287,7 +290,7 @@ public class HarbourPieces {
 		public VillagerPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
 				Rotation rotationIn, int componentTypeIn, Random rand) {
 			super(StructurePieceTypes.HARBOUR_VILLAGER, templateManagerIn, locationIn, posIn, rotationIn,
-					componentTypeIn);
+					componentTypeIn, 0);
 		}
 
 		public VillagerPiece(TemplateManager templateManager, CompoundNBT cNBT) {
@@ -304,7 +307,7 @@ public class HarbourPieces {
 					.setMirror(Mirror.NONE).addProcessor(this.getProcessor());
 			BlockPos blockpos1 = this.templatePosition
 					.offset(Template.calculateRelativePosition(placementsettings, new BlockPos(3, 0, 0)));
-			int i = this.getHeight(world, blockpos1);
+			int i = world.getHeightmapPos(Heightmap.Type.WORLD_SURFACE, blockpos1).getY();
 			this.templatePosition = new BlockPos(this.templatePosition.getX(), i, this.templatePosition.getZ());
 			BlockPos blockpos2 = this.templatePosition;
 			if (world.getBlockState(blockpos2).getBlock() == Blocks.AIR
@@ -318,18 +321,15 @@ public class HarbourPieces {
 	}
 
 	public static class HarbourBuildingPiece extends ColorStructurePiece {
-		protected int height;
 
 		public HarbourBuildingPiece(TemplateManager templateManagerIn, ResourceLocation locationIn, BlockPos posIn,
 				Rotation rotationIn, int componentTypeIn, Random rand, int height) {
 			super(StructurePieceTypes.HARBOUR_HOUSE, templateManagerIn, locationIn, posIn, rotationIn, componentTypeIn,
-					true);
-			this.height = height;
+					true, height);
 		}
 
 		public HarbourBuildingPiece(TemplateManager templateManager, CompoundNBT cNBT) {
 			super(StructurePieceTypes.HARBOUR_HOUSE, templateManager, cNBT);
-			this.height = cNBT.getInt("height");
 			this.diamonds = cNBT.getInt("diamonds");
 		}
 
@@ -338,7 +338,6 @@ public class HarbourPieces {
 		 */
 		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
 			super.addAdditionalSaveData(tagCompound);
-			tagCompound.putInt("height", this.height);
 			tagCompound.putInt("diamonds", this.diamonds);
 		}
 
@@ -354,7 +353,7 @@ public class HarbourPieces {
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
 			super.handleDataMarker(function, pos, worldIn, rand, sbb);
-			boolean loot = Config.STRUCTURES.HARBOUR.LOOT_CHANCE.get() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("harbour").getConfig().getLootChance() > rand.nextDouble();
 			if (function.equals("warehouse1_1")) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
@@ -418,7 +417,7 @@ public class HarbourPieces {
 
 		@Override
 		protected boolean useRandomVarianting() {
-			return Config.STRUCTURES.HARBOUR.USE_RANDOM_VARIANTING.get();
+			return NewStructureInit.STRUCTURES.get("harbour").getConfig().getUseRandomVarianting();
 		}
 
 		public boolean overwriteWool() {
@@ -426,7 +425,7 @@ public class HarbourPieces {
 		}
 
 		protected int getHeight(ISeedReader world, BlockPos pos) {
-			return this.height + 7;
+			return super.getHeight(world, pos) + 7;
 		}
 
 		protected int diamonds = 0;

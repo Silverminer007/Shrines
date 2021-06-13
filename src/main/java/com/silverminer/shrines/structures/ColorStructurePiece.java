@@ -1,3 +1,14 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures;
 
 import java.util.ArrayList;
@@ -8,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
+import com.silverminer.shrines.ShrinesMod;
 
 import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.block.AbstractSignBlock;
@@ -38,7 +50,6 @@ import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class ColorStructurePiece extends AbstractStructurePiece {
 	protected static final Logger LOG = LogManager.getLogger(ColorStructurePiece.class);
@@ -88,8 +99,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 	protected final ArrayList<BlockPos> CHANGED_POS = new ArrayList<BlockPos>();
 
 	public ColorStructurePiece(IStructurePieceType pieceType, TemplateManager templateManager,
-			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn, boolean defaultValue) {
-		super(pieceType, templateManager, location, pos, rotation, componentTypeIn);
+			ResourceLocation location, BlockPos pos, Rotation rotation, int componentTypeIn, boolean defaultValue, int height) {
+		super(pieceType, templateManager, location, pos, rotation, componentTypeIn, height);
 		this.defaultValue = defaultValue;
 		this.addOresOfMoreOre();
 	}
@@ -102,16 +113,16 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 	}
 
 	protected void addOresOfMoreOre() {
-		Block ruby = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("moreore", "rubin_ore"));
+		Block ruby = ShrinesMod.getInstance().getFunctionProvider().getBlockByID("moreore:rubin_ore");
 		if (ruby != null && ruby != Blocks.AIR && !ORES.contains(ruby))
 			ORES.add(ruby);
-		Block saphire = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("moreore", "saphir_ore"));
+		Block saphire = ShrinesMod.getInstance().getFunctionProvider().getBlockByID("moreore:saphir_ore");
 		if (saphire != null && ruby != Blocks.AIR && !ORES.contains(saphire))
 			ORES.add(saphire);
-		Block silver = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("moreore", "silver_ore"));
+		Block silver = ShrinesMod.getInstance().getFunctionProvider().getBlockByID("moreore:silver_ore");
 		if (silver != null && ruby != Blocks.AIR && !ORES.contains(silver))
 			ORES.add(silver);
-		Block alexandrit = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("moreore", "alexandrit_ore"));
+		Block alexandrit = ShrinesMod.getInstance().getFunctionProvider().getBlockByID("moreore:alexandrit_ore");
 		if (alexandrit != null && ruby != Blocks.AIR && !ORES.contains(alexandrit))
 			ORES.add(alexandrit);
 	}
@@ -158,7 +169,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 						for (Template.BlockInfo template$blockinfo : this.template.filterBlocks(this.templatePosition,
 								this.placeSettings, this.getSlab(block))) {
 							this.changeBlock(template$blockinfo.pos, this.getSlab(newBlock).defaultBlockState()
-									.setValue(SlabBlock.TYPE, template$blockinfo.state.getValue(SlabBlock.TYPE)), world, rand);
+									.setValue(SlabBlock.TYPE, template$blockinfo.state.getValue(SlabBlock.TYPE)), world,
+									rand);
 						}
 					}
 					if (this.overwriteFences()) {
@@ -169,7 +181,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 									.setValue(FenceBlock.EAST, template$blockinfo.state.getValue(FenceBlock.EAST))
 									.setValue(FenceBlock.SOUTH, template$blockinfo.state.getValue(FenceBlock.SOUTH))
 									.setValue(FenceBlock.WEST, template$blockinfo.state.getValue(FenceBlock.WEST))
-									.setValue(FenceBlock.WATERLOGGED, template$blockinfo.state.getValue(FenceBlock.WATERLOGGED)),
+									.setValue(FenceBlock.WATERLOGGED,
+											template$blockinfo.state.getValue(FenceBlock.WATERLOGGED)),
 									world, rand);
 						}
 					}
@@ -197,7 +210,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							this.changeBlock(template$blockinfo.pos, this.getTrapdoor(newBlock).defaultBlockState()
 									.setValue(TrapDoorBlock.HALF, template$blockinfo.state.getValue(TrapDoorBlock.HALF))
 									.setValue(TrapDoorBlock.OPEN, template$blockinfo.state.getValue(TrapDoorBlock.OPEN))
-									.setValue(TrapDoorBlock.POWERED, template$blockinfo.state.getValue(TrapDoorBlock.POWERED))
+									.setValue(TrapDoorBlock.POWERED,
+											template$blockinfo.state.getValue(TrapDoorBlock.POWERED))
 									.setValue(TrapDoorBlock.WATERLOGGED,
 											template$blockinfo.state.getValue(TrapDoorBlock.WATERLOGGED))
 									.setValue(TrapDoorBlock.FACING,
@@ -208,36 +222,36 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 					if (this.overwriteDoors()) {
 						for (Template.BlockInfo template$blockinfo : this.template.filterBlocks(this.templatePosition,
 								this.placeSettings, this.getDoor(block))) {
-							this.changeBlock(template$blockinfo.pos,
-									this.getDoor(newBlock).defaultBlockState()
-											.setValue(DoorBlock.OPEN, template$blockinfo.state.getValue(DoorBlock.OPEN))
-											.setValue(DoorBlock.HINGE, template$blockinfo.state.getValue(DoorBlock.HINGE))
-											.setValue(DoorBlock.FACING, template$blockinfo.state.getValue(DoorBlock.FACING))
-											.setValue(DoorBlock.HALF, template$blockinfo.state.getValue(DoorBlock.HALF))
-											.setValue(DoorBlock.POWERED, template$blockinfo.state.getValue(DoorBlock.POWERED)),
+							this.changeBlock(template$blockinfo.pos, this.getDoor(newBlock).defaultBlockState()
+									.setValue(DoorBlock.OPEN, template$blockinfo.state.getValue(DoorBlock.OPEN))
+									.setValue(DoorBlock.HINGE, template$blockinfo.state.getValue(DoorBlock.HINGE))
+									.setValue(DoorBlock.FACING, template$blockinfo.state.getValue(DoorBlock.FACING))
+									.setValue(DoorBlock.HALF, template$blockinfo.state.getValue(DoorBlock.HALF))
+									.setValue(DoorBlock.POWERED, template$blockinfo.state.getValue(DoorBlock.POWERED)),
 									world, rand);
 						}
 					}
 					if (this.overwriteStairs()) {
 						for (Template.BlockInfo template$blockinfo : this.template.filterBlocks(this.templatePosition,
 								this.placeSettings, this.getStairs(block))) {
-							this.changeBlock(template$blockinfo.pos,
-									this.getStairs(newBlock).defaultBlockState()
-											.setValue(StairsBlock.WATERLOGGED,
-													template$blockinfo.state.getValue(StairsBlock.WATERLOGGED))
-											.setValue(StairsBlock.FACING, template$blockinfo.state.getValue(StairsBlock.FACING))
-											.setValue(StairsBlock.HALF, template$blockinfo.state.getValue(StairsBlock.HALF))
-											.setValue(StairsBlock.SHAPE, template$blockinfo.state.getValue(StairsBlock.SHAPE)),
+							this.changeBlock(template$blockinfo.pos, this.getStairs(newBlock).defaultBlockState()
+									.setValue(StairsBlock.WATERLOGGED,
+											template$blockinfo.state.getValue(StairsBlock.WATERLOGGED))
+									.setValue(StairsBlock.FACING, template$blockinfo.state.getValue(StairsBlock.FACING))
+									.setValue(StairsBlock.HALF, template$blockinfo.state.getValue(StairsBlock.HALF))
+									.setValue(StairsBlock.SHAPE, template$blockinfo.state.getValue(StairsBlock.SHAPE)),
 									world, rand);
 						}
 					}
 					if (this.overwriteSigns()) {
 						for (Template.BlockInfo template$blockinfo : this.template.filterBlocks(this.templatePosition,
 								this.placeSettings, this.getSign(block, true))) {
-							this.changeBlock(template$blockinfo.pos, this.getSign(newBlock, true).defaultBlockState()
-									.setValue(AbstractSignBlock.WATERLOGGED,
-											template$blockinfo.state.getValue(AbstractSignBlock.WATERLOGGED))
-									.setValue(WallSignBlock.FACING, template$blockinfo.state.getValue(WallSignBlock.FACING)),
+							this.changeBlock(template$blockinfo.pos,
+									this.getSign(newBlock, true).defaultBlockState()
+											.setValue(AbstractSignBlock.WATERLOGGED,
+													template$blockinfo.state.getValue(AbstractSignBlock.WATERLOGGED))
+											.setValue(WallSignBlock.FACING,
+													template$blockinfo.state.getValue(WallSignBlock.FACING)),
 									world, rand);
 						}
 						for (Template.BlockInfo template$blockinfo : this.template.filterBlocks(this.templatePosition,
@@ -254,13 +268,14 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 					if (this.overwriteButtons()) {
 						for (Template.BlockInfo template$blockinfo : this.template.filterBlocks(this.templatePosition,
 								this.placeSettings, this.getButton(block))) {
-							this.changeBlock(template$blockinfo.pos, this.getButton(newBlock).defaultBlockState()
-									.setValue(AbstractButtonBlock.POWERED,
-											template$blockinfo.state.getValue(AbstractButtonBlock.POWERED))
-									.setValue(AbstractButtonBlock.FACE,
-											template$blockinfo.state.getValue(AbstractButtonBlock.FACE))
-									.setValue(AbstractButtonBlock.FACING,
-											template$blockinfo.state.getValue(AbstractButtonBlock.FACING)),
+							this.changeBlock(template$blockinfo.pos,
+									this.getButton(newBlock).defaultBlockState()
+											.setValue(AbstractButtonBlock.POWERED,
+													template$blockinfo.state.getValue(AbstractButtonBlock.POWERED))
+											.setValue(AbstractButtonBlock.FACE,
+													template$blockinfo.state.getValue(AbstractButtonBlock.FACE))
+											.setValue(AbstractButtonBlock.FACING,
+													template$blockinfo.state.getValue(AbstractButtonBlock.FACING)),
 									world, rand);
 						}
 					}
@@ -339,7 +354,8 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							if (rand.nextFloat() < this.getStoneChangeChance())
 								newBlock2 = STONES.get(rand.nextInt(STONES.size()));
 							this.changeBlock(template$blockinfo.pos, this.getSlab(newBlock2).defaultBlockState()
-									.setValue(SlabBlock.TYPE, template$blockinfo.state.getValue(SlabBlock.TYPE)), world, rand);
+									.setValue(SlabBlock.TYPE, template$blockinfo.state.getValue(SlabBlock.TYPE)), world,
+									rand);
 						}
 					}
 					if (this.overwriteStairs()) {
@@ -348,13 +364,12 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 							newBlock2 = newBlock;
 							if (rand.nextFloat() < this.getStoneChangeChance())
 								newBlock2 = STONES.get(rand.nextInt(STONES.size()));
-							this.changeBlock(template$blockinfo.pos,
-									this.getStairs(newBlock2).defaultBlockState()
-											.setValue(StairsBlock.WATERLOGGED,
-													template$blockinfo.state.getValue(StairsBlock.WATERLOGGED))
-											.setValue(StairsBlock.FACING, template$blockinfo.state.getValue(StairsBlock.FACING))
-											.setValue(StairsBlock.HALF, template$blockinfo.state.getValue(StairsBlock.HALF))
-											.setValue(StairsBlock.SHAPE, template$blockinfo.state.getValue(StairsBlock.SHAPE)),
+							this.changeBlock(template$blockinfo.pos, this.getStairs(newBlock2).defaultBlockState()
+									.setValue(StairsBlock.WATERLOGGED,
+											template$blockinfo.state.getValue(StairsBlock.WATERLOGGED))
+									.setValue(StairsBlock.FACING, template$blockinfo.state.getValue(StairsBlock.FACING))
+									.setValue(StairsBlock.HALF, template$blockinfo.state.getValue(StairsBlock.HALF))
+									.setValue(StairsBlock.SHAPE, template$blockinfo.state.getValue(StairsBlock.SHAPE)),
 									world, rand);
 						}
 					}
@@ -369,8 +384,10 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 				for (Template.BlockInfo template$blockinfo : this.template.filterBlocks(this.templatePosition,
 						this.placeSettings, block)) {
 					this.changeBlock(template$blockinfo.pos,
-							newBlock.setValue(BeehiveBlock.FACING, template$blockinfo.state.getValue(BeehiveBlock.FACING)).setValue(
-									BeehiveBlock.HONEY_LEVEL, template$blockinfo.state.getValue(BeehiveBlock.HONEY_LEVEL)),
+							newBlock.setValue(BeehiveBlock.FACING,
+									template$blockinfo.state.getValue(BeehiveBlock.FACING))
+									.setValue(BeehiveBlock.HONEY_LEVEL,
+											template$blockinfo.state.getValue(BeehiveBlock.HONEY_LEVEL)),
 							world, rand);
 				}
 			}
@@ -634,7 +651,7 @@ public abstract class ColorStructurePiece extends AbstractStructurePiece {
 	@Override
 	protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 			MutableBoundingBox sbb) {
-		Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(function));
+		Block block = ShrinesMod.getInstance().getFunctionProvider().getBlockByID(function);
 		if (block != Blocks.AIR) {
 			worldIn.setBlock(pos, block.defaultBlockState(), 2);
 			CHANGED_POS.add(pos);

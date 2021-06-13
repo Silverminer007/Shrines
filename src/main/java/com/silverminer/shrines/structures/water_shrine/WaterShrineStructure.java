@@ -1,8 +1,19 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures.water_shrine;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -18,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class WaterShrineStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder WATERSHRINE_CONFIG = new ConfigBuilder("Water Shrine", 643168754,
+			Type.LOOTABLE).setDistance(80).setSeparation(15);
 
 	public WaterShrineStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "water_shrine");
+		super(codec, 3, "water_shrine", WATERSHRINE_CONFIG);
 	}
 
 	@Override
@@ -31,11 +44,6 @@ public class WaterShrineStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return WaterShrineStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.WATER_SHRINE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
@@ -50,9 +58,9 @@ public class WaterShrineStructure extends AbstractStructure<NoFeatureConfig> {
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 0, j);
+			BlockPos blockpos = new BlockPos(i, -1, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			WaterShrinePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			WaterShrinePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

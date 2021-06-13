@@ -1,6 +1,6 @@
 modLoader="javafml" #mandatory
 loaderVersion="[34.1,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
-license="All rights reserved"
+license="MPL-2.0"
 issueTrackerURL="https://github.com/Silverminer007/Shrines/issues" #optional
 [[mods]] #mandatory
 modId="shrines" #mandatory
@@ -9,7 +9,7 @@ displayName="Shrines" #mandatory
 updateJSONURL="https://github.com/Silverminer007/Shrines/raw/master/updateJSON.json" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/shrines-structures" #optional
 #logoFile="examplemod.png" #optional
-credits="Thanks for this Mod goes to S1lencegamer(Structure builder and CoAuthor), ThanatosLP(Structure builder), J0hanna_(Structure builder), CPTR1(Nether Shrine builder), SamhitApple(Structure builder), Forscher09(Ballon Builder), Tikofan(Structure Builder) and everybody else who had his/her part in this mod" #optional
+credits="Thanks for this Mod goes to S1lencegamer(Structure builder and CoAuthor), ThanatosLP(Structure builder), J0hanna_(Structure builder), CPTR1(Nether Shrine builder), SamhitApple(Structure builder), Forscher09(Ballon Builder), Tikofan(Structure Builder), Aurelj(Structure builder and help with structure spawning) and everybody else who had his/her part in this mod" #optional
 authors="Silverminer007 and S1lencegamer" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''

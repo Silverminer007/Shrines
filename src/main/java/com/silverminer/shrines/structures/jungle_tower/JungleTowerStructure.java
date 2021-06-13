@@ -1,8 +1,19 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures.jungle_tower;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -11,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -18,9 +30,10 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class JungleTowerStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder JUNGLETOWER_CONFIG = new ConfigBuilder("Jungle Tower", 987531843, Type.LOOTABLE).setDistance(60).setSeparation(11).setBiomes(Category.JUNGLE);
 
 	public JungleTowerStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "jungle_tower");
+		super(codec, 3, "jungle_tower", JUNGLETOWER_CONFIG);
 	}
 
 	@Override
@@ -31,11 +44,6 @@ public class JungleTowerStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return JungleTowerStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.JUNGLE_TOWER;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
@@ -50,9 +58,9 @@ public class JungleTowerStructure extends AbstractStructure<NoFeatureConfig> {
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 0, j);
+			BlockPos blockpos = new BlockPos(i, -1, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			JungleTowerPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			JungleTowerPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

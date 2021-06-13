@@ -1,8 +1,19 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures.high_tempel;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -18,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class HighTempelStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder HIGHTEMPLE_CONFIG = new ConfigBuilder("High Tempel", 536987987, Type.LOOTABLE)
+			.setDistance(85).setSeparation(18);
 
 	public HighTempelStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "high_tempel");
+		super(codec, 3, "high_tempel", HIGHTEMPLE_CONFIG);
 	}
 
 	@Override
@@ -31,11 +44,6 @@ public class HighTempelStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return HighTempelStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.HIGH_TEMPEL;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
@@ -50,9 +58,9 @@ public class HighTempelStructure extends AbstractStructure<NoFeatureConfig> {
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 0, j);
+			BlockPos blockpos = new BlockPos(i, -1, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			HighTempelPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			HighTempelPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

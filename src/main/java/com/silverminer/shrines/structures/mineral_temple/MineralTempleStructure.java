@@ -1,8 +1,19 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures.mineral_temple;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
+import com.silverminer.shrines.config.ConfigBuilder;
+import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 
@@ -18,9 +29,11 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class MineralTempleStructure extends AbstractStructure<NoFeatureConfig> {
+	protected static final ConfigBuilder MINERALTEMPLE_CONFIG = new ConfigBuilder("Mineral Temple", 576143753,
+			Type.LOOTABLE).setDistance(50).setSeparation(10).setUseRandomVarianting(false);
 
 	public MineralTempleStructure(Codec<NoFeatureConfig> codec) {
-		super(codec, 3, "mineral_temple");
+		super(codec, 3, "mineral_temple", MINERALTEMPLE_CONFIG);
 	}
 
 	@Override
@@ -31,11 +44,6 @@ public class MineralTempleStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return MineralTempleStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.MINERAL_TEMPLE;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
@@ -50,9 +58,9 @@ public class MineralTempleStructure extends AbstractStructure<NoFeatureConfig> {
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 0, j);
+			BlockPos blockpos = new BlockPos(i, -1, j);
 			Rotation rotation = Rotation.getRandom(this.random);
-			MineralTemplePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random);
+			MineralTemplePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}

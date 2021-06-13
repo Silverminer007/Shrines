@@ -1,14 +1,27 @@
+/**
+ * Silverminer (and Team)
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+ * (Mozilla Public License 2.0) for more details.
+ * 
+ * You should have received a copy of the MPL (Mozilla Public License 2.0)
+ * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ */
 package com.silverminer.shrines.structures.custom;
+
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.StructureConfig.StructureGenConfig;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.AbstractStructureStart;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.structures.custom.helper.PieceData;
+import com.silverminer.shrines.utils.StructureUtils;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -28,16 +41,12 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 	private CustomStructureData csd;
 
 	public CustomStructure(Codec<NoFeatureConfig> codec, String name, CustomStructureData csd) {
-		super(codec, 3, name);
+		super(codec, 3, name, csd);
 		this.csd = csd;
 	}
 
-	public boolean isEndStructure() {
-		return csd.categories.getValue().contains(Biome.Category.THEEND);
-	}
-
-	public boolean isNetherStructure() {
-		return csd.categories.getValue().contains(Biome.Category.NETHER);
+	public List<? extends String> getDimensions() {
+		return csd.dimensions.getValue();
 	}
 
 	@Override
@@ -48,31 +57,6 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
 		return CustomStructure.Start::new;
-	}
-
-	@Override
-	public StructureGenConfig getConfig() {
-		return Config.STRUCTURES.CUSTOM;
-	}
-
-	public int getDistance() {
-		return csd.distance.getValue();
-	}
-
-	public int getSeparation() {
-		return csd.seperation.getValue();
-	}
-
-	public int getSeedModifier() {
-		return csd.seed.getValue();
-	}
-
-	public double getSpawnChance() {
-		return csd.spawn_chance.getValue();
-	}
-
-	public boolean needsGround() {
-		return csd.needs_ground.getValue();
 	}
 
 	/**
@@ -106,13 +90,21 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
 			int i = chunkX * 16;
 			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, 1, j);
+			BlockPos blockpos = new BlockPos(i, -1, j);
 			Rotation rotation = Rotation.getRandom(this.random);
 			if (!(this.getFeature() instanceof CustomStructure))
 				return;
 			CustomStructure cS = (CustomStructure) this.getFeature();
-			CustomPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, cS.csd.use_random_varianting.getValue(),
-					cS.csd.pieces.getValue(), cS.name, cS.csd.ignore_air.getValue());
+			List<PieceData> pieces = cS.csd.pieces.getValue();
+			BlockPos lastOffset = pieces.get(pieces.size() - 1).offset;
+			int size = 16 + Math.max(lastOffset.getX(), Math.max(lastOffset.getY(), lastOffset.getZ()));
+			MutableBoundingBox mbb = MutableBoundingBox.createProper(-size, 0, -size, size, 0, size);
+			mbb.move(new BlockPos(i, 0, j));
+			int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb, random)
+					+ cS.csd.base_height_offset.getValue();
+			CustomPiece.generate(templateManager, blockpos, rotation, this.pieces, this.random,
+					cS.csd.use_random_varianting.getValue(), pieces, cS.name, cS.csd.ignore_air.getValue(), height,
+					chunkGenerator);
 			this.calculateBoundingBox();
 		}
 	}
