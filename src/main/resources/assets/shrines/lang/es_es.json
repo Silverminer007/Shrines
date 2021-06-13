@@ -68,7 +68,7 @@
 	"gui.shrines.structures.list.active": "(Activo)",
 	"gui.shrines.structures.list.inactive": "(Inactivo)",
 	"gui.shrines.structures.settings": "Ajustes",
-	"gui.shrines.structures.config.title": "Cambiar la configuraci\u00f3n de \"%s\ "",
+	"gui.shrines.structures.config.title": "Cambiar la configuraci\u00f3n de \"%s\"",
 	"gui.shrines.structures.add.title": "A\u00f1adir una nueva estructura personalizada",
 	"gui.shrines.config.generate": "\u00bfGenerar?",
 	"gui.shrines.config.spawn_chance": "La oportunidad de engendrar",
