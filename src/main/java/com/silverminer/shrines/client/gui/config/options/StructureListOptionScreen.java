@@ -75,7 +75,6 @@ public abstract class StructureListOptionScreen extends Screen {
 		buttons.add(button);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(ms);

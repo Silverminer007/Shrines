@@ -205,7 +205,6 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 			return this.config;
 		}
 
-		@SuppressWarnings("deprecation")
 		public void render(MatrixStack p_230432_1_, int p_230432_2_, int p_230432_3_, int p_230432_4_, int p_230432_5_,
 				int p_230432_6_, int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			ITextComponent header = new StringTextComponent(config.getName() + " ")

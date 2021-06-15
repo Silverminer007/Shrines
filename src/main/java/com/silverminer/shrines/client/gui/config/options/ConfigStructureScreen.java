@@ -125,7 +125,6 @@ public class ConfigStructureScreen extends Screen {
 		return button;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		this.renderBackground(ms);
