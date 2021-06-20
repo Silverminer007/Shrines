@@ -26,24 +26,20 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class MineralTempleStructure extends AbstractStructure<NoFeatureConfig> {
+public class MineralTempleStructure extends AbstractStructure {
 	protected static final ConfigBuilder MINERALTEMPLE_CONFIG = new ConfigBuilder("Mineral Temple", 576143753,
 			Type.LOOTABLE).setDistance(50).setSeparation(10).setUseRandomVarianting(false);
 
-	public MineralTempleStructure(Codec<NoFeatureConfig> codec) {
+	public MineralTempleStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "mineral_temple", MINERALTEMPLE_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return MineralTempleStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

@@ -26,24 +26,20 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class GuardianMeetingStructure extends AbstractStructure<NoFeatureConfig> {
+public class GuardianMeetingStructure extends AbstractStructure {
 	protected static final ConfigBuilder GUARDIANMEETING_CONFIG = new ConfigBuilder("Guardian Meeting", 1498473232,
 			Type.LOOTABLE).setLootChance(1.0D).setDistance(70).setSeparation(17).setUseRandomVarianting(false);
 
-	public GuardianMeetingStructure(Codec<NoFeatureConfig> codec) {
+	public GuardianMeetingStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "guardian_meeting", GUARDIANMEETING_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return GuardianMeetingStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

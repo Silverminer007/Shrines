@@ -26,24 +26,20 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class InfestedPrisonStructure extends AbstractStructure<NoFeatureConfig> {
+public class InfestedPrisonStructure extends AbstractStructure {
 	protected static final ConfigBuilder INFESTEDPRISON_CONFIG = new ConfigBuilder("Infested Prison", 567483014,
 			Type.LOOTABLE).setDistance(60).setSeparation(11);
 
-	public InfestedPrisonStructure(Codec<NoFeatureConfig> codec) {
+	public InfestedPrisonStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "infested_prison", INFESTEDPRISON_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return InfestedPrisonStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

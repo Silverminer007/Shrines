@@ -26,24 +26,20 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class WaterShrineStructure extends AbstractStructure<NoFeatureConfig> {
+public class WaterShrineStructure extends AbstractStructure {
 	protected static final ConfigBuilder WATERSHRINE_CONFIG = new ConfigBuilder("Water Shrine", 643168754,
 			Type.LOOTABLE).setDistance(80).setSeparation(15);
 
-	public WaterShrineStructure(Codec<NoFeatureConfig> codec) {
+	public WaterShrineStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "water_shrine", WATERSHRINE_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return WaterShrineStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

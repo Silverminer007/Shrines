@@ -44,7 +44,7 @@ public abstract class AbstractStructureStart<C extends IFeatureConfig> extends S
 		super.placeInChunk(seedReader, manager, generator, random, boundingBox, position);
 
 		if (this.getFeature() instanceof AbstractStructure
-				&& ((AbstractStructure<?>) this.getFeature()).needsGround()) {
+				&& ((AbstractStructure) this.getFeature()).needsGround()) {
 			for (int x = this.boundingBox.x0 - 1; this.boundingBox.x1 + 1 >= x; ++x) {
 				for (int z = this.boundingBox.z0 - 1; this.boundingBox.z1 + 1 >= z; ++z) {
 					for (int y = this.boundingBox.y0 - 1; y > 1; --y) {

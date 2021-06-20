@@ -35,26 +35,22 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class EndTempleStructure extends AbstractStructure<NoFeatureConfig> {
+public class EndTempleStructure extends AbstractStructure {
 	protected static final ConfigBuilder ENDTEMPLE_CONFIG = new ConfigBuilder("End Temple", 32 ^ 478392, Type.LOOTABLE)
 			.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
 			.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands")
 			.setDimension(Lists.newArrayList("end"));
 
-	public EndTempleStructure(Codec<NoFeatureConfig> codec) {
+	public EndTempleStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "end_temple", ENDTEMPLE_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return EndTempleStructure.Start::new;
 	}
 
 	public boolean validateGeneration(ChunkGenerator generator, BiomeProvider provider, long seed,
