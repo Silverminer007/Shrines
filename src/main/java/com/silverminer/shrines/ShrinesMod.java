@@ -36,17 +36,18 @@ public abstract class ShrinesMod {
 	 * TODO 1.8.2 Structures generation height fix -> InteJason -> All structures
 	 * TODO 1.8.2 Move color structure piece from superclass to object for support of multiple pieces having the same materials
 	 * TODO 1.8.2 #8
+	 * TODO 1.8.2 Register Configured Structures only one time
+	 * TODO 1.8.2 Add config option to disable logging (not all but unimportant things)
 	 * 
 	 * TODO 2.0.0 Mc1.17 Update -> Change names of structures -> Move #isAir to state only version
 	 * TODO 2.0.1 Preview for load
 	 * TODO 2.0.1 Improve spacing of structure (make check for other structures) -> #3
 	 * 
 	 * 
-	 * Releases: 
-	 * - 1.8.1 13.06.2021
-	 * - 1.8.2 27.06.2021
-	 * - 2.0.0 04.07.2021
-	 * - 2.0.1 Unknown
+	 * Releases:
+	 * - 1.8.2 Bug fix update
+	 * - 2.0.0 Mc1.17 Update
+	 * - 2.0.1 Bugfix of 2.0.0 and some new features
 	 * 
 	 * NOTE: Test command: /execute positioned ~10000 ~ ~ run locate 
 	 * 

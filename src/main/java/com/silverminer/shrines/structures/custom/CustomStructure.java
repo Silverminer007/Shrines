@@ -34,13 +34,14 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
+public class CustomStructure extends AbstractStructure {
 	protected static final Logger LOG = LogManager.getLogger(CustomStructure.class);
 	private CustomStructureData csd;
 
-	public CustomStructure(Codec<NoFeatureConfig> codec, String name, CustomStructureData csd) {
+	public CustomStructure(Codec<VillageConfig> codec, String name, CustomStructureData csd) {
 		super(codec, 3, name, csd);
 		this.csd = csd;
 	}
@@ -52,11 +53,6 @@ public class CustomStructure extends AbstractStructure<NoFeatureConfig> {
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return CustomStructure.Start::new;
 	}
 
 	/**

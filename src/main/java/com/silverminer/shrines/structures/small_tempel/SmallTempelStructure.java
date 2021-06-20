@@ -26,23 +26,19 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class SmallTempelStructure extends AbstractStructure<NoFeatureConfig> {
+public class SmallTempelStructure extends AbstractStructure {
 	protected static final ConfigBuilder SMALLTEMPLE_CONFIG = new ConfigBuilder("Small Tempel", 4765321, Type.LOOTABLE).setDistance(75).setSeparation(13);
 
-	public SmallTempelStructure(Codec<NoFeatureConfig> codec) {
+	public SmallTempelStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "small_tempel", SMALLTEMPLE_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return SmallTempelStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

@@ -26,24 +26,20 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class HighTempelStructure extends AbstractStructure<NoFeatureConfig> {
+public class HighTempelStructure extends AbstractStructure {
 	protected static final ConfigBuilder HIGHTEMPLE_CONFIG = new ConfigBuilder("High Tempel", 536987987, Type.LOOTABLE)
 			.setDistance(85).setSeparation(18);
 
-	public HighTempelStructure(Codec<NoFeatureConfig> codec) {
+	public HighTempelStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "high_tempel", HIGHTEMPLE_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return HighTempelStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

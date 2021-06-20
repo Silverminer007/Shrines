@@ -27,27 +27,23 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class AbandonedWitchHouseStructure extends AbstractStructure<NoFeatureConfig> {
+public class AbandonedWitchHouseStructure extends AbstractStructure {
 	protected static final ConfigBuilder ABANDONEDWITCHHOUSE_CONFIG = new ConfigBuilder("Abandoned Witch House",
 			1721882513, Type.LOOTABLE).setBiomes(Category.SWAMP, Category.FOREST)
 					.addToBlacklist("minecraft:flower_forest", "minecraft:tall_birch_forest", "minecraft:forest",
 							"minecraft:birch_forest", "minecraft:birch_forest_hills")
 					.setDistance(60).setSeparation(11);
 
-	public AbandonedWitchHouseStructure(Codec<NoFeatureConfig> codec) {
+	public AbandonedWitchHouseStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "witch_house", ABANDONEDWITCHHOUSE_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return AbandonedWitchHouseStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

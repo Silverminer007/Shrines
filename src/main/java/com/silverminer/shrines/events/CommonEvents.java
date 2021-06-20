@@ -28,17 +28,20 @@ import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.Generator;
 import com.silverminer.shrines.structures.StructurePieceTypes;
+import com.silverminer.shrines.structures.ballon.BalloonPools;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.saves.BoundSaveData;
 
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
@@ -73,6 +76,7 @@ public class CommonEvents {
 		@SubscribeEvent
 		public static void commonSetupEvent(FMLCommonSetupEvent event) {
 			ShrinesPacketHandler.register();
+			BalloonPools.load();
 		}
 	}
 
@@ -83,10 +87,13 @@ public class CommonEvents {
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
 			LOGGER.debug("Loading Biome and registering structures. Biome: {}", event.getName());
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
-				for (AbstractStructure<NoFeatureConfig> struct : NewStructureInit.STRUCTURES.values()) {
+				for (AbstractStructure struct : NewStructureInit.STRUCTURES.values()) {
 					if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
-							struct.getConfig().getBlacklist(), event.getName(), event.getCategory()))
-						event.getGeneration().addStructureStart(struct.configured(IFeatureConfig.NONE));
+							struct.getConfig().getBlacklist(), event.getName(), event.getCategory())) {
+						StructureFeature<VillageConfig, ? extends Structure<VillageConfig>>  temp = struct.configured(new VillageConfig(() -> BalloonPools.BALLOON, 7));
+						WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, struct.getRegistryName().toString(), temp);
+						event.getGeneration().addStructureStart(temp);
+					}
 				}
 			}
 		}

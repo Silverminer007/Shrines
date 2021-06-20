@@ -33,7 +33,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
 
 /**
  * @author Silverminer
@@ -162,7 +161,7 @@ public class StructureUtils {
 	}
 
 	public static IStructureConfig getConfigOf(String structure, boolean onServer) {
-		for(AbstractStructure<NoFeatureConfig> st : NewStructureInit.STRUCTURES.values()) {
+		for(AbstractStructure st : NewStructureInit.STRUCTURES.values()) {
 			if(st.getConfig().getName().equals(structure)) {
 				return st.getConfig();
 			}

@@ -31,7 +31,7 @@ public class Generator {
 
 	public static void setupWorldGen() {
 		LOGGER.debug("Generating {} Structures", NewStructureInit.STRUCTURES.size());
-		for (AbstractStructure<?> structure : NewStructureInit.STRUCTURES.values()) {
+		for (AbstractStructure structure : NewStructureInit.STRUCTURES.values()) {
 			try {
 				for (String dim : structure.getDimensions()) {
 					register(RegistryKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, new ResourceLocation(dim)),

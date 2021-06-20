@@ -35,19 +35,25 @@ import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.structure.JigsawStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public abstract class AbstractStructure<C extends IFeatureConfig> extends Structure<C> {
+public abstract class AbstractStructure extends JigsawStructure {
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractStructure.class);
 	public final int size;
 
 	public final String name;
 	public IStructureConfig structureConfig;
 
-	public AbstractStructure(Codec<C> codec, int sizeIn, String nameIn, IStructureConfig config) {
-		super(codec);
+	public AbstractStructure(Codec<VillageConfig> codec, int sizeIn, String nameIn, IStructureConfig config) {
+		this(codec, sizeIn, 0, nameIn, config);
+	}
+
+	public AbstractStructure(Codec<VillageConfig> codec, int sizeIn, int startY, String nameIn, IStructureConfig config) {
+		super(codec, startY, false, true);
 		this.size = sizeIn;
 		this.name = nameIn;
 		structureConfig = config;
@@ -117,7 +123,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 
 	@Override
 	protected boolean isFeatureChunk(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
-			int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config) {
+			int chunkX, int chunkZ, Biome biome, ChunkPos pos, VillageConfig config) {
 		return this.validateGeneration(generator, provider, seed, rand, chunkX, chunkZ, biome, pos, config);
 	}
 
@@ -145,7 +151,7 @@ public abstract class AbstractStructure<C extends IFeatureConfig> extends Struct
 	protected boolean checkForOtherStructures(ChunkGenerator generator, BiomeProvider provider, long seed,
 			SharedSeedRandom rand, int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config,
 			@Nullable Structure<?>... exeptStructure) {
-		for (AbstractStructure<?> s : NewStructureInit.STRUCTURES.values()) {
+		for (AbstractStructure s : NewStructureInit.STRUCTURES.values()) {
 			if (exeptStructure != null)
 				for (Structure<?> es : exeptStructure) {
 					if (es.equals(s))

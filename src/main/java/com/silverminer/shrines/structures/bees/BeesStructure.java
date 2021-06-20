@@ -26,24 +26,20 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class BeesStructure extends AbstractStructure<NoFeatureConfig> {
+public class BeesStructure extends AbstractStructure {
 	protected static final ConfigBuilder BEES_CONFIG = new ConfigBuilder("Bees", 779806245, Type.LOOTABLE)
 			.setDistance(70).setSeparation(12).setUseRandomVarianting(false);
 
-	public BeesStructure(Codec<NoFeatureConfig> codec) {
+	public BeesStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "bees", BEES_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return BeesStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

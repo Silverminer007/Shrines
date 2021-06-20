@@ -34,9 +34,10 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class HarbourStructure extends AbstractStructure<NoFeatureConfig> {
+public class HarbourStructure extends AbstractStructure {
 	protected static final ConfigBuilder HARBOUR_CONFIG = new ConfigBuilder("Harbour", 651398043, Type.HARBOUR)
 			.setDistance(50).setSeparation(8)
 			.setBiomes(Biome.Category.PLAINS, Biome.Category.FOREST, Biome.Category.TAIGA, Biome.Category.SAVANNA,
@@ -44,18 +45,13 @@ public class HarbourStructure extends AbstractStructure<NoFeatureConfig> {
 					Biome.Category.MUSHROOM)
 			.setNeedsGround(false);
 
-	public HarbourStructure(Codec<NoFeatureConfig> codec) {
+	public HarbourStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "harbour", HARBOUR_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return HarbourStructure.Start::new;
 	}
 
 	protected boolean isSurfaceFlatExtended(@Nonnull ChunkGenerator generator, int chunkX, int chunkZ) {

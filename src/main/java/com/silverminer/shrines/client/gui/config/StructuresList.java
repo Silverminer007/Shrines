@@ -48,7 +48,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -80,11 +79,11 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 
 	public void refreshList(Supplier<String> search) {
 		this.clearEntries();
-		List<AbstractStructure<NoFeatureConfig>> structs = NewStructureInit.STRUCTURES.values().stream()
+		List<AbstractStructure> structs = NewStructureInit.STRUCTURES.values().stream()
 				.collect(Collectors.toList());
 		structs.removeIf(struct -> struct == null);
 		this.structures = structs.stream().map((config) -> {
-			AbstractStructure<?> st = (AbstractStructure<?>) config.getStructure();
+			AbstractStructure st = (AbstractStructure) config.getStructure();
 			return st.getConfig();
 		}).collect(Collectors.toList());
 		this.structures.removeIf(entry -> entry == null);

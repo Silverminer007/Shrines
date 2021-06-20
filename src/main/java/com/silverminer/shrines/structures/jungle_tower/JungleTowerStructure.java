@@ -27,23 +27,19 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class JungleTowerStructure extends AbstractStructure<NoFeatureConfig> {
+public class JungleTowerStructure extends AbstractStructure {
 	protected static final ConfigBuilder JUNGLETOWER_CONFIG = new ConfigBuilder("Jungle Tower", 987531843, Type.LOOTABLE).setDistance(60).setSeparation(11).setBiomes(Category.JUNGLE);
 
-	public JungleTowerStructure(Codec<NoFeatureConfig> codec) {
+	public JungleTowerStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "jungle_tower", JUNGLETOWER_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return JungleTowerStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {

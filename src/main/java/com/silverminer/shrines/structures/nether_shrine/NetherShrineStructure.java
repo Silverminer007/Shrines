@@ -27,24 +27,20 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class NetherShrineStructure extends AbstractStructure<NoFeatureConfig> {
+public class NetherShrineStructure extends AbstractStructure {
 	protected static final ConfigBuilder NETHERSHRINE_CONFIG = new ConfigBuilder("Nether Shrine", 653267, Type.LOOTABLE)
 			.setDistance(80).setSeparation(15).addDimension("nether").addBiome(Category.NETHER);
 
-	public NetherShrineStructure(Codec<NoFeatureConfig> codec) {
+	public NetherShrineStructure(Codec<VillageConfig> codec) {
 		super(codec, 3, "nether_shrine", NETHERSHRINE_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-	@Override
-	public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-		return NetherShrineStructure.Start::new;
 	}
 
 	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
