@@ -9,7 +9,7 @@
  * You should have received a copy of the MPL (Mozilla Public License 2.0)
  * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
-package com.silverminer.shrines.structures.ballon;
+package com.silverminer.shrines.structures.abandoned_witch_house;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
@@ -38,14 +37,9 @@ import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
-public class BallonPiece {
-	private static final ArrayList<ResourceLocation> location = Lists.newArrayList(
-			new ResourceLocation("shrines:ballon/ballon_1"), new ResourceLocation("shrines:ballon/ballon_2"),
-			new ResourceLocation("shrines:ballon/ballon_3"), new ResourceLocation("shrines:ballon/ballon_4"),
-			new ResourceLocation("shrines:ballon/ballon_5"), new ResourceLocation("shrines:ballon/ballon_6"),
-			new ResourceLocation("shrines:ballon/ballon_7"), new ResourceLocation("shrines:ballon/ballon2_1"),
-			new ResourceLocation("shrines:ballon/ballon2_2"), new ResourceLocation("shrines:ballon/ballon2_3"),
-			new ResourceLocation("shrines:ballon/ballon2_4"));
+public class AbandonedWitchHousePiece {
+	private static final ArrayList<ResourceLocation> location = Lists
+			.newArrayList(new ResourceLocation("shrines:witch_house/abandoned_witch_house"));
 
 	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
 			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
@@ -54,58 +48,20 @@ public class BallonPiece {
 		mbb.move(pos);
 		int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb,
 				random);
-		boolean flag = true;
-		if (flag)
-			pieces.add(new BallonPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-					rotation, 0, random, height));
-		else
-			// Test function for single variant
-			pieces.add(new BallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random, height));
+		pieces.add(new AbandonedWitchHousePiece.Piece(templateManager, location.get(random.nextInt(location.size())),
+				pos, rotation, 0, true, height));
 	}
 
 	public static class Piece extends ColorStructurePiece {
-		protected int heightOffset = 0;
 
 		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, Random rand, int height) {
-			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true, height);
-			this.heightOffset = 5 + rand.nextInt(25);
+				int componentTypeIn, boolean defaultValue, int height) {
+			super(StructurePieceTypes.WITCH_HOUSE, templateManager, location, pos, rotation, componentTypeIn,
+					defaultValue, height);
 		}
 
 		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
-			super(StructurePieceTypes.BALLON, templateManager, cNBT);
-			this.heightOffset = cNBT.getInt("height");
-		}
-
-		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
-			super.addAdditionalSaveData(tagCompound);
-			tagCompound.putInt("height", this.heightOffset);
-		}
-
-		@Override
-		protected int getHeight(ISeedReader world, BlockPos blockpos1) {
-			return super.getHeight(world, blockpos1) + this.heightOffset - 1;
-		}
-
-		@Override
-		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
-		}
-
-		public boolean overwriteWool() {
-			return true;
-		}
-
-		public boolean overwriteWood() {
-			return true;
-		}
-
-		public boolean overwritePlanks() {
-			return true;
-		}
-
-		public boolean overwriteSlabs() {
-			return true;
+			super(StructurePieceTypes.WITCH_HOUSE, templateManager, cNBT);
 		}
 
 		public Block getDefaultPlank() {
@@ -113,18 +69,33 @@ public class BallonPiece {
 		}
 
 		@Override
+		public StructureProcessor getProcessor() {
+			return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
+		}
+
+		@Override
 		protected boolean useRandomVarianting() {
-			return NewStructureInit.STRUCTURES.get("ballon").getConfig().getUseRandomVarianting();
+			return NewStructureInit.STRUCTURES.get("witch_house").getConfig().getUseRandomVarianting();
 		}
 
 		@Override
 		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
 				MutableBoundingBox sbb) {
-			boolean loot = NewStructureInit.STRUCTURES.get("ballon").getConfig().getLootChance() > rand.nextDouble();
+			boolean loot = NewStructureInit.STRUCTURES.get("witch_house").getConfig().getLootChance() > rand.nextDouble();
 			if (function.equals("chest")) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-				LockableLootTileEntity.setLootTable(worldIn, rand, pos.above(2),
-						loot ? ShrinesLootTables.BALLON : ShrinesLootTables.EMPTY);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(3),
+						loot ? ShrinesLootTables.WITCH_HOUSE : ShrinesLootTables.EMPTY);
+			}
+			if (function.equals("chest_cobweb")) {
+				worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+						loot ? ShrinesLootTables.WITCH_HOUSE : ShrinesLootTables.EMPTY);
+			}
+			if (function.equals("chest_op")) {
+				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+						loot ? ShrinesLootTables.WITCH_HOUSE : ShrinesLootTables.EMPTY);
 			}
 		}
 	}

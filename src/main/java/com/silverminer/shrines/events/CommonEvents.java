@@ -28,7 +28,7 @@ import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.Generator;
 import com.silverminer.shrines.structures.StructurePieceTypes;
-import com.silverminer.shrines.structures.ballon.BalloonPools;
+import com.silverminer.shrines.structures.StructurePools;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.saves.BoundSaveData;
@@ -76,7 +76,7 @@ public class CommonEvents {
 		@SubscribeEvent
 		public static void commonSetupEvent(FMLCommonSetupEvent event) {
 			ShrinesPacketHandler.register();
-			BalloonPools.load();
+			StructurePools.load();
 		}
 	}
 
@@ -90,7 +90,7 @@ public class CommonEvents {
 				for (AbstractStructure struct : NewStructureInit.STRUCTURES.values()) {
 					if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
 							struct.getConfig().getBlacklist(), event.getName(), event.getCategory())) {
-						StructureFeature<VillageConfig, ? extends Structure<VillageConfig>>  temp = struct.configured(new VillageConfig(() -> BalloonPools.BALLOON, 7));
+						StructureFeature<VillageConfig, ? extends Structure<VillageConfig>>  temp = struct.configured(new VillageConfig(() -> struct.getPools(), 7));
 						WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, struct.getRegistryName().toString(), temp);
 						event.getGeneration().addStructureStart(temp);
 					}

@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.structures.ballon.BallonPiece;
+import com.silverminer.shrines.structures.abandoned_witch_house.AbandonedWitchHousePiece;
 import com.silverminer.shrines.structures.bees.BeesPiece;
 import com.silverminer.shrines.structures.custom.CustomPiece;
 import com.silverminer.shrines.structures.end_temple.EndTemplePiece;
@@ -23,7 +23,7 @@ import com.silverminer.shrines.structures.flooded_temple.FloodedTemplePiece;
 import com.silverminer.shrines.structures.guardian_meeting.GuardianMeetingPiece;
 import com.silverminer.shrines.structures.harbour.HarbourPieces;
 import com.silverminer.shrines.structures.harbour.HarbourPieces.HarbourBuildingPiece;
-import com.silverminer.shrines.structures.high_tempel.HighTempelPiece;
+import com.silverminer.shrines.structures.high_temple.HighTempelPiece;
 import com.silverminer.shrines.structures.jungle_tower.JungleTowerPiece;
 import com.silverminer.shrines.structures.mineral_temple.MineralTemplePiece;
 import com.silverminer.shrines.structures.nether_pyramid.NetherPyramidPiece;
@@ -31,9 +31,8 @@ import com.silverminer.shrines.structures.nether_shrine.NetherShrinePiece;
 import com.silverminer.shrines.structures.oriental_sanctuary.OrientalSanctuaryPiece;
 import com.silverminer.shrines.structures.player_house.PlayerhousePiece;
 import com.silverminer.shrines.structures.prison.InfestedPrisonPiece;
-import com.silverminer.shrines.structures.small_tempel.SmallTempelPiece;
+import com.silverminer.shrines.structures.small_temple.SmallTempelPiece;
 import com.silverminer.shrines.structures.water_shrine.WaterShrinePiece;
-import com.silverminer.shrines.structures.witch_house.AbandonedWitchHousePiece;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -43,8 +42,6 @@ public class StructurePieceTypes {
 	protected static final Logger LOGGER = LogManager.getLogger();
 
 	public static final IStructurePieceType NETHER_SHRINE = NetherShrinePiece.Piece::new;
-
-	public static final IStructurePieceType BALLON = BallonPiece.Piece::new;
 
 	public static final IStructurePieceType BEES = BeesPiece.Piece::new;
 
@@ -85,7 +82,6 @@ public class StructurePieceTypes {
 
 	public static void regsiter() {
 		LOGGER.debug("Shrines: registering structure piece types");
-		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(ShrinesMod.MODID, "ballon"), BALLON);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(ShrinesMod.MODID, "bees"), BEES);
 		Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(ShrinesMod.MODID, "nether_shrine"),
 				NETHER_SHRINE);

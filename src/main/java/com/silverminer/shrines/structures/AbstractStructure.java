@@ -13,7 +13,6 @@ package com.silverminer.shrines.structures;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,8 +32,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.structure.JigsawStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
@@ -43,47 +42,26 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public abstract class AbstractStructure extends JigsawStructure {
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractStructure.class);
-	public final int size;
 
 	public final String name;
 	public IStructureConfig structureConfig;
 
-	public AbstractStructure(Codec<VillageConfig> codec, int sizeIn, String nameIn, IStructureConfig config) {
-		this(codec, sizeIn, 0, nameIn, config);
+	public AbstractStructure(Codec<VillageConfig> codec, String nameIn, IStructureConfig config) {
+		this(codec, 0, nameIn, config);
 	}
 
-	public AbstractStructure(Codec<VillageConfig> codec, int sizeIn, int startY, String nameIn, IStructureConfig config) {
+	public AbstractStructure(Codec<VillageConfig> codec, int startY, String nameIn, IStructureConfig config) {
 		super(codec, startY, false, true);
-		this.size = sizeIn;
 		this.name = nameIn;
-		structureConfig = config;
+		this.structureConfig = config;
 		this.setRegistryName(this.getFeatureName());
 	}
+
+	public abstract JigsawPattern getPools();
 
 	@Override
 	public String getFeatureName() {
 		return new ResourceLocation(ShrinesMod.MODID, this.name).toString();
-	}
-
-	protected boolean isSurfaceFlat(@Nonnull ChunkGenerator generator, int chunkX, int chunkZ) {
-		// Size of the area to check.
-		int offset = this.getSize() * 16;
-
-		int xStart = (chunkX << 4);
-		int zStart = (chunkZ << 4);
-
-		int i1 = generator.getBaseHeight(xStart, zStart, Heightmap.Type.WORLD_SURFACE_WG);
-		int j1 = generator.getBaseHeight(xStart, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
-		int k1 = generator.getBaseHeight(xStart + offset, zStart, Heightmap.Type.WORLD_SURFACE_WG);
-		int l1 = generator.getBaseHeight(xStart + offset, zStart + offset, Heightmap.Type.WORLD_SURFACE_WG);
-		int minHeight = Math.min(Math.min(i1, j1), Math.min(k1, l1));
-		int maxHeight = Math.max(Math.max(i1, j1), Math.max(k1, l1));
-
-		return Math.abs(maxHeight - minHeight) <= 4;
-	}
-
-	public int getSize() {
-		return this.size;
 	}
 
 	public int getDistance() {
@@ -130,22 +108,16 @@ public abstract class AbstractStructure extends JigsawStructure {
 	public boolean validateGeneration(ChunkGenerator generator, BiomeProvider provider, long seed,
 			SharedSeedRandom rand, int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config,
 			@Nullable Structure<?>... exeptStructure) {
-		if (isSurfaceFlat(generator, chunkX, chunkZ)) {
 
-			// Check the entire size of the structure to see if it's all a viable biome:
-			for (Biome biome1 : provider.getBiomesWithin(chunkX * 16 + 9, generator.getSeaLevel(), chunkZ * 16 + 9,
-					getSize() * 16)) {
-				if (!biome1.getGenerationSettings().isValidStart(this)) {
-					return false;
-				}
+		// Check the entire size of the structure to see if it's all a viable biome:
+		for (Biome biome1 : provider.getBiomesWithin(chunkX * 16 + 9, generator.getSeaLevel(), chunkZ * 16 + 9, 50)) {
+			if (!biome1.getGenerationSettings().isValidStart(this)) {
+				return false;
 			}
-
-			rand.setLargeFeatureSeed(seed, chunkX, chunkZ);
-			return rand.nextDouble() < getSpawnChance();
-//					&& checkForOtherStructures(generator, provider, seed, rand,chunkX, chunkZ, biome, pos, config, exeptStructure);
 		}
 
-		return false;
+		rand.setLargeFeatureSeed(seed, chunkX, chunkZ);
+		return rand.nextDouble() < getSpawnChance();
 	}
 
 	protected boolean checkForOtherStructures(ChunkGenerator generator, BiomeProvider provider, long seed,

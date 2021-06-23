@@ -18,26 +18,23 @@ import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.ConfigBuilder;
 import com.silverminer.shrines.config.ConfigBuilder.Type;
 import com.silverminer.shrines.structures.AbstractStructure;
-import com.silverminer.shrines.structures.AbstractStructureStart;
+import com.silverminer.shrines.structures.StructurePools;
 
-import net.minecraft.util.Rotation;
 import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
-import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class HarbourStructure extends AbstractStructure {
+	public static final String NAME = "harbour";
 	protected static final ConfigBuilder HARBOUR_CONFIG = new ConfigBuilder("Harbour", 651398043, Type.HARBOUR)
 			.setDistance(50).setSeparation(8)
 			.setBiomes(Biome.Category.PLAINS, Biome.Category.FOREST, Biome.Category.TAIGA, Biome.Category.SAVANNA,
@@ -46,12 +43,18 @@ public class HarbourStructure extends AbstractStructure {
 			.setNeedsGround(false);
 
 	public HarbourStructure(Codec<VillageConfig> codec) {
-		super(codec, 3, "harbour", HARBOUR_CONFIG);
+		super(codec, NAME, HARBOUR_CONFIG);
 	}
 
 	@Override
 	public GenerationStage.Decoration step() {
 		return GenerationStage.Decoration.SURFACE_STRUCTURES;
+	}
+
+
+	@Override
+	public JigsawPattern getPools() {
+		return StructurePools.BALLOON;
 	}
 
 	protected boolean isSurfaceFlatExtended(@Nonnull ChunkGenerator generator, int chunkX, int chunkZ) {
@@ -78,24 +81,5 @@ public class HarbourStructure extends AbstractStructure {
 			return this.isSurfaceFlatExtended(generator, chunkX, chunkZ);
 
 		return false;
-	}
-
-	public static class Start extends AbstractStructureStart<NoFeatureConfig> {
-
-		public Start(Structure<NoFeatureConfig> structure, int chunkX, int chunkZ, MutableBoundingBox boundingbox,
-				int p_i225806_5_, long seed) {
-			super(structure, chunkX, chunkZ, boundingbox, p_i225806_5_, seed);
-		}
-
-		@Override
-		public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
-				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
-			int i = chunkX * 16;
-			int j = chunkZ * 16;
-			BlockPos blockpos = new BlockPos(i, -1, j);
-			Rotation rotation = Rotation.getRandom(this.random);
-			HarbourPieces.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
-			this.calculateBoundingBox();
-		}
 	}
 }
