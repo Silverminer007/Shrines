@@ -27,7 +27,6 @@ import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.Generator;
-import com.silverminer.shrines.structures.StructurePieceTypes;
 import com.silverminer.shrines.structures.StructurePools;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
@@ -35,13 +34,9 @@ import com.silverminer.shrines.utils.saves.BoundSaveData;
 
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
@@ -64,7 +59,6 @@ public class CommonEvents {
 			event.enqueueWork(() -> {
 				LOGGER.debug("Registering structure pieces and structures to dimensions");
 				Generator.setupWorldGen();
-				StructurePieceTypes.regsiter();
 				ArgumentTypes.register("biome_category", BiomeCategoryCSArgumentType.class,
 						new BiomeCategoryCSArgumentType.Serializer());
 				ArgumentTypes.register("biome", BiomeCSArgumentType.class, new BiomeCSArgumentType.Serializer());
@@ -90,9 +84,7 @@ public class CommonEvents {
 				for (AbstractStructure struct : NewStructureInit.STRUCTURES.values()) {
 					if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
 							struct.getConfig().getBlacklist(), event.getName(), event.getCategory())) {
-						StructureFeature<VillageConfig, ? extends Structure<VillageConfig>>  temp = struct.configured(new VillageConfig(() -> struct.getPools(), 7));
-						WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, struct.getRegistryName().toString(), temp);
-						event.getGeneration().addStructureStart(temp);
+						event.getGeneration().addStructureStart(struct.getConfigured());
 					}
 				}
 			}
