@@ -27,7 +27,8 @@ import net.minecraft.world.gen.feature.template.ProcessorLists;
  */
 public class StructurePools {
 	public static final JigsawPattern BALLOON = JigsawPatternRegistry.register(new JigsawPattern(
-			new ResourceLocation(ShrinesMod.MODID, "balloon"), new ResourceLocation("empty"), ImmutableList.of(
+			new ResourceLocation(ShrinesMod.MODID, "balloon"), new ResourceLocation("empty"),
+			ImmutableList.of(
 					Pair.of(JigsawPiece.legacy(new ResourceLocation(ShrinesMod.MODID, "balloon/balloon_1").toString(),
 							ProcessorLists.EMPTY), 1),
 					Pair.of(JigsawPiece.legacy(new ResourceLocation(ShrinesMod.MODID, "balloon/balloon_2").toString(),
@@ -195,7 +196,15 @@ public class StructurePools {
 									Pair.of(JigsawPiece.legacy(
 											new ResourceLocation(ShrinesMod.MODID, "player_house/player_house_v2_1")
 													.toString(),
-											ProcessorLists.EMPTY), 3)),
+											ProcessorLists.EMPTY), 1),
+									Pair.of(JigsawPiece.legacy(
+											new ResourceLocation(ShrinesMod.MODID, "player_house/player_house_v2_2")
+													.toString(),
+											ProcessorLists.EMPTY), 1),
+									Pair.of(JigsawPiece.legacy(
+											new ResourceLocation(ShrinesMod.MODID, "player_house/player_house_v2_3")
+													.toString(),
+											ProcessorLists.EMPTY), 1)),
 							JigsawPattern.PlacementBehaviour.RIGID));
 
 	public static final JigsawPattern INFESTED_PRISON = JigsawPatternRegistry.register(
@@ -227,5 +236,13 @@ public class StructurePools {
 			JigsawPattern.PlacementBehaviour.RIGID));
 
 	public static void load() {
+		// Player house table
+		JigsawPatternRegistry
+				.register(new JigsawPattern(new ResourceLocation(ShrinesMod.MODID, "player_house_table"),
+						new ResourceLocation("empty"),
+						ImmutableList.of(Pair.of(JigsawPiece.legacy(
+								new ResourceLocation(ShrinesMod.MODID, "player_house/table").toString(),
+								ProcessorLists.EMPTY), 1)),
+						JigsawPattern.PlacementBehaviour.RIGID));
 	}
 }

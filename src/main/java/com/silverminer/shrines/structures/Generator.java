@@ -32,6 +32,8 @@ public class Generator {
 	public static void setupWorldGen() {
 		LOGGER.debug("Generating {} Structures", NewStructureInit.STRUCTURES.size());
 		for (AbstractStructure structure : NewStructureInit.STRUCTURES.values()) {
+			WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,
+					structure.getRegistryName().toString(), structure.getConfigured());
 			try {
 				for (String dim : structure.getDimensions()) {
 					register(RegistryKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, new ResourceLocation(dim)),
@@ -49,7 +51,8 @@ public class Generator {
 			StructureSeparationSettings separationSettings) {
 		DimensionSettings DS = WorldGenRegistries.NOISE_GENERATOR_SETTINGS.get(dimension);
 		if (DS == null) {
-			LOGGER.error("You've added an non existing dimension to shrines config. This dimension will be ignored", dimension);
+			LOGGER.error("You've added an non existing dimension to shrines config. This dimension will be ignored",
+					dimension);
 			return;
 		}
 		DimensionStructuresSettings structuresSettings = DS.structureSettings();

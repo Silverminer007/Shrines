@@ -29,10 +29,12 @@ import com.silverminer.shrines.init.NewStructureInit;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
 import net.minecraft.world.gen.feature.structure.JigsawStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -42,6 +44,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public abstract class AbstractStructure extends JigsawStructure {
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractStructure.class);
+	@Nullable
+	private StructureFeature<VillageConfig, ? extends Structure<VillageConfig>> configured = null;
 
 	public final String name;
 	public IStructureConfig structureConfig;
@@ -51,7 +55,7 @@ public abstract class AbstractStructure extends JigsawStructure {
 	}
 
 	public AbstractStructure(Codec<VillageConfig> codec, int startY, String nameIn, IStructureConfig config) {
-		super(codec, startY, false, true);
+		super(codec, startY, true, true);
 		this.name = nameIn;
 		this.structureConfig = config;
 		this.setRegistryName(this.getFeatureName());
@@ -138,5 +142,21 @@ public abstract class AbstractStructure extends JigsawStructure {
 			}
 		}
 		return true;
+	}
+
+	public StructureFeature<VillageConfig, ? extends Structure<VillageConfig>> getConfigured() {
+		if(this.configured == null) {
+			this.configured = this.configured(new VillageConfig(() -> this.getPools(), 7));
+		}
+		return this.configured;
+	}
+
+	public static class ShrinesStructureStart extends Start{
+
+		public ShrinesStructureStart(JigsawStructure p_i241979_1_, int p_i241979_2_, int p_i241979_3_,
+				MutableBoundingBox p_i241979_4_, int p_i241979_5_, long p_i241979_6_) {
+			super(p_i241979_1_, p_i241979_2_, p_i241979_3_, p_i241979_4_, p_i241979_5_, p_i241979_6_);
+		}
+		
 	}
 }
