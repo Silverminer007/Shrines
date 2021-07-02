@@ -260,8 +260,7 @@ public class CustomStructureData implements IStructureConfig {
 			try {
 				template = templatemanager.getOrCreate(location);
 			} catch (ResourceLocationException resourcelocationexception) {
-				if (Config.SETTINGS.ADVANCED_LOGGING.get())
-					LOGGER.error(resourcelocationexception);
+				LOGGER.error(resourcelocationexception);
 				return false;
 			}
 
@@ -272,8 +271,7 @@ public class CustomStructureData implements IStructureConfig {
 					return false;
 				}
 			} catch (ResourceLocationException resourcelocationexception) {
-				if (Config.SETTINGS.ADVANCED_LOGGING.get())
-					LOGGER.error(resourcelocationexception);
+				LOGGER.error(resourcelocationexception);
 				return false;
 			}
 		}
@@ -404,8 +402,7 @@ public class CustomStructureData implements IStructureConfig {
 			}
 			return categories;
 		} catch (Throwable t) {
-			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.warn("Failed to parse [{}] to Categories", s);
+			LOGGER.warn("Failed to parse [{}] to Categories", s);
 			return null;
 		}
 	}

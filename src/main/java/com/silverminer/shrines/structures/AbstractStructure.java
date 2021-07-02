@@ -28,22 +28,15 @@ import com.silverminer.shrines.init.NewStructureInit;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
-import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import net.minecraft.world.gen.feature.structure.JigsawStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
-import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -53,9 +46,6 @@ public abstract class AbstractStructure extends JigsawStructure {
 	private StructureFeature<VillageConfig, ? extends Structure<VillageConfig>> configured = null;
 
 	public final String name;
-	protected final int startYN;
-	protected final boolean doExpansionHackN;
-	protected final boolean projectStartToHeightmapN;
 	public IStructureConfig structureConfig;
 
 	public AbstractStructure(Codec<VillageConfig> codec, String nameIn, IStructureConfig config) {
@@ -64,9 +54,6 @@ public abstract class AbstractStructure extends JigsawStructure {
 
 	public AbstractStructure(Codec<VillageConfig> codec, int startY, String nameIn, IStructureConfig config) {
 		super(codec, startY, true, true);
-		this.startYN = startY;
-		this.doExpansionHackN = true;
-		this.projectStartToHeightmapN = true;
 		this.name = nameIn;
 		this.structureConfig = config;
 		this.setRegistryName(this.getFeatureName());
@@ -110,7 +97,7 @@ public abstract class AbstractStructure extends JigsawStructure {
 	public void buildConfig(final ForgeConfigSpec.Builder BUILDER) {
 		if (this.structureConfig instanceof ConfigBuilder) {
 			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.debug("Building Config");
+				LOGGER.info("Building Config");
 			this.structureConfig = ((ConfigBuilder) this.structureConfig).build(BUILDER);
 		}
 	}
@@ -173,37 +160,5 @@ public abstract class AbstractStructure extends JigsawStructure {
 			this.configured = this.configured(new VillageConfig(() -> this.getPools(), 7));
 		}
 		return this.configured;
-	}
-
-	/*public Structure.IStartFactory<VillageConfig> getStartFactory() {
-		return (structure, chunkX, chunkZ, mbb, references, seed) -> {
-			return new AbstractStructure.ShrinesStructureStart(this, chunkX, chunkZ, mbb, references, seed);
-		};
-	}*/
-
-	public static class ShrinesStructureStart extends Start {
-		protected final AbstractStructure structure;
-
-		public ShrinesStructureStart(AbstractStructure structure, int chunkX, int chunkZ, MutableBoundingBox mbb,
-				int references, long seed) {
-			super(structure, chunkX, chunkZ, mbb, references, seed);
-			this.structure = structure;
-		}
-
-		public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
-				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, VillageConfig config) {
-			boolean nether = false;//biome.getBiomeCategory().equals(Biome.Category.NETHER);
-			int y;
-			if (nether) {
-				y = 96;
-			} else
-				y = this.structure.startYN;
-			BlockPos blockpos = new BlockPos(chunkX * 16, y, chunkZ * 16);
-			JigsawPatternRegistry.bootstrap();
-			JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
-					blockpos, this.pieces, this.random, nether ? this.structure.doExpansionHackN : false,
-					nether ? this.structure.projectStartToHeightmapN : false);
-			this.calculateBoundingBox();
-		}
 	}
 }

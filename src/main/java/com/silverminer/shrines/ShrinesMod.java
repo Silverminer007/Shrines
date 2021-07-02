@@ -36,8 +36,7 @@ public abstract class ShrinesMod {
 	 * TODO 2.0.0 Move custom structures to jigsaw (add GUI to define pools and assigne a pool to an structure)
 	 * TODO (*) 2.0.0 Structures generation height fix -> Nether structures
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
-	 * TODO (*) 2.0.0 #8 & #13
-	 * TODO 2.0.0 Add Traderhouse by "MEME Man77" -> Add loot tables to the barrels
+	 * TODO (*) 2.0.0 #8(Use a processor?)  & #13
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * TODO 3.0.1 Preview for load
