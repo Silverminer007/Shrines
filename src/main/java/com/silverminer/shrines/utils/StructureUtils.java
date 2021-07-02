@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.structures.AbstractStructure;
@@ -72,7 +73,8 @@ public class StructureUtils {
 				min = i;
 			}
 		}
-		LOGGER.info("Min {}, Max {}, Count {}!", min, max, heigths.size());
+		if (Config.SETTINGS.ADVANCED_LOGGING.get())
+			LOGGER.info("Min {}, Max {}, Count {}!", min, max, heigths.size());
 		return Math.min(getAverage(heigths) + 1, getMinHeight(position, cG, size) + 2);
 	}
 
@@ -161,8 +163,8 @@ public class StructureUtils {
 	}
 
 	public static IStructureConfig getConfigOf(String structure, boolean onServer) {
-		for(AbstractStructure st : NewStructureInit.STRUCTURES.values()) {
-			if(st.getConfig().getName().equals(structure)) {
+		for (AbstractStructure st : NewStructureInit.STRUCTURES.values()) {
+			if (st.getConfig().getName().equals(structure)) {
 				return st.getConfig();
 			}
 		}

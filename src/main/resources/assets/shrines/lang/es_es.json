@@ -125,6 +125,10 @@
 	"config.shrines.blacklist.tooltip": "Biomas en los que no se pueden generar Estructuras de este mod. Estructuras personalizadas incluidas",
 	"config.shrines.distance_factor.tooltip": "Esto es multilateral en la distancia de cada estructura. Permite cambiar la distancia de aparici\u00f3n de cada estructura a la vez",
 	"config.shrines.seperation_factor.tooltip": "Esto es multilateral en la separaci\u00f3n de cada estructura. Permite cambiar la separación del desove de cada estructura a la vez",
+	"config.shrines.structure_min_distance": "distancia m\u00ednima de las estructuras",
+	"config.shrines.structure_min_distance.tooltip": "La distancia m\u00ednima de las estructuras es la menor distancia posible entre dos estructuras (de este mod)",
+	"config.shrines.advanced_logging": "registro avanzado",
+	"config.shrines.advanced_logging.tooltip": "Utilizar el registro avanzado. Ayuda m\u00e0s a encontrar los problemas. Por favor, habilita esto antes de reportar un error",
 
 	"_comment_general": "",
 	"shrines.general.cooming_soon": "Cooming soon!",

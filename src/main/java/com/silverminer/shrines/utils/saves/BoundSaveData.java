@@ -14,6 +14,7 @@ package com.silverminer.shrines.utils.saves;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.structures.custom.helper.ResourceData;
 import com.silverminer.shrines.utils.custom_structures.Utils;
@@ -79,7 +80,8 @@ public class BoundSaveData extends WorldSavedData {
 	public static BoundSaveData get(ServerWorld world) {
 		if (world == null)
 			return null;
-		LOG.debug("BoundSaveData read");
+		if (Config.SETTINGS.ADVANCED_LOGGING.get())
+			LOG.debug("BoundSaveData read");
 		DimensionSavedDataManager storage = world.getDataStorage();
 
 		return storage.computeIfAbsent(BoundSaveData::new, DATA_NAME);

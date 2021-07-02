@@ -19,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.client.gui.config.resource.AddResourceScreen;
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 
@@ -56,7 +57,9 @@ public class Handles {
 				@Override
 				public void run() {
 					Utils.setStructures(datas, false);
-					LOGGER.info(Utils.getStructures(false).stream().map(st -> st.getName()).collect(Collectors.toList()));
+					if (Config.SETTINGS.ADVANCED_LOGGING.get())
+						LOGGER.info(Utils.getStructures(false).stream().map(st -> st.getName())
+								.collect(Collectors.toList()));
 				}
 			};
 		}
@@ -76,7 +79,8 @@ public class Handles {
 				@Override
 				public void run() {
 					Utils.setStructures(datas, true);
-					LOGGER.info("Recived structures from client {}", datas);
+					if (Config.SETTINGS.ADVANCED_LOGGING.get())
+						LOGGER.info("Recived structures from client {}", datas);
 				}
 			};
 		}
@@ -95,19 +99,18 @@ public class Handles {
 
 				@Override
 				public void run() {
-					LOGGER.info("Save running");
 					try {
 						MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
 						ServerWorld world = server.getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, dimension));
 						CustomStructureData data = Utils.getData(structure, true);
-						if(data == null) {
-							throw new RuntimeException("Shrines custom structures run out of sync. Tried to save resources to an non existant structure");
+						if (data == null) {
+							throw new RuntimeException(
+									"Shrines custom structures run out of sync. Tried to save resources to an non existant structure");
 						}
 						if (data.savePieces(world, server, author, entities)) {
 							data.addBounds();
 						}
 						Utils.replace(data, true);
-						LOGGER.info("Save Done");
 						ShrinesPacketHandler.sendToServer(new SSaveCSDonePacket());
 					} catch (Throwable e) {
 						e.printStackTrace();

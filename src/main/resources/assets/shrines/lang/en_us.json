@@ -126,6 +126,10 @@
 	"config.shrines.blacklist.tooltip": "Biomes where no Structures of this mod can generate in. Custom structures inclusive",
 	"config.shrines.distance_factor.tooltip": "This is multilied on the distance of every structure. Allows to change spawn distance of every structure at once",
 	"config.shrines.seperation_factor.tooltip": "This is multilied on the seperation of every structure. Allows to change spawn seperation of every structure at once",
+	"config.shrines.structure_min_distance": "Structures min. distance",
+	"config.shrines.structure_min_distance.tooltip": "The structures min. distance is the smallest possible distance between two structures (of this mod)",
+	"config.shrines.advanced_logging": "Advanced Logging",
+	"config.shrines.advanced_logging.tooltip": "Use advanced logging. Helps more with finding issues. Please enable this before reporting a bug",
 
 	"_comment_general": "",
 	"shrines.general.cooming_soon": "Cooming soon!",
