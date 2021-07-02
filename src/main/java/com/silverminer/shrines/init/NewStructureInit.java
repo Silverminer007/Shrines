@@ -85,7 +85,7 @@ public class NewStructureInit {
 
 	public static void initCustomStructures() {
 		if (Config.SETTINGS.ADVANCED_LOGGING.get())
-			LOGGER.debug("Registering custom structures");
+			LOGGER.info("Registering custom structures");
 		for (CustomStructureData csd : Utils.getStructures(true)) {
 			String name = csd.getName().toLowerCase(Locale.ROOT);
 			CustomStructure cS = new CustomStructure(VillageConfig.CODEC, name, csd);

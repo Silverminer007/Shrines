@@ -200,7 +200,7 @@ public class Utils {
 			for (CustomStructureData data : Utils.customsStructs) {
 				String key = data.getName();
 				if (Config.SETTINGS.ADVANCED_LOGGING.get())
-					LOGGER.debug("Writing config options of custom structure with name {}", key);
+					LOGGER.info("Writing config options of custom structure with name {}", key);
 				fw.write(key + "\n");
 				File st = new File(path, "shrines");
 				st = new File(st, key);

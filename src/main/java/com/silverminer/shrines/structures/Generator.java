@@ -32,7 +32,7 @@ public class Generator {
 
 	public static void setupWorldGen() {
 		if (Config.SETTINGS.ADVANCED_LOGGING.get())
-			LOGGER.debug("Generating {} Structures", NewStructureInit.STRUCTURES.size());
+			LOGGER.info("Generating {} Structures", NewStructureInit.STRUCTURES.size());
 		for (AbstractStructure structure : NewStructureInit.STRUCTURES.values()) {
 			WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,
 					structure.getRegistryName().toString(), structure.getConfigured());

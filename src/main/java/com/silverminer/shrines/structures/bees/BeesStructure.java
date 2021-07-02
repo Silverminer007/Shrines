@@ -27,7 +27,7 @@ public class BeesStructure extends AbstractStructure {
 			.setDistance(70).setSeparation(12).setUseRandomVarianting(false);
 
 	public BeesStructure(Codec<VillageConfig> codec) {
-		super(codec, NAME, BEES_CONFIG);
+		super(codec, -1, NAME, BEES_CONFIG);
 	}
 
 	@Override

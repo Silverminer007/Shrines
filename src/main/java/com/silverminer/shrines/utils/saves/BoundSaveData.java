@@ -81,7 +81,7 @@ public class BoundSaveData extends WorldSavedData {
 		if (world == null)
 			return null;
 		if (Config.SETTINGS.ADVANCED_LOGGING.get())
-			LOG.debug("BoundSaveData read");
+			LOG.info("BoundSaveData read");
 		DimensionSavedDataManager storage = world.getDataStorage();
 
 		return storage.computeIfAbsent(BoundSaveData::new, DATA_NAME);

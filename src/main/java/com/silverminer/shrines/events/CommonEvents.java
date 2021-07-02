@@ -58,7 +58,7 @@ public class CommonEvents {
 		public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
 			event.enqueueWork(() -> {
 				if (Config.SETTINGS.ADVANCED_LOGGING.get())
-					LOGGER.debug("Registering structure pieces and structures to dimensions");
+					LOGGER.info("Registering structure pieces and structures to dimensions");
 				Generator.setupWorldGen();
 				ArgumentTypes.register("biome_category", BiomeCategoryCSArgumentType.class,
 						new BiomeCategoryCSArgumentType.Serializer());
@@ -81,7 +81,7 @@ public class CommonEvents {
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
 			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.debug("Loading Biome and registering structures. Biome: {}", event.getName());
+				LOGGER.info("Loading Biome and registering structures. Biome: {}", event.getName());
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				for (AbstractStructure struct : NewStructureInit.STRUCTURES.values()) {
 					if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
@@ -115,7 +115,7 @@ public class CommonEvents {
 		@SubscribeEvent
 		public static void registerCommands(RegisterCommandsEvent event) {
 			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.debug("Registering shrines commands");
+				LOGGER.info("Registering shrines commands");
 			ShrinesCommand.register(event.getDispatcher());
 		}
 
