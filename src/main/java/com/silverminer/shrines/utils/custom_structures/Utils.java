@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.network.CCustomStructuresPacket;
 import com.silverminer.shrines.utils.network.IPacket;
@@ -99,7 +100,7 @@ public class Utils {
 	}
 
 	public static boolean remove(CustomStructureData structure, boolean delete, boolean server) {
-		if(structure == null) {
+		if (structure == null) {
 			return false;
 		}
 		if (delete)
@@ -157,9 +158,11 @@ public class Utils {
 				}
 				csd.fromString(data);
 				Utils.customsStructs.add(csd);
-				LOGGER.info("Read config of [{}] from file: {}", n, csd.toString());
+				if (Config.SETTINGS.ADVANCED_LOGGING.get())
+					LOGGER.info("Read config of [{}] from file: {}", n, csd.toString());
 			}
-			LOGGER.info("Read structures from: {}", f);
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.info("Read structures from: {}", f);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -172,7 +175,8 @@ public class Utils {
 		}
 		try {
 			path = new File(path, "shrines-saves").getCanonicalFile();
-			LOGGER.info("Saving config options on path: {}", path);
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.info("Saving config options on path: {}", path);
 			if (!path.exists())
 				path.mkdirs();
 			File structures = new File(path, "structures.txt");
@@ -189,12 +193,14 @@ public class Utils {
 					f.delete();
 				}
 				st.delete();
-				LOGGER.info("Deleted {} from disk", st);
+				if (Config.SETTINGS.ADVANCED_LOGGING.get())
+					LOGGER.info("Deleted {} from disk", st);
 			}
 			FileWriter fw = new FileWriter(structures);
 			for (CustomStructureData data : Utils.customsStructs) {
 				String key = data.getName();
-				LOGGER.debug("Writing config options of custom structure with name {}", key);
+				if (Config.SETTINGS.ADVANCED_LOGGING.get())
+					LOGGER.debug("Writing config options of custom structure with name {}", key);
 				fw.write(key + "\n");
 				File st = new File(path, "shrines");
 				st = new File(st, key);
@@ -250,7 +256,7 @@ public class Utils {
 	}
 
 	public static void onChanged(boolean server) {
-		if(!send) {
+		if (!send) {
 			return;
 		}
 		if (server) {
@@ -263,6 +269,7 @@ public class Utils {
 	public static void setSend(boolean send) {
 		Utils.send = send;
 	}
+
 	private static void sendToClients() {
 		ShrinesPacketHandler.sendToAll(toPacket(false));
 	}

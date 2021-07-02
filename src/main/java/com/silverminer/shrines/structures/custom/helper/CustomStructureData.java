@@ -28,6 +28,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.config.IConfigOption;
 import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.utils.custom_structures.ModTemplateManager;
@@ -259,7 +260,8 @@ public class CustomStructureData implements IStructureConfig {
 			try {
 				template = templatemanager.getOrCreate(location);
 			} catch (ResourceLocationException resourcelocationexception) {
-				LOGGER.error(resourcelocationexception);
+				if (Config.SETTINGS.ADVANCED_LOGGING.get())
+					LOGGER.error(resourcelocationexception);
 				return false;
 			}
 
@@ -270,7 +272,8 @@ public class CustomStructureData implements IStructureConfig {
 					return false;
 				}
 			} catch (ResourceLocationException resourcelocationexception) {
-				LOGGER.error(resourcelocationexception);
+				if (Config.SETTINGS.ADVANCED_LOGGING.get())
+					LOGGER.error(resourcelocationexception);
 				return false;
 			}
 		}
@@ -401,7 +404,8 @@ public class CustomStructureData implements IStructureConfig {
 			}
 			return categories;
 		} catch (Throwable t) {
-			LOGGER.warn("Failed to parse [{}] to Categories", s);
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.warn("Failed to parse [{}] to Categories", s);
 			return null;
 		}
 	}
@@ -437,7 +441,8 @@ public class CustomStructureData implements IStructureConfig {
 		List<String> cats = Lists.newArrayList();
 		String[] parts = s.split(",");
 		if (!(parts.length % 4 == 0)) {
-			LOGGER.info("Something went wrong reading pieces: Comma count didn't match");
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.info("Something went wrong reading pieces: Comma count didn't match");
 			return null;
 		}
 		for (int i = 0; i < parts.length / 4; i++) {

@@ -11,6 +11,7 @@
  */
 package com.silverminer.shrines.structures;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -18,7 +19,6 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.Config;
@@ -28,17 +28,22 @@ import com.silverminer.shrines.init.NewStructureInit;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
+import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
+import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import net.minecraft.world.gen.feature.structure.JigsawStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
+import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -48,6 +53,9 @@ public abstract class AbstractStructure extends JigsawStructure {
 	private StructureFeature<VillageConfig, ? extends Structure<VillageConfig>> configured = null;
 
 	public final String name;
+	protected final int startYN;
+	protected final boolean doExpansionHackN;
+	protected final boolean projectStartToHeightmapN;
 	public IStructureConfig structureConfig;
 
 	public AbstractStructure(Codec<VillageConfig> codec, String nameIn, IStructureConfig config) {
@@ -56,6 +64,9 @@ public abstract class AbstractStructure extends JigsawStructure {
 
 	public AbstractStructure(Codec<VillageConfig> codec, int startY, String nameIn, IStructureConfig config) {
 		super(codec, startY, true, true);
+		this.startYN = startY;
+		this.doExpansionHackN = true;
+		this.projectStartToHeightmapN = true;
 		this.name = nameIn;
 		this.structureConfig = config;
 		this.setRegistryName(this.getFeatureName());
@@ -98,7 +109,8 @@ public abstract class AbstractStructure extends JigsawStructure {
 
 	public void buildConfig(final ForgeConfigSpec.Builder BUILDER) {
 		if (this.structureConfig instanceof ConfigBuilder) {
-			LOGGER.info("Building Config");
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.debug("Building Config");
 			this.structureConfig = ((ConfigBuilder) this.structureConfig).build(BUILDER);
 		}
 	}
@@ -106,12 +118,6 @@ public abstract class AbstractStructure extends JigsawStructure {
 	@Override
 	protected boolean isFeatureChunk(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
 			int chunkX, int chunkZ, Biome biome, ChunkPos pos, VillageConfig config) {
-		return this.validateGeneration(generator, provider, seed, rand, chunkX, chunkZ, biome, pos, config);
-	}
-
-	public boolean validateGeneration(ChunkGenerator generator, BiomeProvider provider, long seed,
-			SharedSeedRandom rand, int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config,
-			@Nullable Structure<?>... exeptStructure) {
 
 		// Check the entire size of the structure to see if it's all a viable biome:
 		for (Biome biome1 : provider.getBiomesWithin(chunkX * 16 + 9, generator.getSeaLevel(), chunkZ * 16 + 9, 50)) {
@@ -121,42 +127,83 @@ public abstract class AbstractStructure extends JigsawStructure {
 		}
 
 		rand.setLargeFeatureSeed(seed, chunkX, chunkZ);
+		List<Structure<?>> structures = new ArrayList<>();
+
+		for (AbstractStructure iStructure : NewStructureInit.STRUCTURES.values()) {
+			Structure<?> structure = iStructure.getStructure();
+
+			if (structure.step() == this.step()) {
+				structures.add(structure);
+			}
+		}
+
+		structures.add(Structure.VILLAGE);
+		if (!this.checkForOtherStructures(this, generator, seed, rand, chunkX, chunkZ, structures)) {
+			return false;
+		}
 		return rand.nextDouble() < getSpawnChance();
 	}
 
-	protected boolean checkForOtherStructures(ChunkGenerator generator, BiomeProvider provider, long seed,
-			SharedSeedRandom rand, int chunkX, int chunkZ, Biome biome, ChunkPos pos, IFeatureConfig config,
-			@Nullable Structure<?>... exeptStructure) {
-		for (AbstractStructure s : NewStructureInit.STRUCTURES.values()) {
-			if (exeptStructure != null)
-				for (Structure<?> es : exeptStructure) {
-					if (es.equals(s))
-						continue;
+	protected boolean checkForOtherStructures(Structure<?> structure, ChunkGenerator generator, long seed,
+			SharedSeedRandom rand, int chunkX, int chunkZ, List<Structure<?>> structures) {
+		for (Structure<?> structure1 : structures) {
+			StructureSeparationSettings separationSettings = generator.getSettings().getConfig(structure1);
+
+			if (separationSettings == null || structure == structure1) {
+				continue;
+			}
+
+			int distance = Config.SETTINGS.STRUCTURE_MIN_DISTANCE.get();
+			for (int x = chunkX - distance; x <= chunkX + distance; x++) {
+				for (int z = chunkZ - distance; z <= chunkZ + distance; z++) {
+					ChunkPos structurePos = structure1.getPotentialFeatureChunk(separationSettings, seed, rand, x, z);
+
+					if (x == structurePos.x && z == structurePos.z) {
+						return false;
+					}
 				}
-			if (new ChunkPos(chunkX, chunkZ).equals(s.getPotentialFeatureChunk(
-					new StructureSeparationSettings(s.getDistance(), s.getSeparation(), s.getSeedModifier()), seed,
-					rand, chunkX, chunkZ))
-					&& s.validateGeneration(generator, provider, seed, rand, chunkX, chunkZ, biome, pos, config,
-							Lists.asList(s, exeptStructure).toArray(new Structure<?>[exeptStructure.length]))) {
-				return false;
 			}
 		}
+
 		return true;
 	}
 
 	public StructureFeature<VillageConfig, ? extends Structure<VillageConfig>> getConfigured() {
-		if(this.configured == null) {
+		if (this.configured == null) {
 			this.configured = this.configured(new VillageConfig(() -> this.getPools(), 7));
 		}
 		return this.configured;
 	}
 
-	public static class ShrinesStructureStart extends Start{
+	/*public Structure.IStartFactory<VillageConfig> getStartFactory() {
+		return (structure, chunkX, chunkZ, mbb, references, seed) -> {
+			return new AbstractStructure.ShrinesStructureStart(this, chunkX, chunkZ, mbb, references, seed);
+		};
+	}*/
 
-		public ShrinesStructureStart(JigsawStructure p_i241979_1_, int p_i241979_2_, int p_i241979_3_,
-				MutableBoundingBox p_i241979_4_, int p_i241979_5_, long p_i241979_6_) {
-			super(p_i241979_1_, p_i241979_2_, p_i241979_3_, p_i241979_4_, p_i241979_5_, p_i241979_6_);
+	public static class ShrinesStructureStart extends Start {
+		protected final AbstractStructure structure;
+
+		public ShrinesStructureStart(AbstractStructure structure, int chunkX, int chunkZ, MutableBoundingBox mbb,
+				int references, long seed) {
+			super(structure, chunkX, chunkZ, mbb, references, seed);
+			this.structure = structure;
 		}
-		
+
+		public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
+				TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, VillageConfig config) {
+			boolean nether = false;//biome.getBiomeCategory().equals(Biome.Category.NETHER);
+			int y;
+			if (nether) {
+				y = 96;
+			} else
+				y = this.structure.startYN;
+			BlockPos blockpos = new BlockPos(chunkX * 16, y, chunkZ * 16);
+			JigsawPatternRegistry.bootstrap();
+			JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
+					blockpos, this.pieces, this.random, nether ? this.structure.doExpansionHackN : false,
+					nether ? this.structure.projectStartToHeightmapN : false);
+			this.calculateBoundingBox();
+		}
 	}
 }

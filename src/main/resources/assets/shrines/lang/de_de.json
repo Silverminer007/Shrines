@@ -125,6 +125,10 @@
 	"config.shrines.blacklist.tooltip": "Biome in denen kein Bauwerk diese Mod auftauchen kann. Eigene Bauwerke eingeschlossen",
 	"config.shrines.distance_factor.tooltip": "Die Distanz der einzelnen Bauwerk wird mit diesem wert mutipliziert. Das erlaubt es die entfernung aller Bauwerke mit einem Mal zu regulieren",
 	"config.shrines.seperation_factor.tooltip": "Die Entfernung der einzelnen Bauwerk wird mit diesem wert mutipliziert. Das erlaubt es die entfernung aller Bauwerke mit einem Mal zu regulieren",
+	"config.shrines.structure_min_distance": "Mindest Bauwerks distance",
+	"config.shrines.structure_min_distance.tooltip": "Die kleinstm\u00f6glich Distanz die zwischen zwei Bauwerken dieser Mod auftreten darf",
+	"config.shrines.advanced_logging": "Erweiterte Protokollierung",
+	"config.shrines.advanced_logging.tooltip": "Die erweiterte Protokollierung erleichtert es Fehler zu finden. Bitte aktivieren sie dies bevor sie einen Fehler melden",
 
 	"_comment_general": "",
 	"shrines.general.cooming_soon": "Kommt bald!",

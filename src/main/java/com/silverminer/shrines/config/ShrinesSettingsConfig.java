@@ -25,6 +25,8 @@ public class ShrinesSettingsConfig {
 
 	public final ForgeConfigSpec.DoubleValue DISTANCE_FACTOR;
 	public final ForgeConfigSpec.DoubleValue SEPERATION_FACTOR;
+	public final ForgeConfigSpec.IntValue STRUCTURE_MIN_DISTANCE;
+	public final ForgeConfigSpec.BooleanValue ADVANCED_LOGGING;
 
 	public ShrinesSettingsConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		BLACKLISTED_BIOMES = SERVER_BUILDER
@@ -39,6 +41,13 @@ public class ShrinesSettingsConfig {
 				"Seperation Factor (Default 1.0) Is multiplied on the structures seperation. Allows changing seperation of every structure at once")
 				.translation("config.shrines.seperation_factor").worldRestart()
 				.defineInRange("structures.seperation_factor", 1.0, 0.0, 100.0);
+		STRUCTURE_MIN_DISTANCE = SERVER_BUILDER.comment(
+				"The structures min. distance is the smallest possible distance between two structures (of this mod)")
+				.translation("config.shrines.structure_min_distance")
+				.defineInRange("structures.structures_min_distance", 5, 1, 100);
+		ADVANCED_LOGGING = SERVER_BUILDER.comment(
+				"Use advanced logging. Gives more help by finding issues. Please enable this before reporting a bug")
+				.translation("config.shrines.advanced_logging").define("structures.advanced_logging", true);
 	}
 
 	private static boolean validateBiome(Object o) {

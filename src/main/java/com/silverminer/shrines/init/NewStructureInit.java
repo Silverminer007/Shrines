@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.structures.AbstractStructure;
 import com.silverminer.shrines.structures.abandoned_witch_house.AbandonedWitchHouseStructure;
 import com.silverminer.shrines.structures.balloon.BalloonStructure;
@@ -40,6 +41,7 @@ import com.silverminer.shrines.structures.oriental_sanctuary.OrientalSanctuarySt
 import com.silverminer.shrines.structures.player_house.PlayerhouseStructure;
 import com.silverminer.shrines.structures.prison.InfestedPrisonStructure;
 import com.silverminer.shrines.structures.small_temple.SmallTempleStructure;
+import com.silverminer.shrines.structures.trader_house.TraderHouseStructure;
 import com.silverminer.shrines.structures.water_shrine.WaterShrineStructure;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 
@@ -77,11 +79,13 @@ public class NewStructureInit {
 		STRUCTURES.put(SmallTempleStructure.NAME, new SmallTempleStructure(VillageConfig.CODEC));
 		STRUCTURES.put(WaterShrineStructure.NAME, new WaterShrineStructure(VillageConfig.CODEC));
 		STRUCTURES.put(AbandonedWitchHouseStructure.NAME, new AbandonedWitchHouseStructure(VillageConfig.CODEC));
+		STRUCTURES.put(TraderHouseStructure.NAME, new TraderHouseStructure(VillageConfig.CODEC));
 		initCustomStructures();
 	}
 
 	public static void initCustomStructures() {
-		LOGGER.debug("Registering custom structures");
+		if (Config.SETTINGS.ADVANCED_LOGGING.get())
+			LOGGER.debug("Registering custom structures");
 		for (CustomStructureData csd : Utils.getStructures(true)) {
 			String name = csd.getName().toLowerCase(Locale.ROOT);
 			CustomStructure cS = new CustomStructure(VillageConfig.CODEC, name, csd);

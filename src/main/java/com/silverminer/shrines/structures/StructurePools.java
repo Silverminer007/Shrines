@@ -235,6 +235,13 @@ public class StructurePools {
 					ProcessorLists.EMPTY), 1)),
 			JigsawPattern.PlacementBehaviour.RIGID));
 
+	public static final JigsawPattern TRADER_HOUSE = JigsawPatternRegistry.register(new JigsawPattern(
+			new ResourceLocation(ShrinesMod.MODID, "trader_house"), new ResourceLocation("empty"),
+			ImmutableList.of(Pair.of(JigsawPiece.legacy(
+					new ResourceLocation(ShrinesMod.MODID, "trader_house/trader_house").toString(),
+					ProcessorLists.EMPTY), 1)),
+			JigsawPattern.PlacementBehaviour.RIGID));
+
 	public static void load() {
 		// Player house table
 		JigsawPatternRegistry

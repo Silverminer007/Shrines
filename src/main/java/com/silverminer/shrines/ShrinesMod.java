@@ -34,11 +34,10 @@ public abstract class ShrinesMod {
 	/**
 	 * TODO 2.0.0 Change structure system to jigsaw -> harbour
 	 * TODO 2.0.0 Move custom structures to jigsaw (add GUI to define pools and assigne a pool to an structure)
-	 * TODO 2.0.0 Structures generation height fix -> Nether structures
+	 * TODO (*) 2.0.0 Structures generation height fix -> Nether structures
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
-	 * TODO 2.0.0 #8 & #13
-	 * TODO 2.0.0 Add config option to disable logging (not all but unimportant things)
-	 * TODO 2.0.0 Add structure distance check (#3)
+	 * TODO (*) 2.0.0 #8 & #13
+	 * TODO 2.0.0 Add Traderhouse by "MEME Man77" -> Add loot tables to the barrels
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * TODO 3.0.1 Preview for load
@@ -47,7 +46,7 @@ public abstract class ShrinesMod {
 	 * Releases:
 	 * - 2.0.0 Bug fix update
 	 * - 3.0.0 Mc1.17 Update
-	 * - 3.0.1 Bugfix of 2.0.0 and some new features
+	 * - 3.0.1 Bugfixes of 3.0.0 and some new features
 	 * 
 	 * NOTE: Test command: /execute positioned ~10000 ~ ~ run locate 
 	 * 

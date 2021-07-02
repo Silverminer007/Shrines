@@ -57,7 +57,8 @@ public class CommonEvents {
 		@SubscribeEvent
 		public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
 			event.enqueueWork(() -> {
-				LOGGER.debug("Registering structure pieces and structures to dimensions");
+				if (Config.SETTINGS.ADVANCED_LOGGING.get())
+					LOGGER.debug("Registering structure pieces and structures to dimensions");
 				Generator.setupWorldGen();
 				ArgumentTypes.register("biome_category", BiomeCategoryCSArgumentType.class,
 						new BiomeCategoryCSArgumentType.Serializer());
@@ -79,7 +80,8 @@ public class CommonEvents {
 
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
-			LOGGER.debug("Loading Biome and registering structures. Biome: {}", event.getName());
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.debug("Loading Biome and registering structures. Biome: {}", event.getName());
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				for (AbstractStructure struct : NewStructureInit.STRUCTURES.values()) {
 					if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
@@ -106,12 +108,14 @@ public class CommonEvents {
 		public static void onPlayerJoin(PlayerLoggedInEvent event) {
 			Utils.setSend(true);
 			Utils.onChanged(true);
-			LOGGER.info(Utils.getStructures(true).stream().map(st -> st.getName()).collect(Collectors.toList()));
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.info(Utils.getStructures(true).stream().map(st -> st.getName()).collect(Collectors.toList()));
 		}
 
 		@SubscribeEvent
 		public static void registerCommands(RegisterCommandsEvent event) {
-			LOGGER.debug("Registering shrines commands");
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.debug("Registering shrines commands");
 			ShrinesCommand.register(event.getDispatcher());
 		}
 
@@ -134,7 +138,8 @@ public class CommonEvents {
 
 		@SubscribeEvent
 		public static void onWorldLoad(WorldEvent.Load event) {
-			LOGGER.info("Loading bound data from file");
+			if (Config.SETTINGS.ADVANCED_LOGGING.get())
+				LOGGER.info("Loading bound data from file");
 			IWorld iworld = event.getWorld();
 
 			if (!(iworld instanceof World))
