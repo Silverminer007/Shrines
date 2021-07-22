@@ -13,11 +13,35 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+  }
+}
+apply plugin: 'com.matthewprenger.cursegradle'
+
 version = "${minecraft_version}-${mod_version}"
 group = 'com.silverminer.shrines' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Shrines'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+curseforge {
+  apiKey = "${api_key}"
+  project {
+    id = '418915'
+    changelog = file('updateJSON.json')
+    changelogType = 'text'
+    releaseType = 'alpha'
+    
+  }
+}
+
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
