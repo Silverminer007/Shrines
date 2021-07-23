@@ -65,11 +65,11 @@ public abstract class ShrinesMod {
 	 * 
 	 */
 	public ShrinesMod() {
+		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
+				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 		instance = this;
 		Utils.loadCustomStructures();
 		this.registerConfig();
-		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
-				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 	}
 
 	public static ShrinesMod getInstance() {
