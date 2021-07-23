@@ -56,11 +56,11 @@ public class Utils {
 	public static BoundSaveData boundDataSave;
 
 	public static File getSaveLocation() {
-		return FileUtils.getFile(ShrinesMod.getInstance().getProxy().getBaseDir(), "shrines-saves");
+		return FileUtils.getFile(ShrinesMod.getProxy().getBaseDir(), "shrines-saves");
 	}
 
 	public static File getLocationOf(String structure) {
-		return FileUtils.getFile(ShrinesMod.getInstance().getProxy().getBaseDir(), "shrines-saves", "shrines",
+		return FileUtils.getFile(ShrinesMod.getProxy().getBaseDir(), "shrines-saves", "shrines",
 				structure);
 	}
 
@@ -117,7 +117,7 @@ public class Utils {
 
 	public static void loadCustomStructures() {
 		try {
-			File f = new File(ShrinesMod.getInstance().getProxy().getBaseDir(), "shrines-saves").getCanonicalFile();
+			File f = new File(ShrinesMod.getProxy().getBaseDir(), "shrines-saves").getCanonicalFile();
 			if (!f.exists())
 				f.mkdirs();
 
@@ -169,7 +169,7 @@ public class Utils {
 	}
 
 	public static void saveStructures() {
-		File path = ShrinesMod.getInstance().getProxy().getBaseDir();
+		File path = ShrinesMod.getProxy().getBaseDir();
 		if (Utils.properties != null) {
 			Utils.properties.save();
 		}

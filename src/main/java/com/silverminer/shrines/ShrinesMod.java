@@ -37,14 +37,12 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
  *
  */
 @Mod(value = ShrinesMod.MODID)
-public abstract class ShrinesMod {
+public class ShrinesMod {
 	public static final String MODID = "shrines";
 	public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
 
-	protected static ShrinesMod instance;
-
-	protected IProxy proxy;
-	protected IFunctionProvider functionProvider;
+	protected static IProxy proxy;
+	protected static IFunctionProvider functionProvider;
 
 	/**
 	 * TODO 2.0.0 Change structure system to jigsaw -> harbour
@@ -67,38 +65,33 @@ public abstract class ShrinesMod {
 	public ShrinesMod() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
 				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-		instance = this;
 		Utils.loadCustomStructures();
-		this.registerConfig();
+		registerConfig();
 	}
 
-	public static ShrinesMod getInstance() {
-		return instance;
-	}
-
-	public IProxy getProxy(){
-		if(this.proxy == null) {
-			this.setProxy();
+	public static IProxy getProxy(){
+		if(proxy == null) {
+			setProxy();
 		}
-		return this.proxy;
+		return proxy;
 	}
 
-	public void setProxy() {
-		this.proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ForgeServerProxy::new);
+	public static void setProxy() {
+		proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ForgeServerProxy::new);
 	}
 
-	public IFunctionProvider getFunctionProvider(){
-		if(this.functionProvider == null) {
-			this.setFunctionProvider();
+	public static IFunctionProvider getFunctionProvider(){
+		if(functionProvider == null) {
+			setFunctionProvider();
 		}
-		return this.functionProvider;
+		return functionProvider;
 	}
 
-	public void setFunctionProvider() {
-		this.functionProvider = new ForgeFunctionProvider();
+	public static void setFunctionProvider() {
+		functionProvider = new ForgeFunctionProvider();
 	}
 
-	public void registerConfig() {
+	public static void registerConfig() {
 		// Make sure structures are initialized before config will be loaded
 		NewStructureInit.initStructures();
 		// Config

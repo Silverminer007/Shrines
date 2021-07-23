@@ -45,7 +45,7 @@ public class BiomeCSArgumentType extends ResourceLocationArgument {
 	}
 
 	public static List<String> getValidBiomes(CommandContext<?> ctx, boolean newBiome) {
-		List<String> biomes = ShrinesMod.getInstance().getFunctionProvider().getBiomes();
+		List<String> biomes = ShrinesMod.getFunctionProvider().getBiomes();
 		CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class), false);
 		if (data != null)
 			biomes.removeIf(biome -> newBiome ? data.blacklist.getValue().contains(biome)
