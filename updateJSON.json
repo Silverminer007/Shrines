@@ -22,7 +22,8 @@
 		"1.16.5-1.8.1-Beta2": "Added new Structure: Oriental Sanctuary by Aurelj; Added new option to config: dimensions; Fixed some generation height bugs; Nether Shrine and pyramid now spawn in the nether too (can be disabled); Added config GUI; Custom structures can now be added using GUI; You can assigne resources from the world to your custom structures via GUI",
 		"1.16.5-1.8.1-Beta3": "Added Translations; Added new options to filter structures; Fixed some crashes",
 		"1.16.5-1.8.1-Beta4": "Fixed some crshing bugs",
-		"1.16.5-1.8.1": "Added new structure 'Oriental Sanctuary' builded by Aurelj; Added Config GUI where structures can be customized and custom structures can be managed [for more details check out Beta log]; Fixed some bugs since last version"
+		"1.16.5-1.8.1": "Added new structure 'Oriental Sanctuary' builded by Aurelj; Added Config GUI where structures can be customized and custom structures can be managed [for more details check out Beta log]; Fixed some bugs since last version",
+		"1.16.5-2.0.0": "Complete rewrite of the mod to remove and fix many basical issue and bugs; Here is no detailed log of changes as were moving to a new changelog system. Please be patient for details or visit my discord"
 	},
 	"1.16.4": {
 		"1.16.4-1.4.0": "Updated from 1.16.3 to 1.16.4",

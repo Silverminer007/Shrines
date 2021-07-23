@@ -11,17 +11,32 @@
  */
 package com.silverminer.shrines;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.utils.client.ClientUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
+import com.silverminer.shrines.utils.functions.ForgeFunctionProvider;
 import com.silverminer.shrines.utils.functions.IFunctionProvider;
+import com.silverminer.shrines.utils.proxy.ClientProxy;
+import com.silverminer.shrines.utils.proxy.ForgeServerProxy;
 import com.silverminer.shrines.utils.proxy.IProxy;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
 
 /**
  * @author Silverminer
  *
  */
+@Mod(value = ShrinesMod.MODID)
 public abstract class ShrinesMod {
 	public static final String MODID = "shrines";
 	public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
@@ -34,12 +49,11 @@ public abstract class ShrinesMod {
 	/**
 	 * TODO 2.0.0 Change structure system to jigsaw -> harbour
 	 * TODO 2.0.0 Move custom structures to jigsaw (add GUI to define pools and assigne a pool to an structure)
-	 * TODO (*) 2.0.0 Structures generation height fix -> Nether structures
+	 * FIXME 2.0.0 Structures generation height fix -> Nether structures
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
-	 * TODO (*) 2.0.0 #8(Use a processor?)  & #13
+	 * FIXME 2.0.0 #8(Use a processor?)  & #13
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
-	 * TODO 3.0.1 Preview for load
 	 * 
 	 * 
 	 * Releases:
@@ -54,6 +68,8 @@ public abstract class ShrinesMod {
 		instance = this;
 		Utils.loadCustomStructures();
 		this.registerConfig();
+		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
+				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 	}
 
 	public static ShrinesMod getInstance() {
@@ -67,7 +83,9 @@ public abstract class ShrinesMod {
 		return this.proxy;
 	}
 
-	public abstract void setProxy();
+	public void setProxy() {
+		this.proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ForgeServerProxy::new);
+	}
 
 	public IFunctionProvider getFunctionProvider(){
 		if(this.functionProvider == null) {
@@ -76,7 +94,19 @@ public abstract class ShrinesMod {
 		return this.functionProvider;
 	}
 
-	public abstract void setFunctionProvider();
+	public void setFunctionProvider() {
+		this.functionProvider = new ForgeFunctionProvider();
+	}
 
-	public abstract void registerConfig();
+	public void registerConfig() {
+		// Make sure structures are initialized before config will be loaded
+		NewStructureInit.initStructures();
+		// Config
+		Config.register(ModLoadingContext.get());
+		// Setup config UI
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
+					() -> ClientUtils::getConfigGui);
+		});
+	}
 }
