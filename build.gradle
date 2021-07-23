@@ -1,11 +1,10 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -25,20 +24,30 @@ buildscript {
 }
 apply plugin: 'com.matthewprenger.cursegradle'
 
-version = "1.16.5-2.0.0-SNAPSHOT-6"
-group = 'com.silverminer.shrines' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "1.16.5-2.0.0-SNAPSHOT-7"
+group = 'com.silverminer.shrines'
 archivesBaseName = 'Shrines'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 curseforge {
   apiKey = "${api_key}"
   project {
     id = '418915'
-    changelog = file('updateJSON.json')
-    changelogType = 'text'
+    changelog = file('Changelog.md')
+    changelogType = 'markdown'
     releaseType = 'alpha'
-    
+    addGameVersion '1.16.3'
+    addGameVersion '1.16.4'
+    addGameVersion '1.16.5'
+    mainArtifact jar
+  }
+  options {
+    debug = false // defaults to false
+    javaVersionAutoDetect = true // defaults to true
+    detectNewerJava = true // defaults to false
+    javaIntegration = false // defaults to true
+    forgeGradleIntegration = true // defaults to true
   }
 }
 
@@ -90,19 +99,26 @@ minecraft {
             }
         }
 
-        data {
+         data {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // The markers can be changed as needed.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'shrines', '--all', '--output', file('src/generated/resources/')
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', 'shrines', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                 shrines {
+                shrines {
                     source sourceSets.main
                 }
             }
@@ -135,6 +151,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
