@@ -31,6 +31,7 @@ import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IBlockReader;
@@ -38,12 +39,14 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
 import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
 import net.minecraft.world.gen.feature.structure.AbstractVillagePiece;
 import net.minecraft.world.gen.feature.structure.MarginedStructureStart;
 import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
@@ -119,6 +122,10 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 		if (!this.checkForOtherStructures(this, generator, seed, rand, chunkX, chunkZ, structures)) {
 			return false;
 		}
+		if (generator.getFirstFreeHeight(chunkX, chunkZ, Heightmap.Type.WORLD_SURFACE_WG) < 60
+				&& biome.getBiomeCategory() != Biome.Category.NETHER) {
+			return false;
+		}
 		return rand.nextDouble() < getSpawnChance();
 	}
 
@@ -181,10 +188,11 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 					() -> registries.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(pool),
 					this.feature.getMaxDepth());
 
+			BlockPos blockpos;
 			// Check if the actual Dimension has ceiling. If so we don't want it to be
 			// generated over it so we need to search for another place
 			if (biome.getBiomeCategory().equals(Biome.Category.NETHER)) {
-				BlockPos blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
+				blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
 				IBlockReader blockReader = chunkGenerator.getBaseColumn(blockpos.getX(), blockpos.getZ());
 				while (!blockReader.getBlockState(blockpos).isAir(blockReader, blockpos)) {
 					blockpos = blockpos.above();
@@ -192,9 +200,16 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 				JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
 						blockpos, this.pieces, this.random, false, false);
 			} else {
-				BlockPos blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
+				blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
 				JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
 						blockpos, this.pieces, this.random, false, true);
+			}
+
+			Vector3i structureCenter = this.pieces.get(0).getBoundingBox().getCenter();
+			int xOffset = blockpos.getX() - structureCenter.getX();
+			int zOffset = blockpos.getZ() - structureCenter.getZ();
+			for (StructurePiece structurePiece : this.pieces) {
+				structurePiece.move(xOffset, 0, zOffset);
 			}
 
 			this.calculateBoundingBox();

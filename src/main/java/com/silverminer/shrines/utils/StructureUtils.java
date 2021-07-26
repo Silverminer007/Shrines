@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +32,7 @@ import com.silverminer.shrines.utils.custom_structures.Utils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -116,6 +118,7 @@ public class StructureUtils {
 			if (GETCODEC_METHOD == null)
 				GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
 			@SuppressWarnings("unchecked")
+			// cgRL = chunk generator Resource Location
 			ResourceLocation cgRL = Registry.CHUNK_GENERATOR
 					.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(world.getChunkSource().generator));
 			if (cgRL != null && cgRL.getNamespace().equals("terraforged"))
@@ -125,20 +128,28 @@ public class StructureUtils {
 					+ " is using Terraforged's ChunkGenerator.");
 		}
 
+		Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(
+				world.getChunkSource().generator.getSettings().structureConfig());
 		if (world.getChunkSource().getGenerator() instanceof FlatChunkGenerator
 				&& world.dimension().equals(World.OVERWORLD)) {
-			return;
-		}
-
-		for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-			Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(
-					world.getChunkSource().generator.getSettings().structureConfig());
-			if (holder.getStructure().getConfig().getDimensions().contains(world.dimension().location().toString())) {
-				tempMap.put(holder.getStructure(), DimensionStructuresSettings.DEFAULTS.get(holder.getStructure()));
-			} else {
-				tempMap.remove(holder.getStructure());
+			tempMap.keySet().removeAll(NewStructureInit.STRUCTURES.stream().map(holder -> holder.getStructure())
+					.collect(Collectors.toList()));
+		} else {
+			for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+				LOGGER.info("Dimension: {}, {}, {}", world.dimension().location(), holder.getStructure().getDimensions(), holder.getName());
+				if (isAllowedForWorld(world, holder.getStructure().getConfig())) {
+					tempMap.putIfAbsent(holder.getStructure(), DimensionStructuresSettings.DEFAULTS.get(holder.getStructure()));
+				} else {
+					tempMap.remove(holder.getStructure());
+				}
 			}
-			world.getChunkSource().generator.getSettings().structureConfig = tempMap;
 		}
+		world.getChunkSource().generator.getSettings().structureConfig = tempMap;
+	}
+
+	public static boolean isAllowedForWorld(ISeedReader currentWorld, IStructureConfig config) {
+		//return true;
+		String worldID = currentWorld.getLevel().dimension().location().toString();
+		return config.getDimensions().contains(worldID);
 	}
 }
