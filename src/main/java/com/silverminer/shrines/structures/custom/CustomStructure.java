@@ -11,62 +11,19 @@
  */
 package com.silverminer.shrines.structures.custom;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.serialization.Codec;
-import com.silverminer.shrines.structures.AbstractStructure;
-import com.silverminer.shrines.structures.StructurePools;
+import com.silverminer.shrines.structures.ShrinesStructure;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome.Category;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
-import net.minecraft.world.gen.feature.structure.VillageConfig;
-
-public class CustomStructure extends AbstractStructure {
+public class CustomStructure extends ShrinesStructure {
 	protected static final Logger LOG = LogManager.getLogger(CustomStructure.class);
+	@SuppressWarnings("unused")
 	private CustomStructureData csd;
 
-	public CustomStructure(Codec<VillageConfig> codec, String name, CustomStructureData csd) {
-		super(codec, name, csd);
+	public CustomStructure(String name, CustomStructureData csd) {
+		super(name, csd);
 		this.csd = csd;
-	}
-
-	public List<? extends String> getDimensions() {
-		return csd.dimensions.getValue();
-	}
-
-	@Override
-	public GenerationStage.Decoration step() {
-		return GenerationStage.Decoration.SURFACE_STRUCTURES;
-	}
-
-
-	@Override
-	public JigsawPattern getPools() {
-		return StructurePools.BALLOON;
-	}
-
-	/**
-	 * 
-	 * @param name
-	 * @param category
-	 * @return
-	 */
-	public boolean validateSpawn(ResourceLocation name, Category category) {
-		if (!csd.generate.getValue()) {
-			return false;
-		}
-		boolean flag = csd.categories.getValue().contains(category);
-
-		if (!csd.blacklist.getValue().isEmpty() && flag) {
-			flag = !csd.blacklist.getValue().contains(name.toString());
-		}
-
-		return flag;
 	}
 }

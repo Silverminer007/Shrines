@@ -68,8 +68,6 @@ public class CustomStructureData implements IStructureConfig {
 			BoolArgumentType.bool(), BoolArgumentType::getBool));
 	public ConfigOption<Double> spawn_chance = add(new ConfigOption<Double>("spawn_chance", 0.6D, Double::valueOf,
 			DoubleArgumentType.doubleArg(0.0, 1.0), DoubleArgumentType::getDouble));
-	public ConfigOption<Boolean> needs_ground = add(new ConfigOption<Boolean>("needs_ground", true, Boolean::valueOf,
-			BoolArgumentType.bool(), BoolArgumentType::getBool));
 	public ConfigOption<Boolean> use_random_varianting = add(new ConfigOption<Boolean>("use_random_varianting", true,
 			Boolean::valueOf, BoolArgumentType.bool(), BoolArgumentType::getBool));
 	public ConfigOption<Integer> distance = add(new ConfigOption<Integer>("distance", 50, Integer::valueOf,
@@ -475,11 +473,6 @@ public class CustomStructureData implements IStructureConfig {
 	}
 
 	@Override
-	public boolean getNeedsGround() {
-		return this.needs_ground.getValue();
-	}
-
-	@Override
 	public int getDistance() {
 		return this.distance.getValue();
 	}
@@ -517,11 +510,6 @@ public class CustomStructureData implements IStructureConfig {
 	@Override
 	public double getLootChance() {
 		throw new RuntimeException("Tried to access loot chance of custom structure but there is no");
-	}
-
-	@Override
-	public boolean getSpawnVillagers() {
-		throw new RuntimeException("Tried to access spawn villagers of custom structure but there is no");
 	}
 
 	@Override

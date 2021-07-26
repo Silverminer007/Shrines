@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
@@ -272,7 +273,7 @@ public class GeneralSettingsScreen extends Screen {
 					}
 				});
 
-				this.needsWorldRestartButton = new ImageButton(0, 0, 15, 12, 182, 24, 0, Button.WIDGETS_LOCATION, 256,
+				this.needsWorldRestartButton = new ImageButton(0, 0, 15, 12, 182, 24, 0, Widget.WIDGETS_LOCATION, 256,
 						256, (b) -> {
 						});
 				this.needsWorldRestartButton.active = false;

@@ -30,8 +30,6 @@ public interface IStructureConfig extends Comparable<IStructureConfig> {
 
 	public double getSpawnChance();
 
-	public boolean getNeedsGround();
-
 	public int getDistance();
 
 	public int getSeparation();
@@ -46,9 +44,12 @@ public interface IStructureConfig extends Comparable<IStructureConfig> {
 
 	public boolean getUseRandomVarianting();
 
+	/**
+	 * This is gonna be removed because there is no use for this as I can't disable loot of structures anymore
+	 * @return
+	 */
+	@Deprecated
 	public double getLootChance();
-
-	public boolean getSpawnVillagers();
 
 	public boolean isBuiltIn();
 

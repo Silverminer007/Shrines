@@ -44,7 +44,7 @@ public class ShrinesSettingsConfig {
 		STRUCTURE_MIN_DISTANCE = SERVER_BUILDER.comment(
 				"The structures min. distance is the smallest possible distance between two structures (of this mod)")
 				.translation("config.shrines.structure_min_distance")
-				.defineInRange("structures.structures_min_distance", 5, 1, 100);
+				.defineInRange("structures.structures_min_distance", 10, 1, 100);
 		ADVANCED_LOGGING = SERVER_BUILDER.comment(
 				"Use advanced logging. Gives more help by finding issues. Please enable this before reporting a bug")
 				.translation("config.shrines.advanced_logging").define("structures.advanced_logging", true);

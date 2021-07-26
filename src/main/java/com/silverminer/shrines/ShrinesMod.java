@@ -19,10 +19,8 @@ import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.utils.client.ClientUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
-import com.silverminer.shrines.utils.functions.ForgeFunctionProvider;
-import com.silverminer.shrines.utils.functions.IFunctionProvider;
 import com.silverminer.shrines.utils.proxy.ClientProxy;
-import com.silverminer.shrines.utils.proxy.ForgeServerProxy;
+import com.silverminer.shrines.utils.proxy.ServerProxy;
 import com.silverminer.shrines.utils.proxy.IProxy;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,14 +40,17 @@ public class ShrinesMod {
 	public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
 
 	protected static IProxy proxy;
-	protected static IFunctionProvider functionProvider;
 
 	/**
-	 * TODO 2.0.0 Change structure system to jigsaw -> harbour
+	 * 
+	 * If you're looking for example code on how to make a structure Mod see TelepathicGrunt's Example Mod on how to do that:
+	 * https://github.com/TelepathicGrunt/StructureTutorialMod
+	 * 
 	 * TODO 2.0.0 Move custom structures to jigsaw (add GUI to define pools and assigne a pool to an structure)
 	 * FIXME 2.0.0 Structures generation height fix -> Nether structures
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
 	 * FIXME 2.0.0 #8(Use a processor?)  & #13
+	 * FIXME Make build and curseforge task available in eclipse. Currently only from command line
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * 
@@ -77,18 +78,7 @@ public class ShrinesMod {
 	}
 
 	public static void setProxy() {
-		proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ForgeServerProxy::new);
-	}
-
-	public static IFunctionProvider getFunctionProvider(){
-		if(functionProvider == null) {
-			setFunctionProvider();
-		}
-		return functionProvider;
-	}
-
-	public static void setFunctionProvider() {
-		functionProvider = new ForgeFunctionProvider();
+		proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 	}
 
 	public static void registerConfig() {

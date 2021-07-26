@@ -64,9 +64,8 @@ public class ConfigOption<T> implements IConfigOption<T> {
 	public boolean equals(Object o) {
 		if (o instanceof IConfigOption) {
 			return ((IConfigOption<?>) o).getName() == this.getName();
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public boolean getUseInCommand() {

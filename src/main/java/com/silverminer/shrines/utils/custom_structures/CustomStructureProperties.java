@@ -69,6 +69,6 @@ public class CustomStructureProperties extends PropertyManager<CustomStructurePr
 	}
 
 	public static CustomStructureProperties load(Path p) {
-		return new CustomStructureProperties(CustomStructureProperties.loadFromFile(p), p);
+		return new CustomStructureProperties(PropertyManager.loadFromFile(p), p);
 	}
 }

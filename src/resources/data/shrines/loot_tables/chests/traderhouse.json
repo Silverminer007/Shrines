@@ -1,0 +1,207 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": {
+				"min": 2.0,
+				"max": 6.0,
+				"type": "minecraft:uniform"
+			},
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:emerald"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 10,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:dandelion"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 10,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:brown_mushroom"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:nautilus_shell"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 7,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:slime_ball"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 10,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:red_mushroom"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 8,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:tropical_fish_bucket"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 10,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:bowl"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 9,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:paper"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 5,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:blue_ice"
+				}
+			]
+		},
+		{
+			"rolls": {
+				"min": 1.0,
+				"max": 1.0,
+				"type": "minecraft:uniform"
+			},
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:milk_bucket"
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:lead"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 1,
+					"functions": [
+						{
+							"function": "minecraft:set_nbt",
+							"tag": "{Potion:\"minecraft:invisibility\"}"
+						}
+					],
+					"name": "minecraft:potion"
+				},
+				{
+					"type": "minecraft:item",
+					"weight": 10,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"min": 1.0,
+								"max": 3.0,
+								"type": "minecraft:uniform"
+							}
+						}
+					],
+					"name": "minecraft:kelp"
+				}
+			]
+		}
+	]
+}

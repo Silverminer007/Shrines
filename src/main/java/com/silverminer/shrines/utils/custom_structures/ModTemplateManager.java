@@ -72,19 +72,18 @@ public class ModTemplateManager {
 	private Template loadFromGenerated(ResourceLocation p_195428_1_) {
 		if (!this.generatedDir.toFile().isDirectory()) {
 			return null;
-		} else {
-			Path path = this.createAndValidatePathToStructure(p_195428_1_, ".nbt");
+		}
+		Path path = this.createAndValidatePathToStructure(p_195428_1_, ".nbt");
 
-			LOGGER.debug("Loading custom structure piece from {}", path);
-			try (InputStream inputstream = new FileInputStream(path.toFile())) {
-				return this.readStructure(inputstream);
-			} catch (FileNotFoundException filenotfoundexception) {
-				LOGGER.warn("Couldn't load structure from {}, because of {}", path, filenotfoundexception);
-				return null;
-			} catch (IOException ioexception) {
-				LOGGER.error("Couldn't load structure from {}", path, ioexception);
-				return null;
-			}
+		LOGGER.debug("Loading custom structure piece from {}", path);
+		try (InputStream inputstream = new FileInputStream(path.toFile())) {
+			return this.readStructure(inputstream);
+		} catch (FileNotFoundException filenotfoundexception) {
+			LOGGER.warn("Couldn't load structure from {}, because of {}", path, filenotfoundexception);
+			return null;
+		} catch (IOException ioexception) {
+			LOGGER.error("Couldn't load structure from {}", path, ioexception);
+			return null;
 		}
 	}
 
@@ -116,43 +115,38 @@ public class ModTemplateManager {
 	private Path createAndValidatePathToStructure(ResourceLocation p_209510_1_, String p_209510_2_) {
 		if (p_209510_1_.getPath().contains("//")) {
 			throw new ResourceLocationException("Invalid resource path: " + p_209510_1_);
-		} else {
-			Path path = this.createPathToStructure(p_209510_1_, p_209510_2_);
-			if (path.startsWith(this.generatedDir) && FileUtil.isPathNormalized(path)
-					&& FileUtil.isPathPortable(path)) {
-				return path;
-			} else {
-				throw new ResourceLocationException("Invalid resource path: " + path);
-			}
 		}
+		Path path = this.createPathToStructure(p_209510_1_, p_209510_2_);
+		if (path.startsWith(this.generatedDir) && FileUtil.isPathNormalized(path) && FileUtil.isPathPortable(path)) {
+			return path;
+		}
+		throw new ResourceLocationException("Invalid resource path: " + path);
 	}
 
 	public boolean save(ResourceLocation location) {
 		Template template = this.structureRepository.get(location);
 		if (template == null) {
 			return false;
-		} else {
-			Path path = this.createAndValidatePathToStructure(location, ".nbt");
-			Path path1 = path.getParent();
-			if (path1 == null) {
-				return false;
-			} else {
-				try {
-					Files.createDirectories(Files.exists(path1) ? path1.toRealPath() : path1);
-				} catch (IOException ioexception) {
-					LOGGER.error("Failed to create parent directory: {}", (Object) path1);
-					return false;
-				}
+		}
+		Path path = this.createAndValidatePathToStructure(location, ".nbt");
+		Path path1 = path.getParent();
+		if (path1 == null) {
+			return false;
+		}
+		try {
+			Files.createDirectories(Files.exists(path1) ? path1.toRealPath() : path1);
+		} catch (IOException ioexception) {
+			LOGGER.error("Failed to create parent directory: {}", path1);
+			return false;
+		}
 
-				CompoundNBT compoundnbt = template.save(new CompoundNBT());
+		CompoundNBT compoundnbt = template.save(new CompoundNBT());
 
-				try (OutputStream outputstream = new FileOutputStream(path.toFile())) {
-					CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
-					return true;
-				} catch (Throwable throwable) {
-					return false;
-				}
-			}
+		try (OutputStream outputstream = new FileOutputStream(path.toFile())) {
+			CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
+			return true;
+		} catch (Throwable throwable) {
+			return false;
 		}
 	}
 

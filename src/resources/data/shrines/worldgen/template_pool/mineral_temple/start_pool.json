@@ -1,0 +1,15 @@
+{
+	"name": "shrines:mineral_temple/start_pool",
+	"fallback": "minecraft:empty",
+	"elements": [
+		{
+			"weight": 1,
+			"element": {
+				"location": "shrines:mineral_temple/mineral_temple",
+				"processors": "minecraft:empty",
+				"projection": "rigid",
+				"element_type": "minecraft:single_pool_element"
+			}
+		}
+	]
+}

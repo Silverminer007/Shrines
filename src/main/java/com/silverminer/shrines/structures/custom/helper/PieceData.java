@@ -49,8 +49,7 @@ public class PieceData {
 			} catch (NumberFormatException e) {
 				return BlockPos.ZERO;
 			}
-		} else {
-			return BlockPos.ZERO;
 		}
+		return BlockPos.ZERO;
 	}
 }
