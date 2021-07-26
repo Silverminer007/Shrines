@@ -1,11 +1,11 @@
 {
-	"name": "shrines:bees/start_pool",
+	"name": "shrines:end_temple/start_pool",
 	"fallback": "minecraft:empty",
 	"elements": [
 		{
 			"weight": 1,
 			"element": {
-				"location": "shrines:bees/bees",
+				"location": "shrines:end_temple/end_temple",
 				"processors": "minecraft:empty",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"

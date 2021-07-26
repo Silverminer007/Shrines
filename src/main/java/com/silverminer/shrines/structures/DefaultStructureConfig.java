@@ -23,7 +23,7 @@ public class DefaultStructureConfig {
 	public static final ConfigBuilder ENDTEMPLE_CONFIG = new ConfigBuilder("End Temple", 32 ^ 478392, Type.LOOTABLE)
 			.setDistance(60).setSeparation(11).setBiomes(Category.THEEND)
 			.addToBlacklist("minecraft:the_end", "minecraft:the_void", "minecraft:small_end_islands")
-			.setDimension(Lists.newArrayList("end"));
+			.setDimension(Lists.newArrayList("minecraft:the_end"));
 
 	public static final ConfigBuilder FLOODEDTEMPLE_CONFIG = new ConfigBuilder("Flooded Temple", 54315143,
 			Type.LOOTABLE).setDistance(50).setSeparation(10).setUseRandomVarianting(false).removeBiome(Category.DESERT)
@@ -44,10 +44,10 @@ public class DefaultStructureConfig {
 			Type.LOOTABLE).setDistance(50).setSeparation(10).setUseRandomVarianting(false);
 
 	public static final ConfigBuilder NETHERPYRAMID_CONFIG = new ConfigBuilder("Nether Pyramid", 7428394,
-			Type.LOOTABLE).setDistance(150).setSeparation(50).addDimension("nether").addBiome(Category.NETHER);
+			Type.LOOTABLE).setDistance(150).setSeparation(50).addDimension("minecraft:the_nether").addBiome(Category.NETHER);
 
 	public static final ConfigBuilder NETHERSHRINE_CONFIG = new ConfigBuilder("Nether Shrine", 653267, Type.LOOTABLE)
-			.setDistance(80).setSeparation(15).addDimension("nether").addBiome(Category.NETHER);
+			.setDistance(80).setSeparation(15).addDimension("minecraft:the_nether").addBiome(Category.NETHER);
 
 	public static final ConfigBuilder ORIENTALSANCTUARY_CONFIG = new ConfigBuilder("Oriental Sanctuary", 143665,
 			Type.NORMAL).setDistance(50).setSeparation(14);

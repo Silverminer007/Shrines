@@ -64,14 +64,14 @@ public class NewStructureConfig implements IStructureConfig {
 			SPAWN_CHANCE = null;
 		}
 		if (distance != null) {
-			DISTANCE = SERVER_BUILDER.comment(name + " Distance (in chunks) [default: " + distance + "]").worldRestart()
+			DISTANCE = SERVER_BUILDER.comment(name + " Distance (in chunks) [default: " + distance + "]. See 'Structure Min Distance' at general settings too").worldRestart()
 					.defineInRange("structures." + dataName + ".distance", distance, 1, 500);
 			OPTIONS.add(new ShrinesConfigOption<Integer>(DISTANCE, distance));
 		} else {
 			DISTANCE = null;
 		}
 		if (seperation != null) {
-			SEPARATION = SERVER_BUILDER.comment(name + " Minimum Separation (in chunks) [default: " + seperation + "]")
+			SEPARATION = SERVER_BUILDER.comment(name + " Minimum Separation (in chunks) [default: " + seperation + "]. See 'Structure Min Distance' at general settings too")
 					.worldRestart().defineInRange("structures." + dataName + ".seperation", seperation, 1, 500);
 			OPTIONS.add(new ShrinesConfigOption<Integer>(SEPARATION, seperation));
 		} else {

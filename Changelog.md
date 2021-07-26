@@ -56,9 +56,12 @@
 - Made template pools data driven
 - Fixed 'Bees structure flies 1 block in the air'
 - Added 'MEME Man 77's Watchtower
+- Fixed 'dimensions' setting of structures
+- Modified Harbour pieces
+- Added comments to some config options (belongs to #16)
 
 ##### Problems
-- Nether & End structures do not work
+- No know new issues
 
 #### Outstanding
 - Improved Custom structures GUI (rework old system as nothing works at this point)
