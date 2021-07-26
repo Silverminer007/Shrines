@@ -2,7 +2,8 @@
 #### SNAPSHOT 1
 - Changed structure generation system to jigsaw
 - Changed Player House loot-tables
-Problems:
+
+##### Problems:
 - Nether structures generates over the bedrock ceiling
 - Custom structures doesn't work right now (There are only balloons instead of the right resources)
 - Harbour doesn't work (Same as customs)
@@ -10,27 +11,54 @@ Problems:
 
 #### SNAPSHOT 2
 - Added (configurable) min. distance that needs to be at least between two structure to allow generation
-Problems:
+
+##### Problems:
 - Previous problems still affect
 
 #### SNAPSHOT 3
 - Added Translations to "Structure min. Settings" config option
 - Added new config option "Advanced Logging"(with translations) which allows to disable some (spamming) logs
-Problems:
+
+##### Problems:
 - Previous problems still affect
 
 #### SNAPSHOT 4
 - Added 'MEME Man77's Trader House
-Problems:
+
+##### Problems:
 - Previous problems still affect
 
 #### SNAPSHOT 5
 - Replaced 'bees' structure with an newer version of S1fy
-Problems:
+
+##### Problems:
 - Previous problems still affect
 
 #### SNAPSHOT 6
 - Updated to forge 36.2.0
+
+##### Problems:
+- Previous problems still affect
+
+#### SNAPSHOT 7
+- Added the new version of the Harbour (experimental and still in work)
+- Fixed compiler error because of Java 16. Should work now (Fixes #15)
+
+##### Problems
+- Harbour contains Grass and dirt blocks which should be removed
+
+#### SNAPSHOT 8
+- Removed 'Needs Ground' option
+- Removed 'Spawn Villagers' option
+- Removed shrines structures command
+- Fixed 'Dimensions' structure option
+- Fixed terrain changes at the harbour and balloon
+- Made template pools data driven
+- Fixed 'Bees structure flies 1 block in the air'
+- Added 'MEME Man 77's Watchtower
+
+##### Problems
+- Nether & End structures do not work
 
 #### Outstanding
 - Improved Custom structures GUI (rework old system as nothing works at this point)

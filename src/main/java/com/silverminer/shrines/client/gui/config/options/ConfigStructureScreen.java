@@ -658,7 +658,7 @@ public class ConfigStructureScreen extends Screen {
 
 				furtherScreenButton = new Button(0, 0, 100, 20, new StringTextComponent(this.valueSpec.getName()),
 						(button) -> {
-							if (this.valueSpec.getValue() instanceof List<?>) {
+							if (this.valueSpec.getValue() != null) {
 								ConfigStructureScreen.this.minecraft.setScreen(new NormalListScreen(
 										ConfigStructureScreen.this, new StringTextComponent(this.valueSpec.getName()),
 										CustomStructureData.getPossibleValuesForKey(this.valueSpec.getName()),
@@ -753,7 +753,7 @@ public class ConfigStructureScreen extends Screen {
 
 				furtherScreenButton = new Button(0, 0, 100, 20, new StringTextComponent(this.valueSpec.getName()),
 						(button) -> {
-							if (this.valueSpec.getValue() instanceof List<?>) {
+							if (this.valueSpec.getValue() != null) {
 								CustomStructureData csd = Utils.getData(structure, false);
 								if (csd != null)
 									ConfigStructureScreen.this.minecraft

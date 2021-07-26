@@ -60,16 +60,14 @@ public class Utils {
 	}
 
 	public static File getLocationOf(String structure) {
-		return FileUtils.getFile(ShrinesMod.getProxy().getBaseDir(), "shrines-saves", "shrines",
-				structure);
+		return FileUtils.getFile(ShrinesMod.getProxy().getBaseDir(), "shrines-saves", "shrines", structure);
 	}
 
 	public static ArrayList<CustomStructureData> getStructures(boolean server) {
 		if (server) {
 			return Utils.customsStructs;
-		} else {
-			return Utils.DATAS_FROM_SERVER;
 		}
+		return Utils.DATAS_FROM_SERVER;
 	}
 
 	public static void setStructures(ArrayList<CustomStructureData> structures, boolean server) {
@@ -83,16 +81,15 @@ public class Utils {
 	public static boolean addStructure(CustomStructureData csd, boolean server) {
 		if (getData(csd.getName(), server) != null) {
 			return false;
-		} else {
-			boolean flag;
-			if (server) {
-				flag = Utils.customsStructs.add(csd);
-			} else {
-				flag = Utils.DATAS_FROM_SERVER.add(csd);
-			}
-			Utils.onChanged(server);
-			return flag;
 		}
+		boolean flag;
+		if (server) {
+			flag = Utils.customsStructs.add(csd);
+		} else {
+			flag = Utils.DATAS_FROM_SERVER.add(csd);
+		}
+		Utils.onChanged(server);
+		return flag;
 	}
 
 	public static boolean remove(String name, boolean delete, boolean server) {
@@ -158,11 +155,9 @@ public class Utils {
 				}
 				csd.fromString(data);
 				Utils.customsStructs.add(csd);
-				if (Config.SETTINGS.ADVANCED_LOGGING.get())
-					LOGGER.info("Read config of [{}] from file: {}", n, csd.toString());
+				LOGGER.debug("Read config of [{}] from file: {}", n, csd.toString());
 			}
-			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.info("Read structures from: {}", f);
+			LOGGER.info("Read structures from: {}", f);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -229,14 +224,13 @@ public class Utils {
 				}
 			}
 			return null;
-		} else {
-			for (CustomStructureData csd : Utils.DATAS_FROM_SERVER) {
-				if (csd.getName().equals(name)) {
-					return csd;
-				}
-			}
-			return null;
 		}
+		for (CustomStructureData csd : Utils.DATAS_FROM_SERVER) {
+			if (csd.getName().equals(name)) {
+				return csd;
+			}
+		}
+		return null;
 	}
 
 	public static boolean replace(CustomStructureData csd, boolean server) {
@@ -279,9 +273,9 @@ public class Utils {
 	}
 
 	private static IPacket toPacket(boolean server) {
-		if (server)
+		if (server) {
 			return new CCustomStructuresPacket(Utils.DATAS_FROM_SERVER);
-		else
-			return new SCustomStructuresPacket(Utils.customsStructs);
+		}
+		return new SCustomStructuresPacket(Utils.customsStructs);
 	}
 }

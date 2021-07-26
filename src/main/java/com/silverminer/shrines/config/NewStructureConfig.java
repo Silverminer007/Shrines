@@ -30,7 +30,6 @@ public class NewStructureConfig implements IStructureConfig {
 	protected final String name;
 	protected final ForgeConfigSpec.ConfigValue<Boolean> GENERATE;
 	protected final ForgeConfigSpec.ConfigValue<Double> SPAWN_CHANCE;
-	protected final ForgeConfigSpec.ConfigValue<Boolean> NEEDS_GROUND;
 	protected final ForgeConfigSpec.ConfigValue<Integer> DISTANCE;
 	protected final ForgeConfigSpec.ConfigValue<Integer> SEPARATION;
 	protected final ForgeConfigSpec.ConfigValue<Integer> SEED;
@@ -39,16 +38,15 @@ public class NewStructureConfig implements IStructureConfig {
 	protected final ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSIONS;
 	protected final ForgeConfigSpec.ConfigValue<Boolean> USE_RANDOM_VARIANTING;
 	protected final ForgeConfigSpec.ConfigValue<Double> LOOT_CHANCE;
-	protected final ForgeConfigSpec.ConfigValue<Boolean> SPAWN_VILLAGERS;
 	protected final List<ShrinesConfigOption<?>> OPTIONS = Lists.newArrayList();
 
 	protected static final RuntimeException INVALID_ACCESS = new RuntimeException(
 			"Tried to access an non initialised config value");
 
 	public NewStructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER, String name, Boolean generate,
-			Double spawn_chance, Boolean needs_ground, Integer distance, Integer seperation, Integer seed,
+			Double spawn_chance, Integer distance, Integer seperation, Integer seed,
 			List<Biome.Category> categories, List<String> blacklist, List<String> dimensions,
-			Boolean useRandomVarianting, Double loot_chance, Boolean spawn_villagers) {
+			Boolean useRandomVarianting, Double loot_chance) {
 		this.name = name;
 		String dataName = name.toLowerCase(Locale.ROOT).replaceAll(" ", "_");
 		if (generate != null) {
@@ -64,13 +62,6 @@ public class NewStructureConfig implements IStructureConfig {
 			OPTIONS.add(new ShrinesConfigOption<Double>(SPAWN_CHANCE, spawn_chance));
 		} else {
 			SPAWN_CHANCE = null;
-		}
-		if (needs_ground != null) {
-			NEEDS_GROUND = SERVER_BUILDER.comment("Needs " + name + " Ground? [default: " + needs_ground + "]")
-					.worldRestart().define("structures." + dataName + ".needs_ground", needs_ground);
-			OPTIONS.add(new ShrinesConfigOption<Boolean>(NEEDS_GROUND, needs_ground));
-		} else {
-			NEEDS_GROUND = null;
 		}
 		if (distance != null) {
 			DISTANCE = SERVER_BUILDER.comment(name + " Distance (in chunks) [default: " + distance + "]").worldRestart()
@@ -133,14 +124,6 @@ public class NewStructureConfig implements IStructureConfig {
 		} else {
 			LOOT_CHANCE = null;
 		}
-		if (spawn_villagers != null) {
-			SPAWN_VILLAGERS = SERVER_BUILDER.comment(name + " Spawn Villagers [default: " + spawn_villagers + "]")
-					.worldRestart()
-					.define("structures." + dataName.toLowerCase(Locale.ROOT) + ".spawn_villagers", spawn_villagers);
-			OPTIONS.add(new ShrinesConfigOption<Boolean>(SPAWN_VILLAGERS, spawn_villagers));
-		} else {
-			SPAWN_VILLAGERS = null;
-		}
 	}
 
 	private static boolean validateBiome(Object o) {
@@ -168,108 +151,81 @@ public class NewStructureConfig implements IStructureConfig {
 	public boolean getGenerate() {
 		if (GENERATE == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return GENERATE.get();
 		}
+		return GENERATE.get();
 	}
 
 	@Override
 	public double getSpawnChance() {
 		if (SPAWN_CHANCE == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return SPAWN_CHANCE.get();
 		}
-	}
-
-	@Override
-	public boolean getNeedsGround() {
-		if (NEEDS_GROUND == null) {
-			throw INVALID_ACCESS;
-		} else {
-			return NEEDS_GROUND.get();
-		}
+		return SPAWN_CHANCE.get();
 	}
 
 	@Override
 	public int getDistance() {
 		if (DISTANCE == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return DISTANCE.get();
 		}
+		return DISTANCE.get();
 	}
 
 	@Override
 	public int getSeparation() {
 		if (SEPARATION == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return SEPARATION.get();
 		}
+		return SEPARATION.get();
+
 	}
 
 	@Override
 	public int getSeed() {
 		if (SEED == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return SEED.get();
 		}
+		return SEED.get();
 	}
 
 	@Override
 	public List<? extends Category> getWhitelist() {
 		if (BIOME_CATEGORIES == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return BIOME_CATEGORIES.get();
 		}
+		return BIOME_CATEGORIES.get();
 	}
 
 	@Override
 	public List<? extends String> getBlacklist() {
 		if (BIOME_BLACKLIST == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return BIOME_BLACKLIST.get();
 		}
+		return BIOME_BLACKLIST.get();
 	}
 
 	@Override
 	public List<? extends String> getDimensions() {
 		if (DIMENSIONS == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return DIMENSIONS.get();
 		}
+		return DIMENSIONS.get();
 	}
 
 	@Override
 	public boolean getUseRandomVarianting() {
 		if (USE_RANDOM_VARIANTING == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return USE_RANDOM_VARIANTING.get();
 		}
+		return USE_RANDOM_VARIANTING.get();
 	}
 
 	@Override
 	public double getLootChance() {
 		if (LOOT_CHANCE == null) {
 			throw INVALID_ACCESS;
-		} else {
-			return LOOT_CHANCE.get();
 		}
-	}
-
-	@Override
-	public boolean getSpawnVillagers() {
-		if (SPAWN_VILLAGERS == null) {
-			throw INVALID_ACCESS;
-		} else {
-			return SPAWN_VILLAGERS.get();
-		}
+		return LOOT_CHANCE.get();
 	}
 
 	@Override

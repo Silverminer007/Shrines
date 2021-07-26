@@ -3,6 +3,7 @@ package com.silverminer.shrines.client.gui.config.widgets.buttons;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -44,7 +45,7 @@ public class ValidationStatusButton extends Button
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks)
 	{
-		Minecraft.getInstance().getTextureManager().bind(Button.WIDGETS_LOCATION);
+		Minecraft.getInstance().getTextureManager().bind(Widget.WIDGETS_LOCATION);
 		GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Icon icon = (this.valid) ? Icon.VALID : Icon.INVALID;
 

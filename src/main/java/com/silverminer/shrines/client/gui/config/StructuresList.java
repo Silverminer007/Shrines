@@ -18,7 +18,7 @@ import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.client.gui.config.options.ConfigStructureScreen;
 import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.init.NewStructureInit;
-import com.silverminer.shrines.structures.AbstractStructure;
+import com.silverminer.shrines.structures.ShrinesStructure;
 import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 
@@ -79,11 +79,10 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 
 	public void refreshList(Supplier<String> search) {
 		this.clearEntries();
-		List<AbstractStructure> structs = NewStructureInit.STRUCTURES.values().stream()
-				.collect(Collectors.toList());
+		List<ShrinesStructure> structs = NewStructureInit.STRUCTURES.stream().map(holder -> holder.getStructure()).collect(Collectors.toList());
 		structs.removeIf(struct -> struct == null);
 		this.structures = structs.stream().map((config) -> {
-			AbstractStructure st = (AbstractStructure) config.getStructure();
+			ShrinesStructure st = (ShrinesStructure) config.getStructure();
 			return st.getConfig();
 		}).collect(Collectors.toList());
 		this.structures.removeIf(entry -> entry == null);
@@ -194,10 +193,9 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 					this.iconFile = null;
 					return null;
 				}
-			} else {
-				this.minecraft.getTextureManager().release(this.iconLocation);
-				return null;
 			}
+			this.minecraft.getTextureManager().release(this.iconLocation);
+			return null;
 		}
 
 		public IStructureConfig getConfig() {
@@ -213,11 +211,11 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 			String s2 = "Seed:" + config.getSeed() + "  Distance:" + config.getDistance() + "  Seperation:"
 					+ config.getSeparation();
 
-			this.minecraft.font.draw(p_230432_1_, header, (float) (p_230432_4_ + 32 + 3), (float) (p_230432_3_ + 1),
+			this.minecraft.font.draw(p_230432_1_, header, p_230432_4_ + 32 + 3, p_230432_3_ + 1,
 					16777215);
-			this.minecraft.font.draw(p_230432_1_, s1, (float) (p_230432_4_ + 32 + 3), (float) (p_230432_3_ + 9 + 3),
+			this.minecraft.font.draw(p_230432_1_, s1, p_230432_4_ + 32 + 3, p_230432_3_ + 9 + 3,
 					8421504);
-			this.minecraft.font.draw(p_230432_1_, s2, (float) (p_230432_4_ + 32 + 3), (float) (p_230432_3_ + 9 + 9 + 3),
+			this.minecraft.font.draw(p_230432_1_, s2, p_230432_4_ + 32 + 3, p_230432_3_ + 9 + 9 + 3,
 					8421504);
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.minecraft.getTextureManager()
@@ -233,7 +231,7 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 				int i = p_230432_7_ - p_230432_4_;
 				boolean flag = i < 32;
 				int j = flag ? 32 : 0;
-				AbstractGui.blit(p_230432_1_, p_230432_4_, p_230432_3_, 0.0F, (float) j, 32, 32, 256, 256);
+				AbstractGui.blit(p_230432_1_, p_230432_4_, p_230432_3_, 0.0F, j, 32, 32, 256, 256);
 			}
 
 		}
@@ -242,7 +240,7 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 			StructuresList.this.setSelected(this);
 			this.screen.updateButtonStatus(StructuresList.this.getSelectedOpt().isPresent(),
 					!this.getConfig().isBuiltIn());
-			if (p_231044_1_ - (double) StructuresList.this.getRowLeft() <= 32.0D) {
+			if (p_231044_1_ - StructuresList.this.getRowLeft() <= 32.0D) {
 				this.configure();
 				return true;
 			} else if (Util.getMillis() - this.lastClickTime < 250L) {
@@ -270,7 +268,6 @@ public class StructuresList extends ExtendedList<StructuresList.Entry> {
 					CustomStructureData config = (CustomStructureData) this.getConfig();
 					if (!Utils.remove(config, false, false))
 						LOGGER.error("Failed to delete custom structure");
-					NewStructureInit.STRUCTURES.remove(config.getDataName());
 
 					StructuresList.this.refreshList(() -> {
 						return this.screen.searchBox.getValue();

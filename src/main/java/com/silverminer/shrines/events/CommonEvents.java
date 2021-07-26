@@ -11,34 +11,23 @@
  */
 package com.silverminer.shrines.events;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.commands.ShrinesCommand;
-import com.silverminer.shrines.commands.arguments.BiomeCSArgumentType;
-import com.silverminer.shrines.commands.arguments.BiomeCategoryCSArgumentType;
-import com.silverminer.shrines.commands.arguments.NameCSArgumentType;
-import com.silverminer.shrines.commands.arguments.OptionCSArgumentType;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
-import com.silverminer.shrines.structures.AbstractStructure;
-import com.silverminer.shrines.structures.Generator;
-import com.silverminer.shrines.structures.StructurePools;
+import com.silverminer.shrines.init.StructureRegistryHolder;
+import com.silverminer.shrines.utils.StructureUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.saves.BoundSaveData;
 
-import net.minecraft.command.arguments.ArgumentTypes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -47,31 +36,20 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 
 public class CommonEvents {
 	protected static final Logger LOGGER = LogManager.getLogger(CommonEvents.class);
 
 	@EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.MOD)
 	public static class ModEventBus {
-		@SubscribeEvent
-		public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
-			event.enqueueWork(() -> {
-				if (Config.SETTINGS.ADVANCED_LOGGING.get())
-					LOGGER.info("Registering structure pieces and structures to dimensions");
-				Generator.setupWorldGen();
-				ArgumentTypes.register("biome_category", BiomeCategoryCSArgumentType.class,
-						new BiomeCategoryCSArgumentType.Serializer());
-				ArgumentTypes.register("biome", BiomeCSArgumentType.class, new BiomeCSArgumentType.Serializer());
-				ArgumentTypes.register("name", NameCSArgumentType.class, new NameCSArgumentType.Serializer());
-				ArgumentTypes.register("option", OptionCSArgumentType.class, new OptionCSArgumentType.Serializer());
-			});
-		}
 
 		@SubscribeEvent
 		public static void commonSetupEvent(FMLCommonSetupEvent event) {
-			ShrinesPacketHandler.register();
-			StructurePools.load();
+			event.enqueueWork(() -> {
+				ShrinesPacketHandler.register();
+				StructureUtils.setupWorldGen();
+			});
 		}
 	}
 
@@ -83,25 +61,14 @@ public class CommonEvents {
 			if (Config.SETTINGS.ADVANCED_LOGGING.get())
 				LOGGER.info("Loading Biome and registering structures. Biome: {}", event.getName());
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
-				for (AbstractStructure struct : NewStructureInit.STRUCTURES.values()) {
-					if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
-							struct.getConfig().getBlacklist(), event.getName(), event.getCategory())) {
-						event.getGeneration().addStructureStart(struct.getConfigured());
+				for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+					if (holder.getStructure().getConfig().getGenerate() && StructureUtils.checkBiome(
+							holder.getStructure().getConfig().getWhitelist(),
+							holder.getStructure().getConfig().getBlacklist(), event.getName(), event.getCategory())) {
+						event.getGeneration().addStructureStart(holder.getConfiguredStructure());
 					}
 				}
 			}
-		}
-
-		private static boolean checkBiome(List<? extends Object> allowedBiomeCategories,
-				List<? extends String> blacklistedBiomes, ResourceLocation name, Biome.Category category) {
-			boolean flag = allowedBiomeCategories.contains(category.toString())
-					|| allowedBiomeCategories.contains(category);
-
-			if (!blacklistedBiomes.isEmpty() && flag) {
-				flag = !blacklistedBiomes.contains(name.toString());
-			}
-
-			return flag;
 		}
 
 		@SubscribeEvent
@@ -110,13 +77,6 @@ public class CommonEvents {
 			Utils.onChanged(true);
 			if (Config.SETTINGS.ADVANCED_LOGGING.get())
 				LOGGER.info(Utils.getStructures(true).stream().map(st -> st.getName()).collect(Collectors.toList()));
-		}
-
-		@SubscribeEvent
-		public static void registerCommands(RegisterCommandsEvent event) {
-			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.info("Registering shrines commands");
-			ShrinesCommand.register(event.getDispatcher());
 		}
 
 		@SubscribeEvent
@@ -138,16 +98,25 @@ public class CommonEvents {
 
 		@SubscribeEvent
 		public static void onWorldLoad(WorldEvent.Load event) {
+			if (event.getWorld() instanceof ServerWorld) {
+				StructureUtils.addDimensionalSpacing((ServerWorld) event.getWorld());
+			}
 			if (Config.SETTINGS.ADVANCED_LOGGING.get())
 				LOGGER.info("Loading bound data from file");
 			IWorld iworld = event.getWorld();
 
-			if (!(iworld instanceof World))
-				return;
-			World world = (World) iworld;
-			if (!world.isClientSide() && world.dimension() == World.OVERWORLD && world instanceof ServerWorld) {
-				Utils.boundDataSave = BoundSaveData.get((ServerWorld) world);
+			if (iworld instanceof ServerWorld) {
+				ServerWorld world = (ServerWorld) iworld;
+				if (!world.isClientSide() && world.dimension() == World.OVERWORLD) {
+					Utils.boundDataSave = BoundSaveData.get(world);
+				}
 			}
+		}
+
+		@SubscribeEvent
+		public static void onServerStarted(FMLServerStartedEvent event) {
+			// Apply custom structure data packs here? -> Take a look at ReloadListener and
+			// stuff
 		}
 	}
 }

@@ -24,10 +24,10 @@ public class OptionParsingResult {
 	}
 
 	public ITextComponent getMessage() {
-		if (this.message != null)
+		if (this.message != null) {
 			return message;
-		else
-			return new StringTextComponent("");
+		}
+		return new StringTextComponent("");
 	}
 
 	public boolean isSuccess() {

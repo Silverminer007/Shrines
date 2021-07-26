@@ -29,7 +29,6 @@ public class ConfigBuilder implements IStructureConfig {
 	protected final String name;
 	protected boolean generate = true;
 	protected double spawnChance = 0.6D;
-	protected boolean needsGround = true;
 	protected int distance = 60;
 	protected int separation = 12;
 	protected final int seed;
@@ -51,14 +50,11 @@ public class ConfigBuilder implements IStructureConfig {
 	public NewStructureConfig build(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		switch (this.type) {
 		case NORMAL:
-			return new NewStructureConfig(SERVER_BUILDER, name, generate, spawnChance, needsGround, distance,
-					separation, seed, biomes, blacklist, dimensions, useRandomVarianting, null, null);
+			return new NewStructureConfig(SERVER_BUILDER, name, generate, spawnChance, distance,
+					separation, seed, biomes, blacklist, dimensions, useRandomVarianting, null);
 		case LOOTABLE:
-			return new NewStructureConfig(SERVER_BUILDER, name, generate, spawnChance, needsGround, distance,
-					separation, seed, biomes, blacklist, dimensions, useRandomVarianting, lootChance, null);
-		case HARBOUR:
-			return new NewStructureConfig(SERVER_BUILDER, name, generate, spawnChance, needsGround, distance,
-					separation, seed, biomes, blacklist, dimensions, useRandomVarianting, lootChance, spawn_villagers);
+			return new NewStructureConfig(SERVER_BUILDER, name, generate, spawnChance, distance,
+					separation, seed, biomes, blacklist, dimensions, useRandomVarianting, lootChance);
 		}
 		return null;
 	}
@@ -109,11 +105,6 @@ public class ConfigBuilder implements IStructureConfig {
 		return this;
 	}
 
-	public ConfigBuilder setNeedsGround(boolean needsGround) {
-		this.needsGround = needsGround;
-		return this;
-	}
-
 	public ConfigBuilder setBiomes(Category... biomes) {
 		this.biomes = Lists.newArrayList(biomes);
 		return this;
@@ -152,11 +143,6 @@ public class ConfigBuilder implements IStructureConfig {
 	@Override
 	public double getSpawnChance() {
 		return this.spawnChance;
-	}
-
-	@Override
-	public boolean getNeedsGround() {
-		return this.needsGround;
 	}
 
 	@Override
@@ -199,13 +185,8 @@ public class ConfigBuilder implements IStructureConfig {
 		return this.lootChance;
 	}
 
-	@Override
-	public boolean getSpawnVillagers() {
-		return this.spawn_villagers;
-	}
-
 	public static enum Type {
-		NORMAL, LOOTABLE, HARBOUR;
+		NORMAL, LOOTABLE;
 	}
 
 	@Override
