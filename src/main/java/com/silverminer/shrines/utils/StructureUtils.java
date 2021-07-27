@@ -104,7 +104,6 @@ public class StructureUtils {
 	}
 
 	private static Method GETCODEC_METHOD;
-
 	@SuppressWarnings("resource")
 	public static void addDimensionalSpacing(ServerWorld world) {
 
