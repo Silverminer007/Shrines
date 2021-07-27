@@ -2,61 +2,32 @@ buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-  }
-}
-apply plugin: 'com.matthewprenger.cursegradle'
-
-version = "1.16.5-2.0.0-SNAPSHOT-8"
+version = "${mc_version}-${mod_version}"
 group = 'com.silverminer.shrines'
 archivesBaseName = 'Shrines'
 
-//java.toolchain.languageVersion = JavaLanguageVersion.of(8)
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' 
-
-curseforge {
-  apiKey = "${api_key}"
-  project {
-    id = '418915'
-    changelog = file('Changelog.md')
-    changelogType = 'markdown'
-    releaseType = 'alpha'
-    addGameVersion '1.16.3'
-    addGameVersion '1.16.4'
-    addGameVersion '1.16.5'
-    mainArtifact jar
-  }
-  options {
-    debug = false // defaults to false
-    javaVersionAutoDetect = true // defaults to true
-    detectNewerJava = true // defaults to false
-    javaIntegration = false // defaults to true
-    forgeGradleIntegration = true // defaults to true
-  }
-}
-
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+// Remove next line when you try to use this project in your local workspace. This contains private key that I don't want to share arround so I added it to '.gitignore' file. This is not necessary
+apply from: 'gradle/curseforge.gradle'
+
+
 minecraft {
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'official', version: "${mc_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
      accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -101,25 +72,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.16.5-36.2.0"
-
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
 }
 
