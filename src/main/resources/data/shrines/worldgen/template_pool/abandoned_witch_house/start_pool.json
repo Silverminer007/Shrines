@@ -6,7 +6,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:abandoned_witch_house/abandoned_witch_house",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}

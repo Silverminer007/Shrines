@@ -6,7 +6,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon_1",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -15,7 +15,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon_2",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -24,7 +24,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon_3",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -33,7 +33,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon_4",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -42,7 +42,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon_5",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -51,7 +51,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon_6",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -60,7 +60,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon_7",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -69,7 +69,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon2_1",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -78,7 +78,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon2_2",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -87,7 +87,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon2_3",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}
@@ -96,7 +96,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:balloon/balloon2_4",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:legacy_single_pool_element"
 			}

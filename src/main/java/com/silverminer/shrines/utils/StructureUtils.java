@@ -135,7 +135,6 @@ public class StructureUtils {
 					.collect(Collectors.toList()));
 		} else {
 			for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-				LOGGER.info("Dimension: {}, {}, {}", world.dimension().location(), holder.getStructure().getDimensions(), holder.getName());
 				if (isAllowedForWorld(world, holder.getStructure().getConfig())) {
 					tempMap.putIfAbsent(holder.getStructure(), DimensionStructuresSettings.DEFAULTS.get(holder.getStructure()));
 				} else {

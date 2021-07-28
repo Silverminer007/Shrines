@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.init.RegisterStructureProcessors;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.utils.StructureUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
@@ -48,6 +49,7 @@ public class CommonEvents {
 		public static void commonSetupEvent(FMLCommonSetupEvent event) {
 			event.enqueueWork(() -> {
 				ShrinesPacketHandler.register();
+				RegisterStructureProcessors.load();
 				StructureUtils.setupWorldGen();
 			});
 		}
@@ -58,8 +60,6 @@ public class CommonEvents {
 
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
-			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.info("Loading Biome and registering structures. Biome: {}", event.getName());
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 					if (holder.getStructure().getConfig().getGenerate() && StructureUtils.checkBiome(

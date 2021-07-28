@@ -50,7 +50,6 @@ public class ShrinesMod {
 	 * FIXME 2.0.0 Structures generation height fix -> Nether structures
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
 	 * FIXME 2.0.0 #8(Use a processor?)  & #13
-	 * FIXME Make build and curseforge task available in eclipse. Currently only from command line
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * 
@@ -67,6 +66,7 @@ public class ShrinesMod {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
 				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 		Utils.loadCustomStructures();
+		NewStructureInit.load();
 		registerConfig();
 	}
 
@@ -82,8 +82,6 @@ public class ShrinesMod {
 	}
 
 	public static void registerConfig() {
-		// Make sure structures are initialized before config will be loaded
-		NewStructureInit.initStructures();
 		// Config
 		Config.register(ModLoadingContext.get());
 		// Setup config UI

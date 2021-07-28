@@ -20,7 +20,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class StructureConfig {
 
 	public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
-		NewStructureInit.initStructures();
 		ShrinesMod.LOGGER.error("Structures count at config: {}", NewStructureInit.STRUCTURES.size());
 		for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 			holder.buildConfig(SERVER_BUILDER);
