@@ -38,7 +38,9 @@ public class NewStructureInit {
 	protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
 	public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList.<StructureRegistryHolder>builder().addAll(initStructures()).build();
 
-	public static ArrayList<StructureRegistryHolder>  initStructures() {
+	public static void load() {};
+
+	private static ArrayList<StructureRegistryHolder>  initStructures() {
 		ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
 		structures.add(new StructureRegistryHolder("abandoned_witch_house", DefaultStructureConfig.ABANDONEDWITCHHOUSE_CONFIG, true));
 		structures.add(new StructureRegistryHolder("balloon", DefaultStructureConfig.BALLON_CONFIG, false));

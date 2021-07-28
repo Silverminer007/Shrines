@@ -130,6 +130,8 @@
 	"config.shrines.structure_min_distance.tooltip": "The structures min. distance is the smallest possible distance between two structures (of this mod)",
 	"config.shrines.advanced_logging": "Advanced Logging",
 	"config.shrines.advanced_logging.tooltip": "Use advanced logging. Helps more with finding issues. Please enable this before reporting a bug",
+	"config.shrines.banned_blocks": "All blocks in this list will not be placed with the structures. So it is possible to make blocks that are considered too valuable not appear in the world",
+	"config.shrines.banned_entities": "All entities in this list will not be placed with the structures",
 
 	"_comment_general": "",
 	"shrines.general.cooming_soon": "Cooming soon!",

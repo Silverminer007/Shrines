@@ -59,6 +59,14 @@
 - Fixed 'dimensions' setting of structures
 - Modified Harbour pieces
 - Added comments to some config options (belongs to #16)
+- Added loot table to the Trader House
+
+##### Problems
+- No know new issues
+
+#### SNAPSHOT 9
+- Added 'banned_blocks' option
+- Added 'banned_entities' option
 
 ##### Problems
 - No know new issues
@@ -66,10 +74,8 @@
 #### Outstanding
 - Improved Custom structures GUI (rework old system as nothing works at this point)
 - Improve Harbour generation to make use of the new jigsaw system
-- implement 'MEME Man77's Watchtower
 - reimplement Random varianting
 - Remove Shrines.properties file and replace options with ones in the TOML config
-- Drop support for 'shrines-structures' command and rely on GUI
 
 ## 1.8.1
 ### Beta1

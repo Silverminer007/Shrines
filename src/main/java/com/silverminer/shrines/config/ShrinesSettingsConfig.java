@@ -28,6 +28,9 @@ public class ShrinesSettingsConfig {
 	public final ForgeConfigSpec.IntValue STRUCTURE_MIN_DISTANCE;
 	public final ForgeConfigSpec.BooleanValue ADVANCED_LOGGING;
 
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BANNED_BLOCKS;
+	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BANNED_ENTITIES;
+
 	public ShrinesSettingsConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Biomes where NO Structure (of this mod) can generate in. Custom structures too")
@@ -48,9 +51,24 @@ public class ShrinesSettingsConfig {
 		ADVANCED_LOGGING = SERVER_BUILDER.comment(
 				"Use advanced logging. Gives more help by finding issues. Please enable this before reporting a bug")
 				.translation("config.shrines.advanced_logging").define("structures.advanced_logging", true);
+		BANNED_BLOCKS = SERVER_BUILDER.comment(
+				"All blocks in this list will not be placed with the structures. So it is possible to make blocks that are considered too valuable not appear in the world")
+				.translation("config.shrines.banned_blocks")
+				.defineList("structures.banned_blocks", Lists.newArrayList(), ShrinesSettingsConfig::validateBlock);
+		BANNED_ENTITIES = SERVER_BUILDER.comment("All entities in this list will not be placed with the structures")
+				.translation("config.shrines.banned_entities")
+				.defineList("structures.banned_entities", Lists.newArrayList(), ShrinesSettingsConfig::validateEntity);
 	}
 
 	private static boolean validateBiome(Object o) {
-		return o == null || ForgeRegistries.BIOMES.containsKey(new ResourceLocation((String) o));
+		return o != null && ForgeRegistries.BIOMES.containsKey(new ResourceLocation((String) o));
+	}
+
+	private static boolean validateBlock(Object o) {
+		return o != null && ForgeRegistries.BLOCKS.containsKey(new ResourceLocation((String) o));
+	}
+
+	private static boolean validateEntity(Object o) {
+		return o != null && ForgeRegistries.ENTITIES.containsKey(new ResourceLocation((String) o));
 	}
 }

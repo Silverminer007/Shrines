@@ -6,7 +6,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_001",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -15,7 +15,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_002",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -24,7 +24,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_003",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -33,7 +33,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_004",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -42,7 +42,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_005",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -51,7 +51,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_006",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -60,7 +60,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_007",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -69,7 +69,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_008",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -78,7 +78,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_009",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -87,7 +87,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_010",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -96,7 +96,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_011",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
@@ -105,7 +105,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:nether_shrine/nether_shrine_sandstone",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}

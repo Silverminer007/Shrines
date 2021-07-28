@@ -6,7 +6,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:oriental_sanctuary/oriental_sanctuary_0",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}

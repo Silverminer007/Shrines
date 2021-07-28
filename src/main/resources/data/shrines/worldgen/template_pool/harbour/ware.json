@@ -6,7 +6,7 @@
 			"weight": 1,
 			"element": {
 				"location": "shrines:harbour/ware/ware_1",
-				"processors": "minecraft:empty",
+				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
 			}
