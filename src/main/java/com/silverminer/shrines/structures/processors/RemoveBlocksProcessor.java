@@ -1,7 +1,6 @@
 package com.silverminer.shrines.structures.processors;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.Config;
 
 import net.minecraft.block.Blocks;
@@ -32,7 +31,6 @@ public class RemoveBlocksProcessor extends StructureProcessor {
 	public Template.EntityInfo processEntity(IWorldReader world, BlockPos seedPos, Template.EntityInfo rawEntityInfo,
 			Template.EntityInfo entityInfo, PlacementSettings placementSettings, Template template) {
 		if (entityInfo.nbt.contains("id") && Config.SETTINGS.BANNED_ENTITIES.get().contains(entityInfo.nbt.getString("id"))) {
-			ShrinesMod.LOGGER.info("Removed entity");
 			return null;
 		}
 		return entityInfo;

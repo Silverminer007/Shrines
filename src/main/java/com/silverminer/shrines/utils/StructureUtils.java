@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
@@ -73,8 +72,6 @@ public class StructureUtils {
 	}
 
 	public static void setupWorldGen() {
-		if (Config.SETTINGS.ADVANCED_LOGGING.get())
-			LOGGER.info("Generating {} Structures", NewStructureInit.STRUCTURES.size());
 		for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 			ShrinesStructure structure = holder.getStructure();
 			holder.configure();
