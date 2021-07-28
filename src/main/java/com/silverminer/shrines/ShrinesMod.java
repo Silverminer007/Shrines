@@ -47,9 +47,9 @@ public class ShrinesMod {
 	 * https://github.com/TelepathicGrunt/StructureTutorialMod
 	 * 
 	 * TODO 2.0.0 Move custom structures to jigsaw (add GUI to define pools and assigne a pool to an structure)
-	 * FIXME 2.0.0 Structures generation height fix -> Nether structures
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
-	 * FIXME 2.0.0 #8(Use a processor?)  & #13
+	 * TODO Config Types research
+	 * TODO Add improved debug logging
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * 
