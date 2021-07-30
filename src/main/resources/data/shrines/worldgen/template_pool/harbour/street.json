@@ -5,7 +5,7 @@
 		{
 			"weight": 1,
 			"element": {
-				"location": "shrines:harbour/street/corner_1",
+				"location": "shrines:harbour/street/curve_1",
 				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
@@ -14,7 +14,7 @@
 		{
 			"weight": 1,
 			"element": {
-				"location": "shrines:harbour/street/corner_2",
+				"location": "shrines:harbour/street/curve_2",
 				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
@@ -23,7 +23,7 @@
 		{
 			"weight": 1,
 			"element": {
-				"location": "shrines:harbour/street/cross_3",
+				"location": "shrines:harbour/street/cross",
 				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
@@ -32,7 +32,7 @@
 		{
 			"weight": 1,
 			"element": {
-				"location": "shrines:harbour/street/cross_4",
+				"location": "shrines:harbour/street/straight_1",
 				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
@@ -41,16 +41,7 @@
 		{
 			"weight": 1,
 			"element": {
-				"location": "shrines:harbour/street/long_straight",
-				"processors": "shrines:default_processors",
-				"projection": "rigid",
-				"element_type": "minecraft:single_pool_element"
-			}
-		},
-		{
-			"weight": 1,
-			"element": {
-				"location": "shrines:harbour/street/straight",
+				"location": "shrines:harbour/street/straight_2",
 				"processors": "shrines:default_processors",
 				"projection": "rigid",
 				"element_type": "minecraft:single_pool_element"
