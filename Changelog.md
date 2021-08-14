@@ -67,13 +67,26 @@
 #### SNAPSHOT 9
 - Added 'banned_blocks' option
 - Added 'banned_entities' option
+- Changed pieces of the harbour
+- Added some more debug logging
+- Added S1fy's 'Shrine of savanna'
 
 ##### Problems
-- No know new issues
+- Missed structure void in some pieces of the harbour so there is air instead of water
+
+##### Notes
+- New config options (banned blocks and banned entities) are only rarely tested, so major issue may arrise
+
+#### SNAPSHOT 10
+
+##### Problems
+- No new know issues
+
+##### Notes
+- These versions are alpha builds so anything can change in next release!
 
 #### Outstanding
 - Improved Custom structures GUI (rework old system as nothing works at this point)
-- Improve Harbour generation to make use of the new jigsaw system
 - reimplement Random varianting
 - Remove Shrines.properties file and replace options with ones in the TOML config
 

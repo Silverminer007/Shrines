@@ -57,6 +57,7 @@ public class NewStructureInit {
 		structures.add(new StructureRegistryHolder("nether_shrine", DefaultStructureConfig.NETHERSHRINE_CONFIG, true));
 		structures.add(new StructureRegistryHolder("oriental_sanctuary", DefaultStructureConfig.ORIENTALSANCTUARY_CONFIG, true));
 		structures.add(new StructureRegistryHolder("player_house", DefaultStructureConfig.PLAYERHOUSE_CONFIG, true));
+		structures.add(new StructureRegistryHolder("shrine_of_savanna", DefaultStructureConfig.SHRINEOFSAVANNA_CONFIG, true));
 		structures.add(new StructureRegistryHolder("small_temple", DefaultStructureConfig.SMALLTEMPLE_CONFIG, true));
 		structures.add(new StructureRegistryHolder("trader_house", DefaultStructureConfig.TRADER_HOUSE_CONFIG, true));
 		structures.add(new StructureRegistryHolder("watchtower", DefaultStructureConfig.WATCHTOWER_CONFIG, true));

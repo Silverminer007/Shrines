@@ -37,6 +37,17 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            // This allows for optional authentication with Mojang servers
+            // If you want to authenticate, put these properties in GRADLE_HOME/gradle.properties
+            if (project.hasProperty('mc_uuid')) {
+                args '--uuid', project.getProperty('mc_uuid')
+            }
+            if (project.hasProperty('mc_username')) {
+                args '--username', project.getProperty('mc_username')
+            }
+            if (project.hasProperty('mc_accessToken')) {
+                args '--accessToken', project.getProperty('mc_accessToken')
+            }
 
             mods {
                 shrines {
