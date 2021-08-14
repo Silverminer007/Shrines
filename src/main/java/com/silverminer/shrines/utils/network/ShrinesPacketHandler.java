@@ -36,6 +36,7 @@ public class ShrinesPacketHandler {
 			.networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
 	public static void register() {
+		LOGGER.debug("Initializing networking on version [{}]. This should match between client and server");
 		int id = 0;
 		CHANNEL.registerMessage(id++, CCustomStructuresPacket.class, CCustomStructuresPacket::encode,
 				CCustomStructuresPacket::decode, Handles.HandleCustomStructures::handleCustomStructuresServer);

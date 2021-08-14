@@ -57,6 +57,8 @@ public class DefaultStructureConfig {
 	public static final ConfigBuilder INFESTEDPRISON_CONFIG = new ConfigBuilder("Infested Prison", 567483014,
 			Type.LOOTABLE).setDistance(60).setSeparation(11);
 
+	public static final ConfigBuilder SHRINEOFSAVANNA_CONFIG = new ConfigBuilder("Shrine of savanna", 432333099, Type.LOOTABLE).setDistance(67).setSeparation(11);
+
 	public static final ConfigBuilder SMALLTEMPLE_CONFIG = new ConfigBuilder("Small Tempel", 4765321, Type.LOOTABLE).setDistance(75).setSeparation(13);
 
 	public static final ConfigBuilder TRADER_HOUSE_CONFIG = new ConfigBuilder("Trader House",

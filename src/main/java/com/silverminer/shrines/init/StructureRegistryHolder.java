@@ -32,6 +32,7 @@ public class StructureRegistryHolder {
 		}
 		this.name = new ResourceLocation(ShrinesMod.MODID, name).toString();
 		this.transformSurroundingLand = transformSurroundingLand;
+		ShrinesMod.LOGGER.debug("Registering structures for shrines mod. Current structure: {}", this.name);
 	}
 
 	public ShrinesStructure getStructure() {

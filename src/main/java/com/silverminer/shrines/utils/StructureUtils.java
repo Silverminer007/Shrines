@@ -72,9 +72,13 @@ public class StructureUtils {
 	}
 
 	public static void setupWorldGen() {
+		registerConfiguredStructureFeatures();
+		registerStructureSeperationSettings();
+	}
+
+	public static void registerStructureSeperationSettings() {
 		for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 			ShrinesStructure structure = holder.getStructure();
-			holder.configure();
 
 			StructureSeparationSettings structureSeparationSettings = new StructureSeparationSettings(
 					structure.getDistance(), structure.getSeparation(), structure.getSeedModifier());
@@ -93,14 +97,23 @@ public class StructureUtils {
 					structureMap.put(structure, structureSeparationSettings);
 				}
 			});
+			LOGGER.debug("Registered Structure Seperation Settings for {}", holder.getName());
+		}
+	}
 
+	public static void registerConfiguredStructureFeatures() {
+		for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+			ShrinesStructure structure = holder.getStructure();
+			holder.configure();
 			WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,
 					structure.getRegistryName().toString(), holder.getConfiguredStructure());
 			FlatGenerationSettings.STRUCTURE_FEATURES.put(structure, holder.getConfiguredStructure());
+			LOGGER.debug("Registered configured structure feature of {}", holder.getName());
 		}
 	}
 
 	private static Method GETCODEC_METHOD;
+
 	@SuppressWarnings("resource")
 	public static void addDimensionalSpacing(ServerWorld world) {
 
@@ -133,7 +146,8 @@ public class StructureUtils {
 		} else {
 			for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 				if (isAllowedForWorld(world, holder.getStructure().getConfig())) {
-					tempMap.putIfAbsent(holder.getStructure(), DimensionStructuresSettings.DEFAULTS.get(holder.getStructure()));
+					tempMap.putIfAbsent(holder.getStructure(),
+							DimensionStructuresSettings.DEFAULTS.get(holder.getStructure()));
 				} else {
 					tempMap.remove(holder.getStructure());
 				}
@@ -143,7 +157,7 @@ public class StructureUtils {
 	}
 
 	public static boolean isAllowedForWorld(ISeedReader currentWorld, IStructureConfig config) {
-		//return true;
+		// return true;
 		String worldID = currentWorld.getLevel().dimension().location().toString();
 		return config.getDimensions().contains(worldID);
 	}
