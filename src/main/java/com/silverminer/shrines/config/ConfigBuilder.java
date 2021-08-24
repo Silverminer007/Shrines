@@ -25,7 +25,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
  *
  */
 public class ConfigBuilder implements IStructureConfig {
-	protected final Type type;
 	protected final String name;
 	protected boolean generate = true;
 	protected double spawnChance = 0.6D;
@@ -38,25 +37,16 @@ public class ConfigBuilder implements IStructureConfig {
 	protected ArrayList<String> blacklist = Lists.newArrayList();
 	protected ArrayList<String> dimensions = Lists.newArrayList("minecraft:overworld");
 	protected boolean useRandomVarianting = true;
-	protected double lootChance = 1.0D;
 	protected boolean spawn_villagers = true;
 
-	public ConfigBuilder(String name, int seed, Type typeIn) {
+	public ConfigBuilder(String name, int seed) {
 		this.name = name;
 		this.seed = seed;
-		this.type = typeIn;
 	}
 
 	public NewStructureConfig build(final ForgeConfigSpec.Builder SERVER_BUILDER) {
-		switch (this.type) {
-		case NORMAL:
 			return new NewStructureConfig(SERVER_BUILDER, name, generate, spawnChance, distance,
-					separation, seed, biomes, blacklist, dimensions, useRandomVarianting, null);
-		case LOOTABLE:
-			return new NewStructureConfig(SERVER_BUILDER, name, generate, spawnChance, distance,
-					separation, seed, biomes, blacklist, dimensions, useRandomVarianting, lootChance);
-		}
-		return null;
+					separation, seed, biomes, blacklist, dimensions, useRandomVarianting);
 	}
 
 	public ConfigBuilder setGenerate(boolean generate) {
@@ -66,11 +56,6 @@ public class ConfigBuilder implements IStructureConfig {
 
 	public ConfigBuilder setSpawnVillagers(boolean spawn_villagers) {
 		this.spawn_villagers = spawn_villagers;
-		return this;
-	}
-
-	public ConfigBuilder setLootChance(double lootChance) {
-		this.lootChance = lootChance;
 		return this;
 	}
 
@@ -178,15 +163,6 @@ public class ConfigBuilder implements IStructureConfig {
 	@Override
 	public boolean getUseRandomVarianting() {
 		return this.useRandomVarianting;
-	}
-
-	@Override
-	public double getLootChance() {
-		return this.lootChance;
-	}
-
-	public static enum Type {
-		NORMAL, LOOTABLE;
 	}
 
 	@Override

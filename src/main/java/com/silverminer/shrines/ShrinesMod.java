@@ -50,7 +50,6 @@ public class ShrinesMod {
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
 	 * TODO Config Types research
 	 * TODO Add improved debug logging
-	 * TODO Remove Config Type lootable as there is only special option any more
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * 

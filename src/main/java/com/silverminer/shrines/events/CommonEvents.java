@@ -19,8 +19,8 @@ import org.apache.logging.log4j.Logger;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
-import com.silverminer.shrines.init.RegisterStructureProcessors;
 import com.silverminer.shrines.init.StructureRegistryHolder;
+import com.silverminer.shrines.structures.processors.ProcessorTypes;
 import com.silverminer.shrines.utils.StructureUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
@@ -49,7 +49,7 @@ public class CommonEvents {
 		public static void commonSetupEvent(FMLCommonSetupEvent event) {
 			event.enqueueWork(() -> {
 				ShrinesPacketHandler.register();
-				RegisterStructureProcessors.load();
+				ProcessorTypes.register();
 				StructureUtils.setupWorldGen();
 			});
 		}
@@ -99,6 +99,10 @@ public class CommonEvents {
 		@SubscribeEvent
 		public static void onWorldLoad(WorldEvent.Load event) {
 			if (event.getWorld() instanceof ServerWorld) {
+				LOGGER.info("Loading world with dimension: {}",
+						((ServerWorld) event.getWorld()).dimension().location().toString());
+				LOGGER.info("Configured Dimensions of {}: {}", NewStructureInit.STRUCTURES.get(0).getName(),
+						NewStructureInit.STRUCTURES.get(0).getStructure().getConfig().getDimensions());
 				StructureUtils.addDimensionalSpacing((ServerWorld) event.getWorld());
 			}
 			if (Config.SETTINGS.ADVANCED_LOGGING.get())

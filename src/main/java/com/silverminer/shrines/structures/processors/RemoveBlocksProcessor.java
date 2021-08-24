@@ -12,12 +12,11 @@ import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
 
 public class RemoveBlocksProcessor extends StructureProcessor {
-	public static final Codec<RemoveBlocksProcessor> CODEC;
-	public static final RemoveBlocksProcessor INSTANCE = new RemoveBlocksProcessor();
+	public static final Codec<RemoveBlocksProcessor> CODEC = Codec.unit(RemoveBlocksProcessor::new);
 
 	@Override
 	protected IStructureProcessorType<?> getType() {
-		return null;
+		return ProcessorTypes.REMOVE_BLOCKS_PROCESSOR;
 	}
 
 	public Template.BlockInfo processBlock(IWorldReader world, BlockPos position1, BlockPos position2,
@@ -34,11 +33,5 @@ public class RemoveBlocksProcessor extends StructureProcessor {
 			return null;
 		}
 		return entityInfo;
-	}
-
-	static {
-		CODEC = Codec.unit(() -> {
-			return INSTANCE;
-		});
 	}
 }

@@ -37,7 +37,6 @@ public class NewStructureConfig implements IStructureConfig {
 	protected final ForgeConfigSpec.ConfigValue<List<? extends String>> BIOME_BLACKLIST;
 	protected final ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSIONS;
 	protected final ForgeConfigSpec.ConfigValue<Boolean> USE_RANDOM_VARIANTING;
-	protected final ForgeConfigSpec.ConfigValue<Double> LOOT_CHANCE;
 	protected final List<ShrinesConfigOption<?>> OPTIONS = Lists.newArrayList();
 
 	protected static final RuntimeException INVALID_ACCESS = new RuntimeException(
@@ -46,7 +45,7 @@ public class NewStructureConfig implements IStructureConfig {
 	public NewStructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER, String name, Boolean generate,
 			Double spawn_chance, Integer distance, Integer seperation, Integer seed,
 			List<Biome.Category> categories, List<String> blacklist, List<String> dimensions,
-			Boolean useRandomVarianting, Double loot_chance) {
+			Boolean useRandomVarianting) {
 		this.name = name;
 		String dataName = name.toLowerCase(Locale.ROOT).replaceAll(" ", "_");
 		if (generate != null) {
@@ -115,14 +114,6 @@ public class NewStructureConfig implements IStructureConfig {
 			OPTIONS.add(new ShrinesConfigOption<Boolean>(USE_RANDOM_VARIANTING, useRandomVarianting));
 		} else {
 			USE_RANDOM_VARIANTING = null;
-		}
-		if (loot_chance != null) {
-			LOOT_CHANCE = SERVER_BUILDER.comment(name + " Generate Loot Chance [default: " + loot_chance + "]")
-					.worldRestart().defineInRange("structures." + dataName.toLowerCase(Locale.ROOT) + ".loot_chance",
-							loot_chance, 0.0, 1.0);
-			OPTIONS.add(new ShrinesConfigOption<Double>(LOOT_CHANCE, loot_chance));
-		} else {
-			LOOT_CHANCE = null;
 		}
 	}
 
@@ -218,14 +209,6 @@ public class NewStructureConfig implements IStructureConfig {
 			throw INVALID_ACCESS;
 		}
 		return USE_RANDOM_VARIANTING.get();
-	}
-
-	@Override
-	public double getLootChance() {
-		if (LOOT_CHANCE == null) {
-			throw INVALID_ACCESS;
-		}
-		return LOOT_CHANCE.get();
 	}
 
 	@Override
