@@ -78,9 +78,12 @@
 - New config options (banned blocks and banned entities) are only rarely tested, so major issue may arrise
 
 #### SNAPSHOT 10
+- Fixed #18
+- Removed unused loot chance option
+- Added Blame to dev env.
 
 ##### Problems
-- No new know issues
+- #17 isn't fixed yet
 
 ##### Notes
 - These versions are alpha builds so anything can change in next release!

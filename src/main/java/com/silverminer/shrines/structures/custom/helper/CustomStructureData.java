@@ -508,11 +508,6 @@ public class CustomStructureData implements IStructureConfig {
 	}
 
 	@Override
-	public double getLootChance() {
-		throw new RuntimeException("Tried to access loot chance of custom structure but there is no");
-	}
-
-	@Override
 	public int compareTo(IStructureConfig o) {
 		return this.getName().compareTo(o.getName());
 	}
