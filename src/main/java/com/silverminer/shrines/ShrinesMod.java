@@ -17,13 +17,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
-import com.silverminer.shrines.utils.client.ClientUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.proxy.ClientProxy;
-import com.silverminer.shrines.utils.proxy.ServerProxy;
 import com.silverminer.shrines.utils.proxy.IProxy;
+import com.silverminer.shrines.utils.proxy.ServerProxy;
 
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -43,35 +41,35 @@ public class ShrinesMod {
 
 	/**
 	 * 
-	 * If you're looking for example code on how to make a structure Mod see TelepathicGrunt's Example Mod on how to do that:
+	 * If you're looking for example code on how to make a structure Mod see
+	 * TelepathicGrunt's Example Mod on how to do that:
 	 * https://github.com/TelepathicGrunt/StructureTutorialMod
 	 * 
-	 * TODO 2.0.0 Move custom structures to jigsaw (add GUI to define pools and assigne a pool to an structure)
+	 * TODO 2.0.0 add GUI to define pools and assigne a pool to an structure
+	 * 
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
-	 * TODO Config Types research
+	 * 
 	 * TODO Add improved debug logging
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * 
 	 * 
-	 * Releases:
-	 * - 2.0.0 Bug fix update
-	 * - 3.0.0 Mc1.17 Update
-	 * - 3.0.1 Bugfixes of 3.0.0 and some new features
+	 * Releases: - 2.0.0 Bug fix update - 3.0.0 Mc1.17 Update - 3.0.1 Bugfixes of
+	 * 3.0.0 and some new features
 	 * 
-	 * NOTE: Test command: /execute positioned ~10000 ~ ~ run locate 
+	 * NOTE: Test command: /execute positioned ~10000 ~ ~ run locate
 	 * 
 	 */
 	public ShrinesMod() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
 				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-		Utils.loadCustomStructures();
+		Utils.loadStructures();
 		NewStructureInit.load();
 		registerConfig();
 	}
 
-	public static IProxy getProxy(){
-		if(proxy == null) {
+	public static IProxy getProxy() {
+		if (proxy == null) {
 			setProxy();
 		}
 		return proxy;
@@ -85,9 +83,10 @@ public class ShrinesMod {
 		// Config
 		Config.register(ModLoadingContext.get());
 		// Setup config UI
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
-					() -> ClientUtils::getConfigGui);
-		});
+		/*
+		 * DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		 * ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.
+		 * CONFIGGUIFACTORY, () -> ClientUtils::getConfigGui); });
+		 */
 	}
 }

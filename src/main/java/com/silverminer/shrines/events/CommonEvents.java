@@ -11,8 +11,6 @@
  */
 package com.silverminer.shrines.events;
 
-import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,14 +20,9 @@ import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.structures.processors.ProcessorTypes;
 import com.silverminer.shrines.utils.StructureUtils;
-import com.silverminer.shrines.utils.custom_structures.Utils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import com.silverminer.shrines.utils.saves.BoundSaveData;
 
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -37,7 +30,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 
 public class CommonEvents {
 	protected static final Logger LOGGER = LogManager.getLogger(CommonEvents.class);
@@ -63,36 +55,10 @@ public class CommonEvents {
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 					if (holder.getStructure().getConfig().getGenerate() && StructureUtils.checkBiome(
-							holder.getStructure().getConfig().getWhitelist(),
-							holder.getStructure().getConfig().getBlacklist(), event.getName(), event.getCategory())) {
+							holder.getStructure().getConfig().getBiome_blacklist(), event.getName())) {
 						event.getGeneration().addStructureStart(holder.getConfiguredStructure());
 					}
 				}
-			}
-		}
-
-		@SubscribeEvent
-		public static void onPlayerJoin(PlayerLoggedInEvent event) {
-			Utils.setSend(true);
-			Utils.onChanged(true);
-			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.info(Utils.getStructures(true).stream().map(st -> st.getName()).collect(Collectors.toList()));
-		}
-
-		@SubscribeEvent
-		public static void onWorldSaved(WorldEvent.Save event) {
-			if (Utils.properties.autosave)
-				Utils.saveStructures();
-		}
-
-		@SubscribeEvent
-		public static void onWorldStopped(WorldEvent.Unload event) {
-			IWorld iworld = event.getWorld();
-
-			if (!(iworld instanceof World))
-				return;
-			if (!((World) iworld).isClientSide() && ((World) iworld).dimension() == World.OVERWORLD) {
-				Utils.getStructures(true).forEach(csd -> csd.PIECES_ON_FLY.clear());
 			}
 		}
 
@@ -101,26 +67,10 @@ public class CommonEvents {
 			if (event.getWorld() instanceof ServerWorld) {
 				LOGGER.info("Loading world with dimension: {}",
 						((ServerWorld) event.getWorld()).dimension().location().toString());
-				LOGGER.info("Configured Dimensions of {}: {}", NewStructureInit.STRUCTURES.get(0).getName(),
-						NewStructureInit.STRUCTURES.get(0).getStructure().getConfig().getDimensions());
+				LOGGER.info("Configured Dimensions of {}: {}", NewStructureInit.STRUCTURES.get(0).getStructure().getConfig().getName(),
+						NewStructureInit.STRUCTURES.get(0).getStructure().getConfig().getDimension_whitelist());
 				StructureUtils.addDimensionalSpacing((ServerWorld) event.getWorld());
 			}
-			if (Config.SETTINGS.ADVANCED_LOGGING.get())
-				LOGGER.info("Loading bound data from file");
-			IWorld iworld = event.getWorld();
-
-			if (iworld instanceof ServerWorld) {
-				ServerWorld world = (ServerWorld) iworld;
-				if (!world.isClientSide() && world.dimension() == World.OVERWORLD) {
-					Utils.boundDataSave = BoundSaveData.get(world);
-				}
-			}
-		}
-
-		@SubscribeEvent
-		public static void onServerStarted(FMLServerStartedEvent event) {
-			// Apply custom structure data packs here? -> Take a look at ReloadListener and
-			// stuff
 		}
 	}
 }

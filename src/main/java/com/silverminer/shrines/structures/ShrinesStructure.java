@@ -21,10 +21,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.config.ConfigBuilder;
-import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
+import com.silverminer.shrines.new_custom_structures.StructureData;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;
@@ -50,15 +49,14 @@ import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.structure.VillageConfig;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ShrinesStructure extends Structure<NoFeatureConfig> {
 	protected static final Logger LOGGER = LogManager.getLogger(ShrinesStructure.class);
 
 	public final String name;
-	public IStructureConfig structureConfig;
+	public StructureData structureConfig;
 
-	public ShrinesStructure(String nameIn, IStructureConfig config) {
+	public ShrinesStructure(String nameIn, StructureData config) {
 		super(NoFeatureConfig.CODEC);
 		this.name = nameIn;
 		this.structureConfig = config;
@@ -80,29 +78,23 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 	}
 
 	public int getSeparation() {
-		return (int) (this.getConfig().getSeparation() * Config.SETTINGS.SEPERATION_FACTOR.get());
+		return (int) (this.getConfig().getSeperation() * Config.SETTINGS.SEPERATION_FACTOR.get());
 	}
 
 	public int getSeedModifier() {
-		return this.getConfig().getSeed();
+		return this.getConfig().getSeed_modifier();
 	}
 
 	public double getSpawnChance() {
-		return this.getConfig().getSpawnChance();
+		return this.getConfig().getSpawn_chance();
 	}
 
 	public List<? extends String> getDimensions() {
-		return this.getConfig().getDimensions();
+		return this.getConfig().getDimension_whitelist();
 	}
 
-	public IStructureConfig getConfig() {
+	public StructureData getConfig() {
 		return this.structureConfig;
-	}
-
-	public void buildConfig(final ForgeConfigSpec.Builder BUILDER) {
-		if (this.structureConfig instanceof ConfigBuilder) {
-			this.structureConfig = ((ConfigBuilder) this.structureConfig).build(BUILDER);
-		}
 	}
 
 	@Override

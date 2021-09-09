@@ -20,21 +20,14 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.client.gui.config.ShrinesStructuresScreen;
-import com.silverminer.shrines.client.gui.config.resource.AddResourceScreen;
-import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
-import com.silverminer.shrines.structures.custom.helper.ResourceData;
 import com.silverminer.shrines.utils.client.ClientUtils;
-import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -88,14 +81,14 @@ public class ClientEvents {
 			IVertexBuilder vb = buffer.getBuffer(RenderType.lines());
 
 			// Color of the bound (White)
-			Color c = new Color(Utils.properties.bound_color);
+			Color c = new Color(255);
 			// Split up in red, green and blue and transform it to 0.0 - 1.0
 			float red = c.getRed() / 255.0f;
 			float green = c.getGreen() / 255.0f;
 			float blue = c.getBlue() / 255.0f;
 
-			// Iterate over all bounds to draw
-			for (CustomStructureData data : Utils.getStructures(false)) {
+			// Iterate over all bounds to draw//TODO Readd later
+			/*for (CustomStructureData data : Utils.getStructures(false)) {
 				for (ResourceData rd : data.PIECES_ON_FLY) {
 					if (rd.getDimension() == dim) {
 						MutableBoundingBox mbb = rd.getBounds();
@@ -104,7 +97,7 @@ public class ClientEvents {
 								blue, 1.0f, red, green, blue);
 					}
 				}
-			}
+			}*/
 			ms.popPose();
 			// This line is important. Without it rendering does curious things
 			buffer.endBatch(RenderType.lines());
@@ -116,11 +109,7 @@ public class ClientEvents {
 			int scanCode = event.getScanCode();
 			if (ClientUtils.structuresScreen.matches(keyCode, scanCode) && Minecraft.getInstance().screen == null
 					&& Minecraft.getInstance().player != null && Minecraft.getInstance().player.hasPermissions(2)) {
-				if (AddResourceScreen.isInPiecesScreen == null) {
-					Minecraft.getInstance().setScreen(new ShrinesStructuresScreen(null));
-				} else {
-					Minecraft.getInstance().setScreen(AddResourceScreen.isInPiecesScreen);
-				}
+				
 			}
 		}
 	}

@@ -25,19 +25,12 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 public class Config {
-
-	public static final ForgeConfigSpec SERVER_STRUCTURES_CONFIG;
-	public static final StructureConfig STRUCTURES;
 	public static final ForgeConfigSpec SERVER_SETTINGS_CONFIG;
 	public static final ShrinesSettingsConfig SETTINGS;
 
 	static {
-		final Pair<StructureConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
-				.configure(StructureConfig::new);
 		final Pair<ShrinesSettingsConfig, ForgeConfigSpec> settingsPair = new ForgeConfigSpec.Builder()
 				.configure(ShrinesSettingsConfig::new);
-		SERVER_STRUCTURES_CONFIG = specPair.getRight();
-		STRUCTURES = specPair.getLeft();
 		SERVER_SETTINGS_CONFIG = settingsPair.getRight();
 		SETTINGS = settingsPair.getLeft();
 	}
@@ -50,9 +43,7 @@ public class Config {
 	}
 
 	public static void register(final ModLoadingContext context) {
-		context.registerConfig(ModConfig.Type.SERVER, SERVER_STRUCTURES_CONFIG);
-		Config.loadConfig(SERVER_STRUCTURES_CONFIG, FMLPaths.CONFIGDIR.get().resolve(ShrinesMod.MODID + "-server.toml").toString());
 		context.registerConfig(ModConfig.Type.COMMON, SERVER_SETTINGS_CONFIG);
-		Config.loadConfig(SERVER_SETTINGS_CONFIG, FMLPaths.CONFIGDIR.get().resolve(ShrinesMod.MODID + "-common.toml").toString());
+		Config.loadConfig(SERVER_SETTINGS_CONFIG, FMLPaths.CONFIGDIR.get().resolve(ShrinesMod.MODID + "-server.toml").toString());
 	}
 }

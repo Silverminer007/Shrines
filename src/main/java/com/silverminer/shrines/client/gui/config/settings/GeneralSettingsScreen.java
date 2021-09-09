@@ -4,10 +4,8 @@ import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.silverminer.shrines.client.gui.config.options.SettingsBlacklistScreen;
 import com.silverminer.shrines.client.gui.config.widgets.buttons.CheckboxButtonEx;
 import com.silverminer.shrines.client.gui.config.widgets.buttons.ValidationStatusButton;
-import com.silverminer.shrines.config.Config;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -288,8 +286,7 @@ public class GeneralSettingsScreen extends Screen {
 				} else if (value instanceof List<?>) {
 					furtherScreenButton = new Button(0, 0, 100, 20,
 							new TranslationTextComponent(this.valueSpec.getTranslationKey()), (button) -> {
-								GeneralSettingsScreen.this.minecraft.setScreen(new SettingsBlacklistScreen(
-										GeneralSettingsScreen.this, title, Config.SETTINGS.BLACKLISTED_BIOMES.get()));
+								GeneralSettingsScreen.this.minecraft.setScreen(null);
 							});
 					this.children = ImmutableList.of(this.validatedButton, this.needsWorldRestartButton,
 							this.furtherScreenButton);
