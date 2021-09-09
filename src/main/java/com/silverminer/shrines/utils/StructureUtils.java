@@ -22,18 +22,16 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.config.IStructureConfig;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
+import com.silverminer.shrines.new_custom_structures.StructureData;
 import com.silverminer.shrines.structures.ShrinesStructure;
-import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.FlatGenerationSettings;
@@ -50,25 +48,13 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 public class StructureUtils {
 	protected static final Logger LOGGER = LogManager.getLogger(StructureUtils.class);
 
-	public static IStructureConfig getConfigOf(String structure, boolean onServer) {
-		for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-			if (holder.getStructure().getConfig().getName().equals(structure)) {
-				return holder.getStructure().getConfig();
-			}
-		}
-		return Utils.getData(structure, onServer);
-	}
-
-	public static boolean checkBiome(List<? extends Object> allowedBiomeCategories,
-			List<? extends String> blacklistedBiomes, ResourceLocation name, Biome.Category category) {
-		boolean flag = allowedBiomeCategories.contains(category.toString())
-				|| allowedBiomeCategories.contains(category);
-
-		if (!blacklistedBiomes.isEmpty() && flag) {
-			flag = !blacklistedBiomes.contains(name.toString());
+	public static boolean checkBiome(
+			List<? extends String> blacklistedBiomes, ResourceLocation name) {
+		if (!blacklistedBiomes.isEmpty()) {
+			return !blacklistedBiomes.contains(name.toString());
 		}
 
-		return flag;
+		return true;
 	}
 
 	public static void setupWorldGen() {
@@ -97,7 +83,7 @@ public class StructureUtils {
 					structureMap.put(structure, structureSeparationSettings);
 				}
 			});
-			LOGGER.debug("Registered Structure Seperation Settings for {}", holder.getName());
+			LOGGER.debug("Registered Structure Seperation Settings for {}", holder.getStructure().getConfig().getName());
 		}
 	}
 
@@ -108,7 +94,7 @@ public class StructureUtils {
 			WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,
 					structure.getRegistryName().toString(), holder.getConfiguredStructure());
 			FlatGenerationSettings.STRUCTURE_FEATURES.put(structure, holder.getConfiguredStructure());
-			LOGGER.debug("Registered configured structure feature of {}", holder.getName());
+			LOGGER.debug("Registered configured structure feature of {}", holder.getStructure().getConfig().getName());
 		}
 	}
 
@@ -156,9 +142,9 @@ public class StructureUtils {
 		world.getChunkSource().generator.getSettings().structureConfig = tempMap;
 	}
 
-	public static boolean isAllowedForWorld(ISeedReader currentWorld, IStructureConfig config) {
+	public static boolean isAllowedForWorld(ISeedReader currentWorld, StructureData config) {
 		// return true;
 		String worldID = currentWorld.getLevel().dimension().location().toString();
-		return config.getDimensions().contains(worldID);
+		return config.getDimension_whitelist().contains(worldID);
 	}
 }

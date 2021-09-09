@@ -12,7 +12,6 @@
 package com.silverminer.shrines.init;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,8 +19,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.structures.DefaultStructureConfig;
-import com.silverminer.shrines.structures.custom.helper.CustomStructureData;
+import com.silverminer.shrines.new_custom_structures.StructureData;
+import com.silverminer.shrines.new_custom_structures.StructuresPacket;
 import com.silverminer.shrines.utils.custom_structures.Utils;
 
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -36,53 +35,36 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber(modid = ShrinesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class NewStructureInit {
 	protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
-	public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList.<StructureRegistryHolder>builder().addAll(initStructures()).build();
+	public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
+			.<StructureRegistryHolder>builder().addAll(initStructures()).build();
 
-	public static void load() {};
+	public static void load() {
+	};
 
-	private static ArrayList<StructureRegistryHolder>  initStructures() {
+	private static ArrayList<StructureRegistryHolder> initStructures() {
 		ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
-		structures.add(new StructureRegistryHolder("abandoned_witch_house", DefaultStructureConfig.ABANDONEDWITCHHOUSE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("balloon", DefaultStructureConfig.BALLON_CONFIG, false));
-		structures.add(new StructureRegistryHolder("bees", DefaultStructureConfig.BEES_CONFIG, true));
-		structures.add(new StructureRegistryHolder("end_temple", DefaultStructureConfig.ENDTEMPLE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("flooded_temple", DefaultStructureConfig.FLOODEDTEMPLE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("guardian_meeting", DefaultStructureConfig.GUARDIANMEETING_CONFIG, true));
-		structures.add(new StructureRegistryHolder("harbour", DefaultStructureConfig.HARBOUR_CONFIG, false));
-		structures.add(new StructureRegistryHolder("high_temple", DefaultStructureConfig.HIGHTEMPLE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("infested_prison", DefaultStructureConfig.INFESTEDPRISON_CONFIG, true));
-		structures.add(new StructureRegistryHolder("jungle_tower", DefaultStructureConfig.JUNGLETOWER_CONFIG, true));
-		structures.add(new StructureRegistryHolder("mineral_temple", DefaultStructureConfig.MINERALTEMPLE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("nether_pyramid", DefaultStructureConfig.NETHERPYRAMID_CONFIG, true));
-		structures.add(new StructureRegistryHolder("nether_shrine", DefaultStructureConfig.NETHERSHRINE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("oriental_sanctuary", DefaultStructureConfig.ORIENTALSANCTUARY_CONFIG, true));
-		structures.add(new StructureRegistryHolder("player_house", DefaultStructureConfig.PLAYERHOUSE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("shrine_of_savanna", DefaultStructureConfig.SHRINEOFSAVANNA_CONFIG, true));
-		structures.add(new StructureRegistryHolder("small_temple", DefaultStructureConfig.SMALLTEMPLE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("trader_house", DefaultStructureConfig.TRADER_HOUSE_CONFIG, true));
-		structures.add(new StructureRegistryHolder("watchtower", DefaultStructureConfig.WATCHTOWER_CONFIG, true));
-		structures.add(new StructureRegistryHolder("water_shrine", DefaultStructureConfig.WATERSHRINE_CONFIG, true));
-		initCustomStructures(structures);
-		return structures;
-	}
-
-	private static void initCustomStructures(ArrayList<StructureRegistryHolder> structures) {
 		LOGGER.info("Registering custom structures");
-		for (CustomStructureData csd : Utils.getStructures(true)) {
-			String name = csd.getName().toLowerCase(Locale.ROOT);
+		for (StructuresPacket packet : Utils.STRUCTURE_PACKETS) {
+			for (StructureData structure : packet.getStructures()) {
+				if (structure.successful) {
+					String name = structure.getKey();
 
-			structures.add(new StructureRegistryHolder(name, csd, true, true));// TODO Add option to custom structures 'transform surrounding land'
+					structures.add(new StructureRegistryHolder(name, structure));
+				}
+			}
 		}
+		return structures;
 	}
 
 	@SubscribeEvent
 	public static void regsiterStructures(RegistryEvent.Register<Structure<?>> event) {
 		for (StructureRegistryHolder structure : STRUCTURES) {
 			if (!Structure.STRUCTURES_REGISTRY.containsValue(structure.getStructure())) {
-				Structure.STRUCTURES_REGISTRY.putIfAbsent(structure.getName(), structure.getStructure());
+				Structure.STRUCTURES_REGISTRY.putIfAbsent(structure.getStructure().getConfig().getKey(),
+						structure.getStructure());
 			}
 
-			if (structure.isTransformSurroundingLand()) {
+			if (structure.getStructure().getConfig().getTransformLand()) {
 				Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()
 						.addAll(Structure.NOISE_AFFECTING_FEATURES).add(structure.getStructure()).build();
 			}

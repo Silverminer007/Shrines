@@ -38,14 +38,6 @@ public class ShrinesPacketHandler {
 	public static void register() {
 		LOGGER.debug("Initializing networking on version [{}]. This should match between client and server");
 		int id = 0;
-		CHANNEL.registerMessage(id++, CCustomStructuresPacket.class, CCustomStructuresPacket::encode,
-				CCustomStructuresPacket::decode, Handles.HandleCustomStructures::handleCustomStructuresServer);
-		CHANNEL.registerMessage(id++, SCustomStructuresPacket.class, SCustomStructuresPacket::encode,
-				SCustomStructuresPacket::decode, Handles.HandleCustomStructures::handleCustomStructuresClient);
-		CHANNEL.registerMessage(id++, CSaveCustomStructuresPacket.class, CSaveCustomStructuresPacket::encode,
-				CSaveCustomStructuresPacket::decode, Handles.HandleCustomStructures::handleSaveCS);
-		CHANNEL.registerMessage(id++, SSaveCSDonePacket.class, SSaveCSDonePacket::encode,
-				SSaveCSDonePacket::decode, Handles.HandleCustomStructures::handleSaveCSDone);
 	}
 
 	public static void sendTo(IPacket message, PlayerEntity player) {
