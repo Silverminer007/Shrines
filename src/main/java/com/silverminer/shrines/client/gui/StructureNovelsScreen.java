@@ -43,7 +43,7 @@ public class StructureNovelsScreen extends Screen {
 		this.list = new StructureNovelsList(this.minecraft, this.width, this.height, this.isExpanded ? 52 : 26,
 				this.height, this.itemSize, () -> {
 					return this.searchBox.getValue();
-				}, packets);
+				}, packets, this);
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
 				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
 					this.minecraft.setScreen(lastScreen);

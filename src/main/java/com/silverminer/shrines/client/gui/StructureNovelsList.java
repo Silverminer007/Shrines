@@ -23,11 +23,13 @@ import net.minecraft.util.ResourceLocation;
 
 public class StructureNovelsList extends IconList<StructureNovelsEntry> {// TODO Add back button
 	protected static final Logger LOGGER = LogManager.getLogger(StructureNovelsList.class);
+	private final StructureNovelsScreen screen;
 
 	public StructureNovelsList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight,
-			Supplier<String> search, List<StructuresPacket> packets) {
+			Supplier<String> search, List<StructuresPacket> packets, StructureNovelsScreen screen) {
 		super(minecraft, width, height, y0, y1, itemHeight);
 		this.refreshList(search, packets);
+		this.screen = screen;
 	}
 
 	public void refreshList(Supplier<String> filter, List<StructuresPacket> packets) {
@@ -101,6 +103,7 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {// TODO
 				// Open Novels screen
 				LOGGER.info("I'm gonna open the new Novels screen with the Novel of [{}]. Here's the Novel:\n{}",
 						data.getName(), data.getNovel());
+				StructureNovelsList.this.minecraft.setScreen(new StructureNovelScreen(StructureNovelsList.this.screen));
 				return true;
 			} else {
 				StructureNovelsList.this.setSelected(this);
