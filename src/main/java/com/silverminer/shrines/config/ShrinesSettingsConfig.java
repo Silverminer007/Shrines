@@ -38,11 +38,11 @@ public class ShrinesSettingsConfig {
 						Lists.newArrayList(), ShrinesSettingsConfig::validateBiome);
 		DISTANCE_FACTOR = SERVER_BUILDER.comment(
 				"Distance Factor (Default 1.0) Is multiplied on the structures distance. Allows changing distance of every structure at once. See 'Structure Min Distance' too")
-				.translation("config.shrines.distance_factor").worldRestart()
+				.translation("config.shrines.distance_factor")
 				.defineInRange("structures.distance_factor", 1.0, 0.0, 100.0);
 		SEPERATION_FACTOR = SERVER_BUILDER.comment(
 				"Seperation Factor (Default 1.0) Is multiplied on the structures seperation. Allows changing seperation of every structure at once. See 'Structure Min Distance' too")
-				.translation("config.shrines.seperation_factor").worldRestart()
+				.translation("config.shrines.seperation_factor")
 				.defineInRange("structures.seperation_factor", 1.0, 0.0, 100.0);
 		STRUCTURE_MIN_DISTANCE = SERVER_BUILDER.comment(
 				"The structures min. distance is the smallest possible distance between two structures (of this mod). You should set this to an lower value if you set the distance and seperation to lower values, because to high distances here can prevent any structure from spawning")

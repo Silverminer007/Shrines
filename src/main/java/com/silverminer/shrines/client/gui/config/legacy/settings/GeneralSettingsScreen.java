@@ -1,11 +1,11 @@
-package com.silverminer.shrines.client.gui.config.settings;
+package com.silverminer.shrines.client.gui.config.legacy.settings;
 
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.silverminer.shrines.client.gui.config.widgets.buttons.CheckboxButtonEx;
-import com.silverminer.shrines.client.gui.config.widgets.buttons.ValidationStatusButton;
+import com.silverminer.shrines.client.gui.config.legacy.widgets.buttons.CheckboxButtonEx;
+import com.silverminer.shrines.client.gui.config.legacy.widgets.buttons.ValidationStatusButton;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -53,9 +53,9 @@ public class GeneralSettingsScreen extends Screen {
 		int titleHeight = mc.font.wordWrapHeight(title.getString(), width - 2 * PADDING);
 		int paddedTitleHeight = titleHeight + PADDING * 2;
 
-		addButton(width - 120 - 2 * PADDING, 0, 60, paddedTitleHeight, new StringTextComponent("Back"),
+		addButton(width - 120 - 2 * PADDING, 0, 60, paddedTitleHeight, new TranslationTextComponent("gui.shrines.structures.back"),
 				button -> mc.setScreen(parent));
-		addButton(width - 60 - PADDING, 0, 60, paddedTitleHeight, new StringTextComponent("Save"), button -> {
+		addButton(width - 60 - PADDING, 0, 60, paddedTitleHeight, new TranslationTextComponent("gui.shrines.structures.save"), button -> {
 			this.optionList.commitChanges();
 			for (ForgeConfigSpec spec : configSpecs)
 				spec.save();

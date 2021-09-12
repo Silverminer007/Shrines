@@ -11,21 +11,23 @@
  */
 package com.silverminer.shrines;
 
+import java.io.File;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.utils.client.ClientUtils;
 import com.silverminer.shrines.utils.custom_structures.Utils;
-import com.silverminer.shrines.utils.proxy.ClientProxy;
-import com.silverminer.shrines.utils.proxy.IProxy;
-import com.silverminer.shrines.utils.proxy.ServerProxy;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 
 /**
@@ -36,8 +38,6 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 public class ShrinesMod {
 	public static final String MODID = "shrines";
 	public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
-
-	protected static IProxy proxy;
 
 	/**
 	 * 
@@ -68,25 +68,18 @@ public class ShrinesMod {
 		registerConfig();
 	}
 
-	public static IProxy getProxy() {
-		if (proxy == null) {
-			setProxy();
-		}
-		return proxy;
+	public static File getMinecraftDirectory() {
+		return FMLPaths.GAMEDIR.get().toFile();// TODO Test this serverside and clientside -> Looks like it works in singleplayer
 	}
-
-	public static void setProxy() {
-		proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
-	}
-
 	public static void registerConfig() {
 		// Config
 		Config.register(ModLoadingContext.get());
 		// Setup config UI
-		/*
-		 * DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-		 * ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.
-		 * CONFIGGUIFACTORY, () -> ClientUtils::getConfigGui); });
-		 */
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
+					() -> ClientUtils::getConfigGui);
+		});
+
 	}
 }

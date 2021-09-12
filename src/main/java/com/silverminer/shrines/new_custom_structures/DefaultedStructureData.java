@@ -33,11 +33,17 @@ public class DefaultedStructureData {
 	protected int height_offset;
 	protected ArrayList<String> biome_blacklist = Lists.newArrayList();
 	protected ArrayList<String> dimension_whitelist = Lists.newArrayList("minecraft:overworld");
+	protected String novel = "";
 
 	public DefaultedStructureData(String name, String key, int seed_modifier) {
 		this.name = name;
 		this.key = key;
 		this.seed_modifier = seed_modifier;
+	}
+
+	public DefaultedStructureData setNovel(String novel) {
+		this.novel = novel;
+		return this;
 	}
 
 	public DefaultedStructureData setGenerate(boolean generate) {
@@ -149,5 +155,9 @@ public class DefaultedStructureData {
 
 	public String getKey() {
 		return key;
+	}
+
+	public String getNovel() {
+		return this.novel;
 	}
 }

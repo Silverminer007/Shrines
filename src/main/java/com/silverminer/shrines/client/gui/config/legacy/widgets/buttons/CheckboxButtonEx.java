@@ -1,4 +1,4 @@
-package com.silverminer.shrines.client.gui.config.widgets.buttons;
+package com.silverminer.shrines.client.gui.config.legacy.widgets.buttons;
 
 import java.util.function.Consumer;
 

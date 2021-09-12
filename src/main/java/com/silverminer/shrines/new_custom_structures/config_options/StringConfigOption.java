@@ -16,6 +16,6 @@ public class StringConfigOption extends ConfigOption<String> {
 
 	@Override
 	protected INBT writeValue() {
-		return StringNBT.valueOf(this.getOption());
+		return StringNBT.valueOf(this.getValue());
 	}
 }

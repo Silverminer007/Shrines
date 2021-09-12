@@ -9,7 +9,7 @@
  * You should have received a copy of the MPL (Mozilla Public License 2.0)
  * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
-package com.silverminer.shrines.client.gui.config;
+package com.silverminer.shrines.client.gui.config.legacy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
