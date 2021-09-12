@@ -38,17 +38,16 @@ import com.silverminer.shrines.structures.DefaultStructureConfig;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.ListNBT;
 
 public class Utils {
 	protected static final Logger LOGGER = LogManager.getLogger(Utils.class);
 
-	private static final int PACKET_VERSION = 1;
+	public static final int PACKET_VERSION = 1;
 
 	public static ImmutableList<StructuresPacket> STRUCTURE_PACKETS;
 
 	public static File getSaveLocation() {
-		return FileUtils.getFile(ShrinesMod.getProxy().getBaseDir(), "shrines-saves");
+		return FileUtils.getFile(ShrinesMod.getMinecraftDirectory(), "shrines-saves");
 	}
 
 	/**
@@ -73,7 +72,7 @@ public class Utils {
 		try {
 			ArrayList<StructuresPacket> structure_packets = Lists.newArrayList();
 
-			File shrines_saves = new File(ShrinesMod.getProxy().getBaseDir(), "shrines-saves").getCanonicalFile();
+			File shrines_saves = new File(ShrinesMod.getMinecraftDirectory(), "shrines-saves").getCanonicalFile();
 			if (!shrines_saves.exists()) {
 				shrines_saves.mkdirs();
 			}
@@ -89,35 +88,12 @@ public class Utils {
 				}
 				// Read the file here in CompoundNBT tag
 				CompoundNBT data_structure = readNBTFile(structures_file);
-				if (data_structure == null) {
-					LOGGER.info(
-							"Failed to load custom structures packet: Unable to load structures.nbt file. Packet: {}",
-							p_packet);
-					continue;
-				}
-				// Get the name of the packet and basic properties of the packet here
-				if (!data_structure.contains("Packet Version")) {
-					warnInvalidStructureFile(p_packet);
-					continue;
-				}
-				int packet_version = data_structure.getInt("Packet Version");
-				if (packet_version != Utils.PACKET_VERSION) {
-					if (packet_version < Utils.PACKET_VERSION) {
-						LOGGER.info(
-								"Unable to load Structure Packet. This packet was made for an older version of this Mod");
-					}
-					if (packet_version > Utils.PACKET_VERSION) {
-						LOGGER.info(
-								"Unable to load Structure Packet. This packet was made for an newer version of this Mod");
-					}
-					continue;
-				}
-				String packet_name = data_structure.getString("Packet Name");
-				ListNBT structures = data_structure.getList("Structures", 10);
-				boolean is_included = data_structure.getBoolean("Is Included");
 				// Create an instance of a packet datastructure and write it to an read/write
 				// array
-				StructuresPacket packet = new StructuresPacket(packet_name, structures, is_included);
+				StructuresPacket packet = StructuresPacket.fromCompound(data_structure, p_packet);
+				if(packet == null) {
+					continue;
+				}
 				structure_packets.add(packet);
 			}
 
@@ -138,7 +114,7 @@ public class Utils {
 			STRUCTURE_PACKETS = ImmutableList.copyOf(structure_packets);
 			Utils.saveStructures();
 
-			HashMap<String, String> temp = Maps.newHashMap();
+			HashMap<String, StructuresPacket> temp = Maps.newHashMap();
 			// Check for duplicated structure names and warn/stop loading the structure and
 			// open GUI after start
 			for (StructuresPacket packet : Utils.STRUCTURE_PACKETS) {
@@ -146,11 +122,14 @@ public class Utils {
 				for (StructureData data : packet.getStructures()) {
 					String key = data.getKey();
 					if (temp.containsKey(key)) {
-						// Error TODO Improve here
-						LOGGER.info("Found confilict while loading structures. There are two ore more structures with the same name. Key [{}], Packet 1 [{}], Packet 2 [{}]", key, packet_name, temp.get(key));
+						// TODO Make use of successful when GUIs are ready and throw user in GUI as soon
+						// as Minecraft is ready to do so
+						LOGGER.error(
+								"A conflict was detected when loading structures. There are two or more structures with the same name. Key [{}], Packet 1 [{}], Packet 2 [{}]",
+								key, packet_name, temp.get(key).getName());
 						data.successful = false;
 					}
-					temp.put(key, packet_name);
+					temp.put(key, packet);
 				}
 			}
 
@@ -185,7 +164,7 @@ public class Utils {
 		return included_packet;
 	}
 
-	private static void warnInvalidStructureFile(File packet) {
+	public static void warnInvalidStructureFile(File packet) {
 		LOGGER.info("Unable to load Structure Packet, because the structure of structures.nbt is wrong. Packet: {}",
 				packet);
 	}
@@ -202,29 +181,20 @@ public class Utils {
 
 	public static void saveStructures() {
 		try {
-			File shrines_saves = new File(ShrinesMod.getProxy().getBaseDir(), "shrines-saves").getCanonicalFile();
+			File shrines_saves = new File(ShrinesMod.getMinecraftDirectory(), "shrines-saves").getCanonicalFile();
 			if (!shrines_saves.exists()) {
 				shrines_saves.mkdirs();
 			}
 
 			for (StructuresPacket packet : Utils.STRUCTURE_PACKETS) {
-				File packet_path = new File(shrines_saves, packet.getName());// TODO Check what happens when packets are
-																				// renamed
+				File packet_path = new File(shrines_saves, packet.getName());
+				// TODO Check what happens when packets are renamed
 				if (!packet_path.exists()) {
 					packet_path.mkdirs();
 				}
 				File structures_file = new File(packet_path, "structures.nbt");
 
-				CompoundNBT compoundnbt = new CompoundNBT();
-				compoundnbt.putInt("Packet Version", Utils.PACKET_VERSION);
-				compoundnbt.putString("Packet Name", packet.getName());
-				ListNBT structures = new ListNBT();
-				LOGGER.info("There are {} structures in included packet", packet.getStructures().size());
-				structures.addAll(packet.getStructures().stream().map(structure -> structure.write(new CompoundNBT()))
-						.collect(Collectors.toList()));
-				compoundnbt.put("Structures", structures);
-				compoundnbt.putBoolean("Is Included", packet.isIncluded());
-
+				CompoundNBT compoundnbt = StructuresPacket.toCompound(packet);
 				try (OutputStream outputstream = new FileOutputStream(structures_file)) {
 					CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
 				} catch (Throwable throwable) {

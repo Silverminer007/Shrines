@@ -11,7 +11,7 @@ import com.silverminer.shrines.new_custom_structures.config_options.StringListCo
 
 import net.minecraft.nbt.CompoundNBT;
 
-public class StructureData {// TODO Read and write all options
+public class StructureData {
 	public boolean successful = true;
 	private StringConfigOption name;
 	private final StringConfigOption key;
@@ -28,6 +28,8 @@ public class StructureData {// TODO Read and write all options
 	private StringListConfigOption biome_blacklist;
 	private StringListConfigOption dimension_whitelist;
 
+	private StringConfigOption novel;
+
 	public StructureData(CompoundNBT data) {
 		this.name = new StringConfigOption(data.getCompound(ConfigOptions.name));
 		this.key = new StringConfigOption(data.getCompound(ConfigOptions.key));
@@ -41,6 +43,7 @@ public class StructureData {// TODO Read and write all options
 		this.height_offset = new IntegerConfigOption(data.getCompound(ConfigOptions.height_offset));
 		this.biome_blacklist = new StringListConfigOption(data.getCompound(ConfigOptions.biome_blacklist));
 		this.dimension_whitelist = new StringListConfigOption(data.getCompound(ConfigOptions.dimension_whitelist));
+		this.novel = new StringConfigOption(data.getCompound(ConfigOptions.novel));
 	}
 
 	public StructureData(DefaultedStructureData data) {
@@ -66,6 +69,7 @@ public class StructureData {// TODO Read and write all options
 				ConfigOptions.Comments.biome_blacklist);
 		this.dimension_whitelist = new StringListConfigOption(ConfigOptions.dimension_whitelist,
 				data.getDimensionWhitelist(), ConfigOptions.Comments.dimension_whitelist);
+		this.novel = new StringConfigOption(ConfigOptions.novel, data.getNovel(), ConfigOptions.Comments.novel);
 	}
 
 	public CompoundNBT write(CompoundNBT tag) {
@@ -81,6 +85,7 @@ public class StructureData {// TODO Read and write all options
 		tag.put(ConfigOptions.height_offset, this.height_offset.write());
 		tag.put(ConfigOptions.biome_blacklist, this.biome_blacklist.write());
 		tag.put(ConfigOptions.dimension_whitelist, this.dimension_whitelist.write());
+		tag.put(ConfigOptions.novel, this.novel.write());
 		return tag;
 	}
 
@@ -175,5 +180,13 @@ public class StructureData {// TODO Read and write all options
 
 	public String getKey() {
 		return key.getValue();
+	}
+
+	public String getNovel() {
+		return novel.getValue();
+	}
+
+	public void setNovel(String novel) {
+		this.novel.setValue(novel);
 	}
 }

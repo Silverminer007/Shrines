@@ -36,8 +36,12 @@ public class ShrinesPacketHandler {
 			.networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
 	public static void register() {
-		LOGGER.debug("Initializing networking on version [{}]. This should match between client and server");
+		LOGGER.debug("Initializing networking on version [{}]. This should match between client and server", PROTOCOL_VERSION);
 		int id = 0;
+		CHANNEL.registerMessage(id++, CTSFetchStructuresPacket.class, CTSFetchStructuresPacket::encode,
+				CTSFetchStructuresPacket::decode, CTSFetchStructuresPacket::handle);
+		CHANNEL.registerMessage(id++, STCFetchStructuresPacket.class, STCFetchStructuresPacket::encode,
+				STCFetchStructuresPacket::decode, STCFetchStructuresPacket::handle);
 	}
 
 	public static void sendTo(IPacket message, PlayerEntity player) {

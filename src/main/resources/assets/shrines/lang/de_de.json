@@ -129,8 +129,10 @@
 	"config.shrines.structure_min_distance.tooltip": "Die kleinstm\u00f6glich Distanz die zwischen zwei Bauwerken dieser Mod auftreten darf",
 	"config.shrines.advanced_logging": "Erweiterte Protokollierung",
 	"config.shrines.advanced_logging.tooltip": "Die erweiterte Protokollierung erleichtert es Fehler zu finden. Bitte aktivieren sie dies bevor sie einen Fehler melden",
-	"config.shrines.banned_blocks": "Alle Bl\u00f6cke in dieser Liste werden nicht mit den Strukturen platziert werden. So ist es m\u00f6glich Bl\u00f6cke, die als zu wertvoll erachtet werden nicht in der Welt erscheinen zu lassen",
-	"config.shrines.banned_entities": "Alle Kreaturen in dieser Liste werden nicht mit den Strukturen platziert werden",
+	"config.shrines.banned_blocks": "Verbotene Bl\u00f6cke",
+	"config.shrines.banned_entities": "Verbotene Kreaturen",
+	"config.shrines.banned_blocks.tooltip": "Alle Bl\u00f6cke in dieser Liste werden nicht mit den Strukturen platziert werden. So ist es m\u00f6glich Bl\u00f6cke, die als zu wertvoll erachtet werden nicht in der Welt erscheinen zu lassen",
+	"config.shrines.banned_entities.tooltip": "Alle Kreaturen in dieser Liste werden nicht mit den Strukturen platziert werden",
 
 	"_comment_general": "",
 	"shrines.general.cooming_soon": "Kommt bald!",

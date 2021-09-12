@@ -1,4 +1,4 @@
-package com.silverminer.shrines.client.gui.config.widgets.buttons;
+package com.silverminer.shrines.client.gui.config.legacy.widgets.buttons;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
