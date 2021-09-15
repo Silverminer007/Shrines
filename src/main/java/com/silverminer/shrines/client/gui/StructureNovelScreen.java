@@ -11,6 +11,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.new_custom_structures.StructureData;
+import com.silverminer.shrines.new_custom_structures.novels.NovelsDataRegistry;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -33,10 +35,15 @@ public class StructureNovelScreen extends Screen {
 	private Screen lastScreen;
 	private boolean scrolling;
 
-	public StructureNovelScreen(Screen lastScreen) {
-		super(new TranslationTextComponent("Structure Novel"));
+	public StructureNovelScreen(Screen lastScreen, StructureData structure) {
+		super(new TranslationTextComponent("What is " + structure.getName() + "?", structure));
 		this.lastScreen = lastScreen;
+		List<String> s = Arrays.asList(structure.getNovel().replace("\n", " \n ").split(" "));
+		s = s.subList(0, (int) (s.size() * NovelsDataRegistry.getNovelAmount(structure.getName())));
 		this.text = "";
+		for(String sub : s) {
+			this.text = this.text + " " + sub;
+		}
 	}
 
 	public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {

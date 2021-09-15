@@ -49,6 +49,8 @@ public class ShrinesMod {
 	 * 
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
 	 * 
+	 * TODO Fix structure spawning
+	 * 
 	 * TODO Add improved debug logging
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
