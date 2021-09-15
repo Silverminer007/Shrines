@@ -103,7 +103,7 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {// TODO
 				// Open Novels screen
 				LOGGER.info("I'm gonna open the new Novels screen with the Novel of [{}]. Here's the Novel:\n{}",
 						data.getName(), data.getNovel());
-				StructureNovelsList.this.minecraft.setScreen(new StructureNovelScreen(StructureNovelsList.this.screen));
+				StructureNovelsList.this.minecraft.setScreen(new StructureNovelScreen(StructureNovelsList.this.screen, this.data));
 				return true;
 			} else {
 				StructureNovelsList.this.setSelected(this);

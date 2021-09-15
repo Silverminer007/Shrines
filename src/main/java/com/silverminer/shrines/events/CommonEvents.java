@@ -18,11 +18,22 @@ import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
+import com.silverminer.shrines.new_custom_structures.StructureData;
+import com.silverminer.shrines.new_custom_structures.novels.NovelDataSaver;
+import com.silverminer.shrines.new_custom_structures.novels.NovelsData;
+import com.silverminer.shrines.new_custom_structures.novels.NovelsDataRegistry;
+import com.silverminer.shrines.structures.ShrinesStructure;
 import com.silverminer.shrines.structures.processors.ProcessorTypes;
 import com.silverminer.shrines.utils.StructureUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -54,8 +65,8 @@ public class CommonEvents {
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-					if (holder.getStructure().getConfig().getGenerate() && StructureUtils.checkBiome(
-							holder.getStructure().getConfig().getBiome_blacklist(), event.getName())) {
+					if (holder.getStructure().getConfig().getGenerate() && StructureUtils
+							.checkBiome(holder.getStructure().getConfig().getBiome_blacklist(), event.getName())) {
 						event.getGeneration().addStructureStart(holder.getConfiguredStructure());
 					}
 				}
@@ -65,11 +76,52 @@ public class CommonEvents {
 		@SubscribeEvent
 		public static void onWorldLoad(WorldEvent.Load event) {
 			if (event.getWorld() instanceof ServerWorld) {
-				LOGGER.info("Loading world with dimension: {}",
-						((ServerWorld) event.getWorld()).dimension().location().toString());
-				LOGGER.info("Configured Dimensions of {}: {}", NewStructureInit.STRUCTURES.get(0).getStructure().getConfig().getName(),
-						NewStructureInit.STRUCTURES.get(0).getStructure().getConfig().getDimension_whitelist());
 				StructureUtils.addDimensionalSpacing((ServerWorld) event.getWorld());
+			}
+			IWorld iworld = event.getWorld();
+
+			if (iworld instanceof ServerWorld) {
+				ServerWorld world = (ServerWorld) iworld;
+				if (!world.isClientSide() && world.dimension() == World.OVERWORLD) {
+					NovelsDataRegistry.novelsDataSaver = NovelDataSaver.get(world);
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public static void onPlayerTick(PlayerTickEvent event) {
+			if (event.phase == Phase.END) {
+				if (event.player instanceof ServerPlayerEntity) {
+					if (event.player.tickCount % 20 == 0) {
+						NovelsDataRegistry.novelsDataSaver.setDirty();
+						BlockPos playerPos = event.player.blockPosition();
+						for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+							ShrinesStructure structure = holder.getStructure();
+							ServerWorld world = ((ServerPlayerEntity) event.player).getLevel();
+							if(world.structureFeatureManager().getStructureAt(playerPos, true, structure).isValid()) {
+								StructureData data = structure.getConfig();
+								NovelsData novel;
+								if(NovelsDataRegistry.hasNovelOf(data.getName())) {
+									novel = NovelsDataRegistry.getNovelOf(data.getName());
+									boolean isNew = true;
+									for(BlockPos pos : novel.getFoundStructures()) {
+										if(!pos.closerThan(playerPos, 100)) {
+											isNew = false;
+											break;
+										}
+									}
+									if(!isNew) {
+										break;
+									}
+									novel.addFoundStructure(playerPos);
+								} else {
+									novel = new NovelsData(data.getName());
+								}
+								NovelsDataRegistry.setNovelOf(data.getName(), novel);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
