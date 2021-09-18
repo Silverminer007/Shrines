@@ -3,6 +3,9 @@ package com.silverminer.shrines.new_custom_structures.novels;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -12,6 +15,7 @@ import net.minecraft.nbt.NumberNBT;
 import net.minecraft.util.math.BlockPos;
 
 public class NovelsData {
+	protected static final Logger LOGGER = LogManager.getLogger(NovelsData.class);
 	private final String structure;
 	private final ArrayList<BlockPos> found_structures = Lists.newArrayList();
 	private int found_structures_count = 0;
@@ -46,6 +50,7 @@ public class NovelsData {
 	public void addFoundStructure(BlockPos pos) {
 		this.found_structures.add(pos);
 		this.found_structures_count++;
+		LOGGER.info("Found [{}] Structures of {}. Positions: [{}]", this.found_structures_count, this.structure, this.found_structures);
 	}
 
 	public CompoundNBT save() {

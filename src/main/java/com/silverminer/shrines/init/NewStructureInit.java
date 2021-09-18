@@ -58,11 +58,10 @@ public class NewStructureInit {
 
 	@SubscribeEvent
 	public static void regsiterStructures(RegistryEvent.Register<Structure<?>> event) {
+		LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
 		for (StructureRegistryHolder structure : STRUCTURES) {
-			if (!Structure.STRUCTURES_REGISTRY.containsValue(structure.getStructure())) {
-				Structure.STRUCTURES_REGISTRY.putIfAbsent(structure.getStructure().getConfig().getKey(),
-						structure.getStructure());
-			}
+			Structure.STRUCTURES_REGISTRY.putIfAbsent(structure.getStructure().getConfig().getKey(),
+					structure.getStructure());
 
 			if (structure.getStructure().getConfig().getTransformLand()) {
 				Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()

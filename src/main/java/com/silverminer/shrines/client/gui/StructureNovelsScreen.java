@@ -26,7 +26,7 @@ public class StructureNovelsScreen extends Screen {
 	private final List<StructuresPacket> packets;
 
 	public StructureNovelsScreen(Screen lastScreen, List<StructuresPacket> packets) {
-		super(new TranslationTextComponent("Shrines Structures Novels"));// TODO Create Translations
+		super(new TranslationTextComponent("Shrines Structures Novels"));// TODO Translation
 		this.lastScreen = lastScreen;
 		this.packets = packets;
 	}
@@ -34,7 +34,7 @@ public class StructureNovelsScreen extends Screen {
 	protected void init() {
 		this.minecraft.keyboardHandler.setSendRepeatsToGui(true); // Why should I have this?
 		this.searchBox = new TextFieldWidget(this.font, (this.width / 4) * 3 - 20, 3, 100, 20, this.searchBox,
-				new TranslationTextComponent(""));
+				new StringTextComponent(""));
 		this.searchBox.setResponder((string) -> {
 			this.list.refreshList(() -> {
 				return string;
@@ -49,7 +49,7 @@ public class StructureNovelsScreen extends Screen {
 					this.minecraft.setScreen(lastScreen);
 				}, StringTextComponent.EMPTY));
 		this.sizeSlider = this.addButton(new AbstractSlider((this.width / 4) * 3 - 20, 29, 100, 20,
-				StringTextComponent.EMPTY, this.itemSize <= 50 ? 0.0D : (this.itemSize - 50) / 100.0D) {
+				new TranslationTextComponent("gui.shrines.novels.item_size"), this.itemSize <= 50 ? 0.0D : (this.itemSize - 50) / 100.0D) {// TODO Translation
 			{
 				this.updateMessage();
 			}

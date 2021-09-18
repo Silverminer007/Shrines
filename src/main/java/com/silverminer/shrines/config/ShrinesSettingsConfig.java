@@ -31,6 +31,8 @@ public class ShrinesSettingsConfig {
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BANNED_BLOCKS;
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BANNED_ENTITIES;
 
+	public final ForgeConfigSpec.IntValue NEEDED_NOVELS;
+
 	public ShrinesSettingsConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
 		BLACKLISTED_BIOMES = SERVER_BUILDER
 				.comment("Biomes where NO Structure (of this mod) can generate in. Custom structures too")
@@ -58,6 +60,9 @@ public class ShrinesSettingsConfig {
 		BANNED_ENTITIES = SERVER_BUILDER.comment("All entities in this list will not be placed with the structures")
 				.translation("config.shrines.banned_entities")
 				.defineList("structures.banned_entities", Lists.newArrayList(), ShrinesSettingsConfig::validateEntity);
+		NEEDED_NOVELS = SERVER_BUILDER
+				.comment("How many times you need to find a structure to enable it's complete story")
+				.translation("config.shrines.needed_novels").defineInRange("structures.needed_novels", 5, 0, 100);// TODO Translation
 	}
 
 	private static boolean validateBiome(Object o) {
