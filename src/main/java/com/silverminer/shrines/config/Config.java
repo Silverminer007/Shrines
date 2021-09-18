@@ -44,6 +44,6 @@ public class Config {
 
 	public static void register(final ModLoadingContext context) {
 		context.registerConfig(ModConfig.Type.COMMON, SERVER_SETTINGS_CONFIG);
-		Config.loadConfig(SERVER_SETTINGS_CONFIG, FMLPaths.CONFIGDIR.get().resolve(ShrinesMod.MODID + "-server.toml").toString());
+		Config.loadConfig(SERVER_SETTINGS_CONFIG, FMLPaths.CONFIGDIR.get().resolve(ShrinesMod.MODID + "-common.toml").toString());
 	}
 }

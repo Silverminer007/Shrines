@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
-public class StructureNovelsList extends IconList<StructureNovelsEntry> {// TODO Add back button
+public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 	protected static final Logger LOGGER = LogManager.getLogger(StructureNovelsList.class);
 	private final StructureNovelsScreen screen;
 
@@ -39,9 +39,9 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {// TODO
 			for (StructureData data : packet.getStructures()) {
 				if (data.getName().toLowerCase(Locale.ROOT).contains(s)
 						|| data.getKey().toLowerCase(Locale.ROOT).contains(s)) {
-					// if (!data.getNovel().isEmpty()) {
-					this.addEntry(new StructureNovelsEntry(data));
-					// }
+					if (!data.getNovel().isEmpty()) {
+						this.addEntry(new StructureNovelsEntry(data));
+					}
 				}
 			}
 		}
@@ -55,7 +55,8 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {// TODO
 		public StructureNovelsEntry(StructureData data) {
 			this.data = data;
 			this.minecraft = Minecraft.getInstance();
-			this.iconLocation = new ResourceLocation(ShrinesMod.MODID, "textures/structures/" + data.getKey() + ".png");
+			this.iconLocation = new ResourceLocation(ShrinesMod.MODID,
+					"textures/structures/" + new ResourceLocation(data.getKey()).getPath() + ".png");
 		}
 
 		@SuppressWarnings("deprecation")
@@ -100,10 +101,8 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {// TODO
 
 		public boolean mouseClicked(double mouseX, double mouseY, int scrolledAmount) {
 			if (StructureNovelsList.this.getSelected() == this) {
-				// Open Novels screen
-				LOGGER.info("I'm gonna open the new Novels screen with the Novel of [{}]. Here's the Novel:\n{}",
-						data.getName(), data.getNovel());
-				StructureNovelsList.this.minecraft.setScreen(new StructureNovelScreen(StructureNovelsList.this.screen, this.data));
+				StructureNovelsList.this.minecraft
+						.setScreen(new StructureNovelScreen(StructureNovelsList.this.screen, this.data));
 				return true;
 			} else {
 				StructureNovelsList.this.setSelected(this);

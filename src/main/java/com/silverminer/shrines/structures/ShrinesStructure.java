@@ -19,7 +19,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
@@ -70,7 +69,7 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 
 	@Override
 	public String getFeatureName() {
-		return new ResourceLocation(ShrinesMod.MODID, this.name).toString();
+		return this.name;
 	}
 
 	public int getDistance() {

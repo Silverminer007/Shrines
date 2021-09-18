@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.silverminer.shrines.ShrinesMod;
+
+import net.minecraft.util.ResourceLocation;
 
 /**
  * @author Silverminer
@@ -37,7 +40,7 @@ public class DefaultedStructureData {
 
 	public DefaultedStructureData(String name, String key, int seed_modifier) {
 		this.name = name;
-		this.key = key;
+		this.key = new ResourceLocation(ShrinesMod.MODID, key).toString();
 		this.seed_modifier = seed_modifier;
 	}
 

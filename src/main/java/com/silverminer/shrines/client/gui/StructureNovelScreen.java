@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -30,20 +31,22 @@ public class StructureNovelScreen extends Screen {
 	private double scrollAmount;
 	private int bottomHeight;
 	private int headerHeight;
-	private String text;
 	private List<String> lines = Lists.newArrayList();
+	private List<String> words = Lists.newArrayList();
+	private boolean renderInfo = false;
 	private Screen lastScreen;
 	private boolean scrolling;
 
 	public StructureNovelScreen(Screen lastScreen, StructureData structure) {
-		super(new TranslationTextComponent("What is " + structure.getName() + "?", structure));
+		super(new TranslationTextComponent("What is " + structure.getName() + "?", structure));// TODO Translation
 		this.lastScreen = lastScreen;
-		List<String> s = Arrays.asList(structure.getNovel().replace("\n", " \n ").split(" "));
-		s = s.subList(0, (int) (s.size() * NovelsDataRegistry.getNovelAmount(structure.getName())));
-		this.text = "";
-		for(String sub : s) {
-			this.text = this.text + " " + sub;
+		String novel = structure.getNovel();
+		double amount = NovelsDataRegistry.getNovelAmount(structure.getKey());
+		if (amount < 1.0D) {
+			this.renderInfo = true;
 		}
+		this.words = Arrays.asList(novel.replace("\n", " \n ").split(" "));
+		this.words = this.words.subList(0, (int) (this.words.size() * amount));
 	}
 
 	public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {
@@ -95,7 +98,6 @@ public class StructureNovelScreen extends Screen {
 	protected void init() {
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
 				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					LOGGER.info("Button pressed");
 					this.minecraft.setScreen(lastScreen);
 				}, StringTextComponent.EMPTY));
 	}
@@ -121,24 +123,31 @@ public class StructureNovelScreen extends Screen {
 
 	@SuppressWarnings("deprecation")
 	public void render(MatrixStack matrixStack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-		this.bottomHeight = this.height;
+		this.bottomHeight = this.renderInfo ? this.height - 20 : this.height;
 		this.headerHeight = 26;
-		List<String> s = Arrays.asList(text.replace("\n", " \n ").split(" "));
+		List<String> s = this.words;
 		int o = 0;
 		lines = Lists.newArrayList();
 		while (s.size() > o) {
-			if(s.get(o).equals("\n")) {
+			if (s.get(o).equals("\n")) {
 				lines.add("");
 			}
 			String str = s.get(o++);
 			while (o < s.size() && this.minecraft.font.width(str + " " + s.get(o)) < this.width - 20) {
-				if(s.get(o).equals("\n")) {
+				if (s.get(o).equals("\n")) {
 					o++;
 					break;
 				}
 				str = str + " " + s.get(o++);
 			}
 			lines.add(str);
+		}
+		if (this.renderInfo) {
+			if(lines.size() > 0) {
+			lines.set(lines.size() - 1, lines.get(lines.size() - 1) + " ...");
+			} else {
+				lines = Lists.newArrayList("...");
+			}
 		}
 
 		int i = this.getScrollbarPosition();
@@ -263,6 +272,12 @@ public class StructureNovelScreen extends Screen {
 		RenderSystem.disableBlend();
 
 		drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 16777215);
+		if (this.renderInfo) {
+			ITextComponent info = new TranslationTextComponent(// TODO Translation
+					"Find more structures like this one to unlock the whole story");
+			drawCenteredString(matrixStack, this.font, info.getString(), this.width / 2,
+					this.height - this.font.lineHeight - 5, 0xffffff);
+		}
 		super.render(matrixStack, p_230430_2_, p_230430_3_, p_230430_4_);
 	}
 

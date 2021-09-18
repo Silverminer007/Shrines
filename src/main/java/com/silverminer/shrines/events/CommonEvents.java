@@ -92,32 +92,32 @@ public class CommonEvents {
 		public static void onPlayerTick(PlayerTickEvent event) {
 			if (event.phase == Phase.END) {
 				if (event.player instanceof ServerPlayerEntity) {
-					if (event.player.tickCount % 20 == 0) {
+					if (event.player.tickCount % 50 == 0) {
 						NovelsDataRegistry.novelsDataSaver.setDirty();
 						BlockPos playerPos = event.player.blockPosition();
 						for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 							ShrinesStructure structure = holder.getStructure();
 							ServerWorld world = ((ServerPlayerEntity) event.player).getLevel();
-							if(world.structureFeatureManager().getStructureAt(playerPos, true, structure).isValid()) {
+							if (world.structureFeatureManager().getStructureAt(playerPos, true, structure).isValid()) {
 								StructureData data = structure.getConfig();
 								NovelsData novel;
-								if(NovelsDataRegistry.hasNovelOf(data.getName())) {
-									novel = NovelsDataRegistry.getNovelOf(data.getName());
-									boolean isNew = true;
-									for(BlockPos pos : novel.getFoundStructures()) {
-										if(!pos.closerThan(playerPos, 100)) {
-											isNew = false;
-											break;
-										}
-									}
-									if(!isNew) {
+								if (NovelsDataRegistry.hasNovelOf(data.getKey())) {
+									novel = NovelsDataRegistry.getNovelOf(data.getKey());
+								} else {
+									novel = new NovelsData(data.getKey());
+								}
+								boolean isNew = true;
+								for (BlockPos pos : novel.getFoundStructures()) {
+									if (pos.closerThan(playerPos, 100)) {
+										isNew = false;
 										break;
 									}
-									novel.addFoundStructure(playerPos);
-								} else {
-									novel = new NovelsData(data.getName());
 								}
-								NovelsDataRegistry.setNovelOf(data.getName(), novel);
+								if (!isNew) {
+									break;
+								}
+								novel.addFoundStructure(playerPos);
+								NovelsDataRegistry.setNovelOf(data.getKey(), novel);
 							}
 						}
 					}

@@ -71,5 +71,10 @@ public class DefaultStructureConfig {
 			"watchtower", 432189012).setDistance(77).setSeperation(16);
 
 	public static final DefaultedStructureData WATERSHRINE_CONFIG = new DefaultedStructureData("Water Shrine",
-			"water_shrine", 643168754).setDistance(80).setSeperation(15);
+			"water_shrine", 643168754).setDistance(80).setSeperation(15).setNovel("Last April, John took a trip to Las Vegas, Nevada. Las Vegas is a popular destination in the western portion of the United States. The town is most popular for its casinos, hotels, and exciting nightlife.\n"
+					+ "In downtown Las Vegas, John spent a lot of time on The Strip, which is a 2.5 mile stretch of shopping, entertainment venues, luxury hotels, and fine dining experiences. This is probably the most commonly visited tourist area in the city. The Strip at night looks especially beautiful. All of the buildings light up with bright, neon, eye-catching signs to attract visitor attention.\n"
+					+ "A stay in Las Vegas can feel similar to a visit to many popular cities worldwide. Many of the hotels have miniature versions of important international sites and monuments. These famous landmarks include the Eiffel Tower, Venice, and even ancient Rome.\n"
+					+ "One day, John took a side trip outside of the city to visit the Grand Canyon, one of the Seven Wonders of the Natural World. The canyon offers a breathtaking view of Nevada’s ridges and natural landscape. John especially liked the canyon because it was removed from all of the noise and movement in downtown Las Vegas.\n"
+					+ "John had a great time during his trip to Las Vegas. He did not win a lot of money in the casinos. However, he managed to see a lot of amazing sites during his visit to this city that never sleeps.  \n"
+					+ "");
 }
