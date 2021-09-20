@@ -14,6 +14,8 @@ import com.silverminer.shrines.client.gui.IconList;
 import com.silverminer.shrines.client.gui.novels.StructureNovelsList.StructureNovelsEntry;
 import com.silverminer.shrines.new_custom_structures.StructureData;
 import com.silverminer.shrines.new_custom_structures.StructuresPacket;
+import com.silverminer.shrines.utils.network.CTSFetchNovelAmountPacket;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -24,13 +26,11 @@ import net.minecraft.util.ResourceLocation;
 
 public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 	protected static final Logger LOGGER = LogManager.getLogger(StructureNovelsList.class);
-	private final StructureNovelsScreen screen;
 
 	public StructureNovelsList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight,
-			Supplier<String> search, List<StructuresPacket> packets, StructureNovelsScreen screen) {
+			Supplier<String> search, List<StructuresPacket> packets) {
 		super(minecraft, width, height, y0, y1, itemHeight);
 		this.refreshList(search, packets);
-		this.screen = screen;
 	}
 
 	public void refreshList(Supplier<String> filter, List<StructuresPacket> packets) {
@@ -102,8 +102,7 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 
 		public boolean mouseClicked(double mouseX, double mouseY, int scrolledAmount) {
 			if (StructureNovelsList.this.getSelected() == this) {
-				StructureNovelsList.this.minecraft
-						.setScreen(new StructureNovelScreen(StructureNovelsList.this.screen, this.data));
+				ShrinesPacketHandler.sendToServer(new CTSFetchNovelAmountPacket(this.minecraft.player, this.data));
 				return true;
 			} else {
 				StructureNovelsList.this.setSelected(this);

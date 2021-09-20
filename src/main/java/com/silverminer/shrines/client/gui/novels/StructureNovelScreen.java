@@ -13,6 +13,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.new_custom_structures.StructureData;
 import com.silverminer.shrines.new_custom_structures.novels.NovelsDataRegistry;
+import com.silverminer.shrines.utils.network.CTSFetchStructuresPacket;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -34,12 +36,10 @@ public class StructureNovelScreen extends Screen {
 	private List<String> lines = Lists.newArrayList();
 	private List<String> words = Lists.newArrayList();
 	private boolean renderInfo = false;
-	private Screen lastScreen;
 	private boolean scrolling;
 
-	public StructureNovelScreen(Screen lastScreen, StructureData structure) {
+	public StructureNovelScreen(StructureData structure, double novelAmount) {
 		super(new TranslationTextComponent("What is " + structure.getName() + "?", structure));// TODO Translation
-		this.lastScreen = lastScreen;
 		String novel = structure.getNovel();
 		double amount = NovelsDataRegistry.getNovelAmount(structure.getKey());
 		if (amount < 1.0D) {
@@ -98,7 +98,7 @@ public class StructureNovelScreen extends Screen {
 	protected void init() {
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
 				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.minecraft.setScreen(lastScreen);
+					ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(this.minecraft.player, false));
 				}, StringTextComponent.EMPTY));
 	}
 
