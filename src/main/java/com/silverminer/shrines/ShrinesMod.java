@@ -52,9 +52,6 @@ public class ShrinesMod {
 	 * TODO Add biome blacklist and set whitelist to categories again
 	 * 
 	 * TODO Fix screenshots for Novels Screen
-	 *
-	 * 
-	 * TODO Read Novels Data From Networking
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * 
