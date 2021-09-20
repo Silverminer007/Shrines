@@ -1,9 +1,10 @@
-package com.silverminer.shrines.client.gui;
+package com.silverminer.shrines.client.gui.novels;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.client.gui.packets.StructuresPacketsScreen;
 import com.silverminer.shrines.new_custom_structures.StructuresPacket;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -23,9 +24,10 @@ public class StructureNovelsScreen extends Screen {
 	private boolean isExpanded = false;
 	private int itemSize = 50;
 	private AbstractSlider sizeSlider;
-	private final List<StructuresPacket> packets;
+	private Button opMode;
+	private final ArrayList<StructuresPacket> packets;
 
-	public StructureNovelsScreen(Screen lastScreen, List<StructuresPacket> packets) {
+	public StructureNovelsScreen(Screen lastScreen, ArrayList<StructuresPacket> packets) {
 		super(new TranslationTextComponent("Shrines Structures Novels"));// TODO Translation
 		this.lastScreen = lastScreen;
 		this.packets = packets;
@@ -49,7 +51,8 @@ public class StructureNovelsScreen extends Screen {
 					this.minecraft.setScreen(lastScreen);
 				}, StringTextComponent.EMPTY));
 		this.sizeSlider = this.addButton(new AbstractSlider((this.width / 4) * 3 - 20, 29, 100, 20,
-				new TranslationTextComponent("gui.shrines.novels.item_size"), this.itemSize <= 50 ? 0.0D : (this.itemSize - 50) / 100.0D) {// TODO Translation
+				new TranslationTextComponent("gui.shrines.novels.item_size"),
+				this.itemSize <= 50 ? 0.0D : (this.itemSize - 50) / 100.0D) {// TODO Translation
 			{
 				this.updateMessage();
 			}
@@ -66,6 +69,12 @@ public class StructureNovelsScreen extends Screen {
 			}
 		});
 		this.sizeSlider.visible = this.isExpanded;
+		this.opMode = this.addButton(new Button((this.width / 2) - 50, 29, 100, 20,
+				new TranslationTextComponent("Open OP Mode"), (button) -> {
+					this.openOpMode();
+				}));// TODO Translation
+		this.opMode.active = this.minecraft.player.hasPermissions(2);
+		this.opMode.visible = this.isExpanded;
 		this.addButton(new Button((this.width / 4) * 3 + 90, 4, 20, 20,
 				new StringTextComponent(this.isExpanded ? "^" : "˅"), (button) -> {
 					this.isExpanded = !this.isExpanded;
@@ -74,6 +83,14 @@ public class StructureNovelsScreen extends Screen {
 		this.children.add(this.searchBox);
 		this.children.add(this.list);
 		this.setInitialFocus(this.searchBox);
+	}
+
+	public void openOpMode() {
+		this.minecraft.setScreen(new StructuresPacketsScreen(this, this.packets));
+	}
+
+	public void refreshList() {
+		this.list.refreshList(() -> this.searchBox.getValue(), this.packets);
 	}
 
 	public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {

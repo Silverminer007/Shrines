@@ -1,4 +1,4 @@
-package com.silverminer.shrines.client.gui;
+package com.silverminer.shrines.client.gui.novels;
 
 import java.util.Arrays;
 import java.util.List;
