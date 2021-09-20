@@ -1,4 +1,4 @@
-package com.silverminer.shrines.client.gui;
+package com.silverminer.shrines.client.gui.novels;
 
 import java.util.List;
 import java.util.Locale;
@@ -10,7 +10,8 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.client.gui.StructureNovelsList.StructureNovelsEntry;
+import com.silverminer.shrines.client.gui.IconList;
+import com.silverminer.shrines.client.gui.novels.StructureNovelsList.StructureNovelsEntry;
 import com.silverminer.shrines.new_custom_structures.StructureData;
 import com.silverminer.shrines.new_custom_structures.StructuresPacket;
 

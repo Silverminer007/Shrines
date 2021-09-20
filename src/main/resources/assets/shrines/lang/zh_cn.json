@@ -130,8 +130,8 @@
     "config.shrines.advanced_logging.tooltip": "使用高级日志记录。更有助于发现问题。请在报告错误之前启用此功能",
     "config.shrines.banned_blocks.tooltip": "此列表中的所有方块都不会与结构一起放置。因此可以使被认为太有价值的方块不会出现在世界上",
     "config.shrines.banned_entities.tooltip": "此列表中的所有实体都不会与结构一起放置",
-    "config.shrines.banned_blocks": "Banned Blocks",
-    "config.shrines.banned_entities": "banned Entities",
+    "config.shrines.banned_blocks": "禁止块",
+    "config.shrines.banned_entities": "被禁止的实体",
 
     "_comment_general": "",
     "shrines.general.cooming_soon": "即将推出！",

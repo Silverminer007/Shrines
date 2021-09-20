@@ -28,7 +28,7 @@ public class ShrinesPacketHandler {
 
 	protected static final Logger LOGGER = LogManager.getLogger(ShrinesPacketHandler.class);
 
-	public static final String PROTOCOL_VERSION = "4.0";
+	public static final String PROTOCOL_VERSION = "5.0";
 
 	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
 			.named(new ResourceLocation(ShrinesMod.MODID, "main_channel"))
@@ -42,6 +42,14 @@ public class ShrinesPacketHandler {
 				CTSFetchStructuresPacket::decode, CTSFetchStructuresPacket::handle);
 		CHANNEL.registerMessage(id++, STCFetchStructuresPacket.class, STCFetchStructuresPacket::encode,
 				STCFetchStructuresPacket::decode, STCFetchStructuresPacket::handle);
+		CHANNEL.registerMessage(id++, CTSAddedStructurePacketPacket.class, CTSAddedStructurePacketPacket::encode,
+				CTSAddedStructurePacketPacket::decode, CTSAddedStructurePacketPacket::handle);
+		CHANNEL.registerMessage(id++, CTSUpdateStructuresPacketsPacket.class, CTSUpdateStructuresPacketsPacket::encode,
+				CTSUpdateStructuresPacketsPacket::decode, CTSUpdateStructuresPacketsPacket::handle);
+		CHANNEL.registerMessage(id++, CTSDeletedStructurePacketPacket.class, CTSDeletedStructurePacketPacket::encode,
+				CTSDeletedStructurePacketPacket::decode, CTSDeletedStructurePacketPacket::handle);
+		CHANNEL.registerMessage(id++, CTSRenamedStructurePacketPacket.class, CTSRenamedStructurePacketPacket::encode,
+				CTSRenamedStructurePacketPacket::decode, CTSRenamedStructurePacketPacket::handle);
 	}
 
 	public static void sendTo(IPacket message, PlayerEntity player) {

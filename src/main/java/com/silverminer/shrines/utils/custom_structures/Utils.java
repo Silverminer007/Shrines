@@ -34,10 +34,12 @@ import com.google.common.collect.Maps;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.new_custom_structures.StructureData;
 import com.silverminer.shrines.new_custom_structures.StructuresPacket;
+import com.silverminer.shrines.new_custom_structures.StructuresPacket.Mode;
 import com.silverminer.shrines.structures.DefaultStructureConfig;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.util.FileUtil;
 
 public class Utils {
 	protected static final Logger LOGGER = LogManager.getLogger(Utils.class);
@@ -68,7 +70,7 @@ public class Utils {
 	 * could be reloaded during runtime. Here is the place for .nbt files and
 	 * template pools and loot tables
 	 */
-	public static void loadStructures() {
+	public static void loadStructures(boolean initialLoad) {
 		try {
 			ArrayList<StructuresPacket> structure_packets = Lists.newArrayList();
 
@@ -86,12 +88,13 @@ public class Utils {
 				if (!structures_file.exists()) {
 					continue;
 				}
-				// Read the file here in CompoundNBT tag
+				// Read the file here in CompoundNBT tagfalse
 				CompoundNBT data_structure = readNBTFile(structures_file);
 				// Create an instance of a packet datastructure and write it to an read/write
 				// array
-				StructuresPacket packet = StructuresPacket.fromCompound(data_structure, p_packet);
-				if(packet == null) {
+				StructuresPacket packet = StructuresPacket.fromCompound(data_structure, p_packet,
+						initialLoad ? Mode.DISK : Mode.REFRESH);
+				if (packet == null) {
 					continue;
 				}
 				structure_packets.add(packet);
@@ -107,12 +110,12 @@ public class Utils {
 					break;
 				}
 			}
-			if (!has_included_structures) {
+			if (!has_included_structures && initialLoad) {
 				structure_packets.add(Utils.getIncludedStructures());
 			}
 			// Save Structure Packets for later use in immutable list
 			STRUCTURE_PACKETS = ImmutableList.copyOf(structure_packets);
-			Utils.saveStructures();
+			Utils.saveStructures(true);
 
 			HashMap<String, StructuresPacket> temp = Maps.newHashMap();
 			// Check for duplicated structure names and warn/stop loading the structure and
@@ -138,6 +141,26 @@ public class Utils {
 		}
 	}
 
+	protected static String getSavePath(String name) {
+		String resultName = "";
+		resultName = name.trim();
+		if (resultName.isEmpty()) {
+			resultName = "Structures Packet";
+		}
+		try {
+			resultName = FileUtil.findAvailableName(getSaveLocation().toPath(), resultName, "");
+		} catch (Exception exception1) {
+			resultName = "Structures Packet";
+
+			try {
+				resultName = FileUtil.findAvailableName(getSaveLocation().toPath(), resultName, "");
+			} catch (Exception exception) {
+				throw new RuntimeException("Failed to find a suitable Structure packet Name for save", exception);
+			}
+		}
+		return resultName;
+	}
+
 	private static StructuresPacket getIncludedStructures() {
 		ArrayList<StructureData> structures = Lists.newArrayList();
 		structures.add(new StructureData(DefaultStructureConfig.ABANDONEDWITCHHOUSE_CONFIG));
@@ -160,7 +183,7 @@ public class Utils {
 		structures.add(new StructureData(DefaultStructureConfig.TRADER_HOUSE_CONFIG));
 		structures.add(new StructureData(DefaultStructureConfig.WATCHTOWER_CONFIG));
 		structures.add(new StructureData(DefaultStructureConfig.WATERSHRINE_CONFIG));
-		StructuresPacket included_packet = new StructuresPacket("Included Structures", structures, true);
+		StructuresPacket included_packet = new StructuresPacket("Included Structures", structures, true, "Silverm7ner");
 		return included_packet;
 	}
 
@@ -179,30 +202,70 @@ public class Utils {
 		}
 	}
 
-	public static void saveStructures() {
+	public static void saveStructures(boolean initialSave) {
+		saveStructures(initialSave, -1, null);
+	}
+
+	public static void saveStructures(boolean initialSave, StructuresPacket newPacket) {
+		saveStructures(initialSave, -1, newPacket);
+	}
+
+	public static void saveStructures(boolean initialSave, int IDtoDelete) {
+		saveStructures(initialSave, IDtoDelete, null);
+	}
+
+	public static void saveStructures(boolean initialSave, int IDtoDelete, StructuresPacket newPacket) {
 		try {
 			File shrines_saves = new File(ShrinesMod.getMinecraftDirectory(), "shrines-saves").getCanonicalFile();
 			if (!shrines_saves.exists()) {
 				shrines_saves.mkdirs();
 			}
 
+			ArrayList<File> usedPath = Lists.newArrayList();
 			for (StructuresPacket packet : Utils.STRUCTURE_PACKETS) {
-				File packet_path = new File(shrines_saves, packet.getName());
-				// TODO Check what happens when packets are renamed
-				if (!packet_path.exists()) {
-					packet_path.mkdirs();
+				if (IDtoDelete != packet.getTempID()) {
+					usedPath.add(savePacket(shrines_saves, packet, usedPath));
+				} else {
+					try {
+						File packet_path = new File(shrines_saves, packet.getName());
+						File[] subFiles = packet_path.listFiles();
+						for (File subFile : subFiles) {
+							subFile.delete();
+						}
+						packet_path.delete();
+					} catch (Throwable e) {
+						LOGGER.warn("Failed to delete Structure Package {}", packet.getName());
+					}
 				}
-				File structures_file = new File(packet_path, "structures.nbt");
-
-				CompoundNBT compoundnbt = StructuresPacket.toCompound(packet);
-				try (OutputStream outputstream = new FileOutputStream(structures_file)) {
-					CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
-				} catch (Throwable throwable) {
-					LOGGER.error("Failed to save structures packet [{}] on path {}", packet.getName(), structures_file);
-				}
+			}
+			if (newPacket != null) {
+				savePacket(shrines_saves, newPacket, usedPath);
+			}
+			if (!initialSave) {
+				loadStructures(false);
 			}
 		} catch (Throwable t) {
 
 		}
+	}
+
+	public static File savePacket(File shrines_saves, StructuresPacket packet, ArrayList<File> usedPath) {
+		File packet_path = new File(shrines_saves, packet.getName());
+		if (usedPath.contains(packet_path)) {
+			packet_path = new File(shrines_saves, getSavePath(packet_path.getName()));
+		}
+		if (!packet_path.exists()) {
+			packet_path.mkdirs();
+		}
+		File structures_file = new File(packet_path, "structures.nbt");
+
+		CompoundNBT compoundnbt = StructuresPacket.toCompound(packet);
+		try (OutputStream outputstream = new FileOutputStream(structures_file)) {
+			CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
+		} catch (Throwable throwable) {
+			LOGGER.error("Failed to save structures packet [{}] on path {}, {}", packet.getName(), structures_file,
+					throwable);
+		}
+		return packet_path;
 	}
 }

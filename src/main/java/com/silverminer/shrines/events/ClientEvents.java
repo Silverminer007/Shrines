@@ -21,6 +21,7 @@ import com.silverminer.shrines.utils.network.CTSFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.WorkingScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -41,7 +42,8 @@ public class ClientEvents {
 			Minecraft mc = Minecraft.getInstance();
 			if (ClientUtils.structuresScreen.matches(keyCode, scanCode) && mc.screen == null && mc.player != null
 					&& mc.player.hasPermissions(2)) {
-				ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(mc.player));
+				ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(mc.player, false));
+				mc.setScreen(new WorkingScreen());
 			}
 		}
 	}

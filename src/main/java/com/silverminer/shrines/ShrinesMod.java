@@ -52,6 +52,9 @@ public class ShrinesMod {
 	 * TODO Add biome blacklist and set whitelist to categories again
 	 * 
 	 * TODO Fix screenshots for Novels Screen
+	 *
+	 * 
+	 * TODO Read Novels Data From Networking
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * 
@@ -65,14 +68,16 @@ public class ShrinesMod {
 	public ShrinesMod() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
 				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-		Utils.loadStructures();
+		Utils.loadStructures(true);
 		NewStructureInit.load();
 		registerConfig();
 	}
 
 	public static File getMinecraftDirectory() {
-		return FMLPaths.GAMEDIR.get().toFile();// TODO Test this serverside and clientside -> Looks like it works in singleplayer
+		return FMLPaths.GAMEDIR.get().toFile();// TODO Test this serverside and clientside -> Looks like it works in
+												// singleplayer
 	}
+
 	public static void registerConfig() {
 		// Config
 		Config.register(ModLoadingContext.get());
