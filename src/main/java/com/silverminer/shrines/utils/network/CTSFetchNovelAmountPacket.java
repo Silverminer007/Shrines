@@ -3,8 +3,8 @@ package com.silverminer.shrines.utils.network;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.silverminer.shrines.new_custom_structures.StructureData;
-import com.silverminer.shrines.new_custom_structures.novels.NovelsDataRegistry;
+import com.silverminer.shrines.structures.load.StructureData;
+import com.silverminer.shrines.structures.novels.NovelsDataRegistry;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;

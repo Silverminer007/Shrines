@@ -85,6 +85,17 @@
 ##### Problems
 - #17 isn't fixed yet
 
+#### SNAPSHOT 10
+- Fixed #19
+- Added Structure Novel
+- Added GUI to see Novels
+- Changed config system of included structures
+- (Added GUI for Structures -> Included and custom) -> Not done!
+
+##### Problems
+- #17 isn't fixed yet
+- There are no Novels yet
+
 ##### Notes
 - These versions are alpha builds so anything can change in next release!
 

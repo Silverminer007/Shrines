@@ -19,9 +19,9 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.new_custom_structures.StructureData;
-import com.silverminer.shrines.new_custom_structures.StructuresPacket;
-import com.silverminer.shrines.utils.custom_structures.Utils;
+import com.silverminer.shrines.structures.load.StructureData;
+import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.utils.Utils;
 
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.event.RegistryEvent;

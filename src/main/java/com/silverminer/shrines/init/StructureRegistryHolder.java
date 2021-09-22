@@ -1,7 +1,7 @@
 package com.silverminer.shrines.init;
 
-import com.silverminer.shrines.new_custom_structures.StructureData;
 import com.silverminer.shrines.structures.ShrinesStructure;
+import com.silverminer.shrines.structures.load.StructureData;
 
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;

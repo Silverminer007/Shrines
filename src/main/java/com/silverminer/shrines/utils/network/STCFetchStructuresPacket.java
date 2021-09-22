@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.client.gui.novels.StructureNovelsScreen;
-import com.silverminer.shrines.new_custom_structures.StructuresPacket;
-import com.silverminer.shrines.new_custom_structures.StructuresPacket.Mode;
+import com.silverminer.shrines.gui.novels.StructureNovelsScreen;
+import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.structures.load.StructuresPacket.Mode;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
