@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.utils.client.ClientUtils;
+import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.CTSFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 

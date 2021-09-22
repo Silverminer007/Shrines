@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
-import com.silverminer.shrines.new_custom_structures.StructureData;
 import com.silverminer.shrines.structures.ShrinesStructure;
+import com.silverminer.shrines.structures.load.StructureData;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;

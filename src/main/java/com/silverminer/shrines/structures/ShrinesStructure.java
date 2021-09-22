@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
-import com.silverminer.shrines.new_custom_structures.StructureData;
+import com.silverminer.shrines.structures.load.StructureData;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedSeedRandom;

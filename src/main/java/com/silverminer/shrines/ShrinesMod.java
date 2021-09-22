@@ -19,8 +19,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
-import com.silverminer.shrines.utils.client.ClientUtils;
-import com.silverminer.shrines.utils.custom_structures.Utils;
+import com.silverminer.shrines.utils.ClientUtils;
+import com.silverminer.shrines.utils.Utils;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -50,6 +50,8 @@ public class ShrinesMod {
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
 	 * 
 	 * TODO Add biome blacklist and set whitelist to categories again
+	 * 
+	 * FIXME Lock access to op mode if an other player is in there already
 	 * 
 	 * TODO Fix screenshots for Novels Screen
 	 * 

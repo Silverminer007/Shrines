@@ -2,8 +2,8 @@ package com.silverminer.shrines.utils.network;
 
 import java.util.function.Supplier;
 
-import com.silverminer.shrines.client.gui.novels.StructureNovelScreen;
-import com.silverminer.shrines.new_custom_structures.StructureData;
+import com.silverminer.shrines.gui.novels.StructureNovelScreen;
+import com.silverminer.shrines.structures.load.StructureData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
