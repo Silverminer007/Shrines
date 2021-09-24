@@ -15,7 +15,7 @@ public class ConfigOptions {
 	public static final String dimension_whitelist = "dimension whitelist"; // List of Strings
 	public static final String novel = "novel"; // String
 
-	public static class Comments {// TODO Translations
+	public static class Comments {// TRANSLATION
 		public static final String general = "shrines.structures.comments.";
 		public static final String name = general + ConfigOptions.name;// String
 		public static final String key = general + ConfigOptions.key; // String

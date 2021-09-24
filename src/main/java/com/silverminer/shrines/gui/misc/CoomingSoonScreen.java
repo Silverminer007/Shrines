@@ -18,11 +18,14 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * @author Silverminer
  *
  */
+@OnlyIn(Dist.CLIENT)
 public class CoomingSoonScreen extends Screen {
 	protected static final Logger LOGGER = LogManager.getLogger(CoomingSoonScreen.class);
 	protected static final TranslationTextComponent TITLE = new TranslationTextComponent(

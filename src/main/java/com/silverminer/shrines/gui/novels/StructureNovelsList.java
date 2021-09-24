@@ -14,8 +14,8 @@ import com.silverminer.shrines.gui.misc.IconList;
 import com.silverminer.shrines.gui.novels.StructureNovelsList.StructureNovelsEntry;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.network.CTSFetchNovelAmountPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSFetchNovelAmountPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -23,7 +23,10 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 	protected static final Logger LOGGER = LogManager.getLogger(StructureNovelsList.class);
 

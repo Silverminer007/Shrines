@@ -5,7 +5,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class DirtConfirmScreen extends ConfirmScreen {
 
 	public DirtConfirmScreen(BooleanConsumer callback, ITextComponent title1, ITextComponent title2, ITextComponent yes,

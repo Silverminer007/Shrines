@@ -2,34 +2,15 @@ modLoader="javafml"
 loaderVersion="[34.1,)"
 license="MPL-2.0"
 issueTrackerURL="https://github.com/Silverminer007/Shrines/issues"
+
 [[mods]]
 modId="shrines"
 version="${file.jarVersion}"
 displayName="Shrines"
 updateJSONURL="https://github.com/Silverminer007/Shrines/raw/master/updateJSON.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/shrines-structures"
-#logoFile="examplemod.png"
 credits="https://github.com/Silverminer007/Shrines/blob/experimental/Credits.md"
 authors="Silverminer007 and S1lencegamer"
 description='''
 See https://www.curseforge.com/minecraft/mc-mods/shrines-structures for more Info
 '''
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.shrines]] #optional
-    # the modid of the dependency
-    modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
-    mandatory=true #mandatory
-    # The version range of the dependency
-    versionRange="[34.1,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-    ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
-    side="BOTH"
-# Here's another dependency
-[[dependencies.shrines]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.16.3]"
-    ordering="NONE"
-    side="BOTH"

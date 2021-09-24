@@ -17,8 +17,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.utils.ClientUtils;
-import com.silverminer.shrines.utils.network.CTSFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSFetchStructuresPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.WorkingScreen;
@@ -40,8 +40,7 @@ public class ClientEvents {
 			int keyCode = event.getKey();
 			int scanCode = event.getScanCode();
 			Minecraft mc = Minecraft.getInstance();
-			if (ClientUtils.structuresScreen.matches(keyCode, scanCode) && mc.screen == null && mc.player != null
-					&& mc.player.hasPermissions(2)) {
+			if (ClientUtils.structuresScreen.matches(keyCode, scanCode) && mc.screen == null && mc.player != null) {
 				ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(mc.player, false));
 				mc.setScreen(new WorkingScreen());
 			}

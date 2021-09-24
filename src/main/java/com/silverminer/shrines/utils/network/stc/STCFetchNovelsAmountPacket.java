@@ -1,9 +1,10 @@
-package com.silverminer.shrines.utils.network;
+package com.silverminer.shrines.utils.network.stc;
 
 import java.util.function.Supplier;
 
 import com.silverminer.shrines.gui.novels.StructureNovelScreen;
 import com.silverminer.shrines.structures.load.StructureData;
+import com.silverminer.shrines.utils.network.IPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,11 +33,23 @@ public class STCFetchNovelsAmountPacket implements IPacket {
 
 	public static void handle(STCFetchNovelsAmountPacket packet, Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(() -> {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				StructureNovelScreen screen = new StructureNovelScreen(packet.structure, packet.amount);
-				Minecraft.getInstance().setScreen(screen);
-			});
+			DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Handle.handle(packet));
 		});
 		context.get().setPacketHandled(true);
+	}
+
+	private static class Handle {
+		public static DistExecutor.SafeRunnable handle(STCFetchNovelsAmountPacket packet) {
+			return new DistExecutor.SafeRunnable() {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void run() {
+					StructureNovelScreen screen = new StructureNovelScreen(packet.structure, packet.amount);
+					Minecraft.getInstance().setScreen(screen);
+				}
+			};
+		}
 	}
 }

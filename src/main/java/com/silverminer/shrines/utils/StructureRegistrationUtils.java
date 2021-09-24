@@ -45,14 +45,14 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * @author Silverminer
  *
  */
-public class StructureUtils {
-	protected static final Logger LOGGER = LogManager.getLogger(StructureUtils.class);
+public class StructureRegistrationUtils {
+	protected static final Logger LOGGER = LogManager.getLogger(StructureRegistrationUtils.class);
 
 	public static boolean checkBiome(
 			List<? extends String> blacklistedBiomes, ResourceLocation name) {
-		if (!blacklistedBiomes.isEmpty()) {
+		/*if (!blacklistedBiomes.isEmpty()) {
 			return !blacklistedBiomes.contains(name.toString());
-		}
+		}*/
 
 		return true;
 	}
@@ -143,7 +143,6 @@ public class StructureUtils {
 	}
 
 	public static boolean isAllowedForWorld(ISeedReader currentWorld, StructureData config) {
-		// return true;
 		String worldID = currentWorld.getLevel().dimension().location().toString();
 		return config.getDimension_whitelist().contains(worldID);
 	}

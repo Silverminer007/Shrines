@@ -1,14 +1,17 @@
 package com.silverminer.shrines.gui.packets;
 
 import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.network.CTSRenamedStructurePacketPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSRenamedStructurePacketPacket;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.WorkingScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class RenameStructurePacketScreen extends NameStructurePacketScreen {
 	protected final StructuresPacket packet;
 

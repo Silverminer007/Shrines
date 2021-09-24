@@ -24,7 +24,7 @@ import com.silverminer.shrines.structures.novels.NovelDataSaver;
 import com.silverminer.shrines.structures.novels.NovelsData;
 import com.silverminer.shrines.structures.novels.NovelsDataRegistry;
 import com.silverminer.shrines.structures.processors.ProcessorTypes;
-import com.silverminer.shrines.utils.StructureUtils;
+import com.silverminer.shrines.utils.StructureRegistrationUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -53,7 +53,7 @@ public class CommonEvents {
 			event.enqueueWork(() -> {
 				ShrinesPacketHandler.register();
 				ProcessorTypes.register();
-				StructureUtils.setupWorldGen();
+				StructureRegistrationUtils.setupWorldGen();
 			});
 		}
 	}
@@ -65,7 +65,7 @@ public class CommonEvents {
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-					if (holder.getStructure().getConfig().getGenerate() && StructureUtils
+					if (holder.getStructure().getConfig().getGenerate() && StructureRegistrationUtils
 							.checkBiome(holder.getStructure().getConfig().getBiome_blacklist(), event.getName())) {
 						event.getGeneration().addStructureStart(holder.getConfiguredStructure());
 					}
@@ -76,7 +76,7 @@ public class CommonEvents {
 		@SubscribeEvent
 		public static void onWorldLoad(WorldEvent.Load event) {
 			if (event.getWorld() instanceof ServerWorld) {
-				StructureUtils.addDimensionalSpacing((ServerWorld) event.getWorld());
+				StructureRegistrationUtils.addDimensionalSpacing((ServerWorld) event.getWorld());
 			}
 			IWorld iworld = event.getWorld();
 

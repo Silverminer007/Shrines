@@ -9,7 +9,6 @@ buildscript {
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
     }
 }
-
 repositories {
     maven {
         url "https://www.cursemaven.com"
@@ -18,14 +17,9 @@ repositories {
         }
     }
     maven {
-    name = "Curios"
-    url = "https://maven.theillusivec4.top/"
-  }
-  maven {
-
-    url "https://nexus.resourcefulbees.com/repository/maven-public/"
-
-  }
+        // Blame
+        url "https://nexus.resourcefulbees.com/repository/maven-public/"
+    }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -117,11 +111,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "shrines",
-            "Specification-Vendor": "Silverminer007",
+            "Specification-Vendor": "Silverm7ner",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"Silverminer",
+            "Implementation-Vendor" :"Silverm7ner",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

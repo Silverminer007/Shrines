@@ -13,8 +13,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.novels.NovelsDataRegistry;
-import com.silverminer.shrines.utils.network.CTSFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSFetchStructuresPacket;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -27,7 +27,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class StructureNovelScreen extends Screen {
 	protected static final Logger LOGGER = LogManager.getLogger(StructureNovelScreen.class);
 	private double scrollAmount;
@@ -39,7 +42,7 @@ public class StructureNovelScreen extends Screen {
 	private boolean scrolling;
 
 	public StructureNovelScreen(StructureData structure, double novelAmount) {
-		super(new TranslationTextComponent("What is " + structure.getName() + "?", structure));// TODO Translation
+		super(new TranslationTextComponent("What is " + structure.getName() + "?", structure));// TRANSLATION
 		String novel = structure.getNovel();
 		double amount = NovelsDataRegistry.getNovelAmount(structure.getKey());
 		if (amount < 1.0D) {
@@ -273,7 +276,7 @@ public class StructureNovelScreen extends Screen {
 
 		drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 16777215);
 		if (this.renderInfo) {
-			ITextComponent info = new TranslationTextComponent(// TODO Translation
+			ITextComponent info = new TranslationTextComponent(// TRANSLATION
 					"Find more structures like this one to unlock the whole story");
 			drawCenteredString(matrixStack, this.font, info.getString(), this.width / 2,
 					this.height - this.font.lineHeight - 5, 0xffffff);

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -36,17 +37,31 @@ import com.silverminer.shrines.config.DefaultStructureConfig;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.structures.load.StructuresPacket.Mode;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.stc.STCFetchStructuresPacket;
+import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
+import com.silverminer.shrines.utils.network.stc.STCUpdateQueueScreenPacket;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.FileUtil;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSidedProvider;
 
-public class Utils {
-	protected static final Logger LOGGER = LogManager.getLogger(Utils.class);
+public class StructureLoadUtils {
+	protected static final Logger LOGGER = LogManager.getLogger(StructureLoadUtils.class);
 
 	public static final int PACKET_VERSION = 1;
 
 	public static ImmutableList<StructuresPacket> STRUCTURE_PACKETS;
+	/**
+	 * First player in queue is already allowed to edit the structure packets. All
+	 * players behind need to wait until the first player is done. This is needed to
+	 * prevent Overrides of changes one player made while an other one is in
+	 * configuration screen and is going to set the changes later
+	 */
+	public static ArrayList<UUID> PLAYERS_IN_EDIT_QUEUE = Lists.newArrayList();
 
 	public static File getSaveLocation() {
 		return FileUtils.getFile(ShrinesMod.getMinecraftDirectory(), "shrines-saves");
@@ -111,16 +126,16 @@ public class Utils {
 				}
 			}
 			if (!has_included_structures && initialLoad) {
-				structure_packets.add(Utils.getIncludedStructures());
+				structure_packets.add(StructureLoadUtils.getIncludedStructures());
 			}
 			// Save Structure Packets for later use in immutable list
 			STRUCTURE_PACKETS = ImmutableList.copyOf(structure_packets);
-			Utils.saveStructures(true);
+			StructureLoadUtils.saveStructures(true);
 
 			HashMap<String, StructuresPacket> temp = Maps.newHashMap();
 			// Check for duplicated structure names and warn/stop loading the structure and
 			// open GUI after start
-			for (StructuresPacket packet : Utils.STRUCTURE_PACKETS) {
+			for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
 				String packet_name = packet.getName();
 				for (StructureData data : packet.getStructures()) {
 					String key = data.getKey();
@@ -222,7 +237,7 @@ public class Utils {
 			}
 
 			ArrayList<File> usedPath = Lists.newArrayList();
-			for (StructuresPacket packet : Utils.STRUCTURE_PACKETS) {
+			for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
 				if (IDtoDelete != packet.getTempID()) {
 					usedPath.add(savePacket(shrines_saves, packet, usedPath));
 				} else {
@@ -267,5 +282,43 @@ public class Utils {
 					throwable);
 		}
 		return packet_path;
+	}
+
+	public static void sendQueueUpdatesToPlayers() {
+		MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
+		ArrayList<StructuresPacket> packets = Lists.newArrayList();
+		packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+		if (StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.size() == 1) {
+			UUID first = StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.get(0);
+			ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
+					server.getPlayerList().getPlayer(first));
+		} else {
+			StructureLoadUtils.sendUpdatesToNonFirst();
+		}
+	}
+
+	public static void playerLeftQueue(UUID leftPlayer) {
+		ArrayList<StructuresPacket> packets = Lists.newArrayList();
+		packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+		int position = StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.indexOf(leftPlayer);
+		StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.remove(position);
+		if (position >= 0) {
+			if (position == 0 && StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.size() > 0) {
+				UUID first = StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.get(0);
+				ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets), first);
+				return;
+			} else {
+				StructureLoadUtils.sendUpdatesToNonFirst();
+				return;
+			}
+		}
+		ShrinesPacketHandler.sendTo(new STCFetchStructuresPacket(packets, false), leftPlayer);
+	}
+
+	private static void sendUpdatesToNonFirst() {
+		for (int i = 1; i < StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.size(); i++) {
+			UUID player = StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.get(i);
+			ShrinesPacketHandler.sendTo(new STCUpdateQueueScreenPacket(i), player);
+		}
 	}
 }

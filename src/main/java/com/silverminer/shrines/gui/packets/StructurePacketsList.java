@@ -25,8 +25,8 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.network.CTSDeletedStructurePacketPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSDeletedStructurePacketPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DialogTexts;
@@ -130,7 +130,7 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 		}
 
 		public void configure() {
-			// TODO Open next screen
+			// FIXME Open next screen
 		}
 
 		public void remove() {
