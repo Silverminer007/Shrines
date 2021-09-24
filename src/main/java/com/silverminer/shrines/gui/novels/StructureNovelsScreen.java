@@ -6,8 +6,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.gui.packets.StructuresPacketsScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSPlayerJoinedQueuePacket;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.WorkingScreen;
 import net.minecraft.client.gui.widget.AbstractSlider;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -16,7 +19,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class StructureNovelsScreen extends Screen {
 	protected final Screen lastScreen;
 	private StructureNovelsList list;
@@ -28,7 +34,7 @@ public class StructureNovelsScreen extends Screen {
 	private final ArrayList<StructuresPacket> packets;
 
 	public StructureNovelsScreen(Screen lastScreen, ArrayList<StructuresPacket> packets) {
-		super(new TranslationTextComponent("Shrines Structures Novels"));// TODO Translation
+		super(new TranslationTextComponent("Shrines Structures Novels"));// TRANSLATION
 		this.lastScreen = lastScreen;
 		this.packets = packets;
 	}
@@ -52,7 +58,7 @@ public class StructureNovelsScreen extends Screen {
 				}, StringTextComponent.EMPTY));
 		this.sizeSlider = this.addButton(new AbstractSlider((this.width / 4) * 3 - 20, 29, 100, 20,
 				new TranslationTextComponent("gui.shrines.novels.item_size"),
-				this.itemSize <= 50 ? 0.0D : (this.itemSize - 50) / 100.0D) {// TODO Translation
+				this.itemSize <= 50 ? 0.0D : (this.itemSize - 50) / 100.0D) {// TRANSLATION
 			{
 				this.updateMessage();
 			}
@@ -62,7 +68,7 @@ public class StructureNovelsScreen extends Screen {
 						new StringTextComponent(String.valueOf(StructureNovelsScreen.this.list.getEntrySize())));
 			}
 
-			protected void applyValue() {
+			protected void applyValue() { 
 				int res = MathHelper.floor(MathHelper.clampedLerp(50.0D, 150.0D, this.value));
 				StructureNovelsScreen.this.itemSize = res;
 				StructureNovelsScreen.this.minecraft.setScreen(StructureNovelsScreen.this);
@@ -71,8 +77,8 @@ public class StructureNovelsScreen extends Screen {
 		this.sizeSlider.visible = this.isExpanded;
 		this.opMode = this.addButton(new Button((this.width / 2) - 50, 29, 100, 20,
 				new TranslationTextComponent("Open OP Mode"), (button) -> {
-					this.openOpMode();
-				}));// TODO Translation
+					this.addPlayerToQueue();
+				}));// TRANSLATION
 		this.opMode.active = this.minecraft.player.hasPermissions(2);
 		this.opMode.visible = this.isExpanded;
 		this.addButton(new Button((this.width / 4) * 3 + 90, 4, 20, 20,
@@ -83,6 +89,11 @@ public class StructureNovelsScreen extends Screen {
 		this.children.add(this.searchBox);
 		this.children.add(this.list);
 		this.setInitialFocus(this.searchBox);
+	}
+
+	public void addPlayerToQueue() {
+		this.minecraft.setScreen(new WorkingScreen());
+		ShrinesPacketHandler.sendToServer(new CTSPlayerJoinedQueuePacket(this.minecraft.player.getUUID()));
 	}
 
 	public void openOpMode() {

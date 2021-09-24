@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.StructureLoadUtils;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -57,15 +57,15 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
 		// Get the name of the packet and basic properties of the packet here
 		if (!nbt.contains("Packet Version")) {
 			if (path != null)
-				Utils.warnInvalidStructureFile(path);
+				StructureLoadUtils.warnInvalidStructureFile(path);
 			return null;
 		}
 		int packet_version = nbt.getInt("Packet Version");
-		if (packet_version != Utils.PACKET_VERSION) {
-			if (packet_version < Utils.PACKET_VERSION) {
+		if (packet_version != StructureLoadUtils.PACKET_VERSION) {
+			if (packet_version < StructureLoadUtils.PACKET_VERSION) {
 				LOGGER.info("Unable to load Structure Packet. This packet was made for an older version of this Mod");
 			}
-			if (packet_version > Utils.PACKET_VERSION) {
+			if (packet_version > StructureLoadUtils.PACKET_VERSION) {
 				LOGGER.info("Unable to load Structure Packet. This packet was made for an newer version of this Mod");
 			}
 			return null;
@@ -81,7 +81,7 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
 
 	public static CompoundNBT toCompound(StructuresPacket packet) {
 		CompoundNBT compoundnbt = new CompoundNBT();
-		compoundnbt.putInt("Packet Version", Utils.PACKET_VERSION);
+		compoundnbt.putInt("Packet Version", StructureLoadUtils.PACKET_VERSION);
 		compoundnbt.putString("Packet Name", packet.getName());// Only for network
 		ListNBT structures = new ListNBT();
 		structures.addAll(packet.getStructures().stream().map(structure -> structure.write(new CompoundNBT()))

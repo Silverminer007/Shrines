@@ -62,7 +62,7 @@ public class ShrinesSettingsConfig {
 				.defineList("structures.banned_entities", Lists.newArrayList(), ShrinesSettingsConfig::validateEntity);
 		NEEDED_NOVELS = SERVER_BUILDER
 				.comment("How many times you need to find a structure to enable it's complete story")
-				.translation("config.shrines.needed_novels").defineInRange("structures.needed_novels", 5, 0, 100);// TODO Translation
+				.translation("config.shrines.needed_novels").defineInRange("structures.needed_novels", 5, 0, 100);// TRANSLATION
 	}
 
 	private static boolean validateBiome(Object o) {

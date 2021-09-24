@@ -18,13 +18,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.utils.ClientUtils;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.StructureLoadUtils;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -37,6 +37,7 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 @Mod(value = ShrinesMod.MODID)
 public class ShrinesMod {
 	public static final String MODID = "shrines";
+	public static String VERSION = "N/A";
 	public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
 
 	/**
@@ -51,12 +52,9 @@ public class ShrinesMod {
 	 * 
 	 * TODO Add biome blacklist and set whitelist to categories again
 	 * 
-	 * FIXME Lock access to op mode if an other player is in there already
-	 * 
 	 * TODO Fix screenshots for Novels Screen
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
-	 * 
 	 * 
 	 * Releases: - 2.0.0 Bug fix update - 3.0.0 Mc1.17 Update - 3.0.1 Bugfixes of
 	 * 3.0.0 and some new features
@@ -65,16 +63,18 @@ public class ShrinesMod {
 	 * 
 	 */
 	public ShrinesMod() {
+		ModList.get().getModContainerById(ShrinesMod.MODID)
+				.ifPresent(container -> VERSION = container.getModInfo().getVersion().toString());
+		LOGGER.info("Shrines " + VERSION + " initialized");
+
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
 				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-		Utils.loadStructures(true);
-		NewStructureInit.load();
+		StructureLoadUtils.loadStructures(true);
 		registerConfig();
 	}
 
 	public static File getMinecraftDirectory() {
-		return FMLPaths.GAMEDIR.get().toFile();// TODO Test this serverside and clientside -> Looks like it works in
-												// singleplayer
+		return FMLPaths.GAMEDIR.get().toFile();
 	}
 
 	public static void registerConfig() {

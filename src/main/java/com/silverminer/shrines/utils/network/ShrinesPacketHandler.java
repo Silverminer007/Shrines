@@ -11,15 +11,32 @@
  */
 package com.silverminer.shrines.utils.network;
 
+import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.utils.network.cts.CTSAddedStructurePacketPacket;
+import com.silverminer.shrines.utils.network.cts.CTSDeletedStructurePacketPacket;
+import com.silverminer.shrines.utils.network.cts.CTSFetchNovelAmountPacket;
+import com.silverminer.shrines.utils.network.cts.CTSFetchStructuresPacket;
+import com.silverminer.shrines.utils.network.cts.CTSPlayerJoinedQueuePacket;
+import com.silverminer.shrines.utils.network.cts.CTSPlayerLeftQueuePacket;
+import com.silverminer.shrines.utils.network.cts.CTSRenamedStructurePacketPacket;
+import com.silverminer.shrines.utils.network.cts.CTSUpdateStructuresPacketsPacket;
+import com.silverminer.shrines.utils.network.stc.STCFetchNovelsAmountPacket;
+import com.silverminer.shrines.utils.network.stc.STCFetchStructuresPacket;
+import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
+import com.silverminer.shrines.utils.network.stc.STCUpdateQueueScreenPacket;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -36,8 +53,6 @@ public class ShrinesPacketHandler {
 			.networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
 	public static void register() {
-		LOGGER.debug("Initializing networking on version [{}]. This should match between client and server",
-				PROTOCOL_VERSION);
 		int id = 0;
 		CHANNEL.registerMessage(id++, CTSFetchStructuresPacket.class, CTSFetchStructuresPacket::encode,
 				CTSFetchStructuresPacket::decode, CTSFetchStructuresPacket::handle);
@@ -55,10 +70,26 @@ public class ShrinesPacketHandler {
 				CTSFetchNovelAmountPacket::decode, CTSFetchNovelAmountPacket::handle);
 		CHANNEL.registerMessage(id++, STCFetchNovelsAmountPacket.class, STCFetchNovelsAmountPacket::encode,
 				STCFetchNovelsAmountPacket::decode, STCFetchNovelsAmountPacket::handle);
+		CHANNEL.registerMessage(id++, CTSPlayerJoinedQueuePacket.class, CTSPlayerJoinedQueuePacket::encode,
+				CTSPlayerJoinedQueuePacket::decode, CTSPlayerJoinedQueuePacket::handle);
+		CHANNEL.registerMessage(id++, CTSPlayerLeftQueuePacket.class, CTSPlayerLeftQueuePacket::encode,
+				CTSPlayerLeftQueuePacket::decode, CTSPlayerLeftQueuePacket::handle);
+		CHANNEL.registerMessage(id++, STCUpdateQueueScreenPacket.class, STCUpdateQueueScreenPacket::encode,
+				STCUpdateQueueScreenPacket::decode, STCUpdateQueueScreenPacket::handle);
+		CHANNEL.registerMessage(id++, STCOpenStructuresPacketEditPacket.class,
+				STCOpenStructuresPacketEditPacket::encode, STCOpenStructuresPacketEditPacket::decode,
+				STCOpenStructuresPacketEditPacket::handle);
+		LOGGER.info("Initializing networking on version [{}]. This should match between client and server",
+				PROTOCOL_VERSION);
 	}
 
 	public static void sendTo(IPacket message, PlayerEntity player) {
 		CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), message);
+	}
+
+	public static void sendTo(IPacket message, UUID uuid) {
+		MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
+		CHANNEL.send(PacketDistributor.PLAYER.with(() -> server.getPlayerList().getPlayer(uuid)), message);
 	}
 
 	public static void sendToAll(IPacket message) {

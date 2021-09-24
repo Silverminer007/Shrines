@@ -85,11 +85,18 @@
 ##### Problems
 - #17 isn't fixed yet
 
-#### SNAPSHOT 10
+#### SNAPSHOT 11
 - Fixed #19
 - Added Structure Novel
 - Added GUI to see Novels
 - Changed config system of included structures
+- Added Queue for structure packet editing to prevent conflicts
+
+##### Problems
+- #17 isn't fixed yet
+- There are no Novels yet
+
+#### SNAPSHOT 12
 - (Added GUI for Structures -> Included and custom) -> Not done!
 
 ##### Problems

@@ -2,6 +2,6 @@
 	"processors": [ 
 		{
 			"processor_type": "shrines:remove_block_processor"
-		}	
+		}
 	]
 }

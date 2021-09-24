@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.StructureLoadUtils;
 
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.event.RegistryEvent;
@@ -38,13 +38,10 @@ public class NewStructureInit {
 	public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
 			.<StructureRegistryHolder>builder().addAll(initStructures()).build();
 
-	public static void load() {
-	};
-
 	private static ArrayList<StructureRegistryHolder> initStructures() {
 		ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
-		LOGGER.info("Registering custom structures");
-		for (StructuresPacket packet : Utils.STRUCTURE_PACKETS) {
+		LOGGER.info("Registering shrines structures");
+		for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
 			for (StructureData structure : packet.getStructures()) {
 				if (structure.successful) {
 					String name = structure.getKey();

@@ -1,4 +1,4 @@
-package com.silverminer.shrines.utils.network;
+package com.silverminer.shrines.utils.network.cts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.structures.load.StructuresPacket.Mode;
-import com.silverminer.shrines.utils.Utils;
+import com.silverminer.shrines.utils.StructureLoadUtils;
+import com.silverminer.shrines.utils.network.IPacket;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -46,15 +50,30 @@ public class CTSUpdateStructuresPacketsPacket implements IPacket {
 
 	public static void handle(CTSUpdateStructuresPacketsPacket packet, Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(() -> {
-			Utils.STRUCTURE_PACKETS = ImmutableList.copyOf(packet.packets);
-
-			Utils.saveStructures(false);
-
-			MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
-			ArrayList<StructuresPacket> packets = Lists.newArrayList();
-			packets.addAll(Utils.STRUCTURE_PACKETS);
-			ShrinesPacketHandler.sendTo(new STCFetchStructuresPacket(packets, true), server.getPlayerList().getPlayer(packet.player));
+			Handle.handle(packet);
 		});
 		context.get().setPacketHandled(true);
+	}
+
+	private static class Handle {
+		public static DistExecutor.SafeRunnable handle(CTSUpdateStructuresPacketsPacket packet) {
+			return new DistExecutor.SafeRunnable() {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void run() {
+					StructureLoadUtils.STRUCTURE_PACKETS = ImmutableList.copyOf(packet.packets);
+
+					StructureLoadUtils.saveStructures(false);
+
+					MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
+					ArrayList<StructuresPacket> packets = Lists.newArrayList();
+					packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+					ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
+							server.getPlayerList().getPlayer(packet.player));
+				}
+			};
+		}
 	}
 }
