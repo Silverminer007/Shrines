@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class AddStructurePacketScreen extends NameStructurePacketScreen {
 
-	protected AddStructurePacketScreen(Screen lastScreen) {
+	public AddStructurePacketScreen(Screen lastScreen) {
 		super(lastScreen);
 	}
 

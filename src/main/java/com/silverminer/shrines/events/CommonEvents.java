@@ -65,8 +65,10 @@ public class CommonEvents {
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
 			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-					if (holder.getStructure().getConfig().getGenerate() && StructureRegistrationUtils
-							.checkBiome(holder.getStructure().getConfig().getBiome_blacklist(), event.getName())) {
+					if (holder.getStructure().getConfig().getGenerate() && StructureRegistrationUtils.checkBiome(
+							holder.getStructure().getConfig().getBiomeBlacklist(),
+							holder.getStructure().getConfig().getBiomeCategoryWhitelist(), event.getName(),
+							event.getCategory())) {
 						event.getGeneration().addStructureStart(holder.getConfiguredStructure());
 					}
 				}

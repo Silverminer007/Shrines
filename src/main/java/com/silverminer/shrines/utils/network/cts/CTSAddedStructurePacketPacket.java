@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.structures.load.StructuresPacket.Mode;
 import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
@@ -34,14 +33,12 @@ public class CTSAddedStructurePacketPacket implements IPacket {
 	}
 
 	public static CTSAddedStructurePacketPacket decode(PacketBuffer buf) {
-		return new CTSAddedStructurePacketPacket(StructuresPacket.fromCompound(buf.readNbt(), null, Mode.NETWORK),
+		return new CTSAddedStructurePacketPacket(StructuresPacket.fromCompound(buf.readNbt(), null, true),
 				buf.readUUID());
 	}
 
 	public static void handle(CTSAddedStructurePacketPacket packet, Supplier<NetworkEvent.Context> context) {
-		context.get().enqueueWork(() -> {
-			Handle.handle(packet);
-		});
+		context.get().enqueueWork(Handle.handle(packet));
 		context.get().setPacketHandled(true);
 	}
 

@@ -28,11 +28,15 @@ public class WaitInQueueScreen extends Screen {
 		this.loop = new ColorLoop();
 	}
 
+	public void onClose() {
+		this.minecraft.setScreen(new WorkingScreen());
+		ShrinesPacketHandler.sendToServer(new CTSPlayerLeftQueuePacket(this.minecraft.player.getUUID()));
+	}
+
 	protected void init() {
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
 				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.minecraft.setScreen(new WorkingScreen());
-					ShrinesPacketHandler.sendToServer(new CTSPlayerLeftQueuePacket(this.minecraft.player.getUUID()));
+					this.onClose();
 				}, StringTextComponent.EMPTY));
 	}
 

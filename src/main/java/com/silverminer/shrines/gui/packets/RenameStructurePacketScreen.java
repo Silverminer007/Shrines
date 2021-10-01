@@ -2,7 +2,7 @@ package com.silverminer.shrines.gui.packets;
 
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import com.silverminer.shrines.utils.network.cts.CTSRenamedStructurePacketPacket;
+import com.silverminer.shrines.utils.network.cts.CTSEditedStructurePacketPacket;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.WorkingScreen;
@@ -27,7 +27,7 @@ public class RenameStructurePacketScreen extends NameStructurePacketScreen {
 		newPacket.setName(this.nameField.getValue());
 		this.minecraft.setScreen(new WorkingScreen());
 		ShrinesPacketHandler
-				.sendToServer(new CTSRenamedStructurePacketPacket(newPacket, this.minecraft.player.getUUID(), IDtoDelete));
+				.sendToServer(new CTSEditedStructurePacketPacket(newPacket, this.minecraft.player.getUUID(), IDtoDelete));
 	}
 
 	@Override

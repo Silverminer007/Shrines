@@ -2,6 +2,7 @@ package com.silverminer.shrines.structures.load;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,10 +18,12 @@ import net.minecraft.nbt.ListNBT;
 
 public class StructuresPacket implements Comparable<StructuresPacket> {
 	protected static final Logger LOGGER = LogManager.getLogger(StructuresPacket.class);
+	@Nullable
+	public List<String> possibleDimensions;
+	public boolean hasIssues = false;
 	protected String name;
 	protected boolean isIncluded;
 	protected final String author;
-	protected boolean isDeleted = false;
 	protected final int tempID;
 	private static int IDcaller = 0;
 
@@ -47,11 +50,10 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
 		this.tempID = ID;
 	}
 
-	public static StructuresPacket fromCompound(CompoundNBT nbt, @Nullable File path, Mode mode) {
+	public static StructuresPacket fromCompound(CompoundNBT nbt, @Nullable File path, boolean network) {
 		if (nbt == null) {
 			if (path != null)
-				LOGGER.info("Failed to load custom structures packet: Unable to load structures.nbt file. Packet: {}",
-						path);
+				LOGGER.info("Failed to load structures packet: Unable to load structures.nbt file. Packet: {}", path);
 			return null;
 		}
 		// Get the name of the packet and basic properties of the packet here
@@ -70,12 +72,15 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
 			}
 			return null;
 		}
-		String packet_name = mode == Mode.NETWORK || path == null ? nbt.getString("Packet Name") : path.getName();
+		String packet_name = network || path == null ? nbt.getString("Packet Name") : path.getName();
 		ListNBT structures = nbt.getList("Structures", 10);
 		boolean is_included = nbt.getBoolean("Is Included");
 		String author = nbt.getString("Author");
-		int id = mode == Mode.NETWORK ? nbt.getInt("ID") : IDcaller++;
+		int id = network ? nbt.getInt("ID") : IDcaller++;
 		StructuresPacket packet = new StructuresPacket(packet_name, structures, is_included, author, id);
+		List<String> dims = Arrays.asList(nbt.getString("Possible Dimensions").split(";"));
+		packet.possibleDimensions = dims;
+		packet.hasIssues = nbt.getBoolean("HasIssues");
 		return packet;
 	}
 
@@ -90,6 +95,12 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
 		compoundnbt.putBoolean("Is Included", packet.isIncluded());
 		compoundnbt.putString("Author", packet.getAuthor());
 		compoundnbt.putInt("ID", packet.getTempID());// Only for network
+		String dims = "";
+		for (String s : StructureLoadUtils.getPossibleDimensions()) {
+			dims += s + ";";
+		}
+		compoundnbt.putString("Possible Dimensions", dims);
+		compoundnbt.putBoolean("HasIssues", packet.hasIssues);
 		return compoundnbt;
 	}
 
@@ -127,10 +138,6 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
 	}
 
 	public StructuresPacket copy() {
-		return StructuresPacket.fromCompound(StructuresPacket.toCompound(this), null, Mode.REFRESH);
-	}
-
-	public static enum Mode {
-		NETWORK, DISK, REFRESH;
+		return StructuresPacket.fromCompound(StructuresPacket.toCompound(this), null, false);
 	}
 }

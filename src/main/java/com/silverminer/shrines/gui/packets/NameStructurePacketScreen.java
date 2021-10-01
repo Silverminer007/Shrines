@@ -25,6 +25,10 @@ public abstract class NameStructurePacketScreen extends Screen {
 		this.lastScreen = lastScreen;
 	}
 
+	public void onClose() {
+		this.minecraft.setScreen(lastScreen);
+	}
+
 	protected void init() {
 		this.minecraft.keyboardHandler.setSendRepeatsToGui(true); // Why should I have this?
 		String message = this.nameField == null ? this.defaultNameFieldString().getString() : this.nameField.getValue();
@@ -41,7 +45,7 @@ public abstract class NameStructurePacketScreen extends Screen {
 		this.confirmButton.active = !this.nameField.getValue().isEmpty();
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
 				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.minecraft.setScreen(lastScreen);
+					this.onClose();
 				}, StringTextComponent.EMPTY));
 		this.children.add(nameField);
 	}

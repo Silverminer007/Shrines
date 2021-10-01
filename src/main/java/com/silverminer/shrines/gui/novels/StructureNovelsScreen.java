@@ -53,8 +53,10 @@ public class StructureNovelsScreen extends Screen {
 					return this.searchBox.getValue();
 				}, packets);
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.minecraft.setScreen(lastScreen);
+				// new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256,
+				// (button) -> {
+				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets_2.png"), 256, 256, (button) -> {// FIXME Button texture
+					this.onClose();
 				}, StringTextComponent.EMPTY));
 		this.sizeSlider = this.addButton(new AbstractSlider((this.width / 4) * 3 - 20, 29, 100, 20,
 				new TranslationTextComponent("gui.shrines.novels.item_size"),
@@ -68,7 +70,7 @@ public class StructureNovelsScreen extends Screen {
 						new StringTextComponent(String.valueOf(StructureNovelsScreen.this.list.getEntrySize())));
 			}
 
-			protected void applyValue() { 
+			protected void applyValue() {
 				int res = MathHelper.floor(MathHelper.clampedLerp(50.0D, 150.0D, this.value));
 				StructureNovelsScreen.this.itemSize = res;
 				StructureNovelsScreen.this.minecraft.setScreen(StructureNovelsScreen.this);

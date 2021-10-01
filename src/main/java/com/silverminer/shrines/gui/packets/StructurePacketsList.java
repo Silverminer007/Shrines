@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
+import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSDeletedStructurePacketPacket;
@@ -113,7 +114,7 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 			String s1 = "Author: " + this.packet.getAuthor();
 			String s2 = "Structures: " + this.packet.getStructures().size() + "  Templates:" + "" + "  Pools:" + "";
 
-			this.minecraft.font.draw(ms, header, left, top + 1, 16777215);
+			this.minecraft.font.draw(ms, header, left, top + 1, this.packet.hasIssues ? 0xff0000 : 0xffffff);
 			this.minecraft.font.draw(ms, s1, left, top + 9 + 3, 8421504);
 			this.minecraft.font.draw(ms, s2, left, top + 9 + 9 + 3, 8421504);
 		}
@@ -130,7 +131,7 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 		}
 
 		public void configure() {
-			// FIXME Open next screen
+			this.minecraft.setScreen(new EditStructurePacketScreen(this.packet));
 		}
 
 		public void remove() {
@@ -147,9 +148,9 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 					new TranslationTextComponent("gui.shrines.structures.removeWarning"),
 					new TranslationTextComponent("gui.shrines.structures.deleteButton"), DialogTexts.GUI_CANCEL));
 		}
-	
-		public void rename() {
-			this.minecraft.setScreen(new RenameStructurePacketScreen(StructurePacketsList.this.screen, packet));
+
+		public StructuresPacket getPacket() {
+			return this.packet;
 		}
 	}
 }

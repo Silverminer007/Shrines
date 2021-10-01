@@ -32,6 +32,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.FlatGenerationSettings;
@@ -48,13 +49,17 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 public class StructureRegistrationUtils {
 	protected static final Logger LOGGER = LogManager.getLogger(StructureRegistrationUtils.class);
 
-	public static boolean checkBiome(
-			List<? extends String> blacklistedBiomes, ResourceLocation name) {
-		/*if (!blacklistedBiomes.isEmpty()) {
-			return !blacklistedBiomes.contains(name.toString());
-		}*/
-
-		return true;
+	public static boolean checkBiome(List<? extends String> blacklistedBiomes,
+			List<? extends String> whitelistedBiomeCategories, ResourceLocation name, Biome.Category category) {
+		if (!whitelistedBiomeCategories.isEmpty()) {
+			if (blacklistedBiomes.isEmpty()) {
+				return blacklistedBiomes.contains(name.toString())
+						&& whitelistedBiomeCategories.contains(category.toString());
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static void setupWorldGen() {
@@ -83,7 +88,8 @@ public class StructureRegistrationUtils {
 					structureMap.put(structure, structureSeparationSettings);
 				}
 			});
-			LOGGER.debug("Registered Structure Seperation Settings for {}", holder.getStructure().getConfig().getName());
+			LOGGER.debug("Registered Structure Seperation Settings for {}",
+					holder.getStructure().getConfig().getName());
 		}
 	}
 

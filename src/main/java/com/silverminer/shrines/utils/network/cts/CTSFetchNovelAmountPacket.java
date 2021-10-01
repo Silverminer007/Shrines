@@ -41,9 +41,7 @@ public class CTSFetchNovelAmountPacket implements IPacket {
 	}
 
 	public static void handle(CTSFetchNovelAmountPacket packet, Supplier<NetworkEvent.Context> context) {
-		context.get().enqueueWork(() -> {
-			Handle.handle(packet);
-		});
+		context.get().enqueueWork(Handle.handle(packet));
 		context.get().setPacketHandled(true);
 	}
 
