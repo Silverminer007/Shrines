@@ -23,8 +23,7 @@ import com.silverminer.shrines.utils.network.cts.CTSFetchNovelAmountPacket;
 import com.silverminer.shrines.utils.network.cts.CTSFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.cts.CTSPlayerJoinedQueuePacket;
 import com.silverminer.shrines.utils.network.cts.CTSPlayerLeftQueuePacket;
-import com.silverminer.shrines.utils.network.cts.CTSRenamedStructurePacketPacket;
-import com.silverminer.shrines.utils.network.cts.CTSUpdateStructuresPacketsPacket;
+import com.silverminer.shrines.utils.network.cts.CTSEditedStructurePacketPacket;
 import com.silverminer.shrines.utils.network.stc.STCFetchNovelsAmountPacket;
 import com.silverminer.shrines.utils.network.stc.STCFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
@@ -60,12 +59,10 @@ public class ShrinesPacketHandler {
 				STCFetchStructuresPacket::decode, STCFetchStructuresPacket::handle);
 		CHANNEL.registerMessage(id++, CTSAddedStructurePacketPacket.class, CTSAddedStructurePacketPacket::encode,
 				CTSAddedStructurePacketPacket::decode, CTSAddedStructurePacketPacket::handle);
-		CHANNEL.registerMessage(id++, CTSUpdateStructuresPacketsPacket.class, CTSUpdateStructuresPacketsPacket::encode,
-				CTSUpdateStructuresPacketsPacket::decode, CTSUpdateStructuresPacketsPacket::handle);
 		CHANNEL.registerMessage(id++, CTSDeletedStructurePacketPacket.class, CTSDeletedStructurePacketPacket::encode,
 				CTSDeletedStructurePacketPacket::decode, CTSDeletedStructurePacketPacket::handle);
-		CHANNEL.registerMessage(id++, CTSRenamedStructurePacketPacket.class, CTSRenamedStructurePacketPacket::encode,
-				CTSRenamedStructurePacketPacket::decode, CTSRenamedStructurePacketPacket::handle);
+		CHANNEL.registerMessage(id++, CTSEditedStructurePacketPacket.class, CTSEditedStructurePacketPacket::encode,
+				CTSEditedStructurePacketPacket::decode, CTSEditedStructurePacketPacket::handle);
 		CHANNEL.registerMessage(id++, CTSFetchNovelAmountPacket.class, CTSFetchNovelAmountPacket::encode,
 				CTSFetchNovelAmountPacket::decode, CTSFetchNovelAmountPacket::handle);
 		CHANNEL.registerMessage(id++, STCFetchNovelsAmountPacket.class, STCFetchNovelsAmountPacket::encode,

@@ -53,15 +53,16 @@ public class GeneralSettingsScreen extends Screen {
 		int titleHeight = mc.font.wordWrapHeight(title.getString(), width - 2 * PADDING);
 		int paddedTitleHeight = titleHeight + PADDING * 2;
 
-		addButton(width - 120 - 2 * PADDING, 0, 60, paddedTitleHeight, new TranslationTextComponent("gui.shrines.structures.back"),
-				button -> mc.setScreen(parent));
-		addButton(width - 60 - PADDING, 0, 60, paddedTitleHeight, new TranslationTextComponent("gui.shrines.structures.save"), button -> {
-			this.optionList.commitChanges();
-			for (ForgeConfigSpec spec : configSpecs)
-				spec.save();
+		addButton(width - 120 - 2 * PADDING, 0, 60, paddedTitleHeight,
+				new TranslationTextComponent("gui.shrines.structures.back"), button -> mc.setScreen(parent));
+		addButton(width - 60 - PADDING, 0, 60, paddedTitleHeight,
+				new TranslationTextComponent("gui.shrines.structures.save"), button -> {
+					this.optionList.commitChanges();
+					for (ForgeConfigSpec spec : configSpecs)
+						spec.save();
 
-			mc.setScreen(parent);
-		});
+					mc.setScreen(parent);
+				});
 
 		int optionListHeaderHeight = titleHeight + 2 * PADDING;
 		this.optionList = new ModOptionList(configSpecs, minecraft, width, height, optionListHeaderHeight,
@@ -406,7 +407,7 @@ public class GeneralSettingsScreen extends Screen {
 				if (value instanceof Boolean) {
 					ForgeConfigSpec.BooleanValue cfg = (ForgeConfigSpec.BooleanValue) this.configValue;
 					cfg.set(this.checkBox.value);
-				} else if(this.editBox != null) {
+				} else if (this.editBox != null) {
 					String text = this.editBox.getValue();
 
 					if (value instanceof Integer) {

@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +38,6 @@ import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.DefaultStructureConfig;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.structures.load.StructuresPacket.Mode;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.stc.STCFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
@@ -46,6 +47,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.FileUtil;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 
@@ -107,8 +109,7 @@ public class StructureLoadUtils {
 				CompoundNBT data_structure = readNBTFile(structures_file);
 				// Create an instance of a packet datastructure and write it to an read/write
 				// array
-				StructuresPacket packet = StructuresPacket.fromCompound(data_structure, p_packet,
-						initialLoad ? Mode.DISK : Mode.REFRESH);
+				StructuresPacket packet = StructuresPacket.fromCompound(data_structure, p_packet, false);
 				if (packet == null) {
 					continue;
 				}
@@ -133,6 +134,7 @@ public class StructureLoadUtils {
 			StructureLoadUtils.saveStructures(true);
 
 			HashMap<String, StructuresPacket> temp = Maps.newHashMap();
+			ArrayList<StructuresPacket> packets_with_issue = Lists.newArrayList();
 			// Check for duplicated structure names and warn/stop loading the structure and
 			// open GUI after start
 			for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
@@ -140,14 +142,22 @@ public class StructureLoadUtils {
 				for (StructureData data : packet.getStructures()) {
 					String key = data.getKey();
 					if (temp.containsKey(key)) {
-						// TODO Make use of successful when GUIs are ready and throw user in GUI as soon
-						// as Minecraft is ready to do so
 						LOGGER.error(
 								"A conflict was detected when loading structures. There are two or more structures with the same name. Key [{}], Packet 1 [{}], Packet 2 [{}]",
 								key, packet_name, temp.get(key).getName());
 						data.successful = false;
+						packets_with_issue.add(packet);
+					} else {
+						data.successful = true;
 					}
 					temp.put(key, packet);
+				}
+			}
+			for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
+				if (packets_with_issue.contains(packet)) {
+					packet.hasIssues = true;
+				} else {
+					packet.hasIssues = false;
 				}
 			}
 
@@ -319,6 +329,20 @@ public class StructureLoadUtils {
 		for (int i = 1; i < StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.size(); i++) {
 			UUID player = StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.get(i);
 			ShrinesPacketHandler.sendTo(new STCUpdateQueueScreenPacket(i), player);
+		}
+	}
+
+	@Nullable
+	public static List<String> getPossibleDimensions() {
+		try {
+			MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
+			ArrayList<String> dims = Lists.newArrayList();
+			for (ServerWorld w : server.getAllLevels()) {
+				dims.add(w.dimension().location().toString());
+			}
+			return dims;
+		} catch (Throwable t) {
+			return Lists.newArrayList();
 		}
 	}
 }

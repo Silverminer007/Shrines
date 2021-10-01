@@ -1,7 +1,9 @@
 package com.silverminer.shrines.structures.load;
 
 import java.util.List;
+import java.util.Random;
 
+import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.options.BooleanConfigOption;
 import com.silverminer.shrines.structures.load.options.ConfigOptions;
 import com.silverminer.shrines.structures.load.options.DoubleConfigOption;
@@ -10,25 +12,28 @@ import com.silverminer.shrines.structures.load.options.StringConfigOption;
 import com.silverminer.shrines.structures.load.options.StringListConfigOption;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 
-public class StructureData {
+public class StructureData implements Comparable<StructureData> {
 	public boolean successful = true;
-	private StringConfigOption name;
-	private final StringConfigOption key;
+	public boolean registered = false;
+	public StringConfigOption name;
+	public StringConfigOption key;
 
-	private BooleanConfigOption transformLand;
-	private BooleanConfigOption generate;
-	private DoubleConfigOption spawn_chance;
-	private BooleanConfigOption use_random_varianting;
-	private IntegerConfigOption distance;
-	private IntegerConfigOption seperation;
-	private IntegerConfigOption seed_modifier;
-	private IntegerConfigOption height_offset;
+	public BooleanConfigOption transformLand;
+	public BooleanConfigOption generate;
+	public DoubleConfigOption spawn_chance;
+	public BooleanConfigOption use_random_varianting;
+	public IntegerConfigOption distance;
+	public IntegerConfigOption seperation;
+	public IntegerConfigOption seed_modifier;
+	public IntegerConfigOption height_offset;
 
-	private StringListConfigOption biome_blacklist;
-	private StringListConfigOption dimension_whitelist;
+	public StringListConfigOption biome_blacklist;
+	public StringListConfigOption biome_category_whitelist;
+	public StringListConfigOption dimension_whitelist;
 
-	private StringConfigOption novel;
+	public StringConfigOption novel;
 
 	public StructureData(CompoundNBT data) {
 		this.name = new StringConfigOption(data.getCompound(ConfigOptions.name));
@@ -42,13 +47,19 @@ public class StructureData {
 		this.seed_modifier = new IntegerConfigOption(data.getCompound(ConfigOptions.seed_modifier));
 		this.height_offset = new IntegerConfigOption(data.getCompound(ConfigOptions.height_offset));
 		this.biome_blacklist = new StringListConfigOption(data.getCompound(ConfigOptions.biome_blacklist));
+		this.biome_category_whitelist = new StringListConfigOption(
+				data.getCompound(ConfigOptions.biome_category_whitelist));
 		this.dimension_whitelist = new StringListConfigOption(data.getCompound(ConfigOptions.dimension_whitelist));
 		this.novel = new StringConfigOption(data.getCompound(ConfigOptions.novel));
+		this.successful = data.getBoolean("Successful");
+		this.registered = data.getBoolean("Registered");
 	}
 
 	public StructureData(DefaultedStructureData data) {
 		this.name = new StringConfigOption(ConfigOptions.name, data.getName(), ConfigOptions.Comments.name);
-		this.key = new StringConfigOption(ConfigOptions.key, data.getKey(), ConfigOptions.Comments.key);
+		this.key = new StringConfigOption(ConfigOptions.key,
+				new ResourceLocation(data.getKey()).toString().replace("minecraft:", ShrinesMod.MODID + ":"),
+				ConfigOptions.Comments.key);
 		this.transformLand = new BooleanConfigOption(ConfigOptions.transform_land, data.isTransformLand(),
 				ConfigOptions.Comments.transform_land);
 		this.generate = new BooleanConfigOption(ConfigOptions.generate, data.getGenerate(),
@@ -67,6 +78,8 @@ public class StructureData {
 				ConfigOptions.Comments.height_offset);
 		this.biome_blacklist = new StringListConfigOption(ConfigOptions.biome_blacklist, data.getBiomeBlacklist(),
 				ConfigOptions.Comments.biome_blacklist);
+		this.biome_category_whitelist = new StringListConfigOption(ConfigOptions.biome_category_whitelist,
+				data.getBiomeCategoryWhitelist(), ConfigOptions.Comments.biome_category_whitelist);
 		this.dimension_whitelist = new StringListConfigOption(ConfigOptions.dimension_whitelist,
 				data.getDimensionWhitelist(), ConfigOptions.Comments.dimension_whitelist);
 		this.novel = new StringConfigOption(ConfigOptions.novel, data.getNovel(), ConfigOptions.Comments.novel);
@@ -84,8 +97,11 @@ public class StructureData {
 		tag.put(ConfigOptions.seed_modifier, this.seed_modifier.write());
 		tag.put(ConfigOptions.height_offset, this.height_offset.write());
 		tag.put(ConfigOptions.biome_blacklist, this.biome_blacklist.write());
+		tag.put(ConfigOptions.biome_category_whitelist, this.biome_category_whitelist.write());
 		tag.put(ConfigOptions.dimension_whitelist, this.dimension_whitelist.write());
 		tag.put(ConfigOptions.novel, this.novel.write());
+		tag.putBoolean("Successful", this.successful);
+		tag.putBoolean("Registered", this.registered);
 		return tag;
 	}
 
@@ -119,6 +135,7 @@ public class StructureData {
 	}
 
 	public void setDistance(Integer distance) {
+		distance = Math.abs(distance);
 		this.distance.setValue(distance);
 	}
 
@@ -127,6 +144,7 @@ public class StructureData {
 	}
 
 	public void setSeperation(Integer seperation) {
+		seperation = Math.abs(seperation);
 		this.seperation.setValue(seperation);
 	}
 
@@ -135,6 +153,9 @@ public class StructureData {
 	}
 
 	public void setSeed_modifier(Integer seed_modifier) {
+		if (seed_modifier == 0) {
+			seed_modifier = new Random().nextInt(Integer.MAX_VALUE);
+		}
 		this.seed_modifier.setValue(seed_modifier);
 	}
 
@@ -146,12 +167,20 @@ public class StructureData {
 		this.height_offset.setValue(height_offset);
 	}
 
-	public List<String> getBiome_blacklist() {
+	public List<String> getBiomeBlacklist() {
 		return biome_blacklist.getValue();
 	}
 
-	public void setBiome_blacklist(List<String> biome_blacklist) {
+	public void setBiomeBlacklist(List<String> biome_blacklist) {
 		this.biome_blacklist.setValue(biome_blacklist);
+	}
+
+	public List<String> getBiomeCategoryWhitelist() {
+		return biome_category_whitelist.getValue();
+	}
+
+	public void setBiomeCategoryWhitelist(List<String> biome_category_whitelist) {
+		this.biome_category_whitelist.setValue(biome_category_whitelist);
 	}
 
 	public List<String> getDimension_whitelist() {
@@ -182,11 +211,20 @@ public class StructureData {
 		return key.getValue();
 	}
 
+	public void setKey(String key) {
+		this.key.setValue(new ResourceLocation(key).toString().replace("minecraft:", ShrinesMod.MODID + ":"));
+	}
+
 	public String getNovel() {
 		return novel.getValue();
 	}
 
 	public void setNovel(String novel) {
 		this.novel.setValue(novel);
+	}
+
+	@Override
+	public int compareTo(StructureData o) {
+		return this.getName().compareTo(o.getName());
 	}
 }

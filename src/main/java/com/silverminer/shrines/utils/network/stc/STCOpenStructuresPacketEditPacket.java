@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.gui.novels.StructureNovelsScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.structures.load.StructuresPacket.Mode;
 import com.silverminer.shrines.utils.network.IPacket;
 
 import net.minecraft.client.Minecraft;
@@ -34,7 +33,7 @@ public class STCOpenStructuresPacketEditPacket implements IPacket {
 		ArrayList<StructuresPacket> structurePackets = Lists.newArrayList();
 		int packets = buf.readInt();
 		for (int i = 0; i < packets; i++) {
-			structurePackets.add(StructuresPacket.fromCompound(buf.readNbt(), null, Mode.NETWORK));
+			structurePackets.add(StructuresPacket.fromCompound(buf.readNbt(), null, true));
 		}
 		return new STCOpenStructuresPacketEditPacket(structurePackets);
 	}

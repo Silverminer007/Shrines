@@ -13,11 +13,13 @@ package com.silverminer.shrines.structures.load;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 
 /**
  * @author Silverminer
@@ -34,6 +36,10 @@ public class DefaultedStructureData {
 	protected int seperation = 12;
 	protected final int seed_modifier;
 	protected int height_offset;
+	protected ArrayList<Biome.Category> biome_category_whitelist = Lists.newArrayList(Biome.Category.PLAINS,
+			Biome.Category.FOREST, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.JUNGLE,
+			Biome.Category.MESA, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.SWAMP,
+			Biome.Category.MUSHROOM);
 	protected ArrayList<String> biome_blacklist = Lists.newArrayList();
 	protected ArrayList<String> dimension_whitelist = Lists.newArrayList("minecraft:overworld");
 	protected String novel = "";
@@ -54,9 +60,33 @@ public class DefaultedStructureData {
 		return this;
 	}
 
-	public DefaultedStructureData addToBiomeBlacklist(String... blacklist) {
+	public DefaultedStructureData setBiomeBlacklist(String... blacklist) {
+		this.biome_blacklist.clear();
+		;
 		for (String s : blacklist)
 			this.biome_blacklist.add(s);
+		return this;
+	}
+
+	public DefaultedStructureData setBiomeCategoryWhitelist(Biome.Category... whitelist) {
+		this.biome_category_whitelist.clear();
+		for (Biome.Category s : whitelist) {
+			this.biome_category_whitelist.add(s);
+		}
+		return this;
+	}
+
+	public DefaultedStructureData addToBiomeCategoryWhitelist(Biome.Category... whitelist) {
+		for (Biome.Category s : whitelist) {
+			this.biome_category_whitelist.add(s);
+		}
+		return this;
+	}
+
+	public DefaultedStructureData removeFromBiomeCategoryWhitelist(Biome.Category... whitelist) {
+		for (Biome.Category s : whitelist) {
+			this.biome_category_whitelist.remove(s);
+		}
 		return this;
 	}
 
@@ -116,6 +146,10 @@ public class DefaultedStructureData {
 
 	public List<String> getBiomeBlacklist() {
 		return this.biome_blacklist;
+	}
+
+	public List<String> getBiomeCategoryWhitelist() {
+		return this.biome_category_whitelist.stream().map(cat -> cat.toString()).collect(Collectors.toList());
 	}
 
 	public List<String> getDimensionWhitelist() {

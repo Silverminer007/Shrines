@@ -52,6 +52,10 @@ public class StructureNovelScreen extends Screen {
 		this.words = this.words.subList(0, (int) (this.words.size() * amount));
 	}
 
+	public void onClose() {
+		ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(this.minecraft.player, false));
+	}
+
 	public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {
 		this.setScrollAmount(this.getScrollAmount() - p_231043_5_ * 20.0D);
 		return true;
@@ -101,7 +105,7 @@ public class StructureNovelScreen extends Screen {
 	protected void init() {
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
 				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(this.minecraft.player, false));
+					this.onClose();
 				}, StringTextComponent.EMPTY));
 	}
 
@@ -146,8 +150,8 @@ public class StructureNovelScreen extends Screen {
 			lines.add(str);
 		}
 		if (this.renderInfo) {
-			if(lines.size() > 0) {
-			lines.set(lines.size() - 1, lines.get(lines.size() - 1) + " ...");
+			if (lines.size() > 0) {
+				lines.set(lines.size() - 1, lines.get(lines.size() - 1) + " ...");
 			} else {
 				lines = Lists.newArrayList("...");
 			}

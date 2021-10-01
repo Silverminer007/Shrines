@@ -50,9 +50,9 @@ public class ShrinesMod {
 	 * 
 	 * TODO 2.0.0 Use processors to perform Color Structure Piece's work
 	 * 
-	 * TODO Add biome blacklist and set whitelist to categories again
+	 * 2.0.0 Test Caves & Cliffs Backport compat
 	 * 
-	 * TODO Fix screenshots for Novels Screen
+	 * TODO Fix screenshots for Novels Screen. Resolution and size. Send them over network to the client
 	 * 
 	 * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
 	 * 
@@ -81,7 +81,6 @@ public class ShrinesMod {
 		// Config
 		Config.register(ModLoadingContext.get());
 		// Setup config UI
-
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
 					() -> ClientUtils::getConfigGui);

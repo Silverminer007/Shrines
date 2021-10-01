@@ -97,11 +97,22 @@
 - There are no Novels yet
 
 #### SNAPSHOT 12
-- (Added GUI for Structures -> Included and custom) -> Not done!
+- Added GUI for Structures -> Included and custom
+- You're able to add/rename/delete/configure structure packets
+- You're able to add/delete/configure structures
+- You're able add your own novels to the structures
+- You're warned if a key is duplicated
 
 ##### Problems
+- Templates and Pools buttons points to empty screens
+- Novels are always empty even if you add some in configuration
 - #17 isn't fixed yet
 - There are no Novels yet
+
+#### SNAPSHOT 13
+
+##### Problems
+- 
 
 ##### Notes
 - These versions are alpha builds so anything can change in next release!

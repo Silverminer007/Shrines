@@ -37,9 +37,7 @@ public class CTSDeletedStructurePacketPacket implements IPacket {
 	}
 
 	public static void handle(CTSDeletedStructurePacketPacket packet, Supplier<NetworkEvent.Context> context) {
-		context.get().enqueueWork(() -> {
-			Handle.handle(packet);
-		});
+		context.get().enqueueWork(Handle.handle(packet));
 		context.get().setPacketHandled(true);
 	}
 
