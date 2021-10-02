@@ -1,12 +1,12 @@
 package com.silverminer.shrines.gui.packets.edit;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.config.DefaultStructureConfig;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
 import com.silverminer.shrines.gui.packets.edit.structures.EditStructuresList;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSEditedStructurePacketPacket;
 
@@ -16,7 +16,6 @@ import net.minecraft.client.gui.screen.WorkingScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -62,10 +61,9 @@ public class EditStructurePacketScreen extends Screen {
 				this.bottomheight, 35, () -> {
 					return this.searchBox.getValue();
 				}, packet);
-		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.onClose();
-				}, StringTextComponent.EMPTY));
+		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
+			this.onClose();
+		}, StringTextComponent.EMPTY));
 		this.structuresButton = this
 				.addButton(new Button(2, 24, 150, 20, new TranslationTextComponent("Structures"), (button) -> {
 					this.editMode = Mode.STRUCTURES;

@@ -3,9 +3,9 @@ package com.silverminer.shrines.gui.novels;
 import java.util.ArrayList;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.gui.packets.StructuresPacketsScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSPlayerJoinedQueuePacket;
 
@@ -15,7 +15,6 @@ import net.minecraft.client.gui.widget.AbstractSlider;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -53,9 +52,7 @@ public class StructureNovelsScreen extends Screen {
 					return this.searchBox.getValue();
 				}, packets);
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				// new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256,
-				// (button) -> {
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets_2.png"), 256, 256, (button) -> {// FIXME Button texture
+				ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
 					this.onClose();
 				}, StringTextComponent.EMPTY));
 		this.sizeSlider = this.addButton(new AbstractSlider((this.width / 4) * 3 - 20, 29, 100, 20,

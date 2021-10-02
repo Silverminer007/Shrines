@@ -53,7 +53,7 @@ public class StructureRegistrationUtils {
 			List<? extends String> whitelistedBiomeCategories, ResourceLocation name, Biome.Category category) {
 		if (!whitelistedBiomeCategories.isEmpty()) {
 			if (blacklistedBiomes.isEmpty()) {
-				return blacklistedBiomes.contains(name.toString())
+				return !blacklistedBiomes.contains(name.toString())
 						&& whitelistedBiomeCategories.contains(category.toString());
 			} else {
 				return true;

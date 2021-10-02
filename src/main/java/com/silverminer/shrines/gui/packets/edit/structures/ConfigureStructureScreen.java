@@ -3,12 +3,11 @@ package com.silverminer.shrines.gui.packets.edit.structures;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.StructureData;
+import com.silverminer.shrines.utils.ClientUtils;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,10 +35,9 @@ public class ConfigureStructureScreen extends Screen {
 	protected void init() {
 		this.list = new ConfigureStructureList(minecraft, this.width, this.height, 24, height, 30, this,
 				this.structure);
-		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.onClose();
-				}, StringTextComponent.EMPTY));
+		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
+			this.onClose();
+		}, StringTextComponent.EMPTY));
 		this.children.add(list);
 	}
 

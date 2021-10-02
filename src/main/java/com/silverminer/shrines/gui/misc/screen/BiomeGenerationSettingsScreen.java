@@ -6,12 +6,11 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.utils.ClientUtils;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,7 +26,8 @@ public class BiomeGenerationSettingsScreen extends Screen {
 	protected final Consumer<List<String>> biomeCategorySetter;
 
 	public BiomeGenerationSettingsScreen(Screen lastScreen, List<String> selectedBiomes,
-			List<String> selectedBiomeCategories, String title, Consumer<List<String>> setter, Consumer<List<String>> categoriesSetter) {
+			List<String> selectedBiomeCategories, String title, Consumer<List<String>> setter,
+			Consumer<List<String>> categoriesSetter) {
 		super(new StringTextComponent(title));
 		this.lastScreen = lastScreen;
 		this.selectedBiomes = Lists.newArrayList(selectedBiomes);
@@ -43,10 +43,9 @@ public class BiomeGenerationSettingsScreen extends Screen {
 	}
 
 	protected void init() {
-		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.onClose();
-				}, StringTextComponent.EMPTY));
+		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
+			this.onClose();
+		}, StringTextComponent.EMPTY));
 		this.searchBox = new TextFieldWidget(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
 				new StringTextComponent(""));
 		this.searchBox.setResponder((string) -> {

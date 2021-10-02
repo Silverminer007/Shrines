@@ -110,9 +110,11 @@
 - There are no Novels yet
 
 #### SNAPSHOT 13
+- Fixed structure generation
+- Changed back button texture to Novels screen version
 
 ##### Problems
-- 
+- Previous Problems still affect
 
 ##### Notes
 - These versions are alpha builds so anything can change in next release!

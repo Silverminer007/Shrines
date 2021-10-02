@@ -17,7 +17,7 @@ public class DefaultStructureConfig {
 					.setDistance(60).setSeperation(11);
 
 	public static final DefaultedStructureData BALLON_CONFIG = new DefaultedStructureData("Ballon", "balloon", 143665)
-			.setDistance(50).setSeperation(8);
+			.setDistance(50).setSeperation(8).setTransformLand(false);
 
 	public static final DefaultedStructureData BEES_CONFIG = new DefaultedStructureData("Bees", "bees", 779806245)
 			.setDistance(70).setSeperation(12).setUseRandomVarianting(false);
@@ -35,7 +35,7 @@ public class DefaultStructureConfig {
 			"guardian_meeting", 1498473232).setDistance(70).setSeperation(17).setUseRandomVarianting(false);
 
 	public static final DefaultedStructureData HARBOUR_CONFIG = new DefaultedStructureData("Harbour", "harbour",
-			651398043).setDistance(50).setSeperation(8).setBiomeCategoryWhitelist(Category.OCEAN);
+			651398043).setDistance(50).setSeperation(8).setTransformLand(false).setBiomeCategoryWhitelist(Category.OCEAN);
 
 	public static final DefaultedStructureData HIGHTEMPLE_CONFIG = new DefaultedStructureData("High Tempel",
 			"high_temple", 536987987).setDistance(85).setSeperation(18);
