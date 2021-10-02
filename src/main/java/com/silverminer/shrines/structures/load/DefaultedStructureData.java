@@ -62,7 +62,6 @@ public class DefaultedStructureData {
 
 	public DefaultedStructureData setBiomeBlacklist(String... blacklist) {
 		this.biome_blacklist.clear();
-		;
 		for (String s : blacklist)
 			this.biome_blacklist.add(s);
 		return this;

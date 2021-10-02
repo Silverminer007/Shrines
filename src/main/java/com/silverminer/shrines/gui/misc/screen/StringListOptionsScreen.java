@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.utils.ClientUtils;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,7 +23,8 @@ public class StringListOptionsScreen extends Screen {
 	protected final ArrayList<String> selectedValues;
 	protected final Consumer<List<String>> setter;
 
-	public StringListOptionsScreen(Screen lastScreen, List<String> possibleOptions, ArrayList<String> selectedOptions, String title, Consumer<List<String>> setter) {
+	public StringListOptionsScreen(Screen lastScreen, List<String> possibleOptions, ArrayList<String> selectedOptions,
+			String title, Consumer<List<String>> setter) {
 		super(new StringTextComponent(title));
 		this.lastScreen = lastScreen;
 		this.possibleValues = possibleOptions;
@@ -38,10 +38,9 @@ public class StringListOptionsScreen extends Screen {
 	}
 
 	protected void init() {
-		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.onClose();
-				}, StringTextComponent.EMPTY));
+		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
+			this.onClose();
+		}, StringTextComponent.EMPTY));
 		this.searchBox = new TextFieldWidget(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
 				new StringTextComponent(""));
 		this.searchBox.setResponder((string) -> {
@@ -49,7 +48,8 @@ public class StringListOptionsScreen extends Screen {
 				return string;
 			});
 		});
-		this.list = new StringListOptionsList(this, minecraft, this.width, this.height, 26, this.height, 26, () -> this.searchBox.getValue());
+		this.list = new StringListOptionsList(this, minecraft, this.width, this.height, 26, this.height, 26,
+				() -> this.searchBox.getValue());
 		this.children.add(searchBox);
 		this.children.add(list);
 	}

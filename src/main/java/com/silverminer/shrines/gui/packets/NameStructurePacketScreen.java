@@ -1,13 +1,12 @@
 package com.silverminer.shrines.gui.packets;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.utils.ClientUtils;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -43,10 +42,9 @@ public abstract class NameStructurePacketScreen extends Screen {
 					this.done();
 				}));// TRANSLATION
 		this.confirmButton.active = !this.nameField.getValue().isEmpty();
-		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.onClose();
-				}, StringTextComponent.EMPTY));
+		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
+			this.onClose();
+		}, StringTextComponent.EMPTY));
 		this.children.add(nameField);
 	}
 

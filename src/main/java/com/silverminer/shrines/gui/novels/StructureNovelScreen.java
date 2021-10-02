@@ -10,9 +10,9 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.novels.NovelsDataRegistry;
+import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSFetchStructuresPacket;
 
@@ -22,7 +22,6 @@ import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -104,7 +103,7 @@ public class StructureNovelScreen extends Screen {
 
 	protected void init() {
 		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
+				ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
 					this.onClose();
 				}, StringTextComponent.EMPTY));
 	}

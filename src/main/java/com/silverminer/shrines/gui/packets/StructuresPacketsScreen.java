@@ -3,8 +3,8 @@ package com.silverminer.shrines.gui.packets;
 import java.util.ArrayList;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSPlayerLeftQueuePacket;
 
@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -53,10 +52,9 @@ public class StructuresPacketsScreen extends Screen {
 				() -> {
 					return this.searchBox.getValue();
 				}, this.packets);
-		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-				new ResourceLocation(ShrinesMod.MODID, "textures/gui/widgets.png"), 256, 256, (button) -> {
-					this.onClose();
-				}, StringTextComponent.EMPTY));
+		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
+			this.onClose();
+		}, StringTextComponent.EMPTY));
 		this.delete = this.addButton(new Button(this.width / 2 - 80 - 80 - 9, this.height - 22, 80, 20,
 				new TranslationTextComponent("Delete"), (button) -> {
 					this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::remove);
