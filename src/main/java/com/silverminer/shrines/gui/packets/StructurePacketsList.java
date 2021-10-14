@@ -1,4 +1,4 @@
-/**
+/*
  * Silverminer (and Team)
  * 
  * This library is distributed in the hope that it will be useful,
@@ -18,13 +18,14 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.silverminer.shrines.gui.packets.edit.structures.EditStructuresScreen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
-import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSDeletedStructurePacketPacket;
@@ -34,8 +35,6 @@ import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.screen.WorkingScreen;
 import net.minecraft.client.gui.widget.list.ExtendedList;
 import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -48,8 +47,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	private final StructuresPacketsScreen screen;
-	@Nullable
-	private ArrayList<StructuresPacket> packets;
 	private final ArrayList<StructuresPacket> unfilteredPackets;
 
 	public StructurePacketsList(StructuresPacketsScreen screen, Minecraft mc, int p_i49846_3_, int p_i49846_4_,
@@ -69,8 +66,8 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 		String s = search.get().toLowerCase(Locale.ROOT);
 
 		for (StructuresPacket packet : this.unfilteredPackets) {
-			if (packet.getName().toLowerCase(Locale.ROOT).contains(s)) {
-				this.addEntry(new StructurePacketsList.Entry(this, packet));
+			if (packet.getDisplayName().toLowerCase(Locale.ROOT).contains(s)) {
+				this.addEntry(new StructurePacketsList.Entry(packet));
 			}
 		}
 
@@ -103,14 +100,15 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 		private final StructuresPacket packet;
 		private long lastClickTime;
 
-		public Entry(StructurePacketsList p_i242066_2_, StructuresPacket packet) {
+		public Entry(StructuresPacket packet) {
 			this.packet = packet;
 			this.minecraft = Minecraft.getInstance();
 		}
 
+		@ParametersAreNonnullByDefault
 		public void render(MatrixStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
 				int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			ITextComponent header = new StringTextComponent(packet.getName());
+			String header = packet.getDisplayName() + " (" + packet.getSaveName() + ")";
 			String s1 = "Author: " + this.packet.getAuthor();
 			String s2 = "Structures: " + this.packet.getStructures().size() + "  Templates:" + "" + "  Pools:" + "";
 
@@ -131,20 +129,19 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 		}
 
 		public void configure() {
-			this.minecraft.setScreen(new EditStructurePacketScreen(this.packet));
+			this.minecraft.setScreen(new EditStructuresScreen(this.packet));
 		}
 
 		public void remove() {
 			this.minecraft.setScreen(new DirtConfirmScreen((confirmed) -> {
 				if (confirmed) {
 					this.minecraft.setScreen(new WorkingScreen());
-					ShrinesPacketHandler.sendToServer(new CTSDeletedStructurePacketPacket(this.packet.getTempID(),
-							this.minecraft.player.getUUID()));
+					ShrinesPacketHandler.sendToServer(new CTSDeletedStructurePacketPacket(this.packet.getTempID()));
 					this.minecraft.setScreen(new WorkingScreen());
 				}
 
 				this.minecraft.setScreen(StructurePacketsList.this.screen);
-			}, new TranslationTextComponent("gui.shrines.structures.removeQuestion", this.packet.getName()),
+			}, new TranslationTextComponent("gui.shrines.structures.removeQuestion", this.packet.getDisplayName()),
 					new TranslationTextComponent("gui.shrines.structures.removeWarning"),
 					new TranslationTextComponent("gui.shrines.structures.deleteButton"), DialogTexts.GUI_CANCEL));
 		}

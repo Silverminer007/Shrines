@@ -11,6 +11,8 @@ import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.Template;
 
+import javax.annotation.Nullable;
+
 public class RemoveBlocksProcessor extends StructureProcessor {
 	public static final Codec<RemoveBlocksProcessor> CODEC = Codec.unit(RemoveBlocksProcessor::new);
 
@@ -19,14 +21,16 @@ public class RemoveBlocksProcessor extends StructureProcessor {
 		return ProcessorTypes.REMOVE_BLOCKS_PROCESSOR;
 	}
 
-	public Template.BlockInfo processBlock(IWorldReader world, BlockPos position1, BlockPos position2,
-			Template.BlockInfo block1, Template.BlockInfo block2, PlacementSettings settings) {
+	@Override
+	public Template.BlockInfo process(IWorldReader world, BlockPos position1, BlockPos position2,
+			Template.BlockInfo block1, Template.BlockInfo block2, PlacementSettings settings, @Nullable Template template) {
 		if (Config.SETTINGS.BANNED_BLOCKS.get().contains(block2.state.getBlock().getRegistryName().toString())) {
 			return new Template.BlockInfo(block2.pos, Blocks.AIR.defaultBlockState(), block2.nbt);
 		}
 		return block2;
 	}
 
+	@Override
 	public Template.EntityInfo processEntity(IWorldReader world, BlockPos seedPos, Template.EntityInfo rawEntityInfo,
 			Template.EntityInfo entityInfo, PlacementSettings placementSettings, Template template) {
 		if (entityInfo.nbt.contains("id") && Config.SETTINGS.BANNED_ENTITIES.get().contains(entityInfo.nbt.getString("id"))) {

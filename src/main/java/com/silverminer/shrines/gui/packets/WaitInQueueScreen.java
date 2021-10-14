@@ -29,7 +29,7 @@ public class WaitInQueueScreen extends Screen {
 
 	public void onClose() {
 		this.minecraft.setScreen(new WorkingScreen());
-		ShrinesPacketHandler.sendToServer(new CTSPlayerLeftQueuePacket(this.minecraft.player.getUUID()));
+		ShrinesPacketHandler.sendToServer(new CTSPlayerLeftQueuePacket());
 	}
 
 	protected void init() {

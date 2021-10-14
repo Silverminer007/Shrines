@@ -77,27 +77,26 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 				BufferBuilder bufferbuilder = tessellator.getBuilder();
 				RenderSystem.color4f(0.0F, 0.0F, 0.0F, 0.75F);
 				bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
-				int i = itemSize;
-				int j = i - i / 4;
-				y = y + i;
-				bufferbuilder.vertex((double) y - i, (double) x + j, 0.0D).endVertex();// A
-				bufferbuilder.vertex((double) y - i, (double) x + i, 0.0D).endVertex();// D
-				bufferbuilder.vertex((double) y, (double) x + i, 0.0D).endVertex();// C
-				bufferbuilder.vertex((double) y, (double) x + j, 0.0D).endVertex();// B
+				int j = itemSize - itemSize / 4;
+				y = y + itemSize;
+				bufferbuilder.vertex((double) y - itemSize, (double) x + j, 0.0D).endVertex();// A
+				bufferbuilder.vertex((double) y - itemSize, (double) x + itemSize, 0.0D).endVertex();// D
+				bufferbuilder.vertex(y, (double) x + itemSize, 0.0D).endVertex();// C
+				bufferbuilder.vertex(y, (double) x + j, 0.0D).endVertex();// B
 				tessellator.end();
 				RenderSystem.enableTexture();
 				String name = this.data.getName();
 				int stringWidth = this.minecraft.font.width(name);
-				if (stringWidth < i || !name.contains(" "))
-					this.minecraft.font.draw(matrixStack, name, y - (i + stringWidth) / 2, x + i / 8 * 7, 0xffffff);
+				if (stringWidth < itemSize || !name.contains(" "))
+					this.minecraft.font.draw(matrixStack, name, y - (itemSize + stringWidth) / 2.0F, x + itemSize / 8.0F * 7, 0xffffff);
 				else {
 					int idx = name.indexOf(" ");
 					String s1 = name.substring(0, idx);
 					String s2 = name.substring(idx);
 					stringWidth = this.minecraft.font.width(s1);
-					this.minecraft.font.draw(matrixStack, s1, y - (i + stringWidth) / 2, x + i / 16 * 13, 0xffffff);
+					this.minecraft.font.draw(matrixStack, s1, y - (itemSize + stringWidth) / 2.0F, x + itemSize / 16.0F * 13, 0xffffff);
 					stringWidth = this.minecraft.font.width(s2);
-					this.minecraft.font.draw(matrixStack, s2, y - (i + stringWidth) / 2, x + i / 16 * 15, 0xffffff);
+					this.minecraft.font.draw(matrixStack, s2, y - (itemSize + stringWidth) / 2.0F, x + itemSize / 16.0F * 15, 0xffffff);
 				}
 			}
 			RenderSystem.disableBlend();
@@ -105,7 +104,7 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 
 		public boolean mouseClicked(double mouseX, double mouseY, int scrolledAmount) {
 			if (StructureNovelsList.this.getSelected() == this) {
-				ShrinesPacketHandler.sendToServer(new CTSFetchNovelAmountPacket(this.minecraft.player, this.data));
+				ShrinesPacketHandler.sendToServer(new CTSFetchNovelAmountPacket(this.data));
 				return true;
 			} else {
 				StructureNovelsList.this.setSelected(this);

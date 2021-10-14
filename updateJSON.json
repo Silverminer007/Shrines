@@ -5,9 +5,9 @@
 		"1.16.3-recommended": "1.16.4-1.8.1",
 		"1.16.4-recommended": "1.16.4-1.8.1",
 		"1.16.5-recommended": "1.16.4-1.8.1",
-		"1.16.3-latest": "1.16.5-2.0.0-SNAPSHOT-12",
-		"1.16.4-latest": "1.16.5-2.0.0-SNAPSHOT-12",
-		"1.16.5-latest": "1.16.5-2.0.0-SNAPSHOT-12"
+		"1.16.3-latest": "1.16.5-2.0.0-SNAPSHOT-13",
+		"1.16.4-latest": "1.16.5-2.0.0-SNAPSHOT-13",
+		"1.16.5-latest": "1.16.5-2.0.0-SNAPSHOT-13"
 	},
 	"1.16.5": {
 		"23.06.21": "Moved changelog to extra file: https://github.com/Silverminer007/Shrines/blob/experimental/Changelog.md"
