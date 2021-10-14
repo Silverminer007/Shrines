@@ -52,7 +52,7 @@ public class StructureNovelScreen extends Screen {
 	}
 
 	public void onClose() {
-		ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(this.minecraft.player, false));
+		ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(false));
 	}
 
 	public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {

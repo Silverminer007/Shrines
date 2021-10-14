@@ -1,4 +1,4 @@
-/**
+/*
  * Silverminer (and Team)
  * 
  * This library is distributed in the hope that it will be useful,
@@ -41,14 +41,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
-	protected static final Logger LOGGER = LogManager.getLogger();
+	protected static final Logger LOGGER = LogManager.getLogger(EditStructuresList.class);
 	private final EditStructurePacketScreen screen;
 	private final StructuresPacket packet;
 	@Nullable
 	private List<StructureData> structures;
 
-	public EditStructuresList(EditStructurePacketScreen screen, Minecraft mc, int p_i49846_3_, int p_i49846_4_,
-			int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, Supplier<String> search, StructuresPacket packet) {
+	public EditStructuresList(Minecraft mc, int p_i49846_3_, int p_i49846_4_,
+			int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, Supplier<String> search, StructuresPacket packet, EditStructurePacketScreen screen) {
 		super(mc, p_i49846_3_, p_i49846_4_, p_i49846_5_, p_i49846_6_, p_i49846_7_);
 		this.screen = screen;
 		this.packet = packet;

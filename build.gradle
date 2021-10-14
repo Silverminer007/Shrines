@@ -7,6 +7,8 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+        // MixinGradle:
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 repositories {
@@ -25,6 +27,7 @@ repositories {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 
 version = "${mc_version}-${mod_version}"
 group = 'com.silverminer.shrines'
@@ -34,7 +37,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-// Remove next line when you try to use this project in your local workspace. This contains private key that I don't want to share arround so I added it to '.gitignore' file. This is not necessary
+// Remove next line when you try to use this project in your local workspace. This contains private key that I don't want to share around so I added it to '.gitignore' file. This is not necessary
 apply from: 'gradle/curseforge.gradle'
 
 
@@ -102,9 +105,26 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
 	runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.6.1-forge")
+    // Apply Mixin AP
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+mixin {
+    // Refmaps for each SourceSet
+    add sourceSets.main, 'mixins.shrines.refmap.json'
+
+    // Configs to add to runs and jars
+    config 'mixins.shrines.json'
+
+    // Specify options for dev run configs
+    debug.verbose = true
+    debug.export = true
+    dumpTargetOnFailure = true
+
+    // Options for the Annotation Processor
+}
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {

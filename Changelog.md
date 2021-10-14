@@ -29,7 +29,7 @@
 - Previous problems still affect
 
 #### SNAPSHOT 5
-- Replaced 'bees' structure with an newer version of S1fy
+- Replaced 'bees' structure with a newer version of S1fy
 
 ##### Problems:
 - Previous problems still affect
@@ -75,7 +75,7 @@
 - Missed structure void in some pieces of the harbour so there is air instead of water
 
 ##### Notes
-- New config options (banned blocks and banned entities) are only rarely tested, so major issue may arrise
+- New config options (banned blocks and banned entities) are only rarely tested, so major issue may arise
 
 #### SNAPSHOT 10
 - Fixed #18
@@ -83,7 +83,7 @@
 - Added Blame to dev env.
 
 ##### Problems
-- #17 isn't fixed yet
+- Issue #17 isn't fixed yet
 
 #### SNAPSHOT 11
 - Fixed #19
@@ -93,20 +93,20 @@
 - Added Queue for structure packet editing to prevent conflicts
 
 ##### Problems
-- #17 isn't fixed yet
+- Issue #17 isn't fixed yet
 - There are no Novels yet
 
 #### SNAPSHOT 12
 - Added GUI for Structures -> Included and custom
 - You're able to add/rename/delete/configure structure packets
 - You're able to add/delete/configure structures
-- You're able add your own novels to the structures
+- You're able to add your own novels to the structures
 - You're warned if a key is duplicated
 
 ##### Problems
 - Templates and Pools buttons points to empty screens
 - Novels are always empty even if you add some in configuration
-- #17 isn't fixed yet
+- Issue #17 isn't fixed yet
 - There are no Novels yet
 
 #### SNAPSHOT 13
@@ -116,13 +116,19 @@
 ##### Problems
 - Previous Problems still affect
 
+#### SNAPSHOT 14
+- Add Templates Tab to upload structure templates (You can add them from your local file system, rename and delete)
+
+##### Problems
+- Previous Problems still affect
+
 ##### Notes
 - These versions are alpha builds so anything can change in next release!
 
 #### Outstanding
-- Improved Custom structures GUI (rework old system as nothing works at this point)
+- Add Pools tab to define template pools that jigsaw system can use
+- Add Option to add structure templates from the current world
 - reimplement Random varianting
-- Remove Shrines.properties file and replace options with ones in the TOML config
 
 ## 1.8.1
 ### Beta1
@@ -143,7 +149,7 @@
 - Nether Shrine & Nether pyramid can be (configurable) spawn in the nether
 - Added Config GUI
 - Custom structure are now configure- and add-able via GUI
-- You assigne resources from worlds to your custom structures via GUI
+- You assign resources from worlds to your custom structures via GUI
 
 ### Beta3
 -  Added Translations
@@ -156,7 +162,7 @@
 # 1.8.0
 - Added Custom structures
 -> Added command to configure/add/remove/query custom structures
-- Noobandius' mod 'lootr' is now compactible
+- Noobandius' mod 'lootr' is now compatible
 - Improved harbour generation
 
 ## 1.7.1
@@ -206,7 +212,7 @@
 - Fixed bugs
 
 ## 1.4.2
-- Merged PR#1 (fixed #1) - Game crashed sometimes when locating nether pyramid
+- Merged PR#1 (fixed #1) - Game sometimes crashed when locating nether pyramid
 
 ## 1.4.1
 - Nether pyramid & nether shrine are now loot-able

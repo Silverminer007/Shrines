@@ -1,13 +1,13 @@
-/**
- * Silverminer (and Team)
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * 
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+  Silverminer (and Team)
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
+  (Mozilla Public License 2.0) for more details.
+
+  You should have received a copy of the MPL (Mozilla Public License 2.0)
+  License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
  */
 package com.silverminer.shrines.utils;
 
@@ -106,7 +106,6 @@ public class StructureRegistrationUtils {
 
 	private static Method GETCODEC_METHOD;
 
-	@SuppressWarnings("resource")
 	public static void addDimensionalSpacing(ServerWorld world) {
 
 		/*
@@ -133,8 +132,8 @@ public class StructureRegistrationUtils {
 				world.getChunkSource().generator.getSettings().structureConfig());
 		if (world.getChunkSource().getGenerator() instanceof FlatChunkGenerator
 				&& world.dimension().equals(World.OVERWORLD)) {
-			tempMap.keySet().removeAll(NewStructureInit.STRUCTURES.stream().map(holder -> holder.getStructure())
-					.collect(Collectors.toList()));
+			NewStructureInit.STRUCTURES.stream().map(StructureRegistryHolder::getStructure)
+					.collect(Collectors.toList()).forEach(tempMap.keySet()::remove);
 		} else {
 			for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 				if (isAllowedForWorld(world, holder.getStructure().getConfig())) {

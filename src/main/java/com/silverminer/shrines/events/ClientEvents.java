@@ -41,7 +41,7 @@ public class ClientEvents {
 			int scanCode = event.getScanCode();
 			Minecraft mc = Minecraft.getInstance();
 			if (ClientUtils.structuresScreen.matches(keyCode, scanCode) && mc.screen == null && mc.player != null) {
-				ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(mc.player, false));
+				ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(false));
 				mc.setScreen(new WorkingScreen());
 			}
 		}

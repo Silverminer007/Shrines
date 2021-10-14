@@ -54,7 +54,7 @@ public abstract class NameStructurePacketScreen extends Screen {
 		this.renderDirtBackground(0);
 		this.nameField.render(matrixStack, x, y, p_230430_4_);
 		drawCenteredString(matrixStack, font,
-				new TranslationTextComponent("The name may change if there is already a package with this name"),
+				new TranslationTextComponent("Your structure package is not necessarily saved under the same name as it is displayed under"),
 				this.width / 2, this.height / 2 - 16, 0x999999);// TRANSLATION
 		drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 0xffffff);
 		super.render(matrixStack, x, y, p_230430_4_);

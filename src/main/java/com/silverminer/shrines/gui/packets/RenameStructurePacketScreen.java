@@ -22,17 +22,16 @@ public class RenameStructurePacketScreen extends NameStructurePacketScreen {
 
 	@Override
 	public void done() {
-		int IDtoDelete = this.packet.getTempID();
-		StructuresPacket newPacket = this.packet.copy();
-		newPacket.setName(this.nameField.getValue());
+		StructuresPacket newPacket = this.packet;
+		newPacket.setDisplayName(this.nameField.getValue());
 		this.minecraft.setScreen(new WorkingScreen());
 		ShrinesPacketHandler
-				.sendToServer(new CTSEditedStructurePacketPacket(newPacket, this.minecraft.player.getUUID(), IDtoDelete));
+				.sendToServer(new CTSEditedStructurePacketPacket(newPacket));
 	}
 
 	@Override
 	public ITextComponent defaultNameFieldString() {
-		return new StringTextComponent(this.packet.getName());
+		return new StringTextComponent(this.packet.getDisplayName());
 	}
 
 }
