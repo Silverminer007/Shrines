@@ -22,9 +22,9 @@ import java.util.function.Supplier;
 public class CTSRenameTemplatesPacket implements IPacket {
     private final ResourceLocation oldName;
     private final ResourceLocation newName;
-    private final int packetID;
+    private final String packetID;
 
-    public CTSRenameTemplatesPacket(ResourceLocation oldName, ResourceLocation newName, int packetID) {
+    public CTSRenameTemplatesPacket(ResourceLocation oldName, ResourceLocation newName, String packetID) {
         this.oldName = oldName;
         this.newName = newName;
         this.packetID = packetID;
@@ -33,11 +33,11 @@ public class CTSRenameTemplatesPacket implements IPacket {
     public static void encode(CTSRenameTemplatesPacket pkt, PacketBuffer buf) {
         buf.writeUtf(pkt.oldName.toString());
         buf.writeUtf(pkt.newName.toString());
-        buf.writeInt(pkt.packetID);
+        buf.writeUtf(pkt.packetID);
     }
 
     public static CTSRenameTemplatesPacket decode(PacketBuffer buf) {
-        return new CTSRenameTemplatesPacket(new ResourceLocation(buf.readUtf()), new ResourceLocation(buf.readUtf()), buf.readInt());
+        return new CTSRenameTemplatesPacket(new ResourceLocation(buf.readUtf()), new ResourceLocation(buf.readUtf()), buf.readUtf());
     }
 
     public static void handle(CTSRenameTemplatesPacket packet, Supplier<NetworkEvent.Context> context) {

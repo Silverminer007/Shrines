@@ -46,9 +46,10 @@ public class NewStructureInit {
 			.<StructureRegistryHolder>builder().addAll(initStructures()).build();
 
 	private static ArrayList<StructureRegistryHolder> initStructures() {
+		StructureLoadUtils.FINAL_STRUCTURES_PACKETS = ImmutableList.copyOf(StructureLoadUtils.STRUCTURE_PACKETS);
 		ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
 		LOGGER.info("Registering shrines structures");
-		for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
+		for (StructuresPacket packet : StructureLoadUtils.FINAL_STRUCTURES_PACKETS) {
 			for (StructureData structure : packet.getStructures()) {
 				if (structure.successful) {
 					String name = structure.getKey();
@@ -64,7 +65,7 @@ public class NewStructureInit {
 	}
 
 	@SubscribeEvent
-	public static void regsiterStructures(RegistryEvent.Register<Structure<?>> event) {
+	public static void registerStructures(RegistryEvent.Register<Structure<?>> event) {
 		LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
 		for (StructureRegistryHolder holder : STRUCTURES) {
 			Structure.STRUCTURES_REGISTRY.putIfAbsent(holder.getStructure().getConfig().getKey(),

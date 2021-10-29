@@ -42,7 +42,7 @@ public class AddTemplatesList extends ExtendedList<AddTemplatesList.Entry> {
     public void refreshList() {
         this.clearEntries();
         for (String path : files) {
-            if (path.endsWith(".nbt"))
+            if (!screen.invalidFiles.contains(path))
                 this.addEntry(new Entry(path));
         }
         AddTemplatesList.this.updateTemplateDuplicate();

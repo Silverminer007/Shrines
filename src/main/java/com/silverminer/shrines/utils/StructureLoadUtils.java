@@ -39,13 +39,23 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class StructureLoadUtils {
     public static final int PACKET_VERSION = 1;
     protected static final Logger LOGGER = LogManager.getLogger(StructureLoadUtils.class);
-    public static ImmutableList<StructuresPacket> STRUCTURE_PACKETS;
+    /**
+     * This list is equals to the Structure Packet which the user can see, so Packets that were deleted aren't here anymore, but new packets are here.
+     * This list is only on the server side, but synchronized between its threads
+     */
+    public static List<StructuresPacket> STRUCTURE_PACKETS;
+    /**
+     * This list is a copy of the structure packets that were loaded from disk. This list should be used for any world generation access operations, to prevent strange behaviors because of changes in the GUI
+     */
+    public static ImmutableList<StructuresPacket> FINAL_STRUCTURES_PACKETS;
     /**
      * First player in queue is already allowed to edit the structure packets. All
      * players behind need to wait until the first player is done. This is needed to
@@ -54,7 +64,23 @@ public class StructureLoadUtils {
      */
     public static ArrayList<UUID> PLAYERS_IN_EDIT_QUEUE = Lists.newArrayList();
 
-    public static File getSaveLocation() {
+    public static File getImagesCacheLocation() {
+        return FileUtils.getFile(StructureLoadUtils.getShrinesSavesLocation(), "Cache", "Images");
+    }
+
+    public static File getImportCacheLocation() {
+        return FileUtils.getFile(StructureLoadUtils.getShrinesSavesLocation(), "Cache", "Import");
+    }
+
+    public static File getExportCacheLocation() {
+        return FileUtils.getFile(StructureLoadUtils.getShrinesSavesLocation(), "Cache", "Export");
+    }
+
+    public static File getPacketsSaveLocation() {
+        return FileUtils.getFile(StructureLoadUtils.getShrinesSavesLocation(), "Packets");
+    }
+
+    public static File getShrinesSavesLocation() {
         return FileUtils.getFile(ShrinesMod.getMinecraftDirectory(), "shrines-saves");
     }
 
@@ -76,11 +102,11 @@ public class StructureLoadUtils {
      * could be reloaded during runtime. Here is the place for .nbt files and
      * template pools and loot tables
      */
-    public static void loadStructures(boolean initialLoad) {
+    public static void loadStructures() {
         try {
             ArrayList<StructuresPacket> structure_packets = Lists.newArrayList();
 
-            File shrines_saves = new File(ShrinesMod.getMinecraftDirectory(), "shrines-saves").getCanonicalFile();
+            File shrines_saves = StructureLoadUtils.getPacketsSaveLocation().getCanonicalFile();
             if (!shrines_saves.exists()) {
                 if (!shrines_saves.mkdirs()) {
                     LOGGER.error("Failed to Load shrines structure, because directory creation failed");
@@ -89,29 +115,21 @@ public class StructureLoadUtils {
 
             // Get the list of all directories in shrines saves folder as possible structure
             // packets
-            File[] af = shrines_saves.listFiles();
-            if (af != null) {
-                List<File> files_in_shrines_saves = Arrays.stream(af)
-                        .filter(File::isDirectory).collect(Collectors.toList());
-                StructuresPacket.resetIDCaller();
-                for (File p_packet : files_in_shrines_saves) {
-                    File structures_file = new File(p_packet, "structures.nbt");
-                    if (!structures_file.exists()) {
-                        continue;
+            Files.find(shrines_saves.toPath(), 1, (path, basicFileAttributes) -> Files.isDirectory(path)).forEach(path -> {
+                try {
+                    if (Files.isSameFile(path, shrines_saves.toPath())) {
+                        return;
                     }
-                    // Read the file here in CompoundNBT tag
-                    CompoundNBT data_structure = readNBTFile(structures_file);
-                    // Create an instance of a packet datastructures and write it to a read/write
-                    // array
-                    ArrayList<ResourceLocation> templates = StructureLoadUtils.searchForTemplates(p_packet);
-                    StructuresPacket packet = StructuresPacket.fromCompound(data_structure, p_packet, false);
-                    if (packet == null) {
-                        continue;
-                    }
-                    packet.setTemplates(templates);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                StructuresPacket packet = loadStructuresPacket(path);
+                if (packet != null) {
+                    packet.setSaveName(path.getFileName().toString());
                     structure_packets.add(packet);
                 }
-            }
+            });
 
             // Check if the included structures are already loaded or need to be defaulted
             boolean has_included_structures = false;
@@ -121,93 +139,99 @@ public class StructureLoadUtils {
                     break;
                 }
             }
-            if (!has_included_structures && initialLoad) {
-                structure_packets.add(StructureLoadUtils.getIncludedStructures());
+            // Save Structure Packets for later use
+            STRUCTURE_PACKETS = Collections.synchronizedList(structure_packets);
+            // Check for structure key duplicates and disable affected structures
+            checkStructureKeyDuplicates();
+            if (!has_included_structures) {
+                StructureLoadUtils.saveStructures(StructureLoadUtils.getIncludedStructures());
+                //structure_packets.add(StructureLoadUtils.getIncludedStructures());
+                // Save structures to write new created Included Structures Packet
+                //StructureLoadUtils.saveStructures();
             }
-            // Save Structure Packets for later use in immutable list
-            STRUCTURE_PACKETS = ImmutableList.copyOf(structure_packets);
-            StructureLoadUtils.saveStructures(true);
-
-            HashMap<String, StructuresPacket> temp = Maps.newHashMap();
-            ArrayList<StructuresPacket> packets_with_issue = Lists.newArrayList();
-            // Check for duplicated structure names and warn/stop loading the structure and
-            // open GUI after start
-            for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
-                String packet_name = packet.getDisplayName();
-                for (StructureData data : packet.getStructures()) {
-                    String key = data.getKey();
-                    if (temp.containsKey(key)) {
-                        LOGGER.error(
-                                "A conflict was detected when loading structures. There are two or more structures with the same name. Key [{}], Packet 1 [{}], Packet 2 [{}]",
-                                key, packet_name, temp.get(key).getDisplayName());
-                        data.successful = false;
-                        packets_with_issue.add(packet);
-                    } else {
-                        data.successful = true;
-                    }
-                    temp.put(key, packet);
-                }
-            }
-            for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
-                packet.hasIssues = packets_with_issue.contains(packet);
-            }
-
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
-    private static ArrayList<ResourceLocation> searchForTemplates(File p_packet) {
-        p_packet = new File(p_packet, "data");
-        if (!p_packet.isDirectory()) {
+    public static void checkStructureKeyDuplicates() {
+        HashMap<String, StructuresPacket> temp = Maps.newHashMap();
+        ArrayList<StructuresPacket> packets_with_issue = Lists.newArrayList();
+        // Check for duplicated structure names and warn/stop loading the structure and
+        // open GUI after start
+        for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
+            String packet_name = packet.getSaveName();
+            for (StructureData data : packet.getStructures()) {
+                String key = data.getKey();
+                if (temp.containsKey(key)) {
+                    LOGGER.warn(
+                            "A conflict was detected when loading structures. There are two or more structures with the same name. Key [{}], Packet 1 [{}], Packet 2 [{}]",
+                            key, packet_name, temp.get(key).getSaveName());
+                    data.successful = false;
+                    packets_with_issue.add(packet);
+                } else {
+                    data.successful = true;
+                }
+                temp.put(key, packet);
+            }
+        }
+        for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
+            packet.hasIssues = packets_with_issue.contains(packet);
+        }
+    }
+
+    public static StructuresPacket loadStructuresPacket(Path path) {
+        Path structures_file = path.resolve("structures.nbt");
+        if (Files.notExists(structures_file)) {
+            return null;
+        }
+        // Read the file here in CompoundNBT tag
+        CompoundNBT data_structure = readNBTFile(structures_file.toFile());
+        // Create an instance of a packet datastructures and write it to a read/write
+        // array
+        ArrayList<ResourceLocation> templates = StructureLoadUtils.searchForTemplates(path);
+        StructuresPacket packet = StructuresPacket.read(data_structure, path.toFile());
+        if (packet == null) {
+            return null;
+        }
+        packet.setTemplates(templates);
+        return packet;
+    }
+
+    private static ArrayList<ResourceLocation> searchForTemplates(Path path) {
+        Path data = path.resolve("data");
+        if (!Files.isDirectory(data)) {
             return Lists.newArrayList();
         }
         ArrayList<ResourceLocation> templates = Lists.newArrayList();
-        File[] namespaces = p_packet.listFiles();
-        if (namespaces == null) {
-            return templates;
-        }
-        for (File namespace : namespaces) {
-            File templates_path = new File(namespace, "structures");
-            ArrayList<File> possibleTemplates = StructureLoadUtils.scanFilesInSubDirs(templates_path, Lists.newArrayList());
-            for (File possibleTemplate : possibleTemplates) {
-                if (possibleTemplate.getName().endsWith(".nbt")) {
-                    String path = templates_path.toPath().relativize(possibleTemplate.toPath()).toString();
-                    ResourceLocation template = new ResourceLocation(namespace.getName(), path.replace(".nbt", ""));
+        try {
+            Files.find(data, Integer.MAX_VALUE, (p, basicFileAttributes) -> p.toString().endsWith(".nbt")).forEach(templatePath -> {
+                Path relativeTemplate = data.relativize(templatePath).normalize();
+                if (relativeTemplate.getNameCount() > 2) {
+                    String namespace = relativeTemplate.getName(0).toString();
+                    String locationPath = Paths.get(relativeTemplate.getName(0).toString(), relativeTemplate.getName(1).toString()).relativize(relativeTemplate).toString();
+                    ResourceLocation template = new ResourceLocation(namespace, locationPath.replace(".nbt", ""));
                     templates.add(template);
                 }
-            }
+            });
+        } catch (IOException e) {
+            LOGGER.error("Failed to read Templates", e);
         }
         return templates;
     }
 
-    private static ArrayList<File> scanFilesInSubDirs(File base, ArrayList<File> files) {
-        File[] possibleFiles = base.listFiles();
-        if (possibleFiles == null) {
-            return files;
-        }
-        for (File file : possibleFiles) {
-            if (file.isDirectory()) {
-                files = StructureLoadUtils.scanFilesInSubDirs(file, files);
-            } else {
-                files.add(file);
-            }
-        }
-        return files;
-    }
-
-    protected static String getSavePath(String name) {
+    public static String getSavePath(String name) {
         String resultName = name.trim();
         if (resultName.isEmpty()) {
             resultName = "Structures Packet";
         }
         try {
-            resultName = FileUtil.findAvailableName(getSaveLocation().toPath(), resultName, "");
+            resultName = FileUtil.findAvailableName(getPacketsSaveLocation().toPath(), resultName, "");
         } catch (Exception exception1) {
             resultName = "Structures Packet";
 
             try {
-                resultName = FileUtil.findAvailableName(getSaveLocation().toPath(), resultName, "");
+                resultName = FileUtil.findAvailableName(getPacketsSaveLocation().toPath(), resultName, "");
             } catch (Exception exception) {
                 throw new RuntimeException("Failed to find a suitable Structure packet Name for save", exception);
             }
@@ -237,11 +261,11 @@ public class StructureLoadUtils {
         structures.add(new StructureData(DefaultStructureConfig.TRADER_HOUSE_CONFIG));
         structures.add(new StructureData(DefaultStructureConfig.WATCHTOWER_CONFIG));
         structures.add(new StructureData(DefaultStructureConfig.WATERSHRINE_CONFIG));
-        return new StructuresPacket("Included Structures", null, structures, Lists.newArrayList(), true, "Silverm7ner");
+        return new StructuresPacket("Included Structures", null, structures, true, "Silverm7ner");
     }
 
     public static void warnInvalidStructureFile(File packet) {
-        LOGGER.info("Unable to load Structure Packet, because the structure of structures.nbt is wrong. Packet: {}",
+        LOGGER.info("Unable to load Structure Packet, because the structure of structures.nbt is invalid. Packet: {}",
                 packet);
     }
 
@@ -253,29 +277,37 @@ public class StructureLoadUtils {
         }
     }
 
-    public static void saveStructures(boolean noReload) {// TODO Test Templates and structure packet save
-        saveStructures(noReload, -1, null);
+    public static void saveStructures() {
+        saveStructures(null);
     }
 
-    public static void addStructuresPacket(boolean noReload, StructuresPacket newPacket) {
-        saveStructures(noReload, -1, newPacket);
+    public static void addStructuresPacket(StructuresPacket newPacket) {
+        saveStructures(newPacket);
     }
 
-    public static void deleteStructuresPacket(boolean noReload, int IDtoDelete) {
-        saveStructures(noReload, IDtoDelete, null);
-    }
-
-    public static void updateStructuresPacket(boolean noReload, StructuresPacket packet) {
-        ArrayList<StructuresPacket> packets = Lists.newArrayList(StructureLoadUtils.STRUCTURE_PACKETS);
-        int i = packets.indexOf(packets.stream().filter(p -> packet.getTempID() == p.getTempID()).collect(Collectors.toList()).get(0));
-        packets.set(i, packet);
-        StructureLoadUtils.STRUCTURE_PACKETS = ImmutableList.copyOf(packets);
-        StructureLoadUtils.saveStructures(noReload);
-    }
-
-    private static void saveStructures(boolean noReload, int IDtoDelete, StructuresPacket newPacket) {
+    public static void deleteStructuresPacket(String packetToDelete) {
+        saveStructures();
         try {
-            File shrines_saves = new File(ShrinesMod.getMinecraftDirectory(), "shrines-saves").getCanonicalFile();
+            File shrines_saves = StructureLoadUtils.getPacketsSaveLocation().getCanonicalFile();
+            File packet_path = new File(shrines_saves, packetToDelete);
+            FileUtils.deleteDirectory(packet_path);
+        } catch (Throwable e) {
+            LOGGER.warn("Failed to delete Structure Package {}", packetToDelete);
+        }
+        loadStructures();
+    }
+
+    public static void updateStructuresPacket(StructuresPacket packet) {
+        ArrayList<StructuresPacket> packets = Lists.newArrayList(StructureLoadUtils.STRUCTURE_PACKETS);
+        int i = packets.indexOf(packets.stream().filter(p -> packet.getSaveName().equals(p.getSaveName())).collect(Collectors.toList()).get(0));
+        packets.set(i, packet);
+        StructureLoadUtils.STRUCTURE_PACKETS = Collections.synchronizedList(packets);
+        StructureLoadUtils.saveStructures();
+    }
+
+    private static void saveStructures(StructuresPacket newPacket) {
+        try {
+            File shrines_saves = StructureLoadUtils.getPacketsSaveLocation().getCanonicalFile();
             if (!shrines_saves.exists()) {
                 if (!shrines_saves.mkdirs()) {
                     LOGGER.error("Failed to save shrines structure, because directory creation failed");
@@ -285,30 +317,46 @@ public class StructureLoadUtils {
 
             ArrayList<File> usedPath = Lists.newArrayList();
             for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
-                if (IDtoDelete != packet.getTempID()) {
-                    usedPath.add(savePacket(shrines_saves, packet, usedPath));
-                } else {
-                    try {
-                        File packet_path = new File(shrines_saves, packet.getSaveName());
-                        FileUtils.deleteDirectory(packet_path);
-                    } catch (Throwable e) {
-                        LOGGER.warn("Failed to delete Structure Package {}", packet.getDisplayName());
-                    }
-                }
+                usedPath.add(savePacket(shrines_saves, packet, usedPath));
             }
             if (newPacket != null) {
                 savePacket(shrines_saves, newPacket, usedPath);
             }
-            if (!noReload) {
-                loadStructures(false);
-            }
+            loadStructures();
+            StructureLoadUtils.deleteDirectory(StructureLoadUtils.getExportCacheLocation().toPath());
+            StructureLoadUtils.deleteDirectory(StructureLoadUtils.getImportCacheLocation().toPath());
+            StructureLoadUtils.deleteDirectory(StructureLoadUtils.getImagesCacheLocation().toPath());
         } catch (Throwable t) {
             LOGGER.error("Failed to save shrines structures for unknown reason", t);
         }
     }
 
+    public static void deleteDirectory(Path path) throws IOException {
+        if (Files.exists(path)) {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                        throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException e)
+                        throws IOException {
+                    if (e == null) {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    } else {
+                        throw e;
+                    }
+                }
+            });
+        }
+    }
+
     public static File savePacket(File shrines_saves, StructuresPacket packet, ArrayList<File> usedPath) {
-        File packet_path = new File(shrines_saves, packet.getSaveName());
+        File packet_path = new File(shrines_saves, packet.hasSaveName() ? packet.getSaveName() : packet.getDisplayName());
         if (usedPath.contains(packet_path)) {
             packet_path = new File(shrines_saves, getSavePath(packet_path.getName()));
         }
@@ -322,7 +370,7 @@ public class StructureLoadUtils {
         File structures_file = new File(packet_path, "structures.nbt");
         File packInfo = new File(packet_path, "pack.mcmeta");
 
-        CompoundNBT compoundnbt = StructuresPacket.toCompound(packet);
+        CompoundNBT compoundnbt = StructuresPacket.saveToDisk(packet);
         try (OutputStream outputstream = new FileOutputStream(structures_file)) {
             CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
         } catch (Throwable throwable) {
@@ -347,16 +395,20 @@ public class StructureLoadUtils {
         return packet_path;
     }
 
-    public static void addTemplatesToPacket(List<TemplateIdentifier> templates, int packetID) {
-        List<StructuresPacket> packets = StructureLoadUtils.STRUCTURE_PACKETS.stream().filter(packet -> packet.getTempID() == packetID).collect(Collectors.toList());
+    public static void addTemplatesToPacket(List<TemplateIdentifier> templates, String packetSaveName) {
+        List<StructuresPacket> packets = StructureLoadUtils.STRUCTURE_PACKETS.stream().filter(packet -> packet.getSaveName().equals(packetSaveName)).collect(Collectors.toList());
         if (packets.size() < 1) {
             return;
         }
         StructuresPacket packet = packets.get(0);
-        File packet_path = new File(StructureLoadUtils.getSaveLocation(), packet.getSaveName());
+        File packet_path = new File(StructureLoadUtils.getPacketsSaveLocation(), packet.getSaveName());
         for (TemplateIdentifier template : templates) {
             ResourceLocation location = template.getLocation();
             File template_path = FileUtils.getFile(packet_path, "data", location.getNamespace(), "structures", location.getPath() + ".nbt");
+            if (!template_path.getParentFile().mkdirs()) {
+                LOGGER.error("Failed to save new template because directory creation failed");
+                return;
+            }
             try (OutputStream outputstream = new FileOutputStream(template_path)) {
                 CompressedStreamTools.writeCompressed(template.getTemplate(), outputstream);
             } catch (Throwable throwable) {
@@ -364,35 +416,35 @@ public class StructureLoadUtils {
                         throwable);
             }
         }
-        StructureLoadUtils.saveStructures(false);
+        StructureLoadUtils.saveStructures();
     }
 
-    public static void deleteTemplates(ResourceLocation template, int packetID) {
-        List<StructuresPacket> packets = StructureLoadUtils.STRUCTURE_PACKETS.stream().filter(packet -> packet.getTempID() == packetID).collect(Collectors.toList());
+    public static void deleteTemplates(ResourceLocation template, String packetID) {
+        List<StructuresPacket> packets = StructureLoadUtils.STRUCTURE_PACKETS.stream().filter(packet -> packet.getSaveName().equals(packetID)).collect(Collectors.toList());
         if (packets.size() < 1) {
             return;
         }
         StructuresPacket packet = packets.get(0);
-        File packet_path = new File(StructureLoadUtils.getSaveLocation(), packet.getSaveName());
+        File packet_path = new File(StructureLoadUtils.getPacketsSaveLocation(), packet.getSaveName());
         File template_path = FileUtils.getFile(packet_path, "data", template.getNamespace(), "structures", template.getPath().replace(".nbt", "") + ".nbt");
         if (template_path.delete()) {
-            StructureLoadUtils.saveStructures(false);
+            StructureLoadUtils.saveStructures();
         } else {
             LOGGER.error("Failed to delete Template [{}, {}]", template, template_path);
         }
     }
 
-    public static void renameTemplates(ResourceLocation from, ResourceLocation to, int packetID) {
-        List<StructuresPacket> packets = StructureLoadUtils.STRUCTURE_PACKETS.stream().filter(packet -> packet.getTempID() == packetID).collect(Collectors.toList());
+    public static void renameTemplates(ResourceLocation from, ResourceLocation to, String packetID) {
+        List<StructuresPacket> packets = StructureLoadUtils.STRUCTURE_PACKETS.stream().filter(packet -> packet.getSaveName().equals(packetID)).collect(Collectors.toList());
         if (packets.size() < 1) {
             return;
         }
         StructuresPacket packet = packets.get(0);
-        File packet_path = new File(StructureLoadUtils.getSaveLocation(), packet.getSaveName());
+        File packet_path = new File(StructureLoadUtils.getPacketsSaveLocation(), packet.getSaveName());
         File template_path = FileUtils.getFile(packet_path, "data", from.getNamespace(), "structures", from.getPath().replace(".nbt", "") + ".nbt");
         File new_template_path = FileUtils.getFile(packet_path, "data", to.getNamespace(), "structures", to.getPath().replace(".nbt", "") + ".nbt");
         if (template_path.renameTo(new_template_path)) {
-            StructureLoadUtils.saveStructures(false);
+            StructureLoadUtils.saveStructures();
         } else {
             LOGGER.error("Failed to rename Template [{}, {}], [{}, {}]", from, to, template_path, new_template_path);
         }
@@ -449,6 +501,6 @@ public class StructureLoadUtils {
     }
 
     public static IPackFinder getPackFinder() {
-        return new FolderPackFinder(StructureLoadUtils.getSaveLocation(), IPackNameDecorator.DEFAULT);
+        return new FolderPackFinder(StructureLoadUtils.getPacketsSaveLocation(), IPackNameDecorator.DEFAULT);
     }
 }

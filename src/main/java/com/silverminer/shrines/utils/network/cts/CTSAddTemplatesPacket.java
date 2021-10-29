@@ -9,6 +9,7 @@ import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.stc.STCEditStructuresPacketPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -19,9 +20,9 @@ import java.util.function.Supplier;
 
 public class CTSAddTemplatesPacket implements IPacket {
     private final List<TemplateIdentifier> templates;
-    private final int packetID;
+    private final String packetID;
 
-    public CTSAddTemplatesPacket(List<TemplateIdentifier> templates, int packetID) {
+    public CTSAddTemplatesPacket(List<TemplateIdentifier> templates, String packetID) {
         this.templates = templates;
         this.packetID = packetID;
     }
@@ -31,20 +32,20 @@ public class CTSAddTemplatesPacket implements IPacket {
         for (TemplateIdentifier template : pkt.templates) {
             buf.writeNbt(template.write());
         }
-        buf.writeInt(pkt.packetID);
+        buf.writeUtf(pkt.packetID);
     }
 
     public static CTSAddTemplatesPacket decode(PacketBuffer buf) {
         int templateCount = buf.readInt();
         ArrayList<TemplateIdentifier> templates = Lists.newArrayList();
         for (int i = 0; i < templateCount; i++) {
-            CompoundNBT nbt = buf.readNbt();
+            CompoundNBT nbt = buf.readNbt(NBTSizeTracker.UNLIMITED);// Not really save, but template files can be huge and general size limit is to low
             if (nbt == null) {
                 continue;
             }
             templates.add(TemplateIdentifier.read(nbt));
         }
-        return new CTSAddTemplatesPacket(templates, buf.readInt());
+        return new CTSAddTemplatesPacket(templates, buf.readUtf());
     }
 
     public static void handle(CTSAddTemplatesPacket packet, Supplier<NetworkEvent.Context> context) {

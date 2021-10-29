@@ -97,7 +97,7 @@ public class StructureNovelsScreen extends Screen {
         this.minecraft.setScreen(new StructuresPacketsScreen(this, this.packets));
     }
 
-    public void openPacketEdit(int packetId, int editLocation) {
+    public void openPacketEdit(String packetId, int editLocation) {
         if(this.minecraft == null){
             return;
         }

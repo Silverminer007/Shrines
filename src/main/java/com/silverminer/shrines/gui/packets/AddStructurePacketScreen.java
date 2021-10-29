@@ -23,7 +23,7 @@ public class AddStructurePacketScreen extends NameStructurePacketScreen {
         if (this.minecraft == null || this.minecraft.player == null) {
             return;
         }
-        StructuresPacket packet = new StructuresPacket(this.nameField.getValue(), null, Lists.newArrayList(), Lists.newArrayList(),
+        StructuresPacket packet = new StructuresPacket(this.nameField.getValue(), null, Lists.newArrayList(),
                 false, this.minecraft.player.getName().getString());
         this.minecraft.setScreen(new WorkingScreen());
         ShrinesPacketHandler

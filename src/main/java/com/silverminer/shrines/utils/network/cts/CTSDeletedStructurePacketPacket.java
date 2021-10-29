@@ -16,18 +16,18 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class CTSDeletedStructurePacketPacket implements IPacket {
-	private final int packet;
+	private final String packet;
 
-	public CTSDeletedStructurePacketPacket(int packet) {
+	public CTSDeletedStructurePacketPacket(String packet) {
 		this.packet = packet;
 	}
 
 	public static void encode(CTSDeletedStructurePacketPacket pkt, PacketBuffer buf) {
-		buf.writeInt(pkt.packet);
+		buf.writeUtf(pkt.packet);
 	}
 
 	public static CTSDeletedStructurePacketPacket decode(PacketBuffer buf) {
-		return new CTSDeletedStructurePacketPacket(buf.readInt());
+		return new CTSDeletedStructurePacketPacket(buf.readUtf());
 	}
 
 	public static void handle(CTSDeletedStructurePacketPacket packet, Supplier<NetworkEvent.Context> context) {
@@ -43,7 +43,7 @@ public class CTSDeletedStructurePacketPacket implements IPacket {
 
 				@Override
 				public void run() {
-					StructureLoadUtils.deleteStructuresPacket(false, packet.packet);
+					StructureLoadUtils.deleteStructuresPacket(packet.packet);
 					ArrayList<StructuresPacket> packets = Lists.newArrayList();
 					packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
 					ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),

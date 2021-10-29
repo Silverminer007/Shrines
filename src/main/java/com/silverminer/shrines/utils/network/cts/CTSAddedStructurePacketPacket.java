@@ -23,11 +23,11 @@ public class CTSAddedStructurePacketPacket implements IPacket {
 	}
 
 	public static void encode(CTSAddedStructurePacketPacket pkt, PacketBuffer buf) {
-		buf.writeNbt(StructuresPacket.toCompound(pkt.packet));
+		buf.writeNbt(StructuresPacket.saveToNetwork(pkt.packet));
 	}
 
 	public static CTSAddedStructurePacketPacket decode(PacketBuffer buf) {
-		return new CTSAddedStructurePacketPacket(StructuresPacket.fromCompound(buf.readNbt(), null, true));
+		return new CTSAddedStructurePacketPacket(StructuresPacket.read(buf.readNbt(), null));
 	}
 
 	public static void handle(CTSAddedStructurePacketPacket packet, Supplier<NetworkEvent.Context> context) {
@@ -43,7 +43,7 @@ public class CTSAddedStructurePacketPacket implements IPacket {
 
 				@Override
 				public void run() {
-					StructureLoadUtils.addStructuresPacket(false, packet.packet);
+					StructureLoadUtils.addStructuresPacket(packet.packet);
 					ArrayList<StructuresPacket> packets = Lists.newArrayList();
 					packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
 					ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),

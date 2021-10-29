@@ -81,7 +81,7 @@ public class RenameTemplateScreen extends Screen {
         }
         if (this.minecraft.player != null) {
             ShrinesPacketHandler
-                    .sendToServer(new CTSRenameTemplatesPacket(this.template, new ResourceLocation(this.nameField.getValue()), this.packet.getTempID()));
+                    .sendToServer(new CTSRenameTemplatesPacket(this.template, new ResourceLocation(this.nameField.getValue()), this.packet.getSaveName()));
         }
     }
 

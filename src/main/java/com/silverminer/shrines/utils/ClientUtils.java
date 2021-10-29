@@ -7,10 +7,15 @@ import com.silverminer.shrines.gui.config.GeneralSettingsScreen;
 
 import com.silverminer.shrines.gui.novels.StructureNovelsScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.ConfirmOpenLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.DistExecutor;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Locale;
 
 public class ClientUtils {
 	public static final ResourceLocation BACK_BUTTON_TEXTURE = new ResourceLocation(ShrinesMod.MODID,

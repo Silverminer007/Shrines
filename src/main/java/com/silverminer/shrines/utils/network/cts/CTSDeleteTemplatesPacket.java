@@ -17,20 +17,20 @@ import java.util.function.Supplier;
 
 public class CTSDeleteTemplatesPacket implements IPacket {
     private final ResourceLocation template;
-    private final int packetID;
+    private final String packetID;
 
-    public CTSDeleteTemplatesPacket(ResourceLocation template, int packetID) {
+    public CTSDeleteTemplatesPacket(ResourceLocation template, String packetID) {
         this.template = template;
         this.packetID = packetID;
     }
 
     public static void encode(CTSDeleteTemplatesPacket pkt, PacketBuffer buf) {
         buf.writeUtf(pkt.template.toString());
-        buf.writeInt(pkt.packetID);
+        buf.writeUtf(pkt.packetID);
     }
 
     public static CTSDeleteTemplatesPacket decode(PacketBuffer buf) {
-        return new CTSDeleteTemplatesPacket(new ResourceLocation(buf.readUtf()), buf.readInt());
+        return new CTSDeleteTemplatesPacket(new ResourceLocation(buf.readUtf()), buf.readUtf());
     }
 
     public static void handle(CTSDeleteTemplatesPacket packet, Supplier<NetworkEvent.Context> context) {
