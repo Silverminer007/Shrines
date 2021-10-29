@@ -66,7 +66,7 @@ public class ShrinesMod {
 
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
                 () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-        StructureLoadUtils.loadStructures(true);
+        StructureLoadUtils.loadStructures();
         registerConfig();
     }
 

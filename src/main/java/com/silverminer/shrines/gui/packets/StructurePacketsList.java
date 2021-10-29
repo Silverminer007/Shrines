@@ -110,7 +110,7 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 				int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			String header = packet.getDisplayName() + " (" + packet.getSaveName() + ")";
 			String s1 = "Author: " + this.packet.getAuthor();
-			String s2 = "Structures: " + this.packet.getStructures().size() + "  Templates:" + "" + "  Pools:" + "";
+			String s2 = "Structures: " + this.packet.getStructures().size() + "  Templates: " + this.packet.getStructures().size() + "  Pools:" + "";
 
 			this.minecraft.font.draw(ms, header, left, top + 1, this.packet.hasIssues ? 0xff0000 : 0xffffff);
 			this.minecraft.font.draw(ms, s1, left, top + 9 + 3, 8421504);
@@ -136,7 +136,7 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 			this.minecraft.setScreen(new DirtConfirmScreen((confirmed) -> {
 				if (confirmed) {
 					this.minecraft.setScreen(new WorkingScreen());
-					ShrinesPacketHandler.sendToServer(new CTSDeletedStructurePacketPacket(this.packet.getTempID()));
+					ShrinesPacketHandler.sendToServer(new CTSDeletedStructurePacketPacket(this.packet.getSaveName()));
 					this.minecraft.setScreen(new WorkingScreen());
 				}
 

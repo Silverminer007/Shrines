@@ -27,7 +27,7 @@ public class STCFetchStructuresPacket implements IPacket {
 		ArrayList<StructuresPacket> structurePackets = pkt.packets;
 		buf.writeInt(structurePackets.size());
 		for (StructuresPacket packet : structurePackets) {
-			buf.writeNbt(StructuresPacket.toCompound(packet));
+			buf.writeNbt(StructuresPacket.saveToNetwork(packet));
 		}
 		buf.writeBoolean(pkt.op_mode);
 	}
@@ -36,7 +36,7 @@ public class STCFetchStructuresPacket implements IPacket {
 		ArrayList<StructuresPacket> structurePackets = Lists.newArrayList();
 		int packets = buf.readInt();
 		for (int i = 0; i < packets; i++) {
-			structurePackets.add(StructuresPacket.fromCompound(buf.readNbt(), null, true));
+			structurePackets.add(StructuresPacket.read(buf.readNbt(), null));
 		}
 		return new STCFetchStructuresPacket(structurePackets, buf.readBoolean());
 	}

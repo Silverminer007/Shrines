@@ -1,8 +1,10 @@
 package com.silverminer.shrines.gui.packets.edit.templates;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.ClientUtils;
+import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.TemplateIdentifier;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSAddTemplatesPacket;
@@ -10,9 +12,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.WorkingScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,7 +32,7 @@ import java.util.stream.Collectors;
 public class AddTemplatesScreen extends Screen {
     protected final Screen lastScreen;
     protected final String[] files;
-    private final List<String> invalidFiles;
+    protected final List<String> invalidFiles;
     protected AddTemplatesList addTemplatesList;
     protected StructuresPacket packet;
     protected Button saveButton;
@@ -38,7 +43,21 @@ public class AddTemplatesScreen extends Screen {
         this.lastScreen = lastScreen;
         this.packet = packet;
         this.files = files;
-        this.invalidFiles = Arrays.stream(this.files).filter(s -> !s.endsWith(".nbt")).collect(Collectors.toList());
+        this.invalidFiles = Arrays.stream(this.files).filter(s -> invalidateTemplate(s)).collect(Collectors.toList());
+    }
+
+    /**
+     *
+     * @param s
+     * @return true if the given file doesn't point to a valid template file
+     */
+    protected static boolean invalidateTemplate(String s) {
+        try {
+            CompoundNBT nbt = StructureLoadUtils.readNBTFile(new File(s));
+            return nbt.getInt("DataVersion") <= 0 || !s.endsWith(".nbt");
+        } catch (Throwable t) {
+            return true;
+        }
     }
 
     public void onClose() {
@@ -60,7 +79,7 @@ public class AddTemplatesScreen extends Screen {
                 sb.append("\n");
             }
             StringTextComponent invalidFiles = new StringTextComponent(sb.toString());
-            ITextComponent head = new TranslationTextComponent("Left out these files because they don't have the correct extension (.nbt)", invalidFiles);
+            ITextComponent head = new TranslationTextComponent("Left out these files because they aren't valid Template Files", invalidFiles);
             this.renderTooltip(ms, head, x, y);
         }));
         this.infoButton.visible = this.invalidFiles.size() > 0;
@@ -77,8 +96,7 @@ public class AddTemplatesScreen extends Screen {
                     return null;
                 }
             }).filter(Objects::nonNull).collect(Collectors.toList());
-            int packetId = this.packet.getTempID();
-            ShrinesPacketHandler.sendToServer(new CTSAddTemplatesPacket(templates, packetId));
+            ShrinesPacketHandler.sendToServer(new CTSAddTemplatesPacket(templates, this.packet.getSaveName()));
 
             this.minecraft.setScreen(new WorkingScreen());
         }

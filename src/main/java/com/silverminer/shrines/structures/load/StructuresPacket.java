@@ -1,14 +1,13 @@
 package com.silverminer.shrines.structures.load;
 
+import com.google.common.collect.Lists;
 import com.silverminer.shrines.utils.StructureLoadUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.feature.structure.Structure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
@@ -19,43 +18,38 @@ import java.util.stream.Collectors;
 
 public class StructuresPacket implements Comparable<StructuresPacket> {
     protected static final Logger LOGGER = LogManager.getLogger(StructuresPacket.class);
-    private static int IDcaller = 0;
     protected final String author;
-    protected final int tempID;
+    // Runtime only
     @Nullable
     public List<String> possibleDimensions;
+    // Runtime only
     public boolean hasIssues = false;
     protected String displayName;
     @Nullable
     protected String saveName;
     protected boolean isIncluded;
     protected List<StructureData> structures;
+    // Runtime only
     protected List<ResourceLocation> templates;
 
-    public StructuresPacket(String displayName, String saveName, ListNBT structures, List<ResourceLocation> templates, boolean isIncluded, String author, int ID) {
+    public StructuresPacket(String displayName, String saveName, ListNBT structures, boolean isIncluded, String author) {
         this(displayName, saveName, structures.stream().map((inbt) -> {
             if (inbt.getId() == 10)
                 return new StructureData((CompoundNBT) inbt);
             else
                 return null;
-        }).filter(Objects::nonNull).collect(Collectors.toList()), templates, isIncluded, author, ID);
+        }).filter(Objects::nonNull).collect(Collectors.toList()), isIncluded, author);
     }
 
-    public StructuresPacket(String displayName, String saveName, List<StructureData> structures, List<ResourceLocation> templates, boolean isIncluded, String author) {
-        this(displayName, saveName, structures, templates, isIncluded, author, IDcaller++);
-    }
-
-    public StructuresPacket(String displayName, String saveName, List<StructureData> structures, List<ResourceLocation> templates, boolean isIncluded, String author, int ID) {
+    public StructuresPacket(String displayName, String saveName, List<StructureData> structures, boolean isIncluded, String author) {
         this.displayName = displayName;
         this.saveName = saveName == null || saveName.isEmpty() ? null : saveName;
         this.structures = structures;
-        this.templates = templates;
         this.isIncluded = isIncluded;
         this.author = author;
-        this.tempID = ID;
     }
 
-    public static StructuresPacket fromCompound(CompoundNBT nbt, @Nullable File path, boolean network) {
+    public static StructuresPacket read(CompoundNBT nbt, @Nullable File path) {
         if (nbt == null) {
             if (path != null)
                 LOGGER.info("Failed to load structures packet: Unable to load structures.nbt file. Packet: {}", path);
@@ -79,45 +73,59 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         }
         String packet_name = nbt.getString("Packet Name");
         String save_name = nbt.getString("Save Name");
+        if (save_name.isEmpty()) save_name = null;
         ListNBT structures = nbt.getList("Structures", 10);
         boolean is_included = nbt.getBoolean("Is Included");
         String author = nbt.getString("Author");
-        int id = network ? nbt.getInt("ID") : IDcaller++;
-        List<ResourceLocation> templates = Arrays.stream(nbt.getString("Templates").split(";")).map(ResourceLocation::new).collect(Collectors.toList());
-        StructuresPacket packet = new StructuresPacket(packet_name, save_name, structures, templates, is_included, author, id);
+
+        StructuresPacket packet = new StructuresPacket(packet_name, save_name, structures, is_included, author);
+
+        // Network Only
         packet.possibleDimensions = Arrays.asList(nbt.getString("Possible Dimensions").split(";"));
         packet.hasIssues = nbt.getBoolean("HasIssues");
+        String rawTemplates = nbt.getString("Templates");
+        if (!rawTemplates.replace(";", "").isEmpty()) {
+            packet.templates = Arrays.stream(rawTemplates.split(";")).map(ResourceLocation::new).collect(Collectors.toList());
+        } else {
+            packet.templates = Lists.newArrayList();
+        }
+        // Network Only End
+
         return packet;
     }
 
-    public static CompoundNBT toCompound(StructuresPacket packet) {
+    public static CompoundNBT saveToDisk(StructuresPacket packet) {
         CompoundNBT compoundnbt = new CompoundNBT();
         compoundnbt.putInt("Packet Version", StructureLoadUtils.PACKET_VERSION);
         compoundnbt.putString("Packet Name", packet.getDisplayName());
-        compoundnbt.putString("Save Name", packet.getSaveName());
+        if (packet.hasSaveName()) {
+            compoundnbt.putString("Save Name", packet.getSaveName());
+        }
         ListNBT structures = new ListNBT();
         structures.addAll(packet.getStructures().stream().map(structure -> structure.write(new CompoundNBT()))
                 .collect(Collectors.toList()));
         compoundnbt.put("Structures", structures);
         compoundnbt.putBoolean("Is Included", packet.isIncluded());
         compoundnbt.putString("Author", packet.getAuthor());
-        compoundnbt.putInt("ID", packet.getTempID());// Only for network
+        return compoundnbt;
+    }
+
+    public static CompoundNBT saveToNetwork(StructuresPacket packet) {
+        CompoundNBT compoundNBT = StructuresPacket.saveToDisk(packet);
         StringBuilder templates = new StringBuilder();
-        for (ResourceLocation s : packet.templates) {
-            templates.append(s).append(";");
+        if (packet.templates != null) {
+            for (ResourceLocation s : packet.templates) {
+                templates.append(s).append(";");
+            }
         }
-        compoundnbt.putString("Templates", templates.toString());
+        compoundNBT.putString("Templates", templates.toString());
         StringBuilder dims = new StringBuilder();
         for (String s : StructureLoadUtils.getPossibleDimensions()) {
             dims.append(s).append(";");
         }
-        compoundnbt.putString("Possible Dimensions", dims.toString());
-        compoundnbt.putBoolean("HasIssues", packet.hasIssues);
-        return compoundnbt;
-    }
-
-    public static void resetIDCaller() {
-        StructuresPacket.IDcaller = 0;
+        compoundNBT.putString("Possible Dimensions", dims.toString());
+        compoundNBT.putBoolean("HasIssues", packet.hasIssues);
+        return compoundNBT;
     }
 
     public String getDisplayName() {
@@ -128,13 +136,19 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         this.displayName = displayName;
     }
 
-    @Nonnull
-    public String getSaveName() {
-        return this.saveName != null ? this.saveName : this.displayName;
+    public String getSaveName() throws RuntimeException {
+        if (this.hasSaveName())
+            return this.saveName;
+        else
+            throw new RuntimeException("Structure Packets Save name was empty");
     }
 
     public void setSaveName(@Nullable String saveName) {
         this.saveName = saveName;
+    }
+
+    public boolean hasSaveName() {
+        return this.saveName != null;
     }
 
     public List<StructureData> getStructures() {
@@ -161,17 +175,9 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         return author;
     }
 
-    public int getTempID() {
-        return this.tempID;
-    }
-
     @Override
     public int compareTo(StructuresPacket o) {
         int c = this.getDisplayName().compareTo(o.getDisplayName());
         return c != 0 ? c : this.getSaveName().compareTo(o.getSaveName());
-    }
-
-    public StructuresPacket copy() {
-        return StructuresPacket.fromCompound(StructuresPacket.toCompound(this), null, false);
     }
 }

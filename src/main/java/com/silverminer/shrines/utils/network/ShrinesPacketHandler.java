@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public class ShrinesPacketHandler {
 
-    public static final String PROTOCOL_VERSION = "5.1";
+    public static final String PROTOCOL_VERSION = "5.2";
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(ShrinesMod.MODID, "main_channel"))
             .clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -75,6 +75,15 @@ public class ShrinesPacketHandler {
         CHANNEL.registerMessage(id++, CTSRenameTemplatesPacket.class,
                 CTSRenameTemplatesPacket::encode, CTSRenameTemplatesPacket::decode,
                 CTSRenameTemplatesPacket::handle);
+        CHANNEL.registerMessage(id++, CTSExportStructuresPacketPacket.class,
+                CTSExportStructuresPacketPacket::encode, CTSExportStructuresPacketPacket::decode,
+                CTSExportStructuresPacketPacket::handle);
+        CHANNEL.registerMessage(id++, STCExportStructuresPacketPacket.class,
+                STCExportStructuresPacketPacket::encode, STCExportStructuresPacketPacket::decode,
+                STCExportStructuresPacketPacket::handle);
+        CHANNEL.registerMessage(id++, CTSImportStructuresPacketPacket.class,
+                CTSImportStructuresPacketPacket::encode, CTSImportStructuresPacketPacket::decode,
+                CTSImportStructuresPacketPacket::handle);
         LOGGER.info("Initializing networking on version [{}]. This should match between client and server",
                 PROTOCOL_VERSION);
     }

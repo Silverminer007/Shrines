@@ -53,8 +53,7 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
             Optional<TemplatesList.Entry> opt = this.templatesList.getSelectedOpt();
             opt.ifPresent(entry -> this.minecraft.setScreen(new DirtConfirmScreen((confirmed) -> {
                 if (confirmed) {
-                    int packetId = this.packet.getTempID();
-                    ShrinesPacketHandler.sendToServer(new CTSDeleteTemplatesPacket(new ResourceLocation(entry.getTemplate()), packetId));
+                    ShrinesPacketHandler.sendToServer(new CTSDeleteTemplatesPacket(new ResourceLocation(entry.getTemplate()), this.packet.getSaveName()));
 
                     this.minecraft.setScreen(new WorkingScreen());
                 }

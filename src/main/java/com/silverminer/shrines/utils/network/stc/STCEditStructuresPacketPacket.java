@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 public class STCEditStructuresPacketPacket implements IPacket {
     private final ArrayList<StructuresPacket> packets;
-    private final int packetID;
+    private final String packetID;
     /**
      * This is a flag to choose the correct edit tab\n
      * 0 -> Structures \n
@@ -24,7 +24,7 @@ public class STCEditStructuresPacketPacket implements IPacket {
      */
     private final int editLocation;
 
-    public STCEditStructuresPacketPacket(ArrayList<StructuresPacket> structurePackets, int packetID, int editLocation) {
+    public STCEditStructuresPacketPacket(ArrayList<StructuresPacket> structurePackets, String packetID, int editLocation) {
         this.packets = structurePackets;
         this.packetID = packetID;
         this.editLocation = editLocation;
@@ -34,9 +34,9 @@ public class STCEditStructuresPacketPacket implements IPacket {
         ArrayList<StructuresPacket> structurePackets = pkt.packets;
         buf.writeInt(structurePackets.size());
         for (StructuresPacket packet : structurePackets) {
-            buf.writeNbt(StructuresPacket.toCompound(packet));
+            buf.writeNbt(StructuresPacket.saveToNetwork(packet));
         }
-        buf.writeInt(pkt.packetID);
+        buf.writeUtf(pkt.packetID);
         buf.writeInt(pkt.editLocation);
     }
 
@@ -44,9 +44,9 @@ public class STCEditStructuresPacketPacket implements IPacket {
         ArrayList<StructuresPacket> structurePackets = Lists.newArrayList();
         int packets = buf.readInt();
         for (int i = 0; i < packets; i++) {
-            structurePackets.add(StructuresPacket.fromCompound(buf.readNbt(), null, true));
+            structurePackets.add(StructuresPacket.read(buf.readNbt(), null));
         }
-        return new STCEditStructuresPacketPacket(structurePackets, buf.readInt(), buf.readInt());
+        return new STCEditStructuresPacketPacket(structurePackets, buf.readUtf(), buf.readInt());
     }
 
     public static void handle(STCEditStructuresPacketPacket packet, Supplier<NetworkEvent.Context> context) {
