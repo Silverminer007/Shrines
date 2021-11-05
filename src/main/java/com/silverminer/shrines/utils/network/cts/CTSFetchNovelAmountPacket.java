@@ -45,9 +45,10 @@ public class CTSFetchNovelAmountPacket implements IPacket {
 
                 @Override
                 public void run() {
+                    double amount = NovelsDataRegistry.getNovelAmount(packet.structure.getKey());
                     ShrinesPacketHandler.sendTo(
                             new STCFetchNovelsAmountPacket(packet.structure,
-                                    NovelsDataRegistry.getNovelAmount(packet.structure.getKey())),
+                                    amount),
                             sender);
                 }
             };

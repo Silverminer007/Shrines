@@ -36,7 +36,7 @@ public class StructureNovelScreen extends Screen {
 	private int bottomHeight;
 	private int headerHeight;
 	private List<String> lines = Lists.newArrayList();
-	private List<String> words = Lists.newArrayList();
+	private List<String> words;
 	private boolean renderInfo = false;
 	private boolean scrolling;
 
