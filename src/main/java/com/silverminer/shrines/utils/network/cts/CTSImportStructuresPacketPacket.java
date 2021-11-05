@@ -6,6 +6,7 @@ import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.ZIPUtils;
 import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.stc.STCErrorPacket;
 import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -15,7 +16,6 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
@@ -52,29 +52,30 @@ public class CTSImportStructuresPacketPacket implements IPacket {
                 public void run() {
                     StructureLoadUtils.saveStructures();
                     File saveDestination = new File(StructureLoadUtils.getImportCacheLocation(), packet.fileName + ".zip");
-                    if(saveDestination.exists()){
-                        if(!saveDestination.delete()){
+                    if (saveDestination.exists()) {
+                        if (!saveDestination.delete()) {
                             LOGGER.error("Failed to clear cache before structure packet was imported");
+                            ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to clear cache before structure packet was imported"),
+                                    sender);
                             return;
                         }
                     }
                     try {
                         if (!StructureLoadUtils.getImportCacheLocation().exists() && !StructureLoadUtils.getImportCacheLocation().mkdirs()) {
                             LOGGER.error("Failed to create Directory to import structures packet");
+                            ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to clear cache before structure packet was imported"),
+                                    sender);
                             return;
                         }
                         saveDestination = Files.write(saveDestination.toPath(), packet.archive).toFile();
                         if (ZIPUtils.extractArchive(saveDestination, StructureLoadUtils.getImportCacheLocation())) {
                             Files.find(StructureLoadUtils.getImportCacheLocation().toPath(), 1, ((path, basicFileAttributes) -> Files.isDirectory(path))).forEach(path -> {
                                 StructuresPacket structuresPacket = StructureLoadUtils.loadStructuresPacket(path);
-                                if(structuresPacket != null) {
-                                    LOGGER.info("Structures Packet Import. DisplayName: {}, SaveName {}", structuresPacket.getDisplayName(), structuresPacket.getSaveName());
+                                if (structuresPacket != null) {
                                     // TODO Validate Packet
                                     File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), StructureLoadUtils.getSavePath(structuresPacket.getDisplayName()));
                                     try {
-                                        LOGGER.info("Imported bew structures packet and saved it to {}, read zip from {}", packetDest, path);
                                         Files.move(path, packetDest.toPath());
-                                        return;
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -82,13 +83,12 @@ public class CTSImportStructuresPacketPacket implements IPacket {
                             });
                         } else {
                             LOGGER.error("Failed to decompress archive");
-                            // TODO Show error message in the GUI
+                            ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to decompress archive"),
+                                    sender);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        // TODO Show error message in the GUI
+                        ShrinesPacketHandler.sendTo(new STCErrorPacket("", e.getMessage()), sender);
                     }
-                    // TODO Fix Structure Packet Rename
                     StructureLoadUtils.loadStructures();
                     ArrayList<StructuresPacket> packets = Lists.newArrayList();
                     packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);

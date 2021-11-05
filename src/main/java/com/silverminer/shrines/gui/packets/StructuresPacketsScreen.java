@@ -139,8 +139,7 @@ public class StructuresPacketsScreen extends Screen {
             ShrinesPacketHandler.sendToServer(new CTSImportStructuresPacketPacket(new File(s).getName().replace(".zip", ""), archive));
             this.minecraft.setScreen(new WorkingScreen());
         } catch (IOException e) {
-            e.printStackTrace();
-            // TODO Show Error
+            ClientUtils.showErrorToast("Failed to import Structures Packet", e.getMessage());
         }
     }
 

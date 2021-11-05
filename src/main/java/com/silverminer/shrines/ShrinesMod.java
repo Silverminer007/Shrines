@@ -48,8 +48,6 @@ public class ShrinesMod {
      * <p>
      * 2.0.0 Test Caves & Cliffs Backport combat
      * <p>
-     * FIXME Add Mxin into MinecraftServer to inject custom pack finder for templates and pools
-     * <p>
      * TODO Fix screenshots for Novels Screen -> size
      * <p>
      * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
