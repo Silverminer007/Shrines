@@ -1,4 +1,4 @@
-/**
+/*
  * Silverminer (and Team)
  * 
  * This library is distributed in the hope that it will be useful,

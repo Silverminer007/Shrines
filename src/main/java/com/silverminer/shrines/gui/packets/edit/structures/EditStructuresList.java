@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,8 +45,6 @@ public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger(EditStructuresList.class);
 	private final EditStructurePacketScreen screen;
 	private final StructuresPacket packet;
-	@Nullable
-	private List<StructureData> structures;
 
 	public EditStructuresList(Minecraft mc, int p_i49846_3_, int p_i49846_4_,
 			int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, Supplier<String> search, StructuresPacket packet, EditStructurePacketScreen screen) {
@@ -59,11 +58,11 @@ public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
 	public void refreshList(Supplier<String> search) {
 		this.clearEntries();
 
-		this.structures = packet.getStructures();
-		Collections.sort(this.structures);
+		List<StructureData> structures = packet.getStructures();
+		Collections.sort(structures);
 		String s = search.get().toLowerCase(Locale.ROOT);
 
-		for (StructureData packet : this.structures) {
+		for (StructureData packet : structures) {
 			if (packet.getName().toLowerCase(Locale.ROOT).contains(s)) {
 				this.addEntry(new EditStructuresList.Entry(packet));
 			}
@@ -103,6 +102,7 @@ public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
 			this.minecraft = Minecraft.getInstance();
 		}
 
+		@ParametersAreNonnullByDefault
 		public void render(MatrixStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
 				int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			StringTextComponent header = new StringTextComponent(structure.getName());
