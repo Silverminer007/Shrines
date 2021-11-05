@@ -1,7 +1,7 @@
 # CREDITS
 
 I want to say thank you to everyone who contributed to this project in any way.
-I want to name some names specially:
+I want to name some people specially. Everybody in this list contributed to the project in many different ways, but I can't name everything
 
 ### Code
 - S1fy
@@ -15,6 +15,9 @@ I want to name some names specially:
 - Tikofan
 - Aurelj
 - ThanatosLP_
+
+### Novels
+- pea_sh0ter
 
 ### Everything else
 - LegoSorterMan
