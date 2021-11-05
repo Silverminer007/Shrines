@@ -19,9 +19,11 @@ import com.silverminer.shrines.config.DefaultStructureConfig;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.stc.STCErrorPacket;
 import com.silverminer.shrines.utils.network.stc.STCFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
 import com.silverminer.shrines.utils.network.stc.STCUpdateQueueScreenPacket;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.resources.FolderPackFinder;
@@ -140,7 +142,7 @@ public class StructureLoadUtils {
                 }
             }
             // Save Structure Packets for later use
-            STRUCTURE_PACKETS = Collections.synchronizedList(structure_packets);
+            STRUCTURE_PACKETS = structure_packets;
             // Check for structure key duplicates and disable affected structures
             checkStructureKeyDuplicates();
             if (!has_included_structures) {
@@ -502,5 +504,74 @@ public class StructureLoadUtils {
 
     public static IPackFinder getPackFinder() {
         return new FolderPackFinder(StructureLoadUtils.getPacketsSaveLocation(), IPackNameDecorator.DEFAULT);
+    }
+
+    public static void importStructuresPacket(String fileName, byte[] archive, ServerPlayerEntity sender) {
+        StructureLoadUtils.saveStructures();
+        File saveDestination = new File(StructureLoadUtils.getImportCacheLocation(), fileName + ".zip");
+        if (saveDestination.exists()) {
+            if (!saveDestination.delete()) {
+                LOGGER.error("Failed to clear cache before structure packet was imported");
+                ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to clear cache before structure packet was imported"),
+                        sender);
+                return;
+            }
+        }
+        try {
+            if (!StructureLoadUtils.getImportCacheLocation().exists() && !StructureLoadUtils.getImportCacheLocation().mkdirs()) {
+                LOGGER.error("Failed to create Directory to import structures packet");
+                ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to clear cache before structure packet was imported"),
+                        sender);
+                return;
+            }
+            saveDestination = Files.write(saveDestination.toPath(), archive).toFile();
+            if (ZIPUtils.extractArchive(saveDestination, StructureLoadUtils.getImportCacheLocation())) {
+                Files.find(StructureLoadUtils.getImportCacheLocation().toPath(), 1, ((path, basicFileAttributes) -> Files.isDirectory(path))).forEach(path -> {
+                    StructuresPacket structuresPacket = StructureLoadUtils.loadStructuresPacket(path);
+                    if (structuresPacket != null) {
+                        if(validateStructureKeys(structuresPacket)){
+                            ShrinesPacketHandler.sendTo(new STCErrorPacket("Structures were renamed", "Some structures were renamed to prevent structure key duplicates"), sender);
+                        }
+                        savePacket(path.toFile().getParentFile(), structuresPacket, Lists.newArrayList());
+                        File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), StructureLoadUtils.getSavePath(structuresPacket.getDisplayName()));
+                        try {
+                            Files.move(path, packetDest.toPath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } else {
+                LOGGER.error("Failed to decompress archive");
+                ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to decompress archive"),
+                        sender);
+            }
+        } catch (Exception e) {
+            ShrinesPacketHandler.sendTo(new STCErrorPacket("", e.getMessage()), sender);
+        }
+        StructureLoadUtils.loadStructures();
+        ArrayList<StructuresPacket> packets = Lists.newArrayList();
+        packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+        ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
+                sender);
+    }
+
+    private static boolean validateStructureKeys(StructuresPacket packet) {
+        boolean changed = false;
+        List<String> oldKeys = Lists.newArrayList();
+        for (StructuresPacket p : STRUCTURE_PACKETS) {
+            oldKeys.addAll(p.getStructures().stream().map(StructureData::getKey).collect(Collectors.toList()));
+        }
+        for (StructureData data : packet.getStructures()) {
+            int i = 0;
+            String key = data.getKey();
+            String newKey = key;
+            while (oldKeys.contains(newKey)) {
+                newKey = key + i++;
+                changed = true;
+            }
+            data.setKey(newKey);
+        }
+        return changed;
     }
 }

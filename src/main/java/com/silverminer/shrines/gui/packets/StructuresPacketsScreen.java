@@ -153,8 +153,6 @@ public class StructuresPacketsScreen extends Screen {
             return;
         }
 
-        this.list.getSelectedOpt().ifPresent(entry -> {
-            ShrinesPacketHandler.sendToServer(new CTSExportStructuresPacketPacket(entry.getPacket().getSaveName(), entry.getPacket().getDisplayName(), s));
-        });
+        this.list.getSelectedOpt().ifPresent(entry -> ShrinesPacketHandler.sendToServer(new CTSExportStructuresPacketPacket(entry.getPacket().getSaveName(), entry.getPacket().getDisplayName(), s)));
     }
 }
