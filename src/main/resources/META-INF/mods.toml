@@ -12,5 +12,8 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/shrines-structures"
 credits="https://github.com/Silverminer007/Shrines/blob/experimental/Credits.md"
 authors="Silverminer007 and S1lencegamer"
 description='''
+Shrines Structures is a World generation modication for Minecraft Java Edition focused on Structures
+Also allows users to easily add own structures to world generation (Press k)
+
 See https://www.curseforge.com/minecraft/mc-mods/shrines-structures for more Info
 '''

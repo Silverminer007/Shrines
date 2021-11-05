@@ -118,6 +118,9 @@
 
 #### SNAPSHOT 14
 - Add Templates Tab to upload structure templates (You can add them from your local file system, rename and delete)
+- Fixed Structure Novels always appear empty
+- Introduced High Temple's Novel (Credits to pea_sh0ter)
+- Updated Mod description
 
 ##### Problems
 - Previous Problems still affect

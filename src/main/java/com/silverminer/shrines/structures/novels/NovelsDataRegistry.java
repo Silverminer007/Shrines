@@ -18,7 +18,8 @@ public class NovelsDataRegistry {
 		}
 		for (NovelsData novel : NOVELS) {
 			if (novel.getStructure().equals(structure)) {
-				return novel.getFoundStructuresCount() / Config.SETTINGS.NEEDED_NOVELS.get();
+				double amount = novel.getFoundStructuresCount();
+				return amount / ((double) Config.SETTINGS.NEEDED_NOVELS.get());
 			}
 		}
 		return 0.0D;
