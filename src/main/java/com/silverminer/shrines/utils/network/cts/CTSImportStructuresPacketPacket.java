@@ -73,6 +73,7 @@ public class CTSImportStructuresPacketPacket implements IPacket {
                                 StructuresPacket structuresPacket = StructureLoadUtils.loadStructuresPacket(path);
                                 if (structuresPacket != null) {
                                     // TODO Validate Packet
+
                                     File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), StructureLoadUtils.getSavePath(structuresPacket.getDisplayName()));
                                     try {
                                         Files.move(path, packetDest.toPath());
