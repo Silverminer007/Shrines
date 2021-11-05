@@ -1,4 +1,4 @@
-/**
+/*
  * Silverminer (and Team)
  * 
  * This library is distributed in the hope that it will be useful,
@@ -18,7 +18,9 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,8 +45,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class StringListOptionsList extends ExtendedList<StringListOptionsList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	private final StringListOptionsScreen screen;
-	@Nullable
-	private List<String> options;
 
 	public StringListOptionsList(StringListOptionsScreen screen, Minecraft mc, int p_i49846_3_, int p_i49846_4_,
 			int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, Supplier<String> search) {
@@ -57,11 +57,11 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
 	public void refreshList(Supplier<String> search) {
 		this.clearEntries();
 
-		this.options = this.screen.possibleValues;
-		Collections.sort(this.options);
+		List<String> options = this.screen.possibleValues;
+		Collections.sort(options);
 		String s = search.get().toLowerCase(Locale.ROOT);
 
-		for (String opt : this.options) {
+		for (String opt : options) {
 			if (opt.toLowerCase(Locale.ROOT).contains(s)) {
 				this.addEntry(new StringListOptionsList.Entry(opt, this.screen.selectedValues.contains(opt)));
 			}
@@ -95,9 +95,9 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
 		@Nullable
 		private IGuiEventListener focused;
 		private boolean dragging;
-		protected ArrayList<IGuiEventListener> children = Lists.newArrayList();
+		private final ArrayList<IGuiEventListener> children = Lists.newArrayList();
 		private final Minecraft minecraft;
-		protected final BooleanValueButton button;
+		private final BooleanValueButton button;
 		private final String opt;
 		private boolean active;
 
@@ -120,6 +120,7 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
 			this.active = active;
 		}
 
+		@ParametersAreNonnullByDefault
 		@Override
 		public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
 				boolean isHot, float partialTicks) {
@@ -130,6 +131,7 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
 			this.button.render(ms, mouseX, mouseY, partialTicks);
 		}
 
+		@Nonnull
 		@Override
 		public List<? extends IGuiEventListener> children() {
 			return children;

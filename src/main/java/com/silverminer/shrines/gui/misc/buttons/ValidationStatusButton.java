@@ -9,6 +9,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @OnlyIn(Dist.CLIENT)
 public class ValidationStatusButton extends Button
 {
@@ -26,11 +28,6 @@ public class ValidationStatusButton extends Button
 		this.valid = isValid;
 	}
 
-	public void setValid()
-	{
-		this.valid = true;
-	}
-
 	public void setInvalid()
 	{
 		this.valid = false;
@@ -43,6 +40,7 @@ public class ValidationStatusButton extends Button
 
 	@SuppressWarnings("deprecation")
 	@Override
+	@ParametersAreNonnullByDefault
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks)
 	{
 		Minecraft.getInstance().getTextureManager().bind(Widget.WIDGETS_LOCATION);

@@ -1,4 +1,4 @@
-/**
+/*
  * Silverminer (and Team)
  * 
  * This library is distributed in the hope that it will be useful,
@@ -21,6 +21,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * @author Silverminer
  *
@@ -35,10 +37,14 @@ public class CoomingSoonScreen extends Screen {
 		super(TITLE);
 	}
 
-	private ColorLoop loop = new ColorLoop();
+	private final ColorLoop loop = new ColorLoop();
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		if(this.minecraft == null){
+			return;
+		}
 		super.render(ms, mouseX, mouseY, partialTicks);
 		this.loop.tick();
 		try {
