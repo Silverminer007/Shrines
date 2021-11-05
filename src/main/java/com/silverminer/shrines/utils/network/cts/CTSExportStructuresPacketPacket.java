@@ -4,6 +4,7 @@ import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.ZIPUtils;
 import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.stc.STCErrorPacket;
 import com.silverminer.shrines.utils.network.stc.STCExportStructuresPacketPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -63,7 +64,8 @@ public class CTSExportStructuresPacketPacket implements IPacket {
                             }
                         }
                     } else {
-                        // TODO Send Error Packet
+                        ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to export Structures Packet", "Failed to read Structures Packet from disk"),
+                                sender);
                     }
                 }
             };

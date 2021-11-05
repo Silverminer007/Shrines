@@ -125,6 +125,12 @@
 ##### Problems
 - Previous Problems still affect
 
+#### SNAPSHOT 15
+- Added Error Splash screens
+
+##### Problems
+- Previous Problems still affect
+
 ##### Notes
 - These versions are alpha builds so anything can change in next release!
 

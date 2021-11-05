@@ -1,6 +1,8 @@
 package com.silverminer.shrines.utils.network.stc;
 
+import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.IPacket;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Util;
 import net.minecraftforge.api.distmarker.Dist;
@@ -57,8 +59,7 @@ public class STCExportStructuresPacketPacket implements IPacket {
                         Files.write(saveDestination.toPath(), packet.archive);
                         Util.getPlatform().openFile(new File(packet.exportDestination));
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        // TODO Show error in GUI
+                        ClientUtils.showErrorToast("Failed to export Structures Packet", e.getMessage());
                     }
                 }
             };

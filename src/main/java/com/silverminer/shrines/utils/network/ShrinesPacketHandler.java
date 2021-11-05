@@ -84,6 +84,7 @@ public class ShrinesPacketHandler {
         CHANNEL.registerMessage(id++, CTSImportStructuresPacketPacket.class,
                 CTSImportStructuresPacketPacket::encode, CTSImportStructuresPacketPacket::decode,
                 CTSImportStructuresPacketPacket::handle);
+        CHANNEL.registerMessage(id++, STCErrorPacket.class, STCErrorPacket::encode, STCErrorPacket::decode, STCErrorPacket::handle);
         LOGGER.info("Initializing networking on version [{}]. This should match between client and server",
                 PROTOCOL_VERSION);
     }
