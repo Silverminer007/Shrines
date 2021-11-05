@@ -50,50 +50,7 @@ public class CTSImportStructuresPacketPacket implements IPacket {
 
                 @Override
                 public void run() {
-                    StructureLoadUtils.saveStructures();
-                    File saveDestination = new File(StructureLoadUtils.getImportCacheLocation(), packet.fileName + ".zip");
-                    if (saveDestination.exists()) {
-                        if (!saveDestination.delete()) {
-                            LOGGER.error("Failed to clear cache before structure packet was imported");
-                            ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to clear cache before structure packet was imported"),
-                                    sender);
-                            return;
-                        }
-                    }
-                    try {
-                        if (!StructureLoadUtils.getImportCacheLocation().exists() && !StructureLoadUtils.getImportCacheLocation().mkdirs()) {
-                            LOGGER.error("Failed to create Directory to import structures packet");
-                            ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to clear cache before structure packet was imported"),
-                                    sender);
-                            return;
-                        }
-                        saveDestination = Files.write(saveDestination.toPath(), packet.archive).toFile();
-                        if (ZIPUtils.extractArchive(saveDestination, StructureLoadUtils.getImportCacheLocation())) {
-                            Files.find(StructureLoadUtils.getImportCacheLocation().toPath(), 1, ((path, basicFileAttributes) -> Files.isDirectory(path))).forEach(path -> {
-                                StructuresPacket structuresPacket = StructureLoadUtils.loadStructuresPacket(path);
-                                if (structuresPacket != null) {
-                                    // TODO Validate Packet
-                                    File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), StructureLoadUtils.getSavePath(structuresPacket.getDisplayName()));
-                                    try {
-                                        Files.move(path, packetDest.toPath());
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        } else {
-                            LOGGER.error("Failed to decompress archive");
-                            ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to decompress archive"),
-                                    sender);
-                        }
-                    } catch (Exception e) {
-                        ShrinesPacketHandler.sendTo(new STCErrorPacket("", e.getMessage()), sender);
-                    }
-                    StructureLoadUtils.loadStructures();
-                    ArrayList<StructuresPacket> packets = Lists.newArrayList();
-                    packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
-                    ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
-                            sender);
+                    StructureLoadUtils.importStructuresPacket(packet.fileName, packet.archive, sender);
                 }
             };
         }
