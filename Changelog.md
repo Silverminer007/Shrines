@@ -141,7 +141,7 @@
 
 ## 1.8.1
 ### Beta1
-- Shrines structures command was updated:
+- Shrine structures command was updated:
 -> Added 'save-resource' command option
 -> Added 'save' command option
 -> Added 'reset' command option

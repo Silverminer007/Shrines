@@ -466,20 +466,18 @@ public class StructureLoadUtils {
     }
 
     public static void playerLeftQueue(UUID leftPlayer) {
-        ArrayList<StructuresPacket> packets = Lists.newArrayList();
-        packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
         int position = StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.indexOf(leftPlayer);
         StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.remove(position);
         if (position >= 0) {
             if (position == 0 && StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.size() > 0) {
                 UUID first = StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.get(0);
-                ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets), first);
+                ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(Lists.newArrayList(StructureLoadUtils.STRUCTURE_PACKETS)), first);
             } else {
                 StructureLoadUtils.sendUpdatesToNonFirst();
             }
             return;
         }
-        ShrinesPacketHandler.sendTo(new STCFetchStructuresPacket(packets, false), leftPlayer);
+        ShrinesPacketHandler.sendTo(new STCFetchStructuresPacket(Lists.newArrayList(StructureLoadUtils.FINAL_STRUCTURES_PACKETS), false), leftPlayer);
     }
 
     private static void sendUpdatesToNonFirst() {
@@ -562,6 +560,7 @@ public class StructureLoadUtils {
         for (StructuresPacket p : STRUCTURE_PACKETS) {
             oldKeys.addAll(p.getStructures().stream().map(StructureData::getKey).collect(Collectors.toList()));
         }
+        Random r = new Random();
         for (StructureData data : packet.getStructures()) {
             int i = 0;
             String key = data.getKey();
@@ -571,6 +570,7 @@ public class StructureLoadUtils {
                 changed = true;
             }
             data.setKey(newKey);
+            data.setSeed_modifier(r.nextInt());
         }
         return changed;
     }

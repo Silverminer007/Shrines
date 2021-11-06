@@ -2,6 +2,7 @@ package com.silverminer.shrines.utils.network.stc;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.gui.novels.StructureNovelsScreen;
+import com.silverminer.shrines.gui.packets.StructuresPacketsScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.IPacket;
 import net.minecraft.client.Minecraft;
@@ -62,10 +63,9 @@ public class STCEditStructuresPacketPacket implements IPacket {
 
                 @Override
                 public void run() {
-                    StructureNovelsScreen screen = new StructureNovelsScreen(null, packet.packets);
+                    StructuresPacketsScreen screen = new StructuresPacketsScreen(null, packet.packets);
                     Minecraft.getInstance().setScreen(screen);
-                    screen.refreshList();
-                    screen.openPacketEdit(packet.packetID, packet.editLocation);
+                    screen.openPacketAt(packet.packetID, packet.editLocation);
                 }
             };
         }

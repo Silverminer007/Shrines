@@ -90,22 +90,6 @@ public class StructureNovelsScreen extends Screen {
         ShrinesPacketHandler.sendToServer(new CTSPlayerJoinedQueuePacket());
     }
 
-    public void openOpMode() {
-        if(this.minecraft == null){
-            return;
-        }
-        this.minecraft.setScreen(new StructuresPacketsScreen(this, this.packets));
-    }
-
-    public void openPacketEdit(String packetId, int editLocation) {
-        if(this.minecraft == null){
-            return;
-        }
-        StructuresPacketsScreen screen = new StructuresPacketsScreen(this, this.packets);
-        this.minecraft.setScreen(screen);
-        screen.openPacketAt(packetId, editLocation);
-    }
-
     public void refreshList() {
         this.list.refreshList(() -> this.searchBox.getValue(), this.packets);
     }
