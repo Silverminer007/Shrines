@@ -1,18 +1,17 @@
 package com.silverminer.shrines.utils.network.stc;
 
-import java.util.ArrayList;
-import java.util.function.Supplier;
-
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.gui.novels.StructureNovelsScreen;
+import com.silverminer.shrines.gui.packets.StructuresPacketsScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.IPacket;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.ArrayList;
+import java.util.function.Supplier;
 
 public class STCOpenStructuresPacketEditPacket implements IPacket {
 	private final ArrayList<StructuresPacket> packets;
@@ -39,9 +38,7 @@ public class STCOpenStructuresPacketEditPacket implements IPacket {
 	}
 
 	public static void handle(STCOpenStructuresPacketEditPacket packet, Supplier<NetworkEvent.Context> context) {
-		context.get().enqueueWork(() -> {
-			DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Handle.handle(packet));
-		});
+		context.get().enqueueWork(() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Handle.handle(packet)));
 		context.get().setPacketHandled(true);
 	}
 
@@ -53,10 +50,7 @@ public class STCOpenStructuresPacketEditPacket implements IPacket {
 
 				@Override
 				public void run() {
-					StructureNovelsScreen screen = new StructureNovelsScreen(null, packet.packets);
-					Minecraft.getInstance().setScreen(screen);
-					screen.refreshList();
-					screen.openOpMode();
+					Minecraft.getInstance().setScreen(new StructuresPacketsScreen(null, packet.packets));
 				}
 			};
 		}

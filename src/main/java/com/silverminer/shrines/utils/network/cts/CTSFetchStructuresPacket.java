@@ -44,7 +44,7 @@ public class CTSFetchStructuresPacket implements IPacket {
 				@Override
 				public void run() {
 					ArrayList<StructuresPacket> packets = Lists.newArrayList();
-					packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+					packets.addAll(StructureLoadUtils.FINAL_STRUCTURES_PACKETS);
 					ShrinesPacketHandler.sendTo(new STCFetchStructuresPacket(packets, packet.op_mode),
 							sender);
 				}
