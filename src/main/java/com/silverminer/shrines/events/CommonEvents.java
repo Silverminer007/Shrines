@@ -136,10 +136,5 @@ public class CommonEvents {
 		public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
 			ShrinesPacketHandler.sendTo(new STCCacheStructureIconsPacket(StructureLoadUtils.findStructureIcons()), event.getPlayer());
 		}
-
-		@SubscribeEvent
-		public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event){
-			ShrinesPacketHandler.sendTo(new STCClearImagesCachePacket(), event.getPlayer());
-		}
 	}
 }
