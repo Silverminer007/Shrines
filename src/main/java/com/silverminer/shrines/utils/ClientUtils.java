@@ -1,9 +1,7 @@
 package com.silverminer.shrines.utils;
 
-import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.gui.config.GeneralSettingsScreen;
+import com.silverminer.shrines.gui.config.NewGeneralSettingsScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.toasts.SystemToast;
@@ -22,7 +20,7 @@ public class ClientUtils {
     public static KeyBinding structuresScreen;
 
     public static Screen getConfigGui(Minecraft mc, Screen parent) {
-        return new GeneralSettingsScreen(parent, Lists.newArrayList(Config.SERVER_SETTINGS_CONFIG));
+        return new NewGeneralSettingsScreen(parent);
     }
 
     public static void showErrorToast(ITextComponent errorMessage) {

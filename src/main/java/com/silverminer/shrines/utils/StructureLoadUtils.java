@@ -715,6 +715,11 @@ public class StructureLoadUtils {
 
     public static void cacheStructureIcons(HashMap<ResourceLocation, byte[]> icons) {
         File cache = StructureLoadUtils.getImagesCacheLocation();
+        try {
+            Files.delete(cache.toPath());
+        } catch (IOException e) {
+            LOGGER.error("Failed to delete Images Cache", e);
+        }
         for (Map.Entry<ResourceLocation, byte[]> icon : icons.entrySet()) {
             ResourceLocation key = icon.getKey();
             File iconPath = FileUtils.getFile(cache, "Icons", "assets", key.getNamespace(), "textures", "structures", key.getPath());

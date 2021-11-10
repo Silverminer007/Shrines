@@ -1,4 +1,4 @@
-/**
+/*
  * Silverminer (and Team)
  * 
  * This library is distributed in the hope that it will be useful,
@@ -19,7 +19,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ShrinesSettingsConfig {
+public class
+ShrinesSettingsConfig {
 
 	public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
 
