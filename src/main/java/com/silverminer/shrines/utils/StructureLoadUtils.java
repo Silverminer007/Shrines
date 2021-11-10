@@ -39,6 +39,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.*;
@@ -192,11 +193,13 @@ public class StructureLoadUtils {
         // Create an instance of a packet datastructures and write it to a read/write
         // array
         ArrayList<ResourceLocation> templates = StructureLoadUtils.searchForTemplates(path);
+        ArrayList<TemplatePool> pools = StructureLoadUtils.loadTemplatePools(path);
         StructuresPacket packet = StructuresPacket.read(data_structure, path.toFile());
         if (packet == null) {
             return null;
         }
         packet.setTemplates(templates);
+        packet.setPools(pools);
         return packet;
     }
 
@@ -214,6 +217,46 @@ public class StructureLoadUtils {
                     String locationPath = Paths.get(relativeTemplate.getName(0).toString(), relativeTemplate.getName(1).toString()).relativize(relativeTemplate).toString();
                     ResourceLocation template = new ResourceLocation(namespace, locationPath.replace(".nbt", ""));
                     templates.add(template);
+                }
+            });
+        } catch (IOException e) {
+            LOGGER.error("Failed to read Templates", e);
+        }
+        return templates;
+    }
+
+    private static ArrayList<TemplatePool> loadTemplatePools(Path path) {
+        Path data = path.resolve("data");
+        if (!Files.isDirectory(data)) {
+            return Lists.newArrayList();
+        }
+        ArrayList<TemplatePool> templates = Lists.newArrayList();
+        try {
+            Files.find(data, 1, ((path1, basicFileAttributes) -> {
+                try {
+                    return Files.isDirectory(path1) && !Files.isSameFile(data, path1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            })).forEach(namespacePath -> {
+                try {
+                    Path poolsPath = namespacePath.resolve("worldgen").resolve("template_pool");
+                    if (Files.exists(poolsPath)) {
+                        Files.find(poolsPath, Integer.MAX_VALUE, (p, basicFileAttributes) -> Files.isRegularFile(p) && p.toString().endsWith(".json")).forEach(poolPath -> {
+                            try {
+                                StringBuilder poolString = new StringBuilder();
+                                Files.readAllLines(poolPath).forEach(poolString::append);
+                                TemplatePool pool = TemplatePool.fromString(poolString.toString());
+                                pool.setSaveName(new ResourceLocation(namespacePath.getFileName().toString(), poolsPath.relativize(poolPath).toString().replaceAll(".json", "")));
+                                templates.add(pool);
+                            } catch (IOException e) {
+                                LOGGER.error("Failed to parse Template Pool", e);
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    LOGGER.error("Failed to collect template pools", e);
                 }
             });
         } catch (IOException e) {
@@ -327,9 +370,16 @@ public class StructureLoadUtils {
             loadStructures();
             StructureLoadUtils.deleteDirectory(StructureLoadUtils.getExportCacheLocation().toPath());
             StructureLoadUtils.deleteDirectory(StructureLoadUtils.getImportCacheLocation().toPath());
-            StructureLoadUtils.deleteDirectory(StructureLoadUtils.getImagesCacheLocation().toPath());
         } catch (Throwable t) {
             LOGGER.error("Failed to save shrines structures for unknown reason", t);
+        }
+    }
+
+    public static void clearImagesCache() {
+        try {
+            StructureLoadUtils.deleteDirectory(StructureLoadUtils.getImagesCacheLocation().toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -394,6 +444,7 @@ public class StructureLoadUtils {
                         e);
             }
         }
+        StructureLoadUtils.saveTemplatePools(packet.getPools(), packet_path.toPath());
         return packet_path;
     }
 
@@ -446,10 +497,54 @@ public class StructureLoadUtils {
         File template_path = FileUtils.getFile(packet_path, "data", from.getNamespace(), "structures", from.getPath().replace(".nbt", "") + ".nbt");
         File new_template_path = FileUtils.getFile(packet_path, "data", to.getNamespace(), "structures", to.getPath().replace(".nbt", "") + ".nbt");
         if (template_path.renameTo(new_template_path)) {
+            // Update depending template pools
+            for (TemplatePool pool : packet.getPools()) {
+                for (TemplatePool.Entry poolEntry : pool.getEntries()) {
+                    if (poolEntry.getTemplate().equals(from)) {
+                        poolEntry.setTemplate(to);
+                    }
+                }
+            }
             StructureLoadUtils.saveStructures();
         } else {
             LOGGER.error("Failed to rename Template [{}, {}], [{}, {}]", from, to, template_path, new_template_path);
         }
+    }
+
+    public static void saveTemplatePools(List<TemplatePool> templatePools, Path packetPath) {
+        for (TemplatePool templatePool : templatePools) {
+            Path poolPath = packetPath.resolve("data").resolve(templatePool.getSaveName().getNamespace()).resolve("worldgen").resolve("template_pool").resolve(templatePool.getSaveName().getPath() + ".json");
+            try {
+                FileUtils.writeStringToFile(poolPath.toFile(), templatePool.toString(), Charset.defaultCharset());
+            } catch (IOException e) {
+                LOGGER.error("Failed to save template pool [{}]", templatePool.getSaveName(), e);
+            }
+        }
+    }
+
+    public static void deleteTemplatePool(ResourceLocation saveName, String packetID) {
+        Path poolPath = getTemplatePoolPath(packetID, saveName);
+        try {
+            Files.delete(poolPath);
+            StructureLoadUtils.loadStructures();
+        } catch (IOException e) {
+            LOGGER.error("Failed to delete Template Pool [{}, {}]", saveName, poolPath);
+        }
+    }
+
+    public static void addTemplatePool(TemplatePool newPool, String packetID) {
+        StructureLoadUtils.saveStructures();
+        Path newPoolPath = getTemplatePoolPath(packetID, newPool.getName());
+        try {
+            FileUtils.writeStringToFile(newPoolPath.toFile(), newPool.toString(), Charset.defaultCharset());
+        } catch (IOException e) {
+            LOGGER.error("Failed to save new template", e);
+        }
+        StructureLoadUtils.loadStructures();
+    }
+
+    public static Path getTemplatePoolPath(String packetSaveName, ResourceLocation poolLocation) {
+        return StructureLoadUtils.getPacketsSaveLocation().toPath().resolve(packetSaveName).resolve("data").resolve(poolLocation.getNamespace()).resolve("worldgen").resolve("template_pool").resolve(poolLocation.getPath() + ".json");
     }
 
     public static void sendQueueUpdatesToPlayers() {
@@ -500,8 +595,11 @@ public class StructureLoadUtils {
         }
     }
 
-    public static IPackFinder getPackFinder() {
-        return new FolderPackFinder(StructureLoadUtils.getPacketsSaveLocation(), IPackNameDecorator.DEFAULT);
+    public static List<IPackFinder> getPackFinders() {
+        List<IPackFinder> packFinders = Lists.newArrayList();
+        packFinders.add(new FolderPackFinder(StructureLoadUtils.getPacketsSaveLocation(), IPackNameDecorator.DEFAULT));
+        packFinders.add(new FolderPackFinder(StructureLoadUtils.getImagesCacheLocation(), IPackNameDecorator.DEFAULT));
+        return packFinders;
     }
 
     public static void importStructuresPacket(String fileName, byte[] archive, ServerPlayerEntity sender) {
@@ -527,15 +625,17 @@ public class StructureLoadUtils {
                 Files.find(StructureLoadUtils.getImportCacheLocation().toPath(), 1, ((path, basicFileAttributes) -> Files.isDirectory(path))).forEach(path -> {
                     StructuresPacket structuresPacket = StructureLoadUtils.loadStructuresPacket(path);
                     if (structuresPacket != null) {
-                        if(validateStructureKeys(structuresPacket)){
+                        if (validateStructureKeys(structuresPacket, path.toFile())) {
                             ShrinesPacketHandler.sendTo(new STCErrorPacket("Structures were renamed", "Some structures were renamed to prevent structure key duplicates"), sender);
                         }
-                        savePacket(path.toFile().getParentFile(), structuresPacket, Lists.newArrayList());
-                        File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), StructureLoadUtils.getSavePath(structuresPacket.getDisplayName()));
-                        try {
-                            Files.move(path, packetDest.toPath());
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        File savePath = savePacket(path.toFile().getParentFile(), structuresPacket, Lists.newArrayList());
+                        if (savePath != null) {
+                            File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), savePath.toString());
+                            try {
+                                Files.move(path, packetDest.toPath());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 });
@@ -554,7 +654,7 @@ public class StructureLoadUtils {
                 sender);
     }
 
-    private static boolean validateStructureKeys(StructuresPacket packet) {
+    private static boolean validateStructureKeys(StructuresPacket packet, File savePath) {
         boolean changed = false;
         List<String> oldKeys = Lists.newArrayList();
         for (StructuresPacket p : STRUCTURE_PACKETS) {
@@ -569,9 +669,63 @@ public class StructureLoadUtils {
                 newKey = key + i++;
                 changed = true;
             }
+            renameIcon(savePath, key, newKey);
             data.setKey(newKey);
             data.setSeed_modifier(r.nextInt());
         }
         return changed;
+    }
+
+    private static void renameIcon(File packetPath, String oldKey, String newKey) {
+        if (!Objects.equals(oldKey, newKey)) {
+            ResourceLocation oldKeyLoc = new ResourceLocation(oldKey + ".png");
+            File oldKeyIcon = FileUtils.getFile(packetPath, "assets", oldKeyLoc.getNamespace(), "textures", "structures", oldKeyLoc.getPath());
+            if (oldKeyIcon.exists() && oldKeyIcon.isFile()) {
+                ResourceLocation newKeyLoc = new ResourceLocation(newKey + ".png");
+                File newKeyIcon = FileUtils.getFile(packetPath, "assets", newKeyLoc.getNamespace(), "textures", "structures", newKeyLoc.getPath());
+                try {
+                    Files.move(oldKeyIcon.toPath(), newKeyIcon.toPath());
+                } catch (IOException e) {
+                    LOGGER.error("Failed to rename Structures Icon");
+                }
+            }
+        }
+    }
+
+    @Nonnull
+    public static HashMap<ResourceLocation, byte[]> findStructureIcons() {
+        HashMap<ResourceLocation, byte[]> icons = Maps.newHashMap();
+        File packetsPath = StructureLoadUtils.getPacketsSaveLocation();
+        for (StructuresPacket p : StructureLoadUtils.FINAL_STRUCTURES_PACKETS) {
+            File path = new File(packetsPath, p.getSaveName());
+            for (StructureData d : p.getStructures()) {
+                ResourceLocation key = new ResourceLocation(d.getKey() + ".png");
+                File iconPath = FileUtils.getFile(path, "assets", key.getNamespace(), "textures", "structures", key.getPath());
+                if (iconPath.exists() && iconPath.isFile()) {
+                    try {
+                        icons.put(key, Files.readAllBytes(iconPath.toPath()));
+                    } catch (IOException e) {
+                        LOGGER.info("Failed to read structures icon {}", iconPath);
+                    }
+                }
+            }
+        }
+        return icons;
+    }
+
+    public static void cacheStructureIcons(HashMap<ResourceLocation, byte[]> icons) {
+        File cache = StructureLoadUtils.getImagesCacheLocation();
+        for (Map.Entry<ResourceLocation, byte[]> icon : icons.entrySet()) {
+            ResourceLocation key = icon.getKey();
+            File iconPath = FileUtils.getFile(cache, "Icons", "assets", key.getNamespace(), "textures", "structures", key.getPath());
+            if (!iconPath.getParentFile().exists() && !iconPath.getParentFile().mkdirs()) {
+                continue;
+            }
+            try {
+                Files.write(iconPath.toPath(), icon.getValue());
+            } catch (IOException e) {
+                LOGGER.error("Failed to cache structure icon [{}]", key);
+            }
+        }
     }
 }

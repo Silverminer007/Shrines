@@ -6,6 +6,7 @@ import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
 import com.silverminer.shrines.gui.misc.screen.BiomeGenerationSettingsScreen;
 import com.silverminer.shrines.gui.misc.screen.StringListOptionsScreen;
 import com.silverminer.shrines.structures.load.StructureData;
+import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.structures.load.options.ConfigOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -13,6 +14,7 @@ import net.minecraft.client.gui.INestedGuiEventHandler;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -34,12 +36,14 @@ import java.util.stream.Collectors;
 public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.Entry<?>> {
     protected StructureData structure;
     protected ConfigureStructureScreen screen;
+    protected final StructuresPacket packet;
 
     public ConfigureStructureList(Minecraft p_i45010_1_, int p_i45010_2_, int p_i45010_3_, int p_i45010_4_,
-                                  int p_i45010_5_, int p_i45010_6_, ConfigureStructureScreen screen, StructureData structure) {
+                                  int p_i45010_5_, int p_i45010_6_, ConfigureStructureScreen screen, StructureData structure, StructuresPacket packet) {
         super(p_i45010_1_, p_i45010_2_, p_i45010_3_, p_i45010_4_, p_i45010_5_, p_i45010_6_);
         this.screen = screen;
         this.structure = structure;
+        this.packet = packet;
         this.refreshList();
     }
 
@@ -69,6 +73,7 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
                 this.structure::getBiomeCategoryWhitelist, this.structure::setBiomeCategoryWhitelist));
         this.addEntry(new StringListEntry(this.structure.dimension_whitelist, this.structure::getDimension_whitelist,
                 this.structure::setDimension_whitelist, this.screen.possibleDimensions));
+        this.addEntry(new PoolEntry(this.structure.start_pool, this.structure::getStart_pool, this.structure::setStart_pool));
         this.addEntry(new StringEntry(this.structure.novel, this.structure::getNovel, this.structure::setNovel, 10000));
     }
 
@@ -320,6 +325,30 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
             this.categoriesGetter = categories;
             this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("Configure"), (button) -> this.minecraft.setScreen(new BiomeGenerationSettingsScreen(screen, this.getter.get(),
                     this.categoriesGetter.get(), this.option.getOption(), this.setter, this.categoriesSetter)));// TRANSLATION
+            this.children.add(this.button);
+        }
+
+        @Override
+        @ParametersAreNonnullByDefault
+        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+                           boolean isHot, float partialTicks) {
+            super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
+            this.button.x = left + (width / 2);
+            this.button.y = top + (ConfigureStructureList.this.itemHeight - this.button.getHeight()) / 2;
+            this.button.render(ms, mouseX, mouseY, partialTicks);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public class PoolEntry extends Entry<String> {
+        protected final Button button;
+
+        public PoolEntry(ConfigOption<String> option, Supplier<String> value,
+                         Consumer<String> setter) {
+            super(option, value, setter);
+            this.button = new Button(0, 0, 70, 20,
+                    value.get().isEmpty() ? new TranslationTextComponent("Set") : new TranslationTextComponent("Change"),
+                    (button) -> this.minecraft.setScreen(new SelectPoolScreen(ConfigureStructureList.this.screen, ConfigureStructureList.this.packet, ConfigureStructureList.this.structure, new ResourceLocation(this.value))));// TRANSLATION
             this.children.add(this.button);
         }
 

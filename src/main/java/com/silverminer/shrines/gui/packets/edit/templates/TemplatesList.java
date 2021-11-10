@@ -1,7 +1,7 @@
 package com.silverminer.shrines.gui.packets.edit.templates;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
+import com.silverminer.shrines.gui.misc.IUpdatableScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.ExtendedList;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 
 public class TemplatesList extends ExtendedList<TemplatesList.Entry> {
     protected static final Logger LOGGER = LogManager.getLogger(TemplatesList.class);
-    private final EditStructurePacketScreen screen;
-    private final StructuresPacket packet;
+    protected final IUpdatableScreen screen;
+    protected final StructuresPacket packet;
 
-    public TemplatesList(Minecraft p_i45010_1_, int p_i45010_2_, int p_i45010_3_, int p_i45010_4_, int p_i45010_5_, int p_i45010_6_, Supplier<String> search, StructuresPacket packet, EditStructurePacketScreen screen) {
+    public TemplatesList(Minecraft p_i45010_1_, int p_i45010_2_, int p_i45010_3_, int p_i45010_4_, int p_i45010_5_, int p_i45010_6_, Supplier<String> search, StructuresPacket packet, IUpdatableScreen screen) {
         super(p_i45010_1_, p_i45010_2_, p_i45010_3_, p_i45010_4_, p_i45010_5_, p_i45010_6_);
         this.packet = packet;
         this.screen = screen;
@@ -62,9 +62,9 @@ public class TemplatesList extends ExtendedList<TemplatesList.Entry> {
         return Optional.ofNullable(this.getSelected());
     }
 
-    public final class Entry extends ExtendedList.AbstractListEntry<TemplatesList.Entry> {
-        private final Minecraft minecraft;
-        private final String template;
+    public class Entry extends ExtendedList.AbstractListEntry<TemplatesList.Entry> {
+        protected final Minecraft minecraft;
+        protected final String template;
 
         public Entry(String template) {
             this.template = template;

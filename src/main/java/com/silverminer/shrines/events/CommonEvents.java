@@ -1,4 +1,4 @@
-/**
+/*
  * Silverminer (and Team)
  * 
  * This library is distributed in the hope that it will be useful,
@@ -11,6 +11,10 @@
  */
 package com.silverminer.shrines.events;
 
+import com.silverminer.shrines.utils.StructureLoadUtils;
+import com.silverminer.shrines.utils.network.stc.STCCacheStructureIconsPacket;
+import com.silverminer.shrines.utils.network.stc.STCClearImagesCachePacket;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,7 +67,7 @@ public class CommonEvents {
 
 		@SubscribeEvent(priority = EventPriority.HIGH)
 		public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
-			if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
+			if (event.getName() != null && !Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
 				for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
 					if (holder.getStructure().getConfig().getGenerate() && StructureRegistrationUtils.checkBiome(
 							holder.getStructure().getConfig().getBiomeBlacklist(),
@@ -102,10 +106,11 @@ public class CommonEvents {
 							ServerWorld world = ((ServerPlayerEntity) event.player).getLevel();
 							if (world.structureFeatureManager().getStructureAt(playerPos, true, structure).isValid()) {
 								StructureData data = structure.getConfig();
-								NovelsData novel;
+								NovelsData novel = null;
 								if (NovelsDataRegistry.hasNovelOf(data.getKey())) {
 									novel = NovelsDataRegistry.getNovelOf(data.getKey());
-								} else {
+								}
+								if(novel == null) {
 									novel = new NovelsData(data.getKey());
 								}
 								boolean isNew = true;
@@ -125,6 +130,16 @@ public class CommonEvents {
 					}
 				}
 			}
+		}
+
+		@SubscribeEvent
+		public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
+			ShrinesPacketHandler.sendTo(new STCCacheStructureIconsPacket(StructureLoadUtils.findStructureIcons()), event.getPlayer());
+		}
+
+		@SubscribeEvent
+		public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event){
+			ShrinesPacketHandler.sendTo(new STCClearImagesCachePacket(), event.getPlayer());
 		}
 	}
 }

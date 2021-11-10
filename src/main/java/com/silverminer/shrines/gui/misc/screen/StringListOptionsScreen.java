@@ -14,6 +14,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @OnlyIn(Dist.CLIENT)
 public class StringListOptionsScreen extends Screen {
 	protected Screen lastScreen;
@@ -38,16 +40,10 @@ public class StringListOptionsScreen extends Screen {
 	}
 
 	protected void init() {
-		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
-			this.onClose();
-		}, StringTextComponent.EMPTY));
+		this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
 		this.searchBox = new TextFieldWidget(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
 				new StringTextComponent(""));
-		this.searchBox.setResponder((string) -> {
-			this.list.refreshList(() -> {
-				return string;
-			});
-		});
+		this.searchBox.setResponder((string) -> this.list.refreshList(() -> string));
 		this.list = new StringListOptionsList(this, minecraft, this.width, this.height, 26, this.height, 26,
 				() -> this.searchBox.getValue());
 		this.children.add(searchBox);
@@ -55,6 +51,7 @@ public class StringListOptionsScreen extends Screen {
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		this.searchBox.render(ms, mouseX, mouseY, partialTicks);
 		this.list.render(ms, mouseX, mouseY, partialTicks);

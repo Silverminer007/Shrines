@@ -1,14 +1,15 @@
 package com.silverminer.shrines.gui.packets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.silverminer.shrines.gui.packets.edit.pools.EditPoolsScreen;
+import com.silverminer.shrines.gui.misc.SetNameScreen;
 import com.silverminer.shrines.gui.packets.edit.structures.EditStructuresScreen;
 import com.silverminer.shrines.gui.packets.edit.templates.EditTemplatesScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import com.silverminer.shrines.utils.network.cts.CTSExportStructuresPacketPacket;
-import com.silverminer.shrines.utils.network.cts.CTSImportStructuresPacketPacket;
-import com.silverminer.shrines.utils.network.cts.CTSPlayerLeftQueuePacket;
+import com.silverminer.shrines.utils.network.cts.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.WorkingScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -69,14 +70,14 @@ public class StructuresPacketsScreen extends Screen {
         if (packets.size() > 0) {
             StructuresPacket packet = packets.get(0);
             switch (editLocation) {
-                case 0:
-                    this.minecraft.setScreen(new EditStructuresScreen(packet));
-                    break;
                 case 1:
                     this.minecraft.setScreen(new EditTemplatesScreen(packet));
                     break;
+                case 2:
+                    this.minecraft.setScreen(new EditPoolsScreen(packet));
+                    break;
                 default:
-                    // TODO Add Pools Screen and open it here
+                    this.minecraft.setScreen(new EditStructuresScreen(packet));
             }
         }
     }
@@ -91,16 +92,42 @@ public class StructuresPacketsScreen extends Screen {
         this.searchBox.setResponder((string) -> this.list.refreshList(() -> string));
         this.list = new StructurePacketsList(this, this.minecraft, this.width, this.height, 26, this.height - 48, 36,
                 () -> this.searchBox.getValue(), this.packets);
+
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
+
         this.delete = this.addButton(new Button(this.width / 2 - 80 - 80 - 9, this.height - 45, 80, 20,
                 new TranslationTextComponent("Delete"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::remove)));// TRANSLATION
+
         this.configure = this.addButton(new Button(this.width / 2 - 80 - 3, this.height - 45, 80, 20,
                 new TranslationTextComponent("Configure"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::configure)));// TRANSLATION
+
         this.add = this.addButton(new Button(this.width / 2 + 3, this.height - 22, 166, 20,
-                new TranslationTextComponent("Add"), (button) -> this.minecraft.setScreen(new AddStructurePacketScreen(this))));// TRANSLATION
+                new TranslationTextComponent("Add"), (button) -> this.minecraft.setScreen(new SetNameScreen(this,
+                new TranslationTextComponent("Enter a Name"),
+                StringTextComponent.EMPTY,
+                new TranslationTextComponent("Your structure package is not necessarily saved under the same name as it is displayed under"),
+                (value) -> {
+                    StructuresPacket packet = new StructuresPacket(value, null, Lists.newArrayList(),
+                            false, this.minecraft.player.getName().getString());
+                    this.minecraft.setScreen(new WorkingScreen());
+                    ShrinesPacketHandler
+                            .sendToServer(new CTSAddedStructurePacketPacket(packet));
+                }))));// TRANSLATION
+
         this.rename = this.addButton(new Button(this.width / 2 + 3, this.height - 45, 80, 20,
                 new TranslationTextComponent("Rename"), (button) -> this.list.getSelectedOpt().ifPresent(entry -> this.minecraft
-                .setScreen(new RenameStructurePacketScreen(this, entry.getPacket())))));// TRANSLATION
+                .setScreen(new SetNameScreen(this,
+                        new TranslationTextComponent("Enter a new Name"),
+                        new TranslationTextComponent(entry.getPacket().getDisplayName()),
+                        new TranslationTextComponent("Your structure package is not necessarily saved under the same name as it is displayed under"),
+                        (value) -> {
+                            StructuresPacket newPacket = entry.getPacket();
+                            newPacket.setDisplayName(value);
+                            this.minecraft.setScreen(new WorkingScreen());
+                            ShrinesPacketHandler
+                                    .sendToServer(new CTSEditedStructurePacketPacket(newPacket));
+                        })))));// TRANSLATION
+
         this.addButton(new Button((this.width / 4) * 3 + 79, 3, 40, 20, new TranslationTextComponent("Help"), (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Silverminer007/Shrines/wiki")))));
         this.addButton(new Button(this.width / 2 - 3 - 80 - 6 - 80, this.height - 22, 166, 20, new TranslationTextComponent("Import"), (button) -> this.importPacket()));
         this.export = this.addButton(new Button(this.width / 2 + 80 + 9, this.height - 45, 80, 20, new TranslationTextComponent("Export"), (button) -> this.exportPacket()));

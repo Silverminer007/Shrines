@@ -127,17 +127,31 @@
 
 #### SNAPSHOT 15
 - Added Error Splash screens
+- Structure seed modifier shovel during packet import
+- Structure Novels screen now only shows registered structures
+
+##### Problems
+- Previous Problems still affect
+
+#### SNAPSHOT 16
+- Boolean Buttons now always toggle when pressed
+- Fixed Dimensions being multiple times in activated dimensions
+- Activated Pools Tab in Structure Packet Configuration screen
+- Structure Packet Configuration is now done (Structures, Templates and Pools Tab works)
+- Added new Structure option to assign start pool (Requires new packets to appear correctly)
 
 ##### Problems
 - Previous Problems still affect
 
 ##### Notes
 - These versions are alpha builds so anything can change in next release!
+- First Beta release is coming soon
+- Random variant was moved back to 2.0.1
 
 #### Outstanding
-- Add Pools tab to define template pools that jigsaw system can use
-- Add Option to add structure templates from the current world
-- reimplement Random varianting
+- Smaller mod files size -> lower resolution of icons
+- GeneralSettingsScreen rework (includes a bunch of bug fixes)
+- Translations to German and Spanish (and hopefully more)
 
 ## 1.8.1
 ### Beta1

@@ -14,6 +14,7 @@ public class ConfigOptions {
 	public static final String biome_blacklist = "biome blacklist"; // List of Strings
 	public static final String biome_category_whitelist = "biome category whitelist"; // List of Strings
 	public static final String dimension_whitelist = "dimension whitelist"; // List of Strings
+	public static final String start_pool = "start pool";
 	public static final String novel = "novel"; // String
 
 	public static class Comments {// TRANSLATION
@@ -31,6 +32,7 @@ public class ConfigOptions {
 		public static final String biome_blacklist = general + ConfigOptions.biome_blacklist; // List of Strings
 		public static final String biome_category_whitelist = general + ConfigOptions.biome_category_whitelist; // List of Strings
 		public static final String dimension_whitelist = general + ConfigOptions.dimension_whitelist; // List of Strings
+		public static final String start_pool = general + ConfigOptions.start_pool;
 		public static final String novel = general + ConfigOptions.novel; // String
 	}
 }

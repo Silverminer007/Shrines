@@ -24,6 +24,7 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
 
     protected void init() {
         super.init();
+        this.configure.setMessage(new TranslationTextComponent("Rename"));// TRANSLATION
         this.templatesList = new TemplatesList(minecraft, this.width, this.height, this.headerheight, this.bottomheight, 16, () -> this.searchBox.getValue(), packet, this);
         this.children.add(templatesList);
         this.updateButtonStatus();

@@ -5,7 +5,7 @@ import com.silverminer.shrines.structures.load.DefaultedStructureData;
 import net.minecraft.world.biome.Biome.Category;
 
 public class DefaultStructureConfig {
-    public static final DefaultedStructureData CUSTOM = new DefaultedStructureData("", "", 0).setDistance(50)
+    public static final DefaultedStructureData CUSTOM = new DefaultedStructureData("", "", 0).setStartPool("").setDistance(50)
             .setSeperation(8);
 
     public static final DefaultedStructureData ABANDONEDWITCHHOUSE_CONFIG = new DefaultedStructureData(

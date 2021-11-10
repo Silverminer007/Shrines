@@ -102,6 +102,7 @@ minecraft {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
 	runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.6.1-forge")
