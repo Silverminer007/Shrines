@@ -109,7 +109,7 @@ public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
 			header.withStyle(Style.EMPTY.withItalic(!this.structure.registered));
 			String headerRight = " (" + structure.getKey() + ")";
 			String s1 = "Dimensions: " + this.structure.getDimension_whitelist().toString();
-			String s2 = "Distance: " + this.structure.getDistance() + "  Seperation:" + this.structure.getSeperation();
+			String s2 = "Distance: " + this.structure.getDistance() + "  Seperation: " + this.structure.getSeperation();
 
 			this.minecraft.font.draw(ms, header, left, top + 1, this.structure.successful ? 0xffffff : 0xff0000);
 			this.minecraft.font.draw(ms, headerRight, left + this.minecraft.font.width(header), top + 1, 0xc0c0c0);
@@ -129,7 +129,7 @@ public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
 		}
 
 		public void configure() {
-			this.minecraft.setScreen(new ConfigureStructureScreen(screen, structure, packet.possibleDimensions));
+			this.minecraft.setScreen(new ConfigureStructureScreen(screen, structure, packet.possibleDimensions, packet));
 		}
 
 		public StructureData getStructure() {

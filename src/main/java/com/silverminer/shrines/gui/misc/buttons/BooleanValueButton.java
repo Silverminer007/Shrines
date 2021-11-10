@@ -27,13 +27,7 @@ public class BooleanValueButton extends Button {
 	}
 
 	public void onClick(double mouseX, double mouseY) {
-		int x0 = this.x;
-		int middle = this.x + this.width / 2;
-		if (mouseX > x0 && mouseX < middle) {
-			this.value = false;
-		} else {
-			this.value = true;
-		}
+		this.value = !this.value;
 		super.onClick(mouseX, mouseY);
 	}
 

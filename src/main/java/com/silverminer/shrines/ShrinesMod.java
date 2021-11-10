@@ -42,9 +42,7 @@ public class ShrinesMod {
      * TelepathicGrunt's Example Mod on how to do that:
      * https://github.com/TelepathicGrunt/StructureTutorialMod
      * <p>
-     * TODO 2.0.0 add GUI to define pools and assigne a pool to an structure
-     * <p>
-     * TODO 2.0.0 Use processors to perform Color Structure Piece's work
+     * TODO 2.0.1 Use processors to perform Color Structure Piece's work
      * <p>
      * TODO 2.0.0 Test Caves & Cliffs Backport combat
      * <p>
@@ -55,8 +53,6 @@ public class ShrinesMod {
      * TODO Fix GeneralSettings Screen
      * <p>
      * TODO Rebase Translations
-     * <p>
-     * TODO Fix Structure Novel Screen images display
      * <p>
      * Releases: - 2.0.0 Bug fix update - 3.0.0 Mc1.17 Update - 3.0.1 Bugfixes of
      * 3.0.0 and some new features

@@ -1,4 +1,4 @@
-/**
+/*
  * Silverminer (and Team)
  * <p>
  * This library is distributed in the hope that it will be useful,
@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public class ShrinesPacketHandler {
 
-    public static final String PROTOCOL_VERSION = "5.2";
+    public static final String PROTOCOL_VERSION = "5.4";
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(ShrinesMod.MODID, "main_channel"))
             .clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -85,8 +85,12 @@ public class ShrinesPacketHandler {
                 CTSImportStructuresPacketPacket::encode, CTSImportStructuresPacketPacket::decode,
                 CTSImportStructuresPacketPacket::handle);
         CHANNEL.registerMessage(id++, STCErrorPacket.class, STCErrorPacket::encode, STCErrorPacket::decode, STCErrorPacket::handle);
-        LOGGER.info("Initializing networking on version [{}]. This should match between client and server",
-                PROTOCOL_VERSION);
+        CHANNEL.registerMessage(id++, STCClearImagesCachePacket.class, STCClearImagesCachePacket::encode, STCClearImagesCachePacket::decode, STCClearImagesCachePacket::handle);
+        CHANNEL.registerMessage(id++, STCCacheStructureIconsPacket.class, STCCacheStructureIconsPacket::encode, STCCacheStructureIconsPacket::decode, STCCacheStructureIconsPacket::handle);
+        CHANNEL.registerMessage(id++, CTSDeleteTemplatePoolPacket.class, CTSDeleteTemplatePoolPacket::encode, CTSDeleteTemplatePoolPacket::decode, CTSDeleteTemplatePoolPacket::handle);
+        CHANNEL.registerMessage(id++, CTSAddTemplatePoolPacket.class, CTSAddTemplatePoolPacket::encode, CTSAddTemplatePoolPacket::decode, CTSAddTemplatePoolPacket::handle);
+        LOGGER.info("Initializing networking on version [{}]. This should match between client and server. Registered {} packets",
+                PROTOCOL_VERSION, id);
     }
 
     public static void sendTo(IPacket message, PlayerEntity player) {
@@ -98,6 +102,7 @@ public class ShrinesPacketHandler {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> server.getPlayerList().getPlayer(uuid)), message);
     }
 
+    @SuppressWarnings("unused")
     public static void sendToAll(IPacket message) {
         CHANNEL.send(PacketDistributor.ALL.noArg(), message);
     }

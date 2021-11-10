@@ -2,6 +2,7 @@ package com.silverminer.shrines.structures.load;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.utils.StructureLoadUtils;
+import com.silverminer.shrines.utils.TemplatePool;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
@@ -10,10 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StructuresPacket implements Comparable<StructuresPacket> {
@@ -31,6 +29,9 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
     protected List<StructureData> structures;
     // Runtime only
     protected List<ResourceLocation> templates;
+    // Runtime only
+    protected List<TemplatePool> pools;
+
 
     public StructuresPacket(String displayName, String saveName, ListNBT structures, boolean isIncluded, String author) {
         this(displayName, saveName, structures.stream().map((inbt) -> {
@@ -47,6 +48,7 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         this.structures = structures;
         this.isIncluded = isIncluded;
         this.author = author;
+        this.pools = Lists.newArrayList();
     }
 
     public static StructuresPacket read(CompoundNBT nbt, @Nullable File path) {
@@ -89,6 +91,17 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         } else {
             packet.templates = Lists.newArrayList();
         }
+        if (nbt.contains("Pools")) {
+            List<TemplatePool> pools = Lists.newArrayList();
+            CompoundNBT poolsTag = nbt.getCompound("Pools");
+            int i = 0;
+            while (poolsTag.contains(String.valueOf(i))) {
+                CompoundNBT pool = poolsTag.getCompound(String.valueOf(i));
+                pools.add(TemplatePool.read(pool));
+                i++;
+            }
+            packet.pools = pools;
+        }
         // Network Only End
 
         return packet;
@@ -125,6 +138,12 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         }
         compoundNBT.putString("Possible Dimensions", dims.toString());
         compoundNBT.putBoolean("HasIssues", packet.hasIssues);
+        CompoundNBT pools = new CompoundNBT();
+        int i = 0;
+        for (TemplatePool templatePool : packet.pools) {
+            pools.put(String.valueOf(i++), templatePool.write());
+        }
+        compoundNBT.put("Pools", pools);
         return compoundNBT;
     }
 
@@ -179,5 +198,13 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
     public int compareTo(StructuresPacket o) {
         int c = this.getDisplayName().compareTo(o.getDisplayName());
         return c != 0 ? c : this.getSaveName().compareTo(o.getSaveName());
+    }
+
+    public List<TemplatePool> getPools() {
+        return pools;
+    }
+
+    public void setPools(List<TemplatePool> pools) {
+        this.pools = pools;
     }
 }
