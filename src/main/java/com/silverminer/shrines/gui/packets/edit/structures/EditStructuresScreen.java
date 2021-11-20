@@ -51,10 +51,10 @@ public class EditStructuresScreen extends EditStructurePacketScreen {
                     });
                 }
                 this.minecraft.setScreen(this);
-            }, new TranslationTextComponent("gui.shrines.structures.removeQuestion",
+            }, new TranslationTextComponent("gui.shrines.removeQuestion",
                     this.structuresList.getSelected().getStructure().getName()),
-                    new TranslationTextComponent("gui.shrines.structures.removeWarning"),
-                    new TranslationTextComponent("gui.shrines.structures.deleteButton"),
+                    new TranslationTextComponent("gui.shrines.removeWarning"),
+                    new TranslationTextComponent("gui.shrines.delete"),
                     DialogTexts.GUI_CANCEL));
         }
 

@@ -44,15 +44,16 @@ public class ShrinesMod {
      * <p>
      * TODO 2.0.1 Use processors to perform Color Structure Piece's work
      * <p>
+     * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
+     * <p>
+     * <p>
      * TODO 2.0.0 Test Caves & Cliffs Backport combat
      * <p>
      * TODO Fix screenshots for Novels Screen -> size
+     *
+     * FIXME #22 https://github.com/Silverminer007/Shrines/issues/22
      * <p>
-     * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
-     * <p>
-     * TODO Fix GeneralSettings Screen
-     * <p>
-     * TODO Rebase Translations
+     * FIXME Add missing novels @pea_sh0ter
      * <p>
      * Releases: - 2.0.0 Bug fix update - 3.0.0 Mc1.17 Update - 3.0.1 Bugfixes of
      * 3.0.0 and some new features

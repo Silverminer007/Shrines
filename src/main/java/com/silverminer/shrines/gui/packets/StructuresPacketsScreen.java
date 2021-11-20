@@ -48,7 +48,7 @@ public class StructuresPacketsScreen extends Screen {
     protected Button export;
 
     public StructuresPacketsScreen(Screen lastScreen, ArrayList<StructuresPacket> packets) {
-        super(new TranslationTextComponent("Structure Packets"));// TRANSLATION
+        super(new TranslationTextComponent("gui.shrines.packets"));
         this.lastScreen = lastScreen;
         this.packets = packets;
     }
@@ -96,41 +96,41 @@ public class StructuresPacketsScreen extends Screen {
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
 
         this.delete = this.addButton(new Button(this.width / 2 - 80 - 80 - 9, this.height - 45, 80, 20,
-                new TranslationTextComponent("Delete"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::remove)));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.delete"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::remove)));
 
         this.configure = this.addButton(new Button(this.width / 2 - 80 - 3, this.height - 45, 80, 20,
-                new TranslationTextComponent("Configure"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::configure)));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.configure"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::configure)));
 
         this.add = this.addButton(new Button(this.width / 2 + 3, this.height - 22, 166, 20,
-                new TranslationTextComponent("Add"), (button) -> this.minecraft.setScreen(new SetNameScreen(this,
-                new TranslationTextComponent("Enter a Name"),
+                new TranslationTextComponent("gui.shrines.add"), (button) -> this.minecraft.setScreen(new SetNameScreen(this,
+                new TranslationTextComponent("gui.shrines.packets.add.enter_name"),
                 StringTextComponent.EMPTY,
-                new TranslationTextComponent("Your structure package is not necessarily saved under the same name as it is displayed under"),
+                new TranslationTextComponent("gui.shrines.packets.add.info"),
                 (value) -> {
                     StructuresPacket packet = new StructuresPacket(value, null, Lists.newArrayList(),
                             false, this.minecraft.player.getName().getString());
                     this.minecraft.setScreen(new WorkingScreen());
                     ShrinesPacketHandler
                             .sendToServer(new CTSAddedStructurePacketPacket(packet));
-                }))));// TRANSLATION
+                }))));
 
         this.rename = this.addButton(new Button(this.width / 2 + 3, this.height - 45, 80, 20,
-                new TranslationTextComponent("Rename"), (button) -> this.list.getSelectedOpt().ifPresent(entry -> this.minecraft
+                new TranslationTextComponent("gui.shrines.rename"), (button) -> this.list.getSelectedOpt().ifPresent(entry -> this.minecraft
                 .setScreen(new SetNameScreen(this,
-                        new TranslationTextComponent("Enter a new Name"),
+                        new TranslationTextComponent("gui.shrines.packets.rename.enter_name"),
                         new TranslationTextComponent(entry.getPacket().getDisplayName()),
-                        new TranslationTextComponent("Your structure package is not necessarily saved under the same name as it is displayed under"),
+                        new TranslationTextComponent("gui.shrines.packets.rename.info"),
                         (value) -> {
                             StructuresPacket newPacket = entry.getPacket();
                             newPacket.setDisplayName(value);
                             this.minecraft.setScreen(new WorkingScreen());
                             ShrinesPacketHandler
                                     .sendToServer(new CTSEditedStructurePacketPacket(newPacket));
-                        })))));// TRANSLATION
+                        })))));
 
-        this.addButton(new Button((this.width / 4) * 3 + 79, 3, 40, 20, new TranslationTextComponent("Help"), (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Silverminer007/Shrines/wiki")))));
-        this.addButton(new Button(this.width / 2 - 3 - 80 - 6 - 80, this.height - 22, 166, 20, new TranslationTextComponent("Import"), (button) -> this.importPacket()));
-        this.export = this.addButton(new Button(this.width / 2 + 80 + 9, this.height - 45, 80, 20, new TranslationTextComponent("Export"), (button) -> this.exportPacket()));
+        this.addButton(new Button((this.width / 4) * 3 + 79, 3, 40, 20, new TranslationTextComponent("gui.shrines.help"), (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Silverminer007/Shrines/wiki")))));
+        this.addButton(new Button(this.width / 2 - 3 - 80 - 6 - 80, this.height - 22, 166, 20, new TranslationTextComponent("gui.shrines.import"), (button) -> this.importPacket()));
+        this.export = this.addButton(new Button(this.width / 2 + 80 + 9, this.height - 45, 80, 20, new TranslationTextComponent("gui.shrines.export"), (button) -> this.exportPacket()));
         this.updateButtonStatus(false);
         this.children.add(this.searchBox);
         this.children.add(this.list);

@@ -22,7 +22,7 @@ public class WaitInQueueScreen extends Screen {
 	private final ColorLoop loop;
 
 	public WaitInQueueScreen(int position) {
-		super(new TranslationTextComponent(""));// TRANSLATION
+		super(new TranslationTextComponent("gui.shrines.queue"));
 		this.position = position;
 		this.loop = new ColorLoop();
 	}
@@ -43,10 +43,10 @@ public class WaitInQueueScreen extends Screen {
 		this.renderDirtBackground(0);
 		drawCenteredString(matrixStack, this.font,
 				new TranslationTextComponent(
-						"You need to wait. There are " + this.position + " Players before you in queue"),
+						"gui.shrines.queue.info", this.position),
 				this.width / 2, this.height / 2, 0xffffff);
 		drawCenteredString(matrixStack, this.font,
-				new TranslationTextComponent("Please be patient")
+				new TranslationTextComponent("gui.shrines.queue.patient")
 						.setStyle(Style.EMPTY.withColor(Color.fromRgb(this.loop.getRGB()))),
 				this.width / 2, this.height / 2 + 15, 0xffffff);
 		drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 0xffffff);

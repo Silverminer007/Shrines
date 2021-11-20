@@ -23,7 +23,7 @@ public class ConfigureStructureScreen extends Screen {
 	protected final StructuresPacket packet;
 
 	public ConfigureStructureScreen(Screen lastScreen, StructureData structure, List<String> possibleDimensions, StructuresPacket packet) {
-		super(new TranslationTextComponent("Configuration"));// TRANSLATION
+		super(new TranslationTextComponent("gui.shrines.configuration"));
 		this.lastScreen = lastScreen;
 		this.structure = structure;
 		this.possibleDimensions = possibleDimensions;

@@ -68,7 +68,7 @@ public class StructureData implements Comparable<StructureData> {
         this.distance = new IntegerConfigOption(ConfigOptions.distance, data.getDistance(),
                 ConfigOptions.Comments.distance);
         this.seperation = new IntegerConfigOption(ConfigOptions.seperation, data.getSeperation(),
-                ConfigOptions.Comments.seperation);
+                ConfigOptions.Comments.separation);
         this.seed_modifier = new IntegerConfigOption(ConfigOptions.seed_modifier, data.getSeedModifier(),
                 ConfigOptions.Comments.seed_modifier);
         this.height_offset = new IntegerConfigOption(ConfigOptions.height_offset, data.getHeight_offset(),

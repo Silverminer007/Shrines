@@ -50,14 +50,14 @@ public class AddTemplatesList extends ExtendedList<AddTemplatesList.Entry> {
 
     private boolean hasTemplate(ResourceLocation template) {
         if (packet.getTemplates().stream().map(Object::toString).map(temp -> temp.replace(".nbt", "")).anyMatch(temp -> temp.equals(template.toString().replace(".nbt", "")))) {
-            // That expression looks a bit strange at first, but I remove the extension .nbt, and then I add it again to prevent double extensions if there was already one
+            // This expression looks a bit strange at first glance, but I strip the extension .nbt stand and then add it back to avoid duplicate extensions if one was already there
             return true;
         }
         return this.children().stream().map(AddTemplatesList.Entry::getLocation).filter(loc -> loc.toString().equals(template.toString())).count() > 1;
     }
 
     private void updateTemplateDuplicate() {
-        // That expression looks a bit strange at first, but I remove the extension .nbt, and then I add it again to prevent double extensions if there was already one
+        // That expression looks a bit strange at first, but I strip the extension .nbt, and then I add it again to prevent double extensions if there was already one
         // That line is not clean so here is an explanation:
         // I want to set the Save Button to active or inactive.
         // To check if it should be active I read all Templates (new first and old later) and convert their ResourceLocation in Strings

@@ -15,7 +15,7 @@ public class DefaultStructureConfig {
                     "minecraft:birch_forest", "minecraft:birch_forest_hills")
             .setDistance(60).setSeperation(11);
 
-    public static final DefaultedStructureData BALLON_CONFIG = new DefaultedStructureData("Ballon", "balloon", 143665)
+    public static final DefaultedStructureData BALLON_CONFIG = new DefaultedStructureData("Balloon", "balloon", 143665)
             .setDistance(50).setSeperation(8).setTransformLand(false);
 
     public static final DefaultedStructureData BEES_CONFIG = new DefaultedStructureData("Bees", "bees", 779806245)
@@ -36,7 +36,7 @@ public class DefaultStructureConfig {
     public static final DefaultedStructureData HARBOUR_CONFIG = new DefaultedStructureData("Harbour", "harbour",
             651398043).setDistance(50).setSeperation(8).setTransformLand(false).setBiomeCategoryWhitelist(Category.OCEAN);
 
-    public static final DefaultedStructureData HIGHTEMPLE_CONFIG = new DefaultedStructureData("High Tempel",
+    public static final DefaultedStructureData HIGHTEMPLE_CONFIG = new DefaultedStructureData("High Temple",
             "high_temple", 536987987).setDistance(85).setSeperation(18).setNovel(Novels.HIGH_TEMPLE);
 
     public static final DefaultedStructureData JUNGLETOWER_CONFIG = new DefaultedStructureData("Jungle Tower",
@@ -65,7 +65,7 @@ public class DefaultStructureConfig {
     public static final DefaultedStructureData SHRINEOFSAVANNA_CONFIG = new DefaultedStructureData("Shrine of savanna",
             "shrine_of_savanna", 432333099).setDistance(67).setSeperation(11);
 
-    public static final DefaultedStructureData SMALLTEMPLE_CONFIG = new DefaultedStructureData("Small Tempel",
+    public static final DefaultedStructureData SMALLTEMPLE_CONFIG = new DefaultedStructureData("Small Temple",
             "small_temple", 4765321).setDistance(75).setSeperation(13);
 
     public static final DefaultedStructureData TRADER_HOUSE_CONFIG = new DefaultedStructureData("Trader House",

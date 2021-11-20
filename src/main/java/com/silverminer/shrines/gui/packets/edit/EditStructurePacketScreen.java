@@ -34,7 +34,7 @@ public abstract class EditStructurePacketScreen extends Screen implements IUpdat
     protected boolean showHeader;
 
     public EditStructurePacketScreen(StructuresPacket packet) {
-        this(new TranslationTextComponent("Edit Structure Packet"), packet, true);// TRANSLATION
+        this(new TranslationTextComponent("gui.shrines.edit_packet"), packet, true);
     }
 
     public EditStructurePacketScreen(ITextComponent title, StructuresPacket packet, boolean showHeader) {
@@ -63,18 +63,18 @@ public abstract class EditStructurePacketScreen extends Screen implements IUpdat
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
         if (this.showHeader) {
             this.structuresButton = this
-                    .addButton(new Button(2, 24, 150, 20, new TranslationTextComponent("Structures"), (button) -> this.minecraft.setScreen(new EditStructuresScreen(this.packet))));// TRANSLATION
+                    .addButton(new Button(2, 24, 150, 20, new TranslationTextComponent("gui.shrines.structures"), (button) -> this.minecraft.setScreen(new EditStructuresScreen(this.packet))));
             this.templatesButton = this
-                    .addButton(new Button(165, 24, 150, 20, new TranslationTextComponent("Templates"), (button) -> this.minecraft.setScreen(new EditTemplatesScreen(this.packet))));// TRANSLATION
+                    .addButton(new Button(165, 24, 150, 20, new TranslationTextComponent("gui.shrines.templates"), (button) -> this.minecraft.setScreen(new EditTemplatesScreen(this.packet))));
             this.poolsButton = this
-                    .addButton(new Button(326, 24, 150, 20, new TranslationTextComponent("Pools"), (button) -> this.minecraft.setScreen(new EditPoolsScreen(this.packet))));// TRANSLATION
+                    .addButton(new Button(326, 24, 150, 20, new TranslationTextComponent("gui.shrines.pools"), (button) -> this.minecraft.setScreen(new EditPoolsScreen(this.packet))));
         }
         this.delete = this.addButton(new Button(this.width / 2 - 40 - 80 - 3, this.height - 22, 80, 20,
-                new TranslationTextComponent("Delete"), (button) -> this.delete()));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.delete"), (button) -> this.delete()));
         this.configure = this.addButton(new Button(this.width / 2 - 40, this.height - 22, 80, 20,
-                new TranslationTextComponent("Configure"), (button) -> this.renameOrConfigure()));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.configure"), (button) -> this.renameOrConfigure()));
         this.add = this.addButton(new Button(this.width / 2 + 40 + 3, this.height - 22, 80, 20,
-                new TranslationTextComponent("Add"), (button) -> this.add()));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.add"), (button) -> this.add()));
         this.children.add(searchBox);
         this.setInitialFocus(this.searchBox);
     }

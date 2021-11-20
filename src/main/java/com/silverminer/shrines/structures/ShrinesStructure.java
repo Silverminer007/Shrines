@@ -164,7 +164,7 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
             String location = this.feature.structureConfig.getStart_pool();
             LocalDate localdate = LocalDate.now();
             if (this.feature.getFeatureName().contains("balloon") && localdate.get(ChronoField.MONTH_OF_YEAR) == 6) {
-                location += "rainbow";
+                location += "_rainbow";
             }
             ResourceLocation pool = new ResourceLocation(location);
             VillageConfig config = new VillageConfig(

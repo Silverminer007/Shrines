@@ -26,7 +26,7 @@ public class SelectPoolScreen extends Screen implements IDoubleClickScreen {
     protected SelectPoolList templatesList;
 
     public SelectPoolScreen(Screen lastScreen, StructuresPacket packet, StructureData structure, ResourceLocation selectedPool) {
-        super(new TranslationTextComponent("Please select a Template Pool"));// TRANSLATION
+        super(new TranslationTextComponent("gui.shrines.structures.select_pool"));
         this.lastScreen = lastScreen;
         this.packet = packet;
         this.structure = structure;
@@ -51,7 +51,7 @@ public class SelectPoolScreen extends Screen implements IDoubleClickScreen {
                 this.packet, this, selectedPool);
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
         this.set = this.addButton(new Button(this.width / 2 - 50, this.height - 22, 100, 20,
-                new TranslationTextComponent("Set"), (button) -> this.set()));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.set"), (button) -> this.set()));
         this.children.add(searchBox);
         this.children.add(this.templatesList);
         this.setInitialFocus(this.searchBox);

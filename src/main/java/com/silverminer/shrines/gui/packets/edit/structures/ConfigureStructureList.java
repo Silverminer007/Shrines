@@ -122,7 +122,7 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
         @ParametersAreNonnullByDefault
         public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
-            String description = this.option.getOption();
+            String description = new TranslationTextComponent("options.shrines." + this.option.getOption()).getString();
             int descriptionWidth = minecraft.font.width(description);
             int descriptionTop = top + (ConfigureStructureList.this.itemHeight - minecraft.font.lineHeight) / 2;
             minecraft.font.drawShadow(ms, description, left, descriptionTop, 16777215);
@@ -292,8 +292,8 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
         public StringListEntry(ConfigOption<List<String>> option, Supplier<List<String>> value,
                                Consumer<List<String>> saver, List<String> possibleValues) {
             super(option, value, saver);
-            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("Configure"), (button) -> this.minecraft.setScreen(new StringListOptionsScreen(ConfigureStructureList.this.screen, possibleValues,
-                    Lists.newArrayList(this.getter.get()), this.option.getOption(), saver)));// TRANSLATION
+            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new StringListOptionsScreen(ConfigureStructureList.this.screen, possibleValues,
+                    Lists.newArrayList(this.getter.get()), new TranslationTextComponent("options.shrines." + this.option.getOption()), saver)));
             this.children.add(this.button);
         }
 
@@ -323,8 +323,8 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
             this.categoriesOption = categoriesOption;
             this.categoriesSetter = categoriesSaver;
             this.categoriesGetter = categories;
-            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("Configure"), (button) -> this.minecraft.setScreen(new BiomeGenerationSettingsScreen(screen, this.getter.get(),
-                    this.categoriesGetter.get(), this.option.getOption(), this.setter, this.categoriesSetter)));// TRANSLATION
+            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new BiomeGenerationSettingsScreen(screen, this.getter.get(),
+                    this.categoriesGetter.get(), new TranslationTextComponent("options.shrines." + this.option.getOption()), this.setter, this.categoriesSetter)));
             this.children.add(this.button);
         }
 
@@ -347,8 +347,8 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
                          Consumer<String> setter) {
             super(option, value, setter);
             this.button = new Button(0, 0, 70, 20,
-                    value.get().isEmpty() ? new TranslationTextComponent("Set") : new TranslationTextComponent("Change"),
-                    (button) -> this.minecraft.setScreen(new SelectPoolScreen(ConfigureStructureList.this.screen, ConfigureStructureList.this.packet, ConfigureStructureList.this.structure, new ResourceLocation(this.value))));// TRANSLATION
+                    value.get().isEmpty() ? new TranslationTextComponent("gui.shrines.choose") : new TranslationTextComponent("gui.shrines.change"),
+                    (button) -> this.minecraft.setScreen(new SelectPoolScreen(ConfigureStructureList.this.screen, ConfigureStructureList.this.packet, ConfigureStructureList.this.structure, new ResourceLocation(this.value))));
             this.children.add(this.button);
         }
 

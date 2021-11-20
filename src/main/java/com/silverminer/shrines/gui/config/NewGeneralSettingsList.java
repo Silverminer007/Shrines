@@ -6,6 +6,7 @@ import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
 import com.silverminer.shrines.gui.misc.screen.BiomeGenerationSettingsScreen;
 import com.silverminer.shrines.gui.misc.screen.StringListOptionsScreen;
+import com.silverminer.shrines.gui.packets.edit.structures.ConfigureStructureList;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import net.minecraft.client.Minecraft;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.INestedGuiEventHandler;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.ExtendedList;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,10 +25,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -44,14 +43,14 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
     public void refreshList() {
         this.clearEntries();
-        this.addEntry(new DoubleEntry("Distance Factor", Config.SETTINGS.DISTANCE_FACTOR::get, Config.SETTINGS.DISTANCE_FACTOR::set));
-        this.addEntry(new DoubleEntry("Separation Factor", Config.SETTINGS.SEPERATION_FACTOR::get, Config.SETTINGS.SEPERATION_FACTOR::set));
-        this.addEntry(new IntegerEntry("Structures min distance", Config.SETTINGS.STRUCTURE_MIN_DISTANCE::get, Config.SETTINGS.STRUCTURE_MIN_DISTANCE::set, false, false));
-        this.addEntry(new StringListEntry("Biome Blacklist", () -> Config.SETTINGS.BLACKLISTED_BIOMES.get().stream().map(String::toString).collect(Collectors.toList()), Config.SETTINGS.BLACKLISTED_BIOMES::set, ForgeRegistries.BIOMES.getValues().stream().map(o -> o.getRegistryName() != null ? o.getRegistryName().toString() : null).filter(Objects::nonNull).collect(Collectors.toList())));
-        this.addEntry(new BooleanEntry("Advanced Logging", Config.SETTINGS.ADVANCED_LOGGING::get, Config.SETTINGS.ADVANCED_LOGGING::set));
-        this.addEntry(new StringListEntry("Banned Blocks", () -> Config.SETTINGS.BANNED_BLOCKS.get().stream().map(String::toString).collect(Collectors.toList()), Config.SETTINGS.BANNED_BLOCKS::set, ForgeRegistries.BLOCKS.getValues().stream().map(o -> o.getRegistryName() != null ? o.getRegistryName().toString() : null).filter(Objects::nonNull).collect(Collectors.toList())));
-        this.addEntry(new StringListEntry("Banned Entities", () -> Config.SETTINGS.BANNED_ENTITIES.get().stream().map(String::toString).collect(Collectors.toList()), Config.SETTINGS.BANNED_ENTITIES::set, ForgeRegistries.ENTITIES.getValues().stream().map(o -> o.getRegistryName() != null ? o.getRegistryName().toString() : null).filter(Objects::nonNull).collect(Collectors.toList())));
-        this.addEntry(new IntegerEntry("Needed Novels", Config.SETTINGS.NEEDED_NOVELS::get, Config.SETTINGS.NEEDED_NOVELS::set, true, false));
+        this.addEntry(new DoubleEntry("distance_factor", Config.SETTINGS.DISTANCE_FACTOR::get, Config.SETTINGS.DISTANCE_FACTOR::set));
+        this.addEntry(new DoubleEntry("seperation_factor", Config.SETTINGS.SEPERATION_FACTOR::get, Config.SETTINGS.SEPERATION_FACTOR::set));
+        this.addEntry(new IntegerEntry("structure_min_distance", Config.SETTINGS.STRUCTURE_MIN_DISTANCE::get, Config.SETTINGS.STRUCTURE_MIN_DISTANCE::set, false, false));
+        this.addEntry(new StringListEntry("blacklist", () -> Config.SETTINGS.BLACKLISTED_BIOMES.get().stream().map(String::toString).collect(Collectors.toList()), Config.SETTINGS.BLACKLISTED_BIOMES::set, ForgeRegistries.BIOMES.getValues().stream().map(o -> o.getRegistryName() != null ? o.getRegistryName().toString() : null).filter(Objects::nonNull).collect(Collectors.toList())));
+        this.addEntry(new BooleanEntry("advanced_logging", Config.SETTINGS.ADVANCED_LOGGING::get, Config.SETTINGS.ADVANCED_LOGGING::set));
+        this.addEntry(new StringListEntry("banned_blocks", () -> Config.SETTINGS.BANNED_BLOCKS.get().stream().map(String::toString).collect(Collectors.toList()), Config.SETTINGS.BANNED_BLOCKS::set, ForgeRegistries.BLOCKS.getValues().stream().map(o -> o.getRegistryName() != null ? o.getRegistryName().toString() : null).filter(Objects::nonNull).collect(Collectors.toList())));
+        this.addEntry(new StringListEntry("banned_entities", () -> Config.SETTINGS.BANNED_ENTITIES.get().stream().map(String::toString).collect(Collectors.toList()), Config.SETTINGS.BANNED_ENTITIES::set, ForgeRegistries.ENTITIES.getValues().stream().map(o -> o.getRegistryName() != null ? o.getRegistryName().toString() : null).filter(Objects::nonNull).collect(Collectors.toList())));
+        this.addEntry(new IntegerEntry("needed_novels", Config.SETTINGS.NEEDED_NOVELS::get, Config.SETTINGS.NEEDED_NOVELS::set, true, false));
     }
 
     protected int getScrollbarPosition() {
@@ -99,8 +98,15 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
         @ParametersAreNonnullByDefault
         public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
+            ITextComponent option = new TranslationTextComponent("config.shrines." + this.option);
+            int descriptionWidth = this.minecraft.font.width(option);
             int descriptionTop = top + (NewGeneralSettingsList.this.itemHeight - minecraft.font.lineHeight) / 2;
-            minecraft.font.drawShadow(ms, this.option, left, descriptionTop, 16777215);
+            minecraft.font.drawShadow(ms, option, left, descriptionTop, 16777215);
+            if ((mouseX >= left) && (mouseX < (left + descriptionWidth))
+                    && (mouseY >= descriptionTop) && (mouseY < (descriptionTop + minecraft.font.lineHeight))) {
+                List<ITextComponent> comment = Lists.newArrayList(new TranslationTextComponent("config.shrines." + this.option + ".tooltip"));
+                NewGeneralSettingsList.this.screen.renderComponentTooltip(ms, comment, mouseX, mouseY);
+            }
         }
 
         @Override
@@ -261,40 +267,8 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
         public StringListEntry(String option, Supplier<List<String>> value,
                                Consumer<List<String>> saver, List<String> possibleValues) {
             super(option, value, saver);
-            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("Configure"), (button) -> this.minecraft.setScreen(new StringListOptionsScreen(NewGeneralSettingsList.this.screen, possibleValues,
-                    Lists.newArrayList(this.getter.get()), this.option, saver)));// TRANSLATION
-            this.children.add(this.button);
-        }
-
-        @Override
-        @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
-                           boolean isHot, float partialTicks) {
-            super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
-            this.button.x = left + (width / 2);
-            this.button.y = top + (NewGeneralSettingsList.this.itemHeight - this.button.getHeight()) / 2;
-            this.button.render(ms, mouseX, mouseY, partialTicks);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @OnlyIn(Dist.CLIENT)
-    public class BiomeListsEntry extends Entry<List<String>> {
-        protected final Button button;
-        protected final String categoriesOption;
-        protected final Consumer<List<String>> categoriesSetter;
-        protected final Supplier<List<String>> categoriesGetter;
-        protected List<String> value;
-
-        public BiomeListsEntry(String biomesOption, Supplier<List<String>> biomes,
-                               Consumer<List<String>> biomeSaver, String categoriesOption,
-                               Supplier<List<String>> categories, Consumer<List<String>> categoriesSaver) {
-            super(biomesOption, biomes, biomeSaver);
-            this.categoriesOption = categoriesOption;
-            this.categoriesSetter = categoriesSaver;
-            this.categoriesGetter = categories;
-            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("Configure"), (button) -> this.minecraft.setScreen(new BiomeGenerationSettingsScreen(screen, this.getter.get(),
-                    this.categoriesGetter.get(), this.option, this.setter, this.categoriesSetter)));// TRANSLATION
+            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new StringListOptionsScreen(NewGeneralSettingsList.this.screen, possibleValues,
+                    Lists.newArrayList(this.getter.get()), new StringTextComponent(this.option), saver)));
             this.children.add(this.button);
         }
 

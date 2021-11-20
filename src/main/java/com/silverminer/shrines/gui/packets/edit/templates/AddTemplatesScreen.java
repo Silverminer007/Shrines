@@ -39,7 +39,7 @@ public class AddTemplatesScreen extends Screen {
     protected Button infoButton;
 
     protected AddTemplatesScreen(Screen lastScreen, StructuresPacket packet, String[] files) {
-        super(new TranslationTextComponent(""));// TRANSLATION
+        super(new TranslationTextComponent("gui.shrines.templates.add"));
         this.lastScreen = lastScreen;
         this.packet = packet;
         this.files = files;
@@ -70,8 +70,8 @@ public class AddTemplatesScreen extends Screen {
     protected void init() {
         super.init();
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
-        this.saveButton = this.addButton(new Button(this.width - 60 - 2, 2, 60, 20, new TranslationTextComponent("Save"), (button) -> this.save()));// TRANSLATION
-        this.infoButton = this.addButton(new Button(this.width - 60 - 2 - 60 - 2, 2, 60, 20, new TranslationTextComponent("information"), (button) -> {
+        this.saveButton = this.addButton(new Button(this.width - 60 - 2, 2, 60, 20, new TranslationTextComponent("gui.shrines.save"), (button) -> this.save()));
+        this.infoButton = this.addButton(new Button(this.width - 60 - 2 - 20 - 2, 2, 20, 20, new StringTextComponent("?"), (button) -> {
         }, (button, ms, x, y) -> {
             StringBuilder sb = new StringBuilder();
             for (String s : this.invalidFiles) {
@@ -79,7 +79,7 @@ public class AddTemplatesScreen extends Screen {
                 sb.append("\n");
             }
             StringTextComponent invalidFiles = new StringTextComponent(sb.toString());
-            ITextComponent head = new TranslationTextComponent("Left out these files because they aren't valid Template Files", invalidFiles);
+            ITextComponent head = new TranslationTextComponent("gui.shrines.templates.add.left_out", invalidFiles);
             this.renderTooltip(ms, head, x, y);
         }));
         this.infoButton.visible = this.invalidFiles.size() > 0;

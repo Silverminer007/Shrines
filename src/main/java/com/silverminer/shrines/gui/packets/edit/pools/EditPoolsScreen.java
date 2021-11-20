@@ -43,7 +43,7 @@ public class EditPoolsScreen extends EditStructurePacketScreen {
     @Override
     protected void add() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(new SetNameScreen(this, new TranslationTextComponent("Enter a Template Pool Name"), StringTextComponent.EMPTY, StringTextComponent.EMPTY, (value) -> {
+            this.minecraft.setScreen(new SetNameScreen(this, new TranslationTextComponent("gui.shrines.pools.enter_name"), StringTextComponent.EMPTY, StringTextComponent.EMPTY, (value) -> {
                 this.minecraft.setScreen(new WorkingScreen());
                 TemplatePool newPool = new TemplatePool(new ResourceLocation(value), Lists.newArrayList());
                 ShrinesPacketHandler.sendToServer(new CTSAddTemplatePoolPacket(newPool, this.packet.getSaveName()));
@@ -62,10 +62,10 @@ public class EditPoolsScreen extends EditStructurePacketScreen {
                     });
                 }
                 this.minecraft.setScreen(this);
-            }, new TranslationTextComponent("gui.shrines.structures.removeQuestion",
+            }, new TranslationTextComponent("gui.shrines.removeQuestion",
                     this.poolsList.getSelected().getPool().getName().toString()),
-                    new TranslationTextComponent("gui.shrines.structures.removeWarning"),
-                    new TranslationTextComponent("gui.shrines.structures.deleteButton"),
+                    new TranslationTextComponent("gui.shrines.removeWarning"),
+                    new TranslationTextComponent("gui.shrines.delete"),
                     DialogTexts.GUI_CANCEL));
         }
 

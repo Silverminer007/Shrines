@@ -63,10 +63,8 @@ public class NovelsDataRegistry {
 		int i = 0;
 		for (NovelsData novel : NOVELS) {
 			tag.put(String.valueOf(i++), novel.save());
-			ShrinesMod.LOGGER.info("Novels of {} has {} parts, Positions [{}]", novel.getStructure(), novel.getFoundStructuresCount(), novel.getFoundStructures());
 		}
 		tag.putInt("Novels", i);
-		ShrinesMod.LOGGER.info("Saved {} Novels", i);
 		return tag;
 	}
 
