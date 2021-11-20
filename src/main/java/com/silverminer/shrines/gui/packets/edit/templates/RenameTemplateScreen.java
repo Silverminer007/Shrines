@@ -30,7 +30,7 @@ public class RenameTemplateScreen extends Screen {
     protected Button confirmButton;
 
     protected RenameTemplateScreen(Screen lastScreen, ResourceLocation template, StructuresPacket packet) {
-        super(new TranslationTextComponent("Add Structures packet"));// TRANSLATION
+        super(new TranslationTextComponent("gui.shrines.packets.add"));
         this.packet = packet;
         this.lastScreen = lastScreen;
         this.template = template;
@@ -47,14 +47,14 @@ public class RenameTemplateScreen extends Screen {
         if (this.minecraft == null) {
             return;
         }
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true); // Why should I have this?
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         String message = this.nameField == null ? this.template.toString() : this.nameField.getValue();
         this.nameField = new TextFieldWidget(font, this.width / 2 - 75, this.height / 2 - 40, 150, 20,
                 StringTextComponent.EMPTY);
         this.nameField.setValue(message);
         this.nameField.setResponder(this::updateSaveButton);
         this.confirmButton = this.addButton(new Button(this.width / 2 - 70, this.height / 2 + 20, 140, 20,
-                new TranslationTextComponent("Confirm"), (button) -> this.done()));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.confirm"), (button) -> this.done()));
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
         this.children.add(nameField);
         this.updateSaveButton(this.nameField.getValue());
@@ -62,16 +62,16 @@ public class RenameTemplateScreen extends Screen {
 
     private void updateSaveButton(String newName) {
         try {
-            // That expression looks a bit strange at first, but I remove the extension .nbt, and then I add it again to prevent double extensions if there was already one
+            // That expression looks a bit strange at first, but I strip the extension .nbt, and then I add it again to prevent double extensions if there was already one
             this.confirmButton.active = packet.getTemplates().stream().map(Object::toString).map(temp -> temp.replace(".nbt", "")).noneMatch(temp -> temp.equals(new ResourceLocation(newName).toString().replace(".nbt", "")));
             if (this.confirmButton.active) {
                 this.info = StringTextComponent.EMPTY;
             } else {
-                this.info = new TranslationTextComponent("Name already taken");
+                this.info = new TranslationTextComponent("gui.shrines.templates.rename.name_taken");
             }
         } catch (ResourceLocationException e) {
             this.confirmButton.active = false;
-            this.info = new TranslationTextComponent("Invalid Name");
+            this.info = new TranslationTextComponent("gui.shrines.templates.rename.invalid_name");
         }
     }
 
@@ -89,7 +89,7 @@ public class RenameTemplateScreen extends Screen {
     public void render(MatrixStack matrixStack, int x, int y, float p_230430_4_) {
         this.renderDirtBackground(0);
         this.nameField.render(matrixStack, x, y, p_230430_4_);
-        drawCenteredString(matrixStack, this.font, "OldName: " + this.template.toString(), this.width / 2, this.height / 2 - 52, 0xcdcdcd);
+        drawCenteredString(matrixStack, this.font, new TranslationTextComponent("gui.shrines.templates.rename.old_name", this.template.toString()), this.width / 2, this.height / 2 - 52, 0xcdcdcd);
         drawCenteredString(matrixStack, this.font, this.info, this.width / 2, this.height / 2 - 10, 0xaa0000);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 0xffffff);
         super.render(matrixStack, x, y, p_230430_4_);

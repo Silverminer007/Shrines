@@ -48,7 +48,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class StructureLoadUtils {
-    public static final int PACKET_VERSION = 1;
+    public static final int PACKET_VERSION = 2;
     protected static final Logger LOGGER = LogManager.getLogger(StructureLoadUtils.class);
     /**
      * This list is equals to the Structure Packet which the user can see, so Packets that were deleted aren't here anymore, but new packets are here.
@@ -458,7 +458,7 @@ public class StructureLoadUtils {
         for (TemplateIdentifier template : templates) {
             ResourceLocation location = template.getLocation();
             File template_path = FileUtils.getFile(packet_path, "data", location.getNamespace(), "structures", location.getPath() + ".nbt");
-            if (!template_path.getParentFile().mkdirs()) {
+            if (!template_path.getParentFile().isDirectory() && !template_path.getParentFile().mkdirs()) {
                 LOGGER.error("Failed to save new template because directory creation failed");
                 return;
             }
@@ -628,14 +628,12 @@ public class StructureLoadUtils {
                         if (validateStructureKeys(structuresPacket, path.toFile())) {
                             ShrinesPacketHandler.sendTo(new STCErrorPacket("Structures were renamed", "Some structures were renamed to prevent structure key duplicates"), sender);
                         }
-                        File savePath = savePacket(path.toFile().getParentFile(), structuresPacket, Lists.newArrayList());
-                        if (savePath != null) {
-                            File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), savePath.toString());
-                            try {
-                                Files.move(path, packetDest.toPath());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        savePacket(path.toFile().getParentFile(), structuresPacket, Lists.newArrayList());
+                        File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), getSavePath(structuresPacket.getDisplayName()));
+                        try {
+                            Files.move(path, packetDest.toPath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -716,7 +714,7 @@ public class StructureLoadUtils {
     public static void cacheStructureIcons(HashMap<ResourceLocation, byte[]> icons) {
         File cache = StructureLoadUtils.getImagesCacheLocation();
         try {
-            Files.delete(cache.toPath());
+            FileUtils.deleteDirectory(cache);
         } catch (IOException e) {
             LOGGER.error("Failed to delete Images Cache", e);
         }

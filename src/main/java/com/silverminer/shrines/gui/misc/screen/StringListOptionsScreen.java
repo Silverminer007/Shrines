@@ -10,6 +10,7 @@ import com.silverminer.shrines.utils.ClientUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,8 +27,8 @@ public class StringListOptionsScreen extends Screen {
 	protected final Consumer<List<String>> setter;
 
 	public StringListOptionsScreen(Screen lastScreen, List<String> possibleOptions, ArrayList<String> selectedOptions,
-			String title, Consumer<List<String>> setter) {
-		super(new StringTextComponent(title));
+								   ITextComponent title, Consumer<List<String>> setter) {
+		super(title);
 		this.lastScreen = lastScreen;
 		this.possibleValues = possibleOptions;
 		this.selectedValues = selectedOptions;

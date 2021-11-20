@@ -24,7 +24,7 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
 
     protected void init() {
         super.init();
-        this.configure.setMessage(new TranslationTextComponent("Rename"));// TRANSLATION
+        this.configure.setMessage(new TranslationTextComponent("gui.shrines.rename"));
         this.templatesList = new TemplatesList(minecraft, this.width, this.height, this.headerheight, this.bottomheight, 16, () -> this.searchBox.getValue(), packet, this);
         this.children.add(templatesList);
         this.updateButtonStatus();
@@ -40,7 +40,7 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
         if (this.minecraft == null) {
             return;
         }
-        TranslationTextComponent title = new TranslationTextComponent("Select Template Files (*.nbt)");
+        TranslationTextComponent title = new TranslationTextComponent("gui.shrines.templates.add.select");
         String s = TinyFileDialogs.tinyfd_openFileDialog(title.getString(), null, null, null, true);
         if (s == null) {
             return;
@@ -60,9 +60,9 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
                 }
 
                 this.minecraft.setScreen(this);
-            }, new TranslationTextComponent("gui.shrines.structures.removeQuestion", entry.getTemplate()),
-                    new TranslationTextComponent("gui.shrines.structures.removeWarning"),
-                    new TranslationTextComponent("gui.shrines.structures.deleteButton"), DialogTexts.GUI_CANCEL)));
+            }, new TranslationTextComponent("gui.shrines.removeQuestion", entry.getTemplate()),
+                    new TranslationTextComponent("gui.shrines.removeWarning"),
+                    new TranslationTextComponent("gui.shrines.delete"), DialogTexts.GUI_CANCEL)));
 
         }
     }

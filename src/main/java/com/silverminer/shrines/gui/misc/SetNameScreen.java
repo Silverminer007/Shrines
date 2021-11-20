@@ -31,7 +31,7 @@ public class SetNameScreen extends Screen {
     }
 
     public SetNameScreen(Screen lastScreen, ITextComponent title, ITextComponent defaultText, ITextComponent info, Consumer<String> done, Function<String, Boolean> validator) {
-        super(title);// TRANSLATION
+        super(title);
         this.lastScreen = lastScreen;
         this.defaultText = defaultText;
         this.info = info;
@@ -51,7 +51,7 @@ public class SetNameScreen extends Screen {
         this.nameField.setValue(message);
         this.nameField.setResponder(s -> this.confirmButton.active = validator.apply(s));
         this.confirmButton = this.addButton(new Button(this.width / 2 - 70, this.height / 2 + 20, 140, 20,
-                new TranslationTextComponent("Confirm"), (button) -> this.done.accept(this.nameField.getValue())));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.confirm"), (button) -> this.done.accept(this.nameField.getValue())));
         this.confirmButton.active = validator.apply(this.nameField.getValue());
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
         this.children.add(nameField);
@@ -74,14 +74,14 @@ public class SetNameScreen extends Screen {
             }
             drawCenteredString(matrixStack, font,
                     sb,
-                    this.width / 2, this.height / 2 - 16, 0x999999);// TRANSLATION
+                    this.width / 2, this.height / 2 - 16, 0x999999);
             drawCenteredString(matrixStack, font,
                     sb1.toString(),
-                    this.width / 2, this.height / 2 - 4, 0x999999);// TRANSLATION
+                    this.width / 2, this.height / 2 - 4, 0x999999);
         } else {
             drawCenteredString(matrixStack, font,
                     info.getString(),
-                    this.width / 2, this.height / 2 - 16, 0x999999);// TRANSLATION
+                    this.width / 2, this.height / 2 - 16, 0x999999);
         }
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 0xffffff);
         super.render(matrixStack, x, y, p_230430_4_);

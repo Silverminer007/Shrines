@@ -18,7 +18,7 @@ public class ConfigurePoolScreen extends EditStructurePacketScreen {
     protected ConfigurePoolList poolsList;
 
     public ConfigurePoolScreen(Screen lastScreen, StructuresPacket packet, TemplatePool pool) {
-        super(new TranslationTextComponent("Configure Template Pool"), packet, false);// TRANSLATION
+        super(new TranslationTextComponent("gui.shrines.pools.configure_pool"), packet, false);
         this.lastScreen = lastScreen;
         this.pool = pool;
     }
@@ -35,7 +35,7 @@ public class ConfigurePoolScreen extends EditStructurePacketScreen {
     protected void init() {
         super.init();
         this.headerheight = 26;
-        this.delete.setMessage(new TranslationTextComponent("Remove"));
+        this.delete.setMessage(new TranslationTextComponent("gui.shrines.remove"));
         this.poolsList = new ConfigurePoolList(minecraft, this.width, this.height, this.headerheight,
                 this.bottomheight, 23, () -> this.searchBox.getValue(), packet, this, pool);
         this.children.add(poolsList);

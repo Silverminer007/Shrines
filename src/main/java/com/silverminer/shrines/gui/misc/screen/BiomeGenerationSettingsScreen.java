@@ -11,6 +11,7 @@ import com.silverminer.shrines.utils.ClientUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.ImageButton;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,9 +27,9 @@ public class BiomeGenerationSettingsScreen extends Screen {
 	protected final Consumer<List<String>> biomeCategorySetter;
 
 	public BiomeGenerationSettingsScreen(Screen lastScreen, List<String> selectedBiomes,
-			List<String> selectedBiomeCategories, String title, Consumer<List<String>> setter,
-			Consumer<List<String>> categoriesSetter) {
-		super(new StringTextComponent(title));
+										 List<String> selectedBiomeCategories, ITextComponent title, Consumer<List<String>> setter,
+										 Consumer<List<String>> categoriesSetter) {
+		super(title);
 		this.lastScreen = lastScreen;
 		this.selectedBiomes = Lists.newArrayList(selectedBiomes);
 		this.selectedBiomeCategories = Lists.newArrayList(selectedBiomeCategories);

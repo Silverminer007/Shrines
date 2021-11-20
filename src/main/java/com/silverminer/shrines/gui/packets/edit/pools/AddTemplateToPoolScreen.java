@@ -24,7 +24,7 @@ public class AddTemplateToPoolScreen extends Screen implements IDoubleClickScree
     protected SelectTemplatesList templatesList;
 
     public AddTemplateToPoolScreen(Screen lastScreen, StructuresPacket packet, TemplatePool templatePool) {
-        super(new TranslationTextComponent("Please select one or more template(s)"));// TRANSLATION
+        super(new TranslationTextComponent("gui.shrines.pools.select_templates"));
         this.lastScreen = lastScreen;
         this.packet = packet;
         this.templatePool = templatePool;
@@ -41,14 +41,14 @@ public class AddTemplateToPoolScreen extends Screen implements IDoubleClickScree
             return;
         }
         this.searchBox = new TextFieldWidget(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
-                new StringTextComponent(""));
+                StringTextComponent.EMPTY);
         this.searchBox.setResponder(this::refreshList);
         this.templatesList = new SelectTemplatesList(minecraft, this.width, this.height, 26, this.height - 26, 16,
                 () -> this.searchBox.getValue(),
                 packet, this, this.templatePool.getEntries().stream().map(TemplatePool.Entry::getTemplate).collect(Collectors.toList()));
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
         this.add = this.addButton(new Button(this.width / 2 - 50, this.height - 22, 100, 20,
-                new TranslationTextComponent("Add"), (button) -> this.add()));// TRANSLATION
+                new TranslationTextComponent("gui.shrines.add"), (button) -> this.add()));
         this.children.add(searchBox);
         this.children.add(this.templatesList);
         this.setInitialFocus(this.searchBox);

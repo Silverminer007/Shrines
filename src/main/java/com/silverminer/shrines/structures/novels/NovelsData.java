@@ -50,7 +50,6 @@ public class NovelsData {
 	public void addFoundStructure(BlockPos pos) {
 		this.found_structures.add(pos);
 		this.found_structures_count++;
-		LOGGER.info("Found [{}] Structures of {}. Positions: [{}]", this.found_structures_count, this.structure, this.found_structures);
 	}
 
 	public CompoundNBT save() {

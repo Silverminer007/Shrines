@@ -186,15 +186,29 @@
 - Fix Images Cache wasn't cleaned (It's only cleared before a new bunch of images is cached, because hooks of player
   left worlds are fired to late)
 
+### Beta 3
+- Created Translation keys (that required some internal structure config option name changes, which could cause issues)
+- Added English, german and Spanish Translation
+- Increased size of the Admin Mode Button in Novels View to have enough space for text strings
+- Made Packet list translatable and fixed pools amount display
+- Fixed Structure Packet import throws error and sometimes crashes
+- Increased Packet version
+
+#### Know Issues
+- https://github.com/Silverminer007/Shrines/issues/22
+- Some chars in spanish translations aren't properly displayed
+
 ##### Notes
 
 - These versions are beta builds so major issues may arise
 - Random variant was moved back to 2.0.1
+- It's always a good idea to create a new structure packet if something does not work as expected
 
 #### Outstanding
 
 - Smaller mod files size -> lower resolution of icons
-- Translations to German and Spanish (and hopefully more)
+- Legacy Structure import (structures created with versions below 2.0.0)
+- Include a novel for every structure
 
 ## 1.8.1
 

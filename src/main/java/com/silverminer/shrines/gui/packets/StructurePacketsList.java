@@ -109,8 +109,8 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 		public void render(MatrixStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
 				int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			String header = packet.getDisplayName() + " (" + packet.getSaveName() + ")";
-			String s1 = "Author: " + this.packet.getAuthor();
-			String s2 = "Structures: " + this.packet.getStructures().size() + "  Templates: " + this.packet.getStructures().size() + "  Pools:" + "";
+			String s1 = new TranslationTextComponent("gui.shrines.author").getString() + ": " + this.packet.getAuthor();
+			String s2 = new TranslationTextComponent("gui.shrines.structures").getString() + ": " + this.packet.getStructures().size() + " " + new TranslationTextComponent("gui.shrines.templates").getString() + ": " + this.packet.getStructures().size() + " " + new TranslationTextComponent("gui.shrines.pools").getString() + ": " + this.getPacket().getPools().size();
 
 			this.minecraft.font.draw(ms, header, left, top + 1, this.packet.hasIssues ? 0xff0000 : 0xffffff);
 			this.minecraft.font.draw(ms, s1, left, top + 9 + 3, 8421504);
@@ -141,9 +141,9 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 				}
 
 				this.minecraft.setScreen(StructurePacketsList.this.screen);
-			}, new TranslationTextComponent("gui.shrines.structures.removeQuestion", this.packet.getDisplayName()),
-					new TranslationTextComponent("gui.shrines.structures.removeWarning"),
-					new TranslationTextComponent("gui.shrines.structures.deleteButton"), DialogTexts.GUI_CANCEL));
+			}, new TranslationTextComponent("gui.shrines.removeQuestion", this.packet.getDisplayName()),
+					new TranslationTextComponent("gui.shrines.removeWarning"),
+					new TranslationTextComponent("gui.shrines.delete"), DialogTexts.GUI_CANCEL));
 		}
 
 		public StructuresPacket getPacket() {

@@ -21,7 +21,7 @@ public class ConfigurePoolEntryScreen extends Screen {
 	protected ConfigurePoolEntryList list;
 
 	public ConfigurePoolEntryScreen(Screen lastScreen, TemplatePool.Entry poolEntry) {
-		super(new TranslationTextComponent("Configuration"));// TRANSLATION
+		super(new TranslationTextComponent("gui.shrines.configuration"));
 		this.lastScreen = lastScreen;
 		this.poolEntry = poolEntry;
 	}

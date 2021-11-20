@@ -31,7 +31,7 @@ public class StructureNovelsScreen extends Screen {
     private int itemSize = 50;
 
     public StructureNovelsScreen(Screen lastScreen, ArrayList<StructuresPacket> packets) {
-        super(new TranslationTextComponent("Shrines Structures Novels"));// TRANSLATION
+        super(new TranslationTextComponent("gui.shrines.novels.title"));
         this.lastScreen = lastScreen;
         this.packets = packets;
     }
@@ -49,10 +49,9 @@ public class StructureNovelsScreen extends Screen {
                 .getValue(), packets);
         this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
                 ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
-        // TRANSLATION
         AbstractSlider sizeSlider = this.addButton(new AbstractSlider((this.width / 4) * 3 - 20, 29, 100, 20,
                 new TranslationTextComponent("gui.shrines.novels.item_size"),
-                this.itemSize <= 50 ? 0.0D : (this.itemSize - 50) / 100.0D) {// TRANSLATION
+                this.itemSize <= 50 ? 0.0D : (this.itemSize - 50) / 100.0D) {
             {
                 this.updateMessage();
             }
@@ -68,8 +67,8 @@ public class StructureNovelsScreen extends Screen {
             }
         });
         sizeSlider.visible = this.isExpanded;
-        Button opMode = this.addButton(new Button((this.width / 2) - 50, 29, 100, 20,
-                new TranslationTextComponent("Open OP Mode"), (button) -> this.addPlayerToQueue()));// TRANSLATION
+        Button opMode = this.addButton(new Button((this.width / 2) - 75, 29, 150, 20,
+                new TranslationTextComponent("gui.shrines.open_admin_mode"), (button) -> this.addPlayerToQueue()));
         opMode.active = this.minecraft.player.hasPermissions(2);
         opMode.visible = this.isExpanded;
         this.addButton(new Button((this.width / 4) * 3 + 90, 4, 20, 20,

@@ -2,8 +2,6 @@ package com.silverminer.shrines.gui.config;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.structures.load.StructureData;
-import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.ClientUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -13,7 +11,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class NewGeneralSettingsScreen extends Screen {
@@ -21,7 +18,7 @@ public class NewGeneralSettingsScreen extends Screen {
     protected NewGeneralSettingsList list;
 
     public NewGeneralSettingsScreen(Screen lastScreen) {
-        super(new TranslationTextComponent("Configuration"));// TRANSLATION
+        super(new TranslationTextComponent("gui.shrines.configuration"));
         this.lastScreen = lastScreen;
     }
 
