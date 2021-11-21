@@ -142,27 +142,24 @@ public class StructureLoadUtils {
                     break;
                 }
             }
+            // Check for structure key duplicates and disable affected structures
+            checkStructureKeyDuplicates(structure_packets);
             // Save Structure Packets for later use
             STRUCTURE_PACKETS = structure_packets;
-            // Check for structure key duplicates and disable affected structures
-            checkStructureKeyDuplicates();
             if (!has_included_structures) {
                 StructureLoadUtils.saveStructures(StructureLoadUtils.getIncludedStructures());
-                //structure_packets.add(StructureLoadUtils.getIncludedStructures());
-                // Save structures to write new created Included Structures Packet
-                //StructureLoadUtils.saveStructures();
             }
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
-    public static void checkStructureKeyDuplicates() {
+    public static void checkStructureKeyDuplicates(List<StructuresPacket> structuresPackets) {
         HashMap<String, StructuresPacket> temp = Maps.newHashMap();
         ArrayList<StructuresPacket> packets_with_issue = Lists.newArrayList();
         // Check for duplicated structure names and warn/stop loading the structure and
         // open GUI after start
-        for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
+        for (StructuresPacket packet : structuresPackets) {
             String packet_name = packet.getSaveName();
             for (StructureData data : packet.getStructures()) {
                 String key = data.getKey();
@@ -178,7 +175,7 @@ public class StructureLoadUtils {
                 temp.put(key, packet);
             }
         }
-        for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
+        for (StructuresPacket packet : structuresPackets) {
             packet.hasIssues = packets_with_issue.contains(packet);
         }
     }
@@ -622,34 +619,36 @@ public class StructureLoadUtils {
             }
             saveDestination = Files.write(saveDestination.toPath(), archive).toFile();
             if (ZIPUtils.extractArchive(saveDestination, StructureLoadUtils.getImportCacheLocation())) {
-                Files.find(StructureLoadUtils.getImportCacheLocation().toPath(), 1, ((path, basicFileAttributes) -> Files.isDirectory(path))).forEach(path -> {
-                    StructuresPacket structuresPacket = StructureLoadUtils.loadStructuresPacket(path);
-                    if (structuresPacket != null) {
-                        if (validateStructureKeys(structuresPacket, path.toFile())) {
-                            ShrinesPacketHandler.sendTo(new STCErrorPacket("Structures were renamed", "Some structures were renamed to prevent structure key duplicates"), sender);
-                        }
-                        savePacket(path.toFile().getParentFile(), structuresPacket, Lists.newArrayList());
-                        File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), getSavePath(structuresPacket.getDisplayName()));
-                        try {
-                            Files.move(path, packetDest.toPath());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                Files.find(StructureLoadUtils.getImportCacheLocation().toPath(), 1, ((path, basicFileAttributes) -> Files.isDirectory(path))).forEach(path -> importUpToDatePacket(path, sender));
             } else {
                 LOGGER.error("Failed to decompress archive");
                 ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", "Failed to decompress archive"),
                         sender);
             }
         } catch (Exception e) {
-            ShrinesPacketHandler.sendTo(new STCErrorPacket("", e.getMessage()), sender);
+            ShrinesPacketHandler.sendTo(new STCErrorPacket("Failed to import Structures Packet", e.getMessage()), sender);
         }
         StructureLoadUtils.loadStructures();
         ArrayList<StructuresPacket> packets = Lists.newArrayList();
         packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
         ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
                 sender);
+    }
+
+    private static void importUpToDatePacket(Path path, ServerPlayerEntity sender) {
+        StructuresPacket structuresPacket = StructureLoadUtils.loadStructuresPacket(path);
+        if (structuresPacket != null) {
+            if (validateStructureKeys(structuresPacket, path.toFile())) {
+                ShrinesPacketHandler.sendTo(new STCErrorPacket("Structures were renamed", "Some structures were renamed to prevent structure key duplicates"), sender);
+            }
+            savePacket(path.toFile().getParentFile(), structuresPacket, Lists.newArrayList());
+            File packetDest = new File(StructureLoadUtils.getPacketsSaveLocation(), getSavePath(structuresPacket.getDisplayName()));
+            try {
+                Files.move(path, packetDest.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static boolean validateStructureKeys(StructuresPacket packet, File savePath) {

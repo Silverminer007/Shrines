@@ -58,6 +58,7 @@
   "gui.shrines.confirm": "Confirm",
   "gui.shrines.help": "Help",
   "gui.shrines.import": "Import",
+  "gui.shrines.import.legacy": "Import Legacy",
   "gui.shrines.export": "Export",
   "gui.shrines.author": "Author",
   "_comment_options": "",

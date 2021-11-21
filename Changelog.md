@@ -187,6 +187,7 @@
   left worlds are fired to late)
 
 ### Beta 3
+
 - Created Translation keys (that required some internal structure config option name changes, which could cause issues)
 - Added English, german and Spanish Translation
 - Increased size of the Admin Mode Button in Novels View to have enough space for text strings
@@ -195,8 +196,15 @@
 - Increased Packet version
 
 #### Know Issues
+
 - https://github.com/Silverminer007/Shrines/issues/22
 - Some chars in spanish translations aren't properly displayed
+
+### Beta 4
+
+- Added missing error splash title
+- Added legacy structures packet import which allows you to import structures that you have created with versions below
+  2.0.0 as structures packet in the new system
 
 ##### Notes
 
@@ -207,7 +215,6 @@
 #### Outstanding
 
 - Smaller mod files size -> lower resolution of icons
-- Legacy Structure import (structures created with versions below 2.0.0)
 - Include a novel for every structure
 
 ## 1.8.1

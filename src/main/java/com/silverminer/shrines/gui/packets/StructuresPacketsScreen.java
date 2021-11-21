@@ -2,12 +2,14 @@ package com.silverminer.shrines.gui.packets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.gui.packets.edit.pools.EditPoolsScreen;
 import com.silverminer.shrines.gui.misc.SetNameScreen;
+import com.silverminer.shrines.gui.packets.edit.pools.EditPoolsScreen;
 import com.silverminer.shrines.gui.packets.edit.structures.EditStructuresScreen;
 import com.silverminer.shrines.gui.packets.edit.templates.EditTemplatesScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.ClientUtils;
+import com.silverminer.shrines.utils.LegacyPacketImportUtils;
+import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.*;
 import net.minecraft.client.gui.screen.Screen;
@@ -101,7 +103,7 @@ public class StructuresPacketsScreen extends Screen {
         this.configure = this.addButton(new Button(this.width / 2 - 80 - 3, this.height - 45, 80, 20,
                 new TranslationTextComponent("gui.shrines.configure"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::configure)));
 
-        this.add = this.addButton(new Button(this.width / 2 + 3, this.height - 22, 166, 20,
+        this.add = this.addButton(new Button(this.width / 2 + 55 + 4, this.height - 22, 110, 20,
                 new TranslationTextComponent("gui.shrines.add"), (button) -> this.minecraft.setScreen(new SetNameScreen(this,
                 new TranslationTextComponent("gui.shrines.packets.add.enter_name"),
                 StringTextComponent.EMPTY,
@@ -129,7 +131,8 @@ public class StructuresPacketsScreen extends Screen {
                         })))));
 
         this.addButton(new Button((this.width / 4) * 3 + 79, 3, 40, 20, new TranslationTextComponent("gui.shrines.help"), (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Silverminer007/Shrines/wiki")))));
-        this.addButton(new Button(this.width / 2 - 3 - 80 - 6 - 80, this.height - 22, 166, 20, new TranslationTextComponent("gui.shrines.import"), (button) -> this.importPacket()));
+        this.addButton(new Button(this.width / 2 - 55, this.height - 22, 110, 20, new TranslationTextComponent("gui.shrines.import"), (button) -> this.importUpToDatePacket()));
+        this.addButton(new Button(this.width / 2 - 55 - 4 - 110, this.height - 22, 110, 20, new TranslationTextComponent("gui.shrines.import.legacy"), (button) -> this.importLegacyPacket()));
         this.export = this.addButton(new Button(this.width / 2 + 80 + 9, this.height - 45, 80, 20, new TranslationTextComponent("gui.shrines.export"), (button) -> this.exportPacket()));
         this.updateButtonStatus(false);
         this.children.add(this.searchBox);
@@ -152,11 +155,11 @@ public class StructuresPacketsScreen extends Screen {
         this.export.active = hasSelected;
     }
 
-    public void importPacket() {
+    public void importUpToDatePacket() {
         if (this.minecraft == null) {
             return;
         }
-        TranslationTextComponent title = new TranslationTextComponent("Select Structures Export File (*.zip)");
+        TranslationTextComponent title = new TranslationTextComponent("gui.shrines.import.select");
         String s = TinyFileDialogs.tinyfd_openFileDialog(title.getString(), null, null, null, false);
         if (s == null) {
             return;
@@ -170,11 +173,22 @@ public class StructuresPacketsScreen extends Screen {
         }
     }
 
+    public void importLegacyPacket() {
+        if (this.minecraft != null && this.minecraft.player != null) {
+            TranslationTextComponent title = new TranslationTextComponent("gui.shrines.import.legacy.select");
+            String s = TinyFileDialogs.tinyfd_selectFolderDialog(title.getString(), StructureLoadUtils.getShrinesSavesLocation().toString());
+            if(s == null){
+                return;
+            }
+            LegacyPacketImportUtils.importLegacyPacket(Paths.get(s), this.minecraft.player);
+        }
+    }
+
     public void exportPacket() {
         if (this.minecraft == null) {
             return;
         }
-        TranslationTextComponent title = new TranslationTextComponent("Selected a Directory where to export the structures packet");
+        TranslationTextComponent title = new TranslationTextComponent("gui.shrines.export.select");
         String s = TinyFileDialogs.tinyfd_selectFolderDialog(title.getString(), System.getProperty("user.home"));
         if (s == null) {
             return;

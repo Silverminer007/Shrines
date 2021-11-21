@@ -1,22 +1,12 @@
 package com.silverminer.shrines.utils.network.cts;
 
-import com.google.common.collect.Lists;
-import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.StructureLoadUtils;
-import com.silverminer.shrines.utils.ZIPUtils;
 import com.silverminer.shrines.utils.network.IPacket;
-import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import com.silverminer.shrines.utils.network.stc.STCErrorPacket;
-import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public class CTSImportStructuresPacketPacket implements IPacket {
