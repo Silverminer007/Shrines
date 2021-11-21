@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public class ShrinesPacketHandler {
 
-    public static final String PROTOCOL_VERSION = "5.4";
+    public static final String PROTOCOL_VERSION = "5.5";
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(ShrinesMod.MODID, "main_channel"))
             .clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -89,6 +89,7 @@ public class ShrinesPacketHandler {
         CHANNEL.registerMessage(id++, STCCacheStructureIconsPacket.class, STCCacheStructureIconsPacket::encode, STCCacheStructureIconsPacket::decode, STCCacheStructureIconsPacket::handle);
         CHANNEL.registerMessage(id++, CTSDeleteTemplatePoolPacket.class, CTSDeleteTemplatePoolPacket::encode, CTSDeleteTemplatePoolPacket::decode, CTSDeleteTemplatePoolPacket::handle);
         CHANNEL.registerMessage(id++, CTSAddTemplatePoolPacket.class, CTSAddTemplatePoolPacket::encode, CTSAddTemplatePoolPacket::decode, CTSAddTemplatePoolPacket::handle);
+        CHANNEL.registerMessage(id++, CTSImportLegacyStructuresPacket.class, CTSImportLegacyStructuresPacket::encode, CTSImportLegacyStructuresPacket::decode, CTSImportLegacyStructuresPacket::handle);
         LOGGER.info("Initializing networking on version [{}]. This should match between client and server. Registered {} packets",
                 PROTOCOL_VERSION, id);
     }
@@ -111,7 +112,7 @@ public class ShrinesPacketHandler {
         if (Minecraft.getInstance().getConnection() != null) {
             CHANNEL.sendToServer(message);
         } else {
-            LOGGER.error("Failed to send custom structure data to server because connections are death");
+            LOGGER.error("Failed to send shrines packets because connections aren't initialized");
         }
     }
 }

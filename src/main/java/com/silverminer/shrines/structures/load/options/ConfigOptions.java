@@ -17,7 +17,7 @@ public class ConfigOptions {
 	public static final String start_pool = "start_pool";
 	public static final String novel = "novel"; // String
 
-	public static class Comments {// TRANSLATION
+	public static class Comments {
 		public static final String general_prefix = "options.shrines.";
 		public static final String general_suffix = ".comment";
 		public static final String name = general_prefix + ConfigOptions.name + general_suffix;// String
