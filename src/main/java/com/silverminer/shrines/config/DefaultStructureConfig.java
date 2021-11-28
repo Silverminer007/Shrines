@@ -63,7 +63,7 @@ public class DefaultStructureConfig {
             "infested_prison", 567483014).setDistance(60).setSeperation(11);
 
     public static final DefaultedStructureData SHRINEOFSAVANNA_CONFIG = new DefaultedStructureData("Shrine of savanna",
-            "shrine_of_savanna", 432333099).setDistance(67).setSeperation(11);
+            "shrine_of_savanna", 432333099).setBiomeCategoryWhitelist(Category.SAVANNA).setDistance(67).setSeperation(11);
 
     public static final DefaultedStructureData SMALLTEMPLE_CONFIG = new DefaultedStructureData("Small Temple",
             "small_temple", 4765321).setDistance(75).setSeperation(13);

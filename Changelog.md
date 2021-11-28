@@ -206,6 +206,16 @@
 - Added legacy structures packet import which allows you to import structures that you have created with versions below
   2.0.0 as structures packet in the new system
 
+### Beta 5
+
+- Replaced huge structure icons with 256x256 pixel versions -> mod files size is now much smaller
+- Fixed default biome whitelist setting for shrine of savanna
+
+### Beta 6
+
+- Added missing structure icons of harbour and shrine of savanna
+- Changed guardian meetings icon
+
 ##### Notes
 
 - These versions are beta builds so major issues may arise
@@ -214,7 +224,6 @@
 
 #### Outstanding
 
-- Smaller mod files size -> lower resolution of icons
 - Include a novel for every structure
 
 ## 1.8.1
