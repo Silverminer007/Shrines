@@ -6,14 +6,13 @@ import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.TemplateIdentifier;
 import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import com.silverminer.shrines.utils.network.stc.STCEditStructuresPacketPacket;
 import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTSizeTracker;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class CTSImportLegacyStructuresPacket implements IPacket {
         this.packet = packet;
     }
 
-    public static void encode(CTSImportLegacyStructuresPacket pkt, PacketBuffer buf) {
+    public static void encode(CTSImportLegacyStructuresPacket pkt, FriendlyByteBuf buf) {
         buf.writeInt(pkt.templates.size());
         for (TemplateIdentifier template : pkt.templates) {
             buf.writeNbt(template.write());
@@ -36,11 +35,11 @@ public class CTSImportLegacyStructuresPacket implements IPacket {
         buf.writeNbt(StructuresPacket.saveToNetwork(pkt.packet));
     }
 
-    public static CTSImportLegacyStructuresPacket decode(PacketBuffer buf) {
+    public static CTSImportLegacyStructuresPacket decode(FriendlyByteBuf buf) {
         int templateCount = buf.readInt();
         ArrayList<TemplateIdentifier> templates = Lists.newArrayList();
         for (int i = 0; i < templateCount; i++) {
-            CompoundNBT nbt = buf.readNbt(NBTSizeTracker.UNLIMITED);// Not really save, but template files can be huge and general size limit is to low
+            CompoundTag nbt = buf.readNbt(NbtAccounter.UNLIMITED);// Not really save, but template files can be huge and general size limit is to low
             if (nbt == null) {
                 continue;
             }
@@ -55,7 +54,7 @@ public class CTSImportLegacyStructuresPacket implements IPacket {
     }
 
     private static class Handle {
-        public static DistExecutor.SafeRunnable handle(CTSImportLegacyStructuresPacket packet, ServerPlayerEntity sender) {
+        public static DistExecutor.SafeRunnable handle(CTSImportLegacyStructuresPacket packet, ServerPlayer sender) {
             return new DistExecutor.SafeRunnable() {
 
                 private static final long serialVersionUID = 1L;
@@ -66,7 +65,7 @@ public class CTSImportLegacyStructuresPacket implements IPacket {
                     String packetID = packet.packet.getSaveName();
                     StructureLoadUtils.addTemplatesToPacket(packet.templates, packetID);
                     ArrayList<StructuresPacket> packets = Lists.newArrayList();
-                    packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+                    packets.addAll(StructureLoadUtils.getStructurePackets());
                     ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
                             sender);
                 }

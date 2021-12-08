@@ -12,13 +12,14 @@
 package com.silverminer.shrines.gui.misc.screen;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.INestedGuiEventHandler;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +35,7 @@ import java.util.function.Supplier;
  * @author Silverminer
  */
 @OnlyIn(Dist.CLIENT)
-public class StringListOptionsList extends ExtendedList<StringListOptionsList.Entry> {
+public class StringListOptionsList extends ObjectSelectionList<StringListOptionsList.Entry> {
     protected static final Logger LOGGER = LogManager.getLogger();
     private final StringListOptionsScreen screen;
 
@@ -82,14 +83,14 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
     }
 
     @OnlyIn(Dist.CLIENT)
-    public final class Entry extends ExtendedList.AbstractListEntry<StringListOptionsList.Entry>
-            implements INestedGuiEventHandler {
-        private final ArrayList<IGuiEventListener> children = Lists.newArrayList();
+    public final class Entry extends ObjectSelectionList.Entry<StringListOptionsList.Entry>
+            implements ContainerEventHandler {
+        private final ArrayList<GuiEventListener> children = Lists.newArrayList();
         private final Minecraft minecraft;
         private final BooleanValueButton button;
         private final String opt;
         @Nullable
-        private IGuiEventListener focused;
+        private GuiEventListener focused;
         private boolean dragging;
         private boolean active;
 
@@ -97,7 +98,7 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
             this.opt = option;
             this.active = active;
             this.minecraft = Minecraft.getInstance();
-            this.button = new BooleanValueButton(0, 0, StringTextComponent.EMPTY, (button) -> {
+            this.button = new BooleanValueButton(0, 0, TextComponent.EMPTY, (button) -> {
                 this.setActive(((BooleanValueButton) button).value);
                 if (this.active) {
                     if (!StringListOptionsList.this.screen.selectedValues.contains(opt))
@@ -115,7 +116,7 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
 
         @ParametersAreNonnullByDefault
         @Override
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             int descriptionTop = top + (StringListOptionsList.this.itemHeight - minecraft.font.lineHeight) / 2;
             minecraft.font.drawShadow(ms, this.opt, left, descriptionTop, 16777215);
@@ -126,7 +127,7 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
 
         @Nonnull
         @Override
-        public List<? extends IGuiEventListener> children() {
+        public List<? extends GuiEventListener> children() {
             return children;
         }
 
@@ -139,12 +140,17 @@ public class StringListOptionsList extends ExtendedList<StringListOptionsList.En
         }
 
         @Nullable
-        public IGuiEventListener getFocused() {
+        public GuiEventListener getFocused() {
             return this.focused;
         }
 
-        public void setFocused(@Nullable IGuiEventListener p_231035_1_) {
+        public void setFocused(@Nullable GuiEventListener p_231035_1_) {
             this.focused = p_231035_1_;
+        }
+
+        @Override
+        public Component getNarration() {
+            return new TextComponent(this.opt);
         }
     }
 }

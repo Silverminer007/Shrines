@@ -10,10 +10,10 @@ import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 public class CTSDeletedStructurePacketPacket implements IPacket {
 	private final String packet;
@@ -22,11 +22,11 @@ public class CTSDeletedStructurePacketPacket implements IPacket {
 		this.packet = packet;
 	}
 
-	public static void encode(CTSDeletedStructurePacketPacket pkt, PacketBuffer buf) {
+	public static void encode(CTSDeletedStructurePacketPacket pkt, FriendlyByteBuf buf) {
 		buf.writeUtf(pkt.packet);
 	}
 
-	public static CTSDeletedStructurePacketPacket decode(PacketBuffer buf) {
+	public static CTSDeletedStructurePacketPacket decode(FriendlyByteBuf buf) {
 		return new CTSDeletedStructurePacketPacket(buf.readUtf());
 	}
 
@@ -36,7 +36,7 @@ public class CTSDeletedStructurePacketPacket implements IPacket {
 	}
 
 	private static class Handle {
-		public static DistExecutor.SafeRunnable handle(CTSDeletedStructurePacketPacket packet, ServerPlayerEntity sender) {
+		public static DistExecutor.SafeRunnable handle(CTSDeletedStructurePacketPacket packet, ServerPlayer sender) {
 			return new DistExecutor.SafeRunnable() {
 
 				private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class CTSDeletedStructurePacketPacket implements IPacket {
 				public void run() {
 					StructureLoadUtils.deleteStructuresPacket(packet.packet);
 					ArrayList<StructuresPacket> packets = Lists.newArrayList();
-					packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+					packets.addAll(StructureLoadUtils.getStructurePackets());
 					ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
 							sender);
 				}

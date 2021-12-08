@@ -1,14 +1,7 @@
 package com.silverminer.shrines.gui.novels;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.gui.misc.IconList;
 import com.silverminer.shrines.gui.novels.StructureNovelsList.StructureNovelsEntry;
@@ -16,15 +9,17 @@ import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSFetchNovelAmountPacket;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
 public class StructureNovelsList extends IconList<StructureNovelsEntry> {
@@ -51,6 +46,16 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 		}
 	}
 
+	@Override
+	public NarrationPriority narrationPriority() {
+		return null;
+	}
+
+	@Override
+	public void updateNarration(NarrationElementOutput p_169152_) {
+
+	}
+
 	public class StructureNovelsEntry extends IconList.AbstractListEntry<StructureNovelsEntry> {
 		private final Minecraft minecraft;
 		private final StructureData data;
@@ -65,18 +70,18 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public void render(MatrixStack matrixStack, int x1, int x, int y, int y2, int p_230432_6_, int p_230432_7_,
-				int p_230432_8_, boolean isHovered, float p_230432_10_, int itemSize) {
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.minecraft.getTextureManager().bind(this.iconLocation);
+		public void render(PoseStack matrixStack, int x1, int x, int y, int y2, int p_230432_6_, int p_230432_7_,
+						   int p_230432_8_, boolean isHovered, float p_230432_10_, int itemSize) {
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderTexture(0, this.iconLocation);
 			RenderSystem.enableBlend();
-			AbstractGui.blit(matrixStack, y, x, 0.0F, 0.0F, itemSize, itemSize, itemSize, itemSize);
+			blit(matrixStack, y, x, 0.0F, 0.0F, itemSize, itemSize, itemSize, itemSize);
 			if (isHovered || StructureNovelsList.this.getSelected() == this) {
 				RenderSystem.disableTexture();
-				Tessellator tessellator = Tessellator.getInstance();
+				Tesselator tessellator = Tesselator.getInstance();
 				BufferBuilder bufferbuilder = tessellator.getBuilder();
-				RenderSystem.color4f(0.0F, 0.0F, 0.0F, 0.75F);
-				bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
+				RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 0.75F);
+				bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 				int j = itemSize - itemSize / 4;
 				y = y + itemSize;
 				bufferbuilder.vertex((double) y - itemSize, (double) x + j, 0.0D).endVertex();// A

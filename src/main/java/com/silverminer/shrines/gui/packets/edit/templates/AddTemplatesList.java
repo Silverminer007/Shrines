@@ -1,16 +1,17 @@
 package com.silverminer.shrines.gui.packets.edit.templates;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.INestedGuiEventHandler;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class AddTemplatesList extends ExtendedList<AddTemplatesList.Entry> {
+public class AddTemplatesList extends ObjectSelectionList<AddTemplatesList.Entry> {
     protected static final Logger LOGGER = LogManager.getLogger(AddTemplatesList.class);
     private final AddTemplatesScreen screen;
     private final StructuresPacket packet;
@@ -87,20 +88,20 @@ public class AddTemplatesList extends ExtendedList<AddTemplatesList.Entry> {
         return Optional.ofNullable(this.getSelected());
     }
 
-    public final class Entry extends ExtendedList.AbstractListEntry<AddTemplatesList.Entry> implements INestedGuiEventHandler {
-        private final TextFieldWidget textField;
+    public final class Entry extends ObjectSelectionList.Entry<AddTemplatesList.Entry> implements ContainerEventHandler {
+        private final EditBox textField;
         private final Minecraft minecraft;
         private final String path;
-        private final ArrayList<IGuiEventListener> children = Lists.newArrayList();
+        private final ArrayList<GuiEventListener> children = Lists.newArrayList();
         private ResourceLocation location;
         @Nullable
-        private IGuiEventListener focused;
+        private GuiEventListener focused;
         private boolean dragging;
 
         public Entry(String path) {
             this.path = path;
             this.minecraft = Minecraft.getInstance();
-            this.textField = new TextFieldWidget(this.minecraft.font, 0, 0, 200, 20, StringTextComponent.EMPTY);
+            this.textField = new EditBox(this.minecraft.font, 0, 0, 200, 20, TextComponent.EMPTY);
             this.textField.setMaxLength(256);
             this.textField.setResponder(text -> {
                 try {
@@ -123,7 +124,7 @@ public class AddTemplatesList extends ExtendedList<AddTemplatesList.Entry> {
 
         @ParametersAreNonnullByDefault
         @Override
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             this.textField.x = left + 2;
             this.textField.y = top + this.minecraft.font.lineHeight + 4;
@@ -133,7 +134,7 @@ public class AddTemplatesList extends ExtendedList<AddTemplatesList.Entry> {
 
         @Nonnull
         @Override
-        public List<? extends IGuiEventListener> children() {
+        public List<? extends GuiEventListener> children() {
             return children;
         }
 
@@ -146,11 +147,11 @@ public class AddTemplatesList extends ExtendedList<AddTemplatesList.Entry> {
         }
 
         @Nullable
-        public IGuiEventListener getFocused() {
+        public GuiEventListener getFocused() {
             return this.focused;
         }
 
-        public void setFocused(@Nullable IGuiEventListener p_231035_1_) {
+        public void setFocused(@Nullable GuiEventListener p_231035_1_) {
             this.focused = p_231035_1_;
         }
 
@@ -160,6 +161,11 @@ public class AddTemplatesList extends ExtendedList<AddTemplatesList.Entry> {
 
         public ResourceLocation getLocation() {
             return location;
+        }
+
+        @Override
+        public Component getNarration() {
+            return new TextComponent(this.getPath());
         }
     }
 }

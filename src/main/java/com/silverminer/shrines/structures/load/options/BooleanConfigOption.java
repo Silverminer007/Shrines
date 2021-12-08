@@ -1,8 +1,8 @@
 package com.silverminer.shrines.structures.load.options;
 
-import net.minecraft.nbt.ByteNBT;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 
 public class BooleanConfigOption extends ConfigOption<Boolean> {
 
@@ -10,12 +10,12 @@ public class BooleanConfigOption extends ConfigOption<Boolean> {
 		super(option, value, comments);
 	}
 
-	public BooleanConfigOption(CompoundNBT tag) {
+	public BooleanConfigOption(CompoundTag tag) {
 		super(tag.getBoolean("Value"), tag);
 	}
 
 	@Override
-	protected INBT writeValue() {
-		return ByteNBT.valueOf(this.getValue());
+	protected Tag writeValue() {
+		return ByteTag.valueOf(this.getValue());
 	}
 }

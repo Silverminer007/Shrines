@@ -1,11 +1,13 @@
 package com.silverminer.shrines.gui.packets.edit.templates;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.IUpdatableScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +19,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class TemplatesList extends ExtendedList<TemplatesList.Entry> {
+public class TemplatesList extends ObjectSelectionList<TemplatesList.Entry> {
     protected static final Logger LOGGER = LogManager.getLogger(TemplatesList.class);
     protected final IUpdatableScreen screen;
     protected final StructuresPacket packet;
@@ -62,7 +64,7 @@ public class TemplatesList extends ExtendedList<TemplatesList.Entry> {
         return Optional.ofNullable(this.getSelected());
     }
 
-    public class Entry extends ExtendedList.AbstractListEntry<TemplatesList.Entry> {
+    public class Entry extends ObjectSelectionList.Entry<TemplatesList.Entry> {
         protected final Minecraft minecraft;
         protected final String template;
 
@@ -73,7 +75,7 @@ public class TemplatesList extends ExtendedList<TemplatesList.Entry> {
 
         @ParametersAreNonnullByDefault
         @Override
-        public void render(MatrixStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
+        public void render(PoseStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
                            int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
             this.minecraft.font.draw(ms, template, left, top + 1, 0xffffff);
         }
@@ -89,6 +91,11 @@ public class TemplatesList extends ExtendedList<TemplatesList.Entry> {
 
         public String getTemplate() {
             return template;
+        }
+
+        @Override
+        public Component getNarration() {
+            return new TextComponent(this.template);
         }
     }
 }

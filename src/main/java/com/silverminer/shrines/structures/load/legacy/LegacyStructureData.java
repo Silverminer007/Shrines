@@ -14,10 +14,9 @@ package com.silverminer.shrines.structures.load.legacy;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.config.DefaultStructureConfig;
 import com.silverminer.shrines.structures.load.StructureData;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.Category;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,8 +37,8 @@ public class LegacyStructureData implements IStructureConfig {
     public ConfigOption<Integer> distance = add(new ConfigOption<Integer>("distance", 50, Integer::valueOf));
     public ConfigOption<Integer> seed = add(new ConfigOption<Integer>("seed", 0, Integer::valueOf));
     public ConfigOption<Integer> seperation = add(new ConfigOption<Integer>("seperation", 8, Integer::valueOf));
-    public ConfigOption<List<Biome.Category>> categories = add(new ConfigOption<List<Biome.Category>>("categories",
-            Lists.newArrayList(Biome.Category.PLAINS, Biome.Category.TAIGA, Biome.Category.FOREST),
+    public ConfigOption<List<Biome.BiomeCategory>> categories = add(new ConfigOption<List<Biome.BiomeCategory>>("categories",
+            Lists.newArrayList(Biome.BiomeCategory.PLAINS, Biome.BiomeCategory.TAIGA, Biome.BiomeCategory.FOREST),
             LegacyStructureData::readCategories));
     public ConfigOption<List<String>> blacklist = add(
             new ConfigOption<List<String>>("blacklist", Lists.newArrayList(), LegacyStructureData::readBlackList));
@@ -59,7 +58,7 @@ public class LegacyStructureData implements IStructureConfig {
         this.seed.setValue(seed, this.getName());
     }
 
-    public static List<Biome.Category> readCategories(String s) {
+    public static List<Biome.BiomeCategory> readCategories(String s) {
         if (s.startsWith("[") && s.endsWith("]")) {
             s = s.substring(1, s.length() - 1);
         }
@@ -72,14 +71,14 @@ public class LegacyStructureData implements IStructureConfig {
                 s = s.substring(0, idx);
             }
             cats.add(s);
-            List<Biome.Category> categories = Lists.newArrayList();
+            List<Biome.BiomeCategory> categories = Lists.newArrayList();
             for (String cat : cats) {
                 if (cat.equals("DEFAULT")) {
-                    return Lists.newArrayList(Biome.Category.PLAINS, Biome.Category.TAIGA, Biome.Category.FOREST);
+                    return Lists.newArrayList(Biome.BiomeCategory.PLAINS, Biome.BiomeCategory.TAIGA, Biome.BiomeCategory.FOREST);
                 } else if (cat.equals("ALL")) {
-                    return Lists.newArrayList(Biome.Category.values());
+                    return Lists.newArrayList(Biome.BiomeCategory.values());
                 } else {
-                    Biome.Category c = Biome.Category.valueOf(cat);
+                    Biome.BiomeCategory c = Biome.BiomeCategory.valueOf(cat);
                     categories.add(c);
                 }
             }
@@ -214,7 +213,7 @@ public class LegacyStructureData implements IStructureConfig {
     }
 
     @Override
-    public List<? extends Category> getWhitelist() {
+    public List<? extends Biome.BiomeCategory> getWhitelist() {
         return this.categories.getValue();
     }
 

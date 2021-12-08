@@ -5,10 +5,10 @@ import com.silverminer.shrines.gui.packets.StructuresPacketsScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.IPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.function.Supplier;
@@ -20,7 +20,7 @@ public class STCOpenStructuresPacketEditPacket implements IPacket {
 		this.packets = structurePackets;
 	}
 
-	public static void encode(STCOpenStructuresPacketEditPacket pkt, PacketBuffer buf) {
+	public static void encode(STCOpenStructuresPacketEditPacket pkt, FriendlyByteBuf buf) {
 		ArrayList<StructuresPacket> structurePackets = pkt.packets;
 		buf.writeInt(structurePackets.size());
 		for (StructuresPacket packet : structurePackets) {
@@ -28,7 +28,7 @@ public class STCOpenStructuresPacketEditPacket implements IPacket {
 		}
 	}
 
-	public static STCOpenStructuresPacketEditPacket decode(PacketBuffer buf) {
+	public static STCOpenStructuresPacketEditPacket decode(FriendlyByteBuf buf) {
 		ArrayList<StructuresPacket> structurePackets = Lists.newArrayList();
 		int packets = buf.readInt();
 		for (int i = 0; i < packets; i++) {

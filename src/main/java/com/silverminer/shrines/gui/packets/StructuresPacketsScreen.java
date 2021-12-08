@@ -1,7 +1,7 @@
 package com.silverminer.shrines.gui.packets;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.SetNameScreen;
 import com.silverminer.shrines.gui.packets.edit.pools.EditPoolsScreen;
 import com.silverminer.shrines.gui.packets.edit.structures.EditStructuresScreen;
@@ -12,15 +12,15 @@ import com.silverminer.shrines.utils.LegacyPacketImportUtils;
 import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.*;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.WorkingScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.ProgressScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +41,7 @@ public class StructuresPacketsScreen extends Screen {
     protected static final Logger LOGGER = LogManager.getLogger(StructuresPacketsScreen.class);
     protected final Screen lastScreen;
     private final ArrayList<StructuresPacket> packets;
-    protected TextFieldWidget searchBox;
+    protected EditBox searchBox;
     protected StructurePacketsList list;
     protected Button delete;
     protected Button configure;
@@ -50,7 +50,7 @@ public class StructuresPacketsScreen extends Screen {
     protected Button export;
 
     public StructuresPacketsScreen(Screen lastScreen, ArrayList<StructuresPacket> packets) {
-        super(new TranslationTextComponent("gui.shrines.packets"));
+        super(new TranslatableComponent("gui.shrines.packets"));
         this.lastScreen = lastScreen;
         this.packets = packets;
     }
@@ -89,59 +89,59 @@ public class StructuresPacketsScreen extends Screen {
             return;
         }
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true); // Why should I have this?
-        this.searchBox = new TextFieldWidget(this.font, (this.width / 4) * 3 - 25, 3, 100, 20, this.searchBox,
-                new StringTextComponent(""));
+        this.searchBox = new EditBox(this.font, (this.width / 4) * 3 - 25, 3, 100, 20, this.searchBox,
+                new TextComponent(""));
         this.searchBox.setResponder((string) -> this.list.refreshList(() -> string));
         this.list = new StructurePacketsList(this, this.minecraft, this.width, this.height, 26, this.height - 48, 36,
                 () -> this.searchBox.getValue(), this.packets);
 
-        this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
+        this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), TextComponent.EMPTY));
 
-        this.delete = this.addButton(new Button(this.width / 2 - 80 - 80 - 9, this.height - 45, 80, 20,
-                new TranslationTextComponent("gui.shrines.delete"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::remove)));
+        this.delete = this.addRenderableWidget(new Button(this.width / 2 - 80 - 80 - 9, this.height - 45, 80, 20,
+                new TranslatableComponent("gui.shrines.delete"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::remove)));
 
-        this.configure = this.addButton(new Button(this.width / 2 - 80 - 3, this.height - 45, 80, 20,
-                new TranslationTextComponent("gui.shrines.configure"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::configure)));
+        this.configure = this.addRenderableWidget(new Button(this.width / 2 - 80 - 3, this.height - 45, 80, 20,
+                new TranslatableComponent("gui.shrines.configure"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::configure)));
 
-        this.add = this.addButton(new Button(this.width / 2 + 55 + 4, this.height - 22, 110, 20,
-                new TranslationTextComponent("gui.shrines.add"), (button) -> this.minecraft.setScreen(new SetNameScreen(this,
-                new TranslationTextComponent("gui.shrines.packets.add.enter_name"),
-                StringTextComponent.EMPTY,
-                new TranslationTextComponent("gui.shrines.packets.add.info"),
+        this.add = this.addRenderableWidget(new Button(this.width / 2 + 55 + 4, this.height - 22, 110, 20,
+                new TranslatableComponent("gui.shrines.add"), (button) -> this.minecraft.setScreen(new SetNameScreen(this,
+                new TranslatableComponent("gui.shrines.packets.add.enter_name"),
+                TextComponent.EMPTY,
+                new TranslatableComponent("gui.shrines.packets.add.info"),
                 (value) -> {
                     StructuresPacket packet = new StructuresPacket(value, null, Lists.newArrayList(),
                             false, this.minecraft.player.getName().getString());
-                    this.minecraft.setScreen(new WorkingScreen());
+                    this.minecraft.setScreen(new ProgressScreen(true));
                     ShrinesPacketHandler
                             .sendToServer(new CTSAddedStructurePacketPacket(packet));
                 }))));
 
-        this.rename = this.addButton(new Button(this.width / 2 + 3, this.height - 45, 80, 20,
-                new TranslationTextComponent("gui.shrines.rename"), (button) -> this.list.getSelectedOpt().ifPresent(entry -> this.minecraft
+        this.rename = this.addRenderableWidget(new Button(this.width / 2 + 3, this.height - 45, 80, 20,
+                new TranslatableComponent("gui.shrines.rename"), (button) -> this.list.getSelectedOpt().ifPresent(entry -> this.minecraft
                 .setScreen(new SetNameScreen(this,
-                        new TranslationTextComponent("gui.shrines.packets.rename.enter_name"),
-                        new TranslationTextComponent(entry.getPacket().getDisplayName()),
-                        new TranslationTextComponent("gui.shrines.packets.rename.info"),
+                        new TranslatableComponent("gui.shrines.packets.rename.enter_name"),
+                        new TranslatableComponent(entry.getPacket().getDisplayName()),
+                        new TranslatableComponent("gui.shrines.packets.rename.info"),
                         (value) -> {
                             StructuresPacket newPacket = entry.getPacket();
                             newPacket.setDisplayName(value);
-                            this.minecraft.setScreen(new WorkingScreen());
+                            this.minecraft.setScreen(new ProgressScreen(true));
                             ShrinesPacketHandler
                                     .sendToServer(new CTSEditedStructurePacketPacket(newPacket));
                         })))));
 
-        this.addButton(new Button((this.width / 4) * 3 + 79, 3, 40, 20, new TranslationTextComponent("gui.shrines.help"), (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Silverminer007/Shrines/wiki")))));
-        this.addButton(new Button(this.width / 2 - 55, this.height - 22, 110, 20, new TranslationTextComponent("gui.shrines.import"), (button) -> this.importUpToDatePacket()));
-        this.addButton(new Button(this.width / 2 - 55 - 4 - 110, this.height - 22, 110, 20, new TranslationTextComponent("gui.shrines.import.legacy"), (button) -> this.importLegacyPacket()));
-        this.export = this.addButton(new Button(this.width / 2 + 80 + 9, this.height - 45, 80, 20, new TranslationTextComponent("gui.shrines.export"), (button) -> this.exportPacket()));
+        this.addRenderableWidget(new Button((this.width / 4) * 3 + 79, 3, 40, 20, new TranslatableComponent("gui.shrines.help"), (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Silverminer007/Shrines/wiki")))));
+        this.addRenderableWidget(new Button(this.width / 2 - 55, this.height - 22, 110, 20, new TranslatableComponent("gui.shrines.import"), (button) -> this.importUpToDatePacket()));
+        this.addRenderableWidget(new Button(this.width / 2 - 55 - 4 - 110, this.height - 22, 110, 20, new TranslatableComponent("gui.shrines.import.legacy"), (button) -> this.importLegacyPacket()));
+        this.export = this.addRenderableWidget(new Button(this.width / 2 + 80 + 9, this.height - 45, 80, 20, new TranslatableComponent("gui.shrines.export"), (button) -> this.exportPacket()));
         this.updateButtonStatus(false);
-        this.children.add(this.searchBox);
-        this.children.add(this.list);
+        this.addWidget(this.searchBox);
+        this.addWidget(this.list);
         this.setInitialFocus(this.searchBox);
     }
 
     @ParametersAreNonnullByDefault
-    public void render(MatrixStack matrixStack, int x, int y, float p_230430_4_) {
+    public void render(PoseStack matrixStack, int x, int y, float p_230430_4_) {
         this.list.render(matrixStack, x, y, p_230430_4_);
         this.searchBox.render(matrixStack, x, y, p_230430_4_);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 16777215);
@@ -159,7 +159,7 @@ public class StructuresPacketsScreen extends Screen {
         if (this.minecraft == null) {
             return;
         }
-        TranslationTextComponent title = new TranslationTextComponent("gui.shrines.import.select");
+        TranslatableComponent title = new TranslatableComponent("gui.shrines.import.select");
         String s = TinyFileDialogs.tinyfd_openFileDialog(title.getString(), null, null, null, false);
         if (s == null) {
             return;
@@ -167,7 +167,7 @@ public class StructuresPacketsScreen extends Screen {
         try {
             byte[] archive = Files.readAllBytes(Paths.get(s));
             ShrinesPacketHandler.sendToServer(new CTSImportStructuresPacketPacket(new File(s).getName().replace(".zip", ""), archive));
-            this.minecraft.setScreen(new WorkingScreen());
+            this.minecraft.setScreen(new ProgressScreen(true));
         } catch (IOException e) {
             ClientUtils.showErrorToast("Failed to import Structures Packet", e.getMessage());
         }
@@ -175,7 +175,7 @@ public class StructuresPacketsScreen extends Screen {
 
     public void importLegacyPacket() {
         if (this.minecraft != null && this.minecraft.player != null) {
-            TranslationTextComponent title = new TranslationTextComponent("gui.shrines.import.legacy.select");
+            TranslatableComponent title = new TranslatableComponent("gui.shrines.import.legacy.select");
             String s = TinyFileDialogs.tinyfd_selectFolderDialog(title.getString(), StructureLoadUtils.getShrinesSavesLocation().toString());
             if(s == null){
                 return;
@@ -188,7 +188,7 @@ public class StructuresPacketsScreen extends Screen {
         if (this.minecraft == null) {
             return;
         }
-        TranslationTextComponent title = new TranslationTextComponent("gui.shrines.export.select");
+        TranslatableComponent title = new TranslatableComponent("gui.shrines.export.select");
         String s = TinyFileDialogs.tinyfd_selectFolderDialog(title.getString(), System.getProperty("user.home"));
         if (s == null) {
             return;

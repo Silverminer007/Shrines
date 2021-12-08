@@ -20,19 +20,20 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.biome.Biome;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.INestedGuiEventHandler;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -42,7 +43,7 @@ import net.minecraftforge.registries.ForgeRegistries;
  *
  */
 @OnlyIn(Dist.CLIENT)
-public class BiomeGenerationSettingsList extends ExtendedList<BiomeGenerationSettingsList.Entry> {
+public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenerationSettingsList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	private final BiomeGenerationSettingsScreen screen;
 	@Nullable
@@ -59,7 +60,7 @@ public class BiomeGenerationSettingsList extends ExtendedList<BiomeGenerationSet
 	public void refreshList(Supplier<String> search) {
 		this.clearEntries();
 
-		ArrayList<Biome.Category> possibleCategories = Lists.newArrayList(Biome.Category.values());
+		ArrayList<Biome.BiomeCategory> possibleCategories = Lists.newArrayList(Biome.BiomeCategory.values());
 		ArrayList<String> selectedCategories = this.screen.selectedBiomeCategories;
 		ArrayList<Biome> possibleBiomes = Lists.newArrayList(ForgeRegistries.BIOMES.getEntries().stream()
 				.map(entry -> entry.getValue()).collect(Collectors.toList()));
@@ -67,7 +68,7 @@ public class BiomeGenerationSettingsList extends ExtendedList<BiomeGenerationSet
 
 		String s = search.get().toLowerCase(Locale.ROOT);
 
-		for (Biome.Category opt : possibleCategories) {
+		for (Biome.BiomeCategory opt : possibleCategories) {
 			if (opt.getName().toLowerCase(Locale.ROOT).contains(s)) {
 				boolean selected = selectedCategories.contains(opt.toString());
 				this.addEntry(new BiomeGenerationSettingsList.CategoryEntry(opt, selected));
@@ -104,12 +105,12 @@ public class BiomeGenerationSettingsList extends ExtendedList<BiomeGenerationSet
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract class Entry extends ExtendedList.AbstractListEntry<BiomeGenerationSettingsList.Entry>
-			implements INestedGuiEventHandler {
+	public abstract class Entry extends ObjectSelectionList.Entry<BiomeGenerationSettingsList.Entry>
+			implements ContainerEventHandler {
 		@Nullable
-		private IGuiEventListener focused;
+		private GuiEventListener focused;
 		private boolean dragging;
-		protected ArrayList<IGuiEventListener> children = Lists.newArrayList();
+		protected ArrayList<GuiEventListener> children = Lists.newArrayList();
 		protected final Minecraft minecraft;
 		protected final BooleanValueButton button;
 		protected final String opt;
@@ -117,7 +118,7 @@ public class BiomeGenerationSettingsList extends ExtendedList<BiomeGenerationSet
 		public Entry(String option, boolean active) {
 			this.opt = option;
 			this.minecraft = Minecraft.getInstance();
-			this.button = new BooleanValueButton(0, 0, StringTextComponent.EMPTY, (button) -> {
+			this.button = new BooleanValueButton(0, 0, TextComponent.EMPTY, (button) -> {
 				this.updateList(((BooleanValueButton) button).value);
 				BiomeGenerationSettingsList.this
 						.refreshList(() -> BiomeGenerationSettingsList.this.screen.searchBox.getValue());
@@ -128,8 +129,8 @@ public class BiomeGenerationSettingsList extends ExtendedList<BiomeGenerationSet
 		public abstract void updateList(boolean active);
 
 		@Override
-		public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
-				boolean isHot, float partialTicks) {
+		public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+						   boolean isHot, float partialTicks) {
 			int descriptionTop = top + (BiomeGenerationSettingsList.this.itemHeight - minecraft.font.lineHeight) / 2;
 			minecraft.font.drawShadow(ms, this.opt, left, descriptionTop, this.isCategoryOption() ? 0xffffff : 0x999999);
 			this.button.x = left + (width / 2);
@@ -140,7 +141,7 @@ public class BiomeGenerationSettingsList extends ExtendedList<BiomeGenerationSet
 		public abstract boolean isCategoryOption();
 
 		@Override
-		public List<? extends IGuiEventListener> children() {
+		public List<? extends GuiEventListener> children() {
 			return children;
 		}
 
@@ -152,20 +153,25 @@ public class BiomeGenerationSettingsList extends ExtendedList<BiomeGenerationSet
 			this.dragging = p_231037_1_;
 		}
 
-		public void setFocused(@Nullable IGuiEventListener p_231035_1_) {
+		public void setFocused(@Nullable GuiEventListener p_231035_1_) {
 			this.focused = p_231035_1_;
 		}
 
 		@Nullable
-		public IGuiEventListener getFocused() {
+		public GuiEventListener getFocused() {
 			return this.focused;
+		}
+
+		@Override
+		public Component getNarration() {
+			return new TextComponent(this.opt);
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public class CategoryEntry extends Entry {
 
-		public CategoryEntry(Biome.Category option, boolean active) {
+		public CategoryEntry(Biome.BiomeCategory option, boolean active) {
 			super(option.toString(), active);
 		}
 

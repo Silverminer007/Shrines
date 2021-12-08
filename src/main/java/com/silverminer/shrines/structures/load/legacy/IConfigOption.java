@@ -11,8 +11,8 @@
  */
 package com.silverminer.shrines.structures.load.legacy;
 
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.Random;
 import java.util.function.Function;
@@ -29,7 +29,7 @@ public interface IConfigOption<T> {
 
     default OptionParsingResult fromString(String s, IStructureConfig data, boolean set) {
         if (data == null) {
-            return new OptionParsingResult(false, new StringTextComponent("Failed to read structure from string, because config instance was null"));
+            return new OptionParsingResult(false, new TextComponent("Failed to read structure from string, because config instance was null"));
         }
         if (s == null || s.replaceAll(" ", "").isEmpty()) {
             return new OptionParsingResult(false, null);
@@ -42,31 +42,31 @@ public interface IConfigOption<T> {
         }
         if (v == null) {
             return new OptionParsingResult(false,
-                    new TranslationTextComponent("commands.shrines.configure.failed.wrong_value", s, this.getName()));
+                    new TranslatableComponent("commands.shrines.configure.failed.wrong_value", s, this.getName()));
         } else if (this.getName().equals("distance")) {
             if (((Integer) v) <= data.getSeparation()) {
-                return new OptionParsingResult(false, new TranslationTextComponent(
+                return new OptionParsingResult(false, new TranslatableComponent(
                         "commands.shrines.configure.failed.dist_larger_sep", v, data.getSeparation()));
             }
         } else if (this.getName().equals("seperation")) {
             if (((Integer) v) >= data.getDistance()) {
-                return new OptionParsingResult(false, new TranslationTextComponent(
+                return new OptionParsingResult(false, new TranslatableComponent(
                         "commands.shrines.configure.failed.sep_smaller_dist", v, data.getDistance()));
             }
         } else if (this.getName().equals("spawn_chance")) {
             double d = (Double) v;
             if (d < 0.0 || d > 1.0) {
                 return new OptionParsingResult(false,
-                        new TranslationTextComponent("commands.shrines.configure.failed.chance_out_of_range", v));
+                        new TranslatableComponent("commands.shrines.configure.failed.chance_out_of_range", v));
             }
         } else if (this.getName().equals("seed")) {
             int i = (Integer) v;
             if (i < 0) {
                 return this.fromString(String.valueOf(i * -1), data, set).setMessage(
-                        new TranslationTextComponent("commands.shrines.configure.failed.seed_set_positive"));
+                        new TranslatableComponent("commands.shrines.configure.failed.seed_set_positive"));
             } else if (i == 0) {
                 return this.fromString(String.valueOf(new Random().nextInt(Integer.MAX_VALUE)), data, set)
-                        .setMessage(new TranslationTextComponent("commands.shrines.configure.failed.seed_set_random"));
+                        .setMessage(new TranslatableComponent("commands.shrines.configure.failed.seed_set_random"));
             }
         }
         if (set) {

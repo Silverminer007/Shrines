@@ -10,10 +10,10 @@ import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.stc.STCFetchStructuresPacket;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 public class CTSFetchStructuresPacket implements IPacket {
 	private final boolean op_mode;
@@ -22,11 +22,11 @@ public class CTSFetchStructuresPacket implements IPacket {
 		this.op_mode = op_mode;
 	}
 
-	public static void encode(CTSFetchStructuresPacket pkt, PacketBuffer buf) {
+	public static void encode(CTSFetchStructuresPacket pkt, FriendlyByteBuf buf) {
 		buf.writeBoolean(pkt.op_mode);
 	}
 
-	public static CTSFetchStructuresPacket decode(PacketBuffer buf) {
+	public static CTSFetchStructuresPacket decode(FriendlyByteBuf buf) {
 		return new CTSFetchStructuresPacket(buf.readBoolean());
 	}
 
@@ -36,7 +36,7 @@ public class CTSFetchStructuresPacket implements IPacket {
 	}
 
 	private static class Handle {
-		public static DistExecutor.SafeRunnable handle(CTSFetchStructuresPacket packet, ServerPlayerEntity sender) {
+		public static DistExecutor.SafeRunnable handle(CTSFetchStructuresPacket packet, ServerPlayer sender) {
 			return new DistExecutor.SafeRunnable() {
 
 				private static final long serialVersionUID = 1L;

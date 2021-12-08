@@ -1,23 +1,19 @@
 package com.silverminer.shrines.gui.config;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
-import com.silverminer.shrines.gui.misc.screen.BiomeGenerationSettingsScreen;
 import com.silverminer.shrines.gui.misc.screen.StringListOptionsScreen;
-import com.silverminer.shrines.gui.packets.edit.structures.ConfigureStructureList;
-import com.silverminer.shrines.structures.load.StructureData;
-import com.silverminer.shrines.structures.load.StructuresPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.INestedGuiEventHandler;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -31,7 +27,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
-public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.Entry<?>> {
+public class NewGeneralSettingsList extends ObjectSelectionList<NewGeneralSettingsList.Entry<?>> {
     protected NewGeneralSettingsScreen screen;
 
     public NewGeneralSettingsList(Minecraft p_i45010_1_, int p_i45010_2_, int p_i45010_3_, int p_i45010_4_,
@@ -71,15 +67,15 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
     @OnlyIn(Dist.CLIENT)
     public abstract class Entry<T>
-            extends ExtendedList.AbstractListEntry<NewGeneralSettingsList.Entry<?>> implements INestedGuiEventHandler {
+            extends ObjectSelectionList.Entry<NewGeneralSettingsList.Entry<?>> implements ContainerEventHandler {
         protected final String option;
         protected final Consumer<T> setter;
         protected final Supplier<T> getter;
         protected Minecraft minecraft;
-        protected ArrayList<IGuiEventListener> children = Lists.newArrayList();
+        protected ArrayList<GuiEventListener> children = Lists.newArrayList();
         protected T value;
         @Nullable
-        private IGuiEventListener focused;
+        private GuiEventListener focused;
         private boolean dragging;
 
         public Entry(String option, Supplier<T> value, Consumer<T> saver) {
@@ -96,22 +92,22 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
-            ITextComponent option = new TranslationTextComponent("config.shrines." + this.option);
+            Component option = new TranslatableComponent("config.shrines." + this.option);
             int descriptionWidth = this.minecraft.font.width(option);
             int descriptionTop = top + (NewGeneralSettingsList.this.itemHeight - minecraft.font.lineHeight) / 2;
             minecraft.font.drawShadow(ms, option, left, descriptionTop, 16777215);
             if ((mouseX >= left) && (mouseX < (left + descriptionWidth))
                     && (mouseY >= descriptionTop) && (mouseY < (descriptionTop + minecraft.font.lineHeight))) {
-                List<ITextComponent> comment = Lists.newArrayList(new TranslationTextComponent("config.shrines." + this.option + ".tooltip"));
+                List<Component> comment = Lists.newArrayList(new TranslatableComponent("config.shrines." + this.option + ".tooltip"));
                 NewGeneralSettingsList.this.screen.renderComponentTooltip(ms, comment, mouseX, mouseY);
             }
         }
 
         @Override
         @Nonnull
-        public List<? extends IGuiEventListener> children() {
+        public List<? extends GuiEventListener> children() {
             return children;
         }
 
@@ -124,12 +120,17 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
         }
 
         @Nullable
-        public IGuiEventListener getFocused() {
+        public GuiEventListener getFocused() {
             return this.focused;
         }
 
-        public void setFocused(@Nullable IGuiEventListener p_231035_1_) {
+        public void setFocused(@Nullable GuiEventListener p_231035_1_) {
             this.focused = p_231035_1_;
+        }
+
+        @Override
+        public Component getNarration() {// TODO Check for usages
+            return new TextComponent(option);
         }
     }
 
@@ -139,7 +140,7 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
         public BooleanEntry(String option, Supplier<Boolean> value, Consumer<Boolean> saver) {
             super(option, value, saver);
-            this.button = new BooleanValueButton(0, 0, StringTextComponent.EMPTY, (button) -> {
+            this.button = new BooleanValueButton(0, 0, TextComponent.EMPTY, (button) -> {
                 this.value = ((BooleanValueButton) button).value;
                 this.setter.accept(this.value);
             }, this.value);
@@ -148,7 +149,7 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.button.x = left + (width / 2);
@@ -160,11 +161,11 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
     @SuppressWarnings("unused")
     @OnlyIn(Dist.CLIENT)
     public class StringEntry extends Entry<String> {
-        protected final TextFieldWidget textField;
+        protected final EditBox textField;
 
         public StringEntry(String option, Supplier<String> value, Consumer<String> saver, int maxLength) {
             super(option, value, saver);
-            this.textField = new TextFieldWidget(this.minecraft.font, 0, 0, 200, 20, StringTextComponent.EMPTY);
+            this.textField = new EditBox(this.minecraft.font, 0, 0, 200, 20, TextComponent.EMPTY);
             this.textField.setMaxLength(maxLength);
             this.textField.setValue(value.get());
             this.textField.setResponder(text -> {
@@ -180,7 +181,7 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.textField.x = left + (width / 2);
@@ -191,11 +192,11 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
     @OnlyIn(Dist.CLIENT)
     public class DoubleEntry extends Entry<Double> {
-        protected final TextFieldWidget textField;
+        protected final EditBox textField;
 
         public DoubleEntry(String option, Supplier<Double> value, Consumer<Double> saver) {
             super(option, value, saver);
-            this.textField = new TextFieldWidget(this.minecraft.font, 0, 0, 200, 20, StringTextComponent.EMPTY);
+            this.textField = new EditBox(this.minecraft.font, 0, 0, 200, 20, TextComponent.EMPTY);
             this.textField.setValue(value.get().toString());
             this.textField.setResponder(text -> {
                 try {
@@ -212,7 +213,7 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.textField.x = left + (width / 2);
@@ -223,14 +224,14 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
     @OnlyIn(Dist.CLIENT)
     public class IntegerEntry extends Entry<Integer> {
-        protected final TextFieldWidget textField;
+        protected final EditBox textField;
         protected final boolean isNullAllowed;
         protected boolean isNegativeAllowed;
 
         public IntegerEntry(String option, Supplier<Integer> value, Consumer<Integer> saver,
                             boolean isNullAllowed, boolean isNegativeAllowed) {
             super(option, value, saver);
-            this.textField = new TextFieldWidget(this.minecraft.font, 0, 0, 200, 20, StringTextComponent.EMPTY);
+            this.textField = new EditBox(this.minecraft.font, 0, 0, 200, 20, TextComponent.EMPTY);
             this.textField.setValue(value.get().toString());
             this.isNullAllowed = isNullAllowed;
             this.isNegativeAllowed = isNegativeAllowed;
@@ -251,7 +252,7 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.textField.x = left + (width / 2);
@@ -267,14 +268,14 @@ public class NewGeneralSettingsList extends ExtendedList<NewGeneralSettingsList.
         public StringListEntry(String option, Supplier<List<String>> value,
                                Consumer<List<String>> saver, List<String> possibleValues) {
             super(option, value, saver);
-            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new StringListOptionsScreen(NewGeneralSettingsList.this.screen, possibleValues,
-                    Lists.newArrayList(this.getter.get()), new StringTextComponent(this.option), saver)));
+            this.button = new Button(0, 0, 70, 20, new TranslatableComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new StringListOptionsScreen(NewGeneralSettingsList.this.screen, possibleValues,
+                    Lists.newArrayList(this.getter.get()), new TextComponent(this.option), saver)));
             this.children.add(this.button);
         }
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.button.x = left + (width / 2);

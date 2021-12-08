@@ -3,9 +3,9 @@ package com.silverminer.shrines.structures.load;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.TemplatePool;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,10 +33,10 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
     protected List<TemplatePool> pools;
 
 
-    public StructuresPacket(String displayName, String saveName, ListNBT structures, boolean isIncluded, String author) {
+    public StructuresPacket(String displayName, String saveName, ListTag structures, boolean isIncluded, String author) {
         this(displayName, saveName, structures.stream().map((inbt) -> {
             if (inbt.getId() == 10)
-                return new StructureData((CompoundNBT) inbt);
+                return new StructureData((CompoundTag) inbt);
             else
                 return null;
         }).filter(Objects::nonNull).collect(Collectors.toList()), isIncluded, author);
@@ -51,7 +51,7 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         this.pools = Lists.newArrayList();
     }
 
-    public static StructuresPacket read(CompoundNBT nbt, @Nullable File path) {
+    public static StructuresPacket read(CompoundTag nbt, @Nullable File path) {
         if (nbt == null) {
             if (path != null)
                 LOGGER.info("Failed to load structures packet: Unable to load structures.nbt file. Packet: {}", path);
@@ -76,7 +76,7 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         String packet_name = nbt.getString("Packet Name");
         String save_name = nbt.getString("Save Name");
         if (save_name.isEmpty()) save_name = null;
-        ListNBT structures = nbt.getList("Structures", 10);
+        ListTag structures = nbt.getList("Structures", 10);
         boolean is_included = nbt.getBoolean("Is Included");
         String author = nbt.getString("Author");
 
@@ -93,10 +93,10 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         }
         if (nbt.contains("Pools")) {
             List<TemplatePool> pools = Lists.newArrayList();
-            CompoundNBT poolsTag = nbt.getCompound("Pools");
+            CompoundTag poolsTag = nbt.getCompound("Pools");
             int i = 0;
             while (poolsTag.contains(String.valueOf(i))) {
-                CompoundNBT pool = poolsTag.getCompound(String.valueOf(i));
+                CompoundTag pool = poolsTag.getCompound(String.valueOf(i));
                 pools.add(TemplatePool.read(pool));
                 i++;
             }
@@ -107,15 +107,15 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         return packet;
     }
 
-    public static CompoundNBT saveToDisk(StructuresPacket packet) {
-        CompoundNBT compoundnbt = new CompoundNBT();
+    public static CompoundTag saveToDisk(StructuresPacket packet) {
+        CompoundTag compoundnbt = new CompoundTag();
         compoundnbt.putInt("Packet Version", StructureLoadUtils.PACKET_VERSION);
         compoundnbt.putString("Packet Name", packet.getDisplayName());
         if (packet.hasSaveName()) {
             compoundnbt.putString("Save Name", packet.getSaveName());
         }
-        ListNBT structures = new ListNBT();
-        structures.addAll(packet.getStructures().stream().map(structure -> structure.write(new CompoundNBT()))
+        ListTag structures = new ListTag();
+        structures.addAll(packet.getStructures().stream().map(structure -> structure.write(new CompoundTag()))
                 .collect(Collectors.toList()));
         compoundnbt.put("Structures", structures);
         compoundnbt.putBoolean("Is Included", packet.isIncluded());
@@ -123,8 +123,8 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         return compoundnbt;
     }
 
-    public static CompoundNBT saveToNetwork(StructuresPacket packet) {
-        CompoundNBT compoundNBT = StructuresPacket.saveToDisk(packet);
+    public static CompoundTag saveToNetwork(StructuresPacket packet) {
+        CompoundTag compoundNBT = StructuresPacket.saveToDisk(packet);
         StringBuilder templates = new StringBuilder();
         if (packet.templates != null) {
             for (ResourceLocation s : packet.templates) {
@@ -138,7 +138,7 @@ public class StructuresPacket implements Comparable<StructuresPacket> {
         }
         compoundNBT.putString("Possible Dimensions", dims.toString());
         compoundNBT.putBoolean("HasIssues", packet.hasIssues);
-        CompoundNBT pools = new CompoundNBT();
+        CompoundTag pools = new CompoundTag();
         int i = 0;
         for (TemplatePool templatePool : packet.pools) {
             pools.put(String.valueOf(i++), templatePool.write());

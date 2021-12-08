@@ -14,13 +14,12 @@ package com.silverminer.shrines.structures.load.options;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
 
 public abstract class ConfigOption<T> {
 	protected static final Logger LOGGER = LogManager.getLogger(ConfigOption.class);
@@ -34,21 +33,21 @@ public abstract class ConfigOption<T> {
 		this.comments = comments;
 	}
 
-	public ConfigOption(T value, CompoundNBT tag) {
+	public ConfigOption(T value, CompoundTag tag) {
 		this(tag.getString("Option"), value, tag.getList("Comments", 0).stream().map(inbt -> inbt.getAsString()).toArray(String[]::new));
 	}
 
-	public CompoundNBT write() {
-		CompoundNBT tag = new CompoundNBT();
+	public CompoundTag write() {
+		CompoundTag tag = new CompoundTag();
 		tag.putString("Option", option);
-		ListNBT comments = new ListNBT();
-		comments.addAll(Arrays.asList(this.comments).stream().map(s -> StringNBT.valueOf(s)).collect(Collectors.toList()));
+		ListTag comments = new ListTag();
+		comments.addAll(Arrays.asList(this.comments).stream().map(s -> StringTag.valueOf(s)).collect(Collectors.toList()));
 		tag.put("Comments", comments);
 		tag.put("Value", this.writeValue());
 		return tag;
 	}
 
-	protected abstract INBT writeValue();
+	protected abstract Tag writeValue();
 
 	public void setValue(T v) {
 		this.value = v;

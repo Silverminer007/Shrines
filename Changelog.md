@@ -226,6 +226,13 @@
 
 - Include a novel for every structure
 
+# 3.0.0
+
+### Beta 1
+- Bumped Forge version to 38.0.0 (MC 1.18)
+- Removed unused ClearImagesCachePacket
+- Removed unused checkbox button
+
 ## 1.8.1
 
 ### Beta1

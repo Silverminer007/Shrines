@@ -2,10 +2,10 @@ package com.silverminer.shrines.utils.network.cts;
 
 import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.network.IPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -18,12 +18,12 @@ public class CTSImportStructuresPacketPacket implements IPacket {
         this.archive = archive;
     }
 
-    public static void encode(CTSImportStructuresPacketPacket pkt, PacketBuffer buf) {
+    public static void encode(CTSImportStructuresPacketPacket pkt, FriendlyByteBuf buf) {
         buf.writeUtf(pkt.fileName);
         buf.writeByteArray(pkt.archive);
     }
 
-    public static CTSImportStructuresPacketPacket decode(PacketBuffer buf) {
+    public static CTSImportStructuresPacketPacket decode(FriendlyByteBuf buf) {
         return new CTSImportStructuresPacketPacket(buf.readUtf(), buf.readByteArray());
     }
 
@@ -33,7 +33,7 @@ public class CTSImportStructuresPacketPacket implements IPacket {
     }
 
     public static class Handle {
-        public static DistExecutor.SafeRunnable handle(CTSImportStructuresPacketPacket packet, ServerPlayerEntity sender) {
+        public static DistExecutor.SafeRunnable handle(CTSImportStructuresPacketPacket packet, ServerPlayer sender) {
             return new DistExecutor.SafeRunnable() {
 
                 private static final long serialVersionUID = 1L;

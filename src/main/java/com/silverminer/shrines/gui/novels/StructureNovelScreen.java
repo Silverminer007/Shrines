@@ -1,23 +1,20 @@
 package com.silverminer.shrines.gui.novels;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSFetchStructuresPacket;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +37,7 @@ public class StructureNovelScreen extends Screen {
     private boolean scrolling;
 
     public StructureNovelScreen(StructureData structure, double novelAmount) {
-        super(new TranslationTextComponent("gui.shrines.novel.title", structure.getName()));
+        super(new TranslatableComponent("gui.shrines.novel.title", structure.getName()));
         String novel = structure.getNovel();
         if (novelAmount < 1.0D) {
             this.renderInfo = true;
@@ -70,7 +67,7 @@ public class StructureNovelScreen extends Screen {
             } else {
                 double d0 = Math.max(1, this.getMaxScroll());
                 int i = this.bottomHeight - this.headerHeight;
-                int j = MathHelper.clamp((int) ((float) (i * i) / (float) this.getMaxPosition()), 32, i - 8);
+                int j = Mth.clamp((int) ((float) (i * i) / (float) this.getMaxPosition()), 32, i - 8);
                 double d1 = Math.max(1.0D, d0 / (double) (i - j));
                 this.setScrollAmount(this.getScrollAmount() + p_231045_8_ * d1);
             }
@@ -100,8 +97,8 @@ public class StructureNovelScreen extends Screen {
     }
 
     protected void init() {
-        this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-                ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
+        this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20,
+                ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), TextComponent.EMPTY));
     }
 
     public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
@@ -125,7 +122,7 @@ public class StructureNovelScreen extends Screen {
 
     @ParametersAreNonnullByDefault
     @SuppressWarnings("deprecation")
-    public void render(MatrixStack matrixStack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
+    public void render(PoseStack matrixStack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
         if (this.minecraft == null) {
             return;
         }
@@ -158,12 +155,12 @@ public class StructureNovelScreen extends Screen {
 
         int i = this.getScrollbarPosition();
         int j = i + 6;
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
-        this.minecraft.getTextureManager().bind(AbstractGui.BACKGROUND_LOCATION);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, GuiComponent.BACKGROUND_LOCATION);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32.0F;
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         bufferbuilder.vertex(0, this.bottomHeight, 0.0D)
                 .uv((float) 0 / f, (float) (this.bottomHeight + (int) this.getScrollAmount()) / f)
                 .color(32, 32, 32, 255).endVertex();
@@ -185,11 +182,11 @@ public class StructureNovelScreen extends Screen {
                     0xffffff);
         }
 
-        this.minecraft.getTextureManager().bind(AbstractGui.BACKGROUND_LOCATION);
+        RenderSystem.setShaderTexture(0, GuiComponent.BACKGROUND_LOCATION);
         RenderSystem.enableDepthTest();
         RenderSystem.depthFunc(519);
         int l = -100;
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         bufferbuilder.vertex(0, this.headerHeight, l).uv(0.0F, (float) this.headerHeight / f)
                 .color(64, 64, 64, 255).endVertex();
         bufferbuilder.vertex(this.width, this.headerHeight, l)
@@ -212,11 +209,9 @@ public class StructureNovelScreen extends Screen {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
                 GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO,
                 GlStateManager.DestFactor.ONE);
-        RenderSystem.disableAlphaTest();
-        RenderSystem.shadeModel(7425);
         RenderSystem.disableTexture();
         int m = 4;
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         bufferbuilder.vertex(0, this.headerHeight + m, 0.0D).uv(0.0F, 1.0F).color(0, 0, 0, 0)
                 .endVertex();
         bufferbuilder.vertex(this.width, this.headerHeight + m, 0.0D).uv(1.0F, 1.0F)
@@ -240,14 +235,14 @@ public class StructureNovelScreen extends Screen {
             RenderSystem.disableTexture();
             int l1 = (int) ((float) ((this.bottomHeight - this.headerHeight) * (this.bottomHeight - this.headerHeight))
                     / (float) this.getMaxPosition());
-            l1 = MathHelper.clamp(l1, 32, this.bottomHeight - this.headerHeight - 8);
+            l1 = Mth.clamp(l1, 32, this.bottomHeight - this.headerHeight - 8);
             int i2 = (int) this.getScrollAmount() * (this.bottomHeight - this.headerHeight - l1) / k1
                     + this.headerHeight;
             if (i2 < this.headerHeight) {
                 i2 = this.headerHeight;
             }
 
-            bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             bufferbuilder.vertex(i, this.bottomHeight, 0.0D).uv(0.0F, 1.0F).color(0, 0, 0, 255)
                     .endVertex();
             bufferbuilder.vertex(j, this.bottomHeight, 0.0D).uv(1.0F, 1.0F).color(0, 0, 0, 255)
@@ -273,13 +268,11 @@ public class StructureNovelScreen extends Screen {
         }
 
         RenderSystem.enableTexture();
-        RenderSystem.shadeModel(7424);
-        RenderSystem.enableAlphaTest();
         RenderSystem.disableBlend();
 
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 16777215);
         if (this.renderInfo) {
-            ITextComponent info = new TranslationTextComponent(
+            Component info = new TranslatableComponent(
                     "gui.shrines.novels.find_more");
             drawCenteredString(matrixStack, this.font, info.getString(), this.width / 2,
                     this.height - this.font.lineHeight - 5, 0xffffff);
@@ -292,7 +285,7 @@ public class StructureNovelScreen extends Screen {
     }
 
     public void setScrollAmount(double p_230932_1_) {
-        this.scrollAmount = MathHelper.clamp(p_230932_1_, 0.0D, this.getMaxScroll());
+        this.scrollAmount = Mth.clamp(p_230932_1_, 0.0D, this.getMaxScroll());
     }
 
     public int getMaxScroll() {

@@ -7,11 +7,11 @@ import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.utils.network.IPacket;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 public class STCFetchNovelsAmountPacket implements IPacket {
 	private final double amount;
@@ -22,12 +22,12 @@ public class STCFetchNovelsAmountPacket implements IPacket {
 		this.structure = structure;
 	}
 
-	public static void encode(STCFetchNovelsAmountPacket pkt, PacketBuffer buf) {
-		buf.writeNbt(pkt.structure.write(new CompoundNBT()));
+	public static void encode(STCFetchNovelsAmountPacket pkt, FriendlyByteBuf buf) {
+		buf.writeNbt(pkt.structure.write(new CompoundTag()));
 		buf.writeDouble(pkt.amount);
 	}
 
-	public static STCFetchNovelsAmountPacket decode(PacketBuffer buf) {
+	public static STCFetchNovelsAmountPacket decode(FriendlyByteBuf buf) {
 		return new STCFetchNovelsAmountPacket(new StructureData(buf.readNbt()), buf.readDouble());
 	}
 

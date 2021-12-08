@@ -11,8 +11,8 @@
  */
 package com.silverminer.shrines.structures.load.legacy;
 
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.biome.Biome.Category;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +36,7 @@ public interface IStructureConfig extends Comparable<IStructureConfig> {
 
     int getSeed();
 
-    List<? extends Category> getWhitelist();
+    List<? extends Biome.BiomeCategory> getWhitelist();
 
     List<? extends String> getBlacklist();
 
@@ -71,6 +71,6 @@ public interface IStructureConfig extends Comparable<IStructureConfig> {
                 return res;
             }
         }
-        return new OptionParsingResult(false, new StringTextComponent("There is no such option as provided"));
+        return new OptionParsingResult(false, new TextComponent("There is no such option as provided"));
     }
 }

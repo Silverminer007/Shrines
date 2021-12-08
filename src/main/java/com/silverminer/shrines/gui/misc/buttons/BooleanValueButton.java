@@ -1,26 +1,25 @@
 package com.silverminer.shrines.gui.misc.buttons;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.ShrinesMod;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 public class BooleanValueButton extends Button {
 	public boolean value;
 	private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation(ShrinesMod.MODID,
 			"textures/gui/buttons_boolean.png");
 
-	public BooleanValueButton(int posX, int posY, ITextComponent text, IPressable onPress, boolean value) {
+	public BooleanValueButton(int posX, int posY, Component text, Button.OnPress onPress, boolean value) {
 		super(posY, posY, 40, 20, text, onPress);
 		this.value = value;
 	}
 
-	public BooleanValueButton(int posX, int posY, ITextComponent text, IPressable onPress, ITooltip tooltip,
+	public BooleanValueButton(int posX, int posY, Component text, Button.OnPress onPress, Button.OnTooltip tooltip,
 			boolean value) {
 		super(posY, posY, 40, 20, text, onPress, tooltip);
 		this.value = value;
@@ -33,13 +32,13 @@ public class BooleanValueButton extends Button {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		boolean isHovered = this.isMouseOver(mouseX, mouseY);
 		if (this.visible) {
 			Minecraft minecraft = Minecraft.getInstance();
-			minecraft.getTextureManager().bind(BUTTON_TEXTURE);
+			RenderSystem.setShaderTexture(0, BUTTON_TEXTURE);
 			RenderSystem.enableDepthTest();
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
+			RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, this.alpha);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
 					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,

@@ -3,10 +3,10 @@ package com.silverminer.shrines.structures.load.options;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 
 public class StringListConfigOption extends ConfigOption<List<String>> {
 
@@ -14,15 +14,15 @@ public class StringListConfigOption extends ConfigOption<List<String>> {
 		super(option, value, comments);
 	}
 
-	public StringListConfigOption(CompoundNBT tag) {
+	public StringListConfigOption(CompoundTag tag) {
 		super(tag.getList("Value", 8).stream().map(inbt -> inbt.getAsString()).collect(Collectors.toList()), tag);
 		// Type 8 means String
 	}
 
 	@Override
-	protected INBT writeValue() {
-		ListNBT value = new ListNBT();
-		value.addAll(this.getValue().stream().map(s -> StringNBT.valueOf(s)).collect(Collectors.toList()));
+	protected Tag writeValue() {
+		ListTag value = new ListTag();
+		value.addAll(this.getValue().stream().map(s -> StringTag.valueOf(s)).collect(Collectors.toList()));
 		return value;
 	}
 }

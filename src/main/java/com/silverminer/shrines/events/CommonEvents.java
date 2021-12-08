@@ -17,7 +17,6 @@ import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.structures.ShrinesStructure;
 import com.silverminer.shrines.structures.load.StructureData;
-import com.silverminer.shrines.structures.novels.NovelDataSaver;
 import com.silverminer.shrines.structures.novels.NovelsData;
 import com.silverminer.shrines.structures.novels.NovelsDataRegistry;
 import com.silverminer.shrines.structures.processors.ProcessorTypes;
@@ -25,11 +24,13 @@ import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.StructureRegistrationUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.stc.STCCacheStructureIconsPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.RepositorySource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -57,36 +58,29 @@ public class CommonEvents {
                 StructureRegistrationUtils.setupWorldGen();
             });
         }
+
+        @SubscribeEvent
+        public static void addPackFinder(AddPackFindersEvent event){
+            for(RepositorySource source : StructureLoadUtils.getPackFinders()){
+                event.addRepositorySource(source);
+            }
+        }
     }
 
     @EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.FORGE)
     public static class ForgeEventBus {
 
-        @SubscribeEvent(priority = EventPriority.HIGH)
-        public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
-            if (event.getName() != null && !Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
-                for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-                    if (holder.getStructure().getConfig().getGenerate() && StructureRegistrationUtils.checkBiome(
-                            holder.getStructure().getConfig().getBiomeBlacklist(),
-                            holder.getStructure().getConfig().getBiomeCategoryWhitelist(), event.getName(),
-                            event.getCategory())) {
-                        event.getGeneration().addStructureStart(holder.getConfiguredStructure());
-                    }
-                }
-            }
-        }
-
         @SubscribeEvent
         public static void onWorldLoad(WorldEvent.Load event) {
-            if (event.getWorld() instanceof ServerWorld) {
-                StructureRegistrationUtils.addDimensionalSpacing((ServerWorld) event.getWorld());
+            if (event.getWorld() instanceof ServerLevel) {
+                StructureRegistrationUtils.addDimensionalSpacing((ServerLevel) event.getWorld());
             }
-            IWorld iworld = event.getWorld();
+            LevelAccessor iworld = event.getWorld();
 
-            if (iworld instanceof ServerWorld) {
-                ServerWorld world = (ServerWorld) iworld;
-                if (!world.isClientSide() && world.dimension() == World.OVERWORLD) {
-                    NovelsDataRegistry.novelsDataSaver = NovelDataSaver.get(world);
+            if (iworld instanceof ServerLevel) {
+                ServerLevel world = (ServerLevel) iworld;
+                if (!world.isClientSide() && world.dimension() == Level.OVERWORLD) {
+                    NovelsDataRegistry.loadData(world);
                 }
             }
         }
@@ -94,18 +88,18 @@ public class CommonEvents {
         @SubscribeEvent
         public static void onPlayerTick(PlayerTickEvent event) {
             if (event.phase == Phase.END) {
-                if (event.player instanceof ServerPlayerEntity) {
+                if (event.player instanceof ServerPlayer) {
                     if (event.player.tickCount % 50 == 0) {
-                        NovelsDataRegistry.novelsDataSaver.setDirty();
+                        NovelsDataRegistry.INSTANCE.setDirty();
                         BlockPos playerPos = event.player.blockPosition();
                         for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
                             ShrinesStructure structure = holder.getStructure();
-                            ServerWorld world = ((ServerPlayerEntity) event.player).getLevel();
-                            if (world.structureFeatureManager().getStructureAt(playerPos, true, structure).isValid()) {
+                            ServerLevel world = ((ServerPlayer) event.player).getLevel();
+                            if (world.structureFeatureManager().getStructureAt(playerPos, structure).isValid()) {
                                 StructureData data = structure.getConfig();
                                 NovelsData novel = null;
-                                if (NovelsDataRegistry.hasNovelOf(data.getKey())) {
-                                    novel = NovelsDataRegistry.getNovelOf(data.getKey());
+                                if (NovelsDataRegistry.INSTANCE.hasNovelOf(data.getKey())) {
+                                    novel = NovelsDataRegistry.INSTANCE.getNovelOf(data.getKey());
                                 }
                                 if (novel == null) {
                                     novel = new NovelsData(data.getKey());
@@ -121,7 +115,7 @@ public class CommonEvents {
                                     break;
                                 }
                                 novel.addFoundStructure(playerPos);
-                                NovelsDataRegistry.setNovelOf(data.getKey(), novel);
+                                NovelsDataRegistry.INSTANCE.setNovelOf(data.getKey(), novel);
                             }
                         }
                     }

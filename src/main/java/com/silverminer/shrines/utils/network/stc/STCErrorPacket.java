@@ -2,10 +2,10 @@ package com.silverminer.shrines.utils.network.stc;
 
 import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.IPacket;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -18,12 +18,12 @@ public class STCErrorPacket implements IPacket {
         this.error = error;
     }
 
-    public static void encode(STCErrorPacket pkt, PacketBuffer buf) {
+    public static void encode(STCErrorPacket pkt, FriendlyByteBuf buf) {
         buf.writeUtf(pkt.errorTitle);
         buf.writeUtf(pkt.error);
     }
 
-    public static STCErrorPacket decode(PacketBuffer buf) {
+    public static STCErrorPacket decode(FriendlyByteBuf buf) {
         return new STCErrorPacket(buf.readUtf(), buf.readUtf());
     }
 

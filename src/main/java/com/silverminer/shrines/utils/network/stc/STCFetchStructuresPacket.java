@@ -9,10 +9,10 @@ import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.IPacket;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 public class STCFetchStructuresPacket implements IPacket {
 	private final ArrayList<StructuresPacket> packets;
@@ -23,7 +23,7 @@ public class STCFetchStructuresPacket implements IPacket {
 		this.op_mode = op_mode;
 	}
 
-	public static void encode(STCFetchStructuresPacket pkt, PacketBuffer buf) {
+	public static void encode(STCFetchStructuresPacket pkt, FriendlyByteBuf buf) {
 		ArrayList<StructuresPacket> structurePackets = pkt.packets;
 		buf.writeInt(structurePackets.size());
 		for (StructuresPacket packet : structurePackets) {
@@ -32,7 +32,7 @@ public class STCFetchStructuresPacket implements IPacket {
 		buf.writeBoolean(pkt.op_mode);
 	}
 
-	public static STCFetchStructuresPacket decode(PacketBuffer buf) {
+	public static STCFetchStructuresPacket decode(FriendlyByteBuf buf) {
 		ArrayList<StructuresPacket> structurePackets = Lists.newArrayList();
 		int packets = buf.readInt();
 		for (int i = 0; i < packets; i++) {

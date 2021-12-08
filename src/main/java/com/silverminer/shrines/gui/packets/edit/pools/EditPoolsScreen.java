@@ -1,7 +1,7 @@
 package com.silverminer.shrines.gui.packets.edit.pools;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
 import com.silverminer.shrines.gui.misc.SetNameScreen;
 import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
@@ -10,12 +10,12 @@ import com.silverminer.shrines.utils.TemplatePool;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSAddTemplatePoolPacket;
 import com.silverminer.shrines.utils.network.cts.CTSDeleteTemplatePoolPacket;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.WorkingScreen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.ProgressScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -30,7 +30,7 @@ public class EditPoolsScreen extends EditStructurePacketScreen {
         super.init();
         this.poolsList = new EditPoolsList(minecraft, this.width, this.height, this.headerheight,
                 this.bottomheight, 23, () -> this.searchBox.getValue(), packet, this);
-        this.children.add(poolsList);
+        this.addWidget(this.poolsList);
         this.updateButtonStatus();
         this.refreshList(searchBox.getValue());
     }
@@ -43,8 +43,8 @@ public class EditPoolsScreen extends EditStructurePacketScreen {
     @Override
     protected void add() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(new SetNameScreen(this, new TranslationTextComponent("gui.shrines.pools.enter_name"), StringTextComponent.EMPTY, StringTextComponent.EMPTY, (value) -> {
-                this.minecraft.setScreen(new WorkingScreen());
+            this.minecraft.setScreen(new SetNameScreen(this, new TranslatableComponent("gui.shrines.pools.enter_name"), TextComponent.EMPTY, TextComponent.EMPTY, (value) -> {
+                this.minecraft.setScreen(new ProgressScreen(true));
                 TemplatePool newPool = new TemplatePool(new ResourceLocation(value), Lists.newArrayList());
                 ShrinesPacketHandler.sendToServer(new CTSAddTemplatePoolPacket(newPool, this.packet.getSaveName()));
             }, (value) -> !value.isEmpty() && ResourceLocation.isValidResourceLocation(value) && this.packet.getPools().stream().map(pool -> pool.getName().toString()).noneMatch(pool -> pool.equals(value))));
@@ -62,11 +62,11 @@ public class EditPoolsScreen extends EditStructurePacketScreen {
                     });
                 }
                 this.minecraft.setScreen(this);
-            }, new TranslationTextComponent("gui.shrines.removeQuestion",
+            }, new TranslatableComponent("gui.shrines.removeQuestion",
                     this.poolsList.getSelected().getPool().getName().toString()),
-                    new TranslationTextComponent("gui.shrines.removeWarning"),
-                    new TranslationTextComponent("gui.shrines.delete"),
-                    DialogTexts.GUI_CANCEL));
+                    new TranslatableComponent("gui.shrines.removeWarning"),
+                    new TranslatableComponent("gui.shrines.delete"),
+                    CommonComponents.GUI_CANCEL));
         }
 
     }
@@ -84,7 +84,7 @@ public class EditPoolsScreen extends EditStructurePacketScreen {
     }
 
     @ParametersAreNonnullByDefault
-    public void render(MatrixStack ms, int mouseX, int mouseY, float p_230430_4_) {
+    public void render(PoseStack ms, int mouseX, int mouseY, float p_230430_4_) {
         this.poolsList.render(ms, mouseX, mouseY, p_230430_4_);
         super.render(ms, mouseX, mouseY, p_230430_4_);
     }

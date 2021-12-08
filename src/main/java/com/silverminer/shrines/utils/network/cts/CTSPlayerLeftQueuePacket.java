@@ -2,10 +2,10 @@ package com.silverminer.shrines.utils.network.cts;
 
 import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.network.IPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,11 +17,11 @@ public class CTSPlayerLeftQueuePacket implements IPacket {
     public CTSPlayerLeftQueuePacket() {
     }
 
-    public static void encode(CTSPlayerLeftQueuePacket pkt, PacketBuffer buf) {
+    public static void encode(CTSPlayerLeftQueuePacket pkt, FriendlyByteBuf buf) {
 
     }
 
-    public static CTSPlayerLeftQueuePacket decode(PacketBuffer buf) {
+    public static CTSPlayerLeftQueuePacket decode(FriendlyByteBuf buf) {
         return new CTSPlayerLeftQueuePacket();
     }
 
@@ -31,7 +31,7 @@ public class CTSPlayerLeftQueuePacket implements IPacket {
     }
 
     private static class Handle {
-        public static DistExecutor.SafeRunnable handle(CTSPlayerLeftQueuePacket packet, ServerPlayerEntity sender) {
+        public static DistExecutor.SafeRunnable handle(CTSPlayerLeftQueuePacket packet, ServerPlayer sender) {
             return new DistExecutor.SafeRunnable() {
 
                 private static final long serialVersionUID = 1L;

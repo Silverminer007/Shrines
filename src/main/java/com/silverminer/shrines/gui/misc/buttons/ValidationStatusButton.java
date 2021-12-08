@@ -1,11 +1,10 @@
 package com.silverminer.shrines.gui.misc.buttons;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -16,9 +15,9 @@ public class ValidationStatusButton extends Button
 {
 	private boolean valid;
 
-	public ValidationStatusButton(int x, int y, IPressable clickHandler)
+	public ValidationStatusButton(int x, int y, OnPress clickHandler)
 	{
-		super(x, y, 15, 15, new StringTextComponent(""), clickHandler);
+		super(x, y, 15, 15, new TextComponent(""), clickHandler);
 
 		this.valid = true;
 	}
@@ -41,10 +40,10 @@ public class ValidationStatusButton extends Button
 	@SuppressWarnings("deprecation")
 	@Override
 	@ParametersAreNonnullByDefault
-	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks)
+	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks)
 	{
-		Minecraft.getInstance().getTextureManager().bind(Widget.WIDGETS_LOCATION);
-		GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, AbstractWidget.WIDGETS_LOCATION);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		Icon icon = (this.valid) ? Icon.VALID : Icon.INVALID;
 
 		this.blit(ms, this.x, this.y, icon.getX(), icon.getY(), this.width, this.height);

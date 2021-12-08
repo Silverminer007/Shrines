@@ -11,7 +11,7 @@
  */
 package com.silverminer.shrines.structures.load.legacy;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public class PieceData {
     public final String path;

@@ -23,18 +23,21 @@ import com.silverminer.shrines.utils.network.stc.STCErrorPacket;
 import com.silverminer.shrines.utils.network.stc.STCFetchStructuresPacket;
 import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
 import com.silverminer.shrines.utils.network.stc.STCUpdateQueueScreenPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.resources.FolderPackFinder;
-import net.minecraft.resources.IPackFinder;
-import net.minecraft.resources.IPackNameDecorator;
+import net.minecraft.FileUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.FileUtil;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.TickTask;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.FolderRepositorySource;
+import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.server.packs.repository.RepositorySource;
+import net.minecraft.util.thread.BlockableEventLoop;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +57,7 @@ public class StructureLoadUtils {
      * This list is equals to the Structure Packet which the user can see, so Packets that were deleted aren't here anymore, but new packets are here.
      * This list is only on the server side, but synchronized between its threads
      */
-    public static List<StructuresPacket> STRUCTURE_PACKETS;
+    private static List<StructuresPacket> STRUCTURE_PACKETS;
     /**
      * This list is a copy of the structure packets that were loaded from disk. This list should be used for any world generation access operations, to prevent strange behaviors because of changes in the GUI
      */
@@ -66,6 +69,13 @@ public class StructureLoadUtils {
      * configuration screen and is going to set the changes later
      */
     public static ArrayList<UUID> PLAYERS_IN_EDIT_QUEUE = Lists.newArrayList();
+
+    public static List<StructuresPacket> getStructurePackets() {
+        if (STRUCTURE_PACKETS == null || STRUCTURE_PACKETS.isEmpty()) {
+            StructureLoadUtils.loadStructures();
+        }
+        return STRUCTURE_PACKETS;
+    }
 
     public static File getImagesCacheLocation() {
         return FileUtils.getFile(StructureLoadUtils.getShrinesSavesLocation(), "Cache", "Images");
@@ -186,7 +196,7 @@ public class StructureLoadUtils {
             return null;
         }
         // Read the file here in CompoundNBT tag
-        CompoundNBT data_structure = readNBTFile(structures_file.toFile());
+        CompoundTag data_structure = readNBTFile(structures_file.toFile());
         // Create an instance of a packet datastructures and write it to a read/write
         // array
         ArrayList<ResourceLocation> templates = StructureLoadUtils.searchForTemplates(path);
@@ -311,9 +321,9 @@ public class StructureLoadUtils {
                 packet);
     }
 
-    public static CompoundNBT readNBTFile(File path) {
+    public static CompoundTag readNBTFile(File path) {
         try (InputStream inputstream = new FileInputStream(path)) {
-            return CompressedStreamTools.readCompressed(inputstream);
+            return NbtIo.readCompressed(inputstream);
         } catch (IOException exception) {
             return null;
         }
@@ -419,9 +429,9 @@ public class StructureLoadUtils {
         File structures_file = new File(packet_path, "structures.nbt");
         File packInfo = new File(packet_path, "pack.mcmeta");
 
-        CompoundNBT compoundnbt = StructuresPacket.saveToDisk(packet);
+        CompoundTag compoundnbt = StructuresPacket.saveToDisk(packet);
         try (OutputStream outputstream = new FileOutputStream(structures_file)) {
-            CompressedStreamTools.writeCompressed(compoundnbt, outputstream);
+            NbtIo.writeCompressed(compoundnbt, outputstream);
         } catch (Throwable throwable) {
             LOGGER.error("Failed to save structures packet [{}] on path {}, {}", packet.getDisplayName(), structures_file,
                     throwable);
@@ -460,7 +470,7 @@ public class StructureLoadUtils {
                 return;
             }
             try (OutputStream outputstream = new FileOutputStream(template_path)) {
-                CompressedStreamTools.writeCompressed(template.getTemplate(), outputstream);
+                NbtIo.writeCompressed(template.getTemplate(), outputstream);
             } catch (Throwable throwable) {
                 LOGGER.error("Failed to save new template {} to {}", location, template_path,
                         throwable);
@@ -545,13 +555,11 @@ public class StructureLoadUtils {
     }
 
     public static void sendQueueUpdatesToPlayers() {
-        MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
         ArrayList<StructuresPacket> packets = Lists.newArrayList();
         packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
         if (StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.size() == 1) {
             UUID first = StructureLoadUtils.PLAYERS_IN_EDIT_QUEUE.get(0);
-            ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
-                    server.getPlayerList().getPlayer(first));
+            ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets), first);
         } else {
             StructureLoadUtils.sendUpdatesToNonFirst();
         }
@@ -581,25 +589,30 @@ public class StructureLoadUtils {
 
     public static List<String> getPossibleDimensions() {
         try {
-            MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
-            ArrayList<String> dims = Lists.newArrayList();
-            for (ServerWorld w : server.getAllLevels()) {
-                dims.add(w.dimension().location().toString());
+            BlockableEventLoop<? super TickTask> server = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
+            if (server instanceof MinecraftServer) {
+                ArrayList<String> dims = Lists.newArrayList();
+                for (ServerLevel w : ((MinecraftServer) server).getAllLevels()) {
+                    dims.add(w.dimension().location().toString());
+                }
+                return dims;
+            } else {
+                return Lists.newArrayList();
             }
-            return dims;
         } catch (Throwable t) {
             return Lists.newArrayList();
         }
     }
 
-    public static List<IPackFinder> getPackFinders() {
-        List<IPackFinder> packFinders = Lists.newArrayList();
-        packFinders.add(new FolderPackFinder(StructureLoadUtils.getPacketsSaveLocation(), IPackNameDecorator.DEFAULT));
-        packFinders.add(new FolderPackFinder(StructureLoadUtils.getImagesCacheLocation(), IPackNameDecorator.DEFAULT));
+    public static List<RepositorySource> getPackFinders() {
+        List<RepositorySource> packFinders = Lists.newArrayList();
+        PackSource source = PackSource.decorating("pack.source.shrines");
+        packFinders.add(new FolderRepositorySource(StructureLoadUtils.getPacketsSaveLocation(), source));
+        packFinders.add(new FolderRepositorySource(StructureLoadUtils.getImagesCacheLocation(), source));
         return packFinders;
     }
 
-    public static void importStructuresPacket(String fileName, byte[] archive, ServerPlayerEntity sender) {
+    public static void importStructuresPacket(String fileName, byte[] archive, ServerPlayer sender) {
         StructureLoadUtils.saveStructures();
         File saveDestination = new File(StructureLoadUtils.getImportCacheLocation(), fileName + ".zip");
         if (saveDestination.exists()) {
@@ -635,7 +648,7 @@ public class StructureLoadUtils {
                 sender);
     }
 
-    private static void importUpToDatePacket(Path path, ServerPlayerEntity sender) {
+    private static void importUpToDatePacket(Path path, ServerPlayer sender) {
         StructuresPacket structuresPacket = StructureLoadUtils.loadStructuresPacket(path);
         if (structuresPacket != null) {
             if (validateStructureKeys(structuresPacket, path.toFile())) {

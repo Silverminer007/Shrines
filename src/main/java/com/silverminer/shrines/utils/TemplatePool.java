@@ -5,12 +5,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
+import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class TemplatePool implements Comparable<TemplatePool> {
@@ -24,8 +29,8 @@ public class TemplatePool implements Comparable<TemplatePool> {
         this.entries = entries;
     }
 
-    public static TemplatePool read(CompoundNBT nbt) {
-        TemplatePool pool = new TemplatePool(new ResourceLocation(nbt.getString("Name")), nbt.getList("Entries", 10).stream().map(inbt -> Entry.read((CompoundNBT) inbt)).collect(Collectors.toCollection(ArrayList::new)));
+    public static TemplatePool read(CompoundTag nbt) {
+        TemplatePool pool = new TemplatePool(new ResourceLocation(nbt.getString("Name")), nbt.getList("Entries", 10).stream().map(inbt -> Entry.read((CompoundTag) inbt)).collect(Collectors.toCollection(ArrayList::new)));
         pool.setSaveName(new ResourceLocation(nbt.getString("Save Name")));
         return pool;
     }
@@ -47,11 +52,11 @@ public class TemplatePool implements Comparable<TemplatePool> {
         return new TemplatePool(name, entries);
     }
 
-    public CompoundNBT write() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag write() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putString("Name", this.getName().toString());
         nbt.putString("Save Name", this.getSaveName().toString());
-        ListNBT entries = new ListNBT();
+        ListTag entries = new ListTag();
         for (Entry e : this.getEntries()) {
             entries.add(e.write());
         }
@@ -97,6 +102,14 @@ public class TemplatePool implements Comparable<TemplatePool> {
         return this.getName().compareTo(o.getName());
     }
 
+    public StructureTemplatePool toVanillaVersion() {// Not the cleanestt, but a working implementation
+        List<Pair<Function<StructureTemplatePool.Projection, ? extends StructurePoolElement>, Integer>> entriesVanilla = Lists.newArrayList();
+        for (Entry e : this.entries) {
+            entriesVanilla.add(Pair.of((projection) -> StructurePoolElement.single(e.template.toString()).apply(null).setProjection(e.isTerrain_matching() ? StructureTemplatePool.Projection.TERRAIN_MATCHING : StructureTemplatePool.Projection.RIGID), e.weight));
+        }
+        return new StructureTemplatePool(this.name, new ResourceLocation("empty"), entriesVanilla, StructureTemplatePool.Projection.RIGID);
+    }
+
     public static class Entry implements Comparable<Entry> {
         private ResourceLocation template;
         private int weight;
@@ -112,7 +125,7 @@ public class TemplatePool implements Comparable<TemplatePool> {
             this.terrain_matching = terrain_matching;
         }
 
-        public static Entry read(CompoundNBT nbt) {
+        public static Entry read(CompoundTag nbt) {
             return new Entry(new ResourceLocation(nbt.getString("Template")), nbt.getInt("weight"), nbt.getBoolean("Terrain Matching"));
         }
 
@@ -129,8 +142,8 @@ public class TemplatePool implements Comparable<TemplatePool> {
             }
         }
 
-        public CompoundNBT write() {
-            CompoundNBT nbt = new CompoundNBT();
+        public CompoundTag write() {
+            CompoundTag nbt = new CompoundTag();
             nbt.putString("Template", this.template.toString());
             nbt.putInt("weight", this.weight);
             nbt.putBoolean("Terrain Matching", this.terrain_matching);

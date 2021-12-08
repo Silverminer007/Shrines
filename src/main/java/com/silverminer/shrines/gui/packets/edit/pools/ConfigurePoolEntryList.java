@@ -1,24 +1,17 @@
 package com.silverminer.shrines.gui.packets.edit.pools;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
-import com.silverminer.shrines.gui.misc.screen.BiomeGenerationSettingsScreen;
-import com.silverminer.shrines.gui.misc.screen.StringListOptionsScreen;
-import com.silverminer.shrines.gui.packets.edit.structures.ConfigureStructureScreen;
-import com.silverminer.shrines.structures.load.StructureData;
-import com.silverminer.shrines.structures.load.options.ConfigOption;
 import com.silverminer.shrines.utils.TemplatePool;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.INestedGuiEventHandler;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -34,7 +27,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
-public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.Entry<?>> {
+public class ConfigurePoolEntryList extends ObjectSelectionList<ConfigurePoolEntryList.Entry<?>> {
     protected Screen screen;
     protected final TemplatePool.Entry poolEntry;
 
@@ -70,15 +63,15 @@ public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.
 
     @OnlyIn(Dist.CLIENT)
     public abstract class Entry<T>
-            extends ExtendedList.AbstractListEntry<ConfigurePoolEntryList.Entry<?>> implements INestedGuiEventHandler {
+            extends ObjectSelectionList.Entry<ConfigurePoolEntryList.Entry<?>> implements ContainerEventHandler {
         protected final String option;
         protected final Consumer<T> setter;
         protected final Supplier<T> getter;
         protected Minecraft minecraft;
-        protected ArrayList<IGuiEventListener> children = Lists.newArrayList();
+        protected ArrayList<GuiEventListener> children = Lists.newArrayList();
         protected T value;
         @Nullable
-        private IGuiEventListener focused;
+        private GuiEventListener focused;
         private boolean dragging;
 
         public Entry(String option, Supplier<T> value, Consumer<T> saver) {
@@ -95,7 +88,7 @@ public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             String description = this.option;
             int descriptionTop = top + (ConfigurePoolEntryList.this.itemHeight - minecraft.font.lineHeight) / 2;
@@ -104,7 +97,7 @@ public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.
 
         @Override
         @Nonnull
-        public List<? extends IGuiEventListener> children() {
+        public List<? extends GuiEventListener> children() {
             return children;
         }
 
@@ -117,12 +110,17 @@ public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.
         }
 
         @Nullable
-        public IGuiEventListener getFocused() {
+        public GuiEventListener getFocused() {
             return this.focused;
         }
 
-        public void setFocused(@Nullable IGuiEventListener p_231035_1_) {
+        public void setFocused(@Nullable GuiEventListener p_231035_1_) {
             this.focused = p_231035_1_;
+        }
+
+        @Override
+        public Component getNarration() {
+            return new TextComponent(this.option);
         }
     }
 
@@ -132,7 +130,7 @@ public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.
 
         public BooleanEntry(String option, Supplier<Boolean> value, Consumer<Boolean> saver) {
             super(option, value, saver);
-            this.button = new BooleanValueButton(0, 0, StringTextComponent.EMPTY, (button) -> {
+            this.button = new BooleanValueButton(0, 0, TextComponent.EMPTY, (button) -> {
                 this.value = ((BooleanValueButton) button).value;
                 this.setter.accept(this.value);
             }, this.value);
@@ -141,7 +139,7 @@ public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.button.x = left + (width / 2);
@@ -152,14 +150,14 @@ public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.
 
     @OnlyIn(Dist.CLIENT)
     public class IntegerEntry extends Entry<Integer> {
-        protected final TextFieldWidget textField;
+        protected final EditBox textField;
         protected final boolean isNullAllowed;
         protected boolean isNegativeAllowed;
 
         public IntegerEntry(String option, Supplier<Integer> value, Consumer<Integer> saver,
                             boolean isNullAllowed, boolean isNegativeAllowed) {
             super(option, value, saver);
-            this.textField = new TextFieldWidget(this.minecraft.font, 0, 0, 200, 20, StringTextComponent.EMPTY);
+            this.textField = new EditBox(this.minecraft.font, 0, 0, 200, 20, TextComponent.EMPTY);
             this.textField.setValue(value.get().toString());
             this.isNullAllowed = isNullAllowed;
             this.isNegativeAllowed = isNegativeAllowed;
@@ -180,7 +178,7 @@ public class ConfigurePoolEntryList extends ExtendedList<ConfigurePoolEntryList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.textField.x = left + (width / 2);

@@ -11,40 +11,39 @@
  */
 package com.silverminer.shrines.gui.packets;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
+import com.silverminer.shrines.gui.packets.edit.structures.EditStructuresScreen;
+import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSDeletedStructurePacketPacket;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.screens.ProgressScreen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import com.silverminer.shrines.gui.packets.edit.structures.EditStructuresScreen;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
-import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import com.silverminer.shrines.utils.network.cts.CTSDeletedStructurePacketPacket;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.WorkingScreen;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 /**
  * @author Silverminer
  *
  */
 @OnlyIn(Dist.CLIENT)
-public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entry> {
+public class StructurePacketsList extends ObjectSelectionList<StructurePacketsList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger();
 	private final StructuresPacketsScreen screen;
 	private final ArrayList<StructuresPacket> unfilteredPackets;
@@ -95,7 +94,7 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public final class Entry extends ExtendedList.AbstractListEntry<StructurePacketsList.Entry> {
+	public final class Entry extends ObjectSelectionList.Entry<StructurePacketsList.Entry> {
 		private final Minecraft minecraft;
 		private final StructuresPacket packet;
 		private long lastClickTime;
@@ -106,11 +105,11 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 		}
 
 		@ParametersAreNonnullByDefault
-		public void render(MatrixStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
-				int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+		public void render(PoseStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
+						   int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
 			String header = packet.getDisplayName() + " (" + packet.getSaveName() + ")";
-			String s1 = new TranslationTextComponent("gui.shrines.author").getString() + ": " + this.packet.getAuthor();
-			String s2 = new TranslationTextComponent("gui.shrines.structures").getString() + ": " + this.packet.getStructures().size() + " " + new TranslationTextComponent("gui.shrines.templates").getString() + ": " + this.packet.getStructures().size() + " " + new TranslationTextComponent("gui.shrines.pools").getString() + ": " + this.getPacket().getPools().size();
+			String s1 = new TranslatableComponent("gui.shrines.author").getString() + ": " + this.packet.getAuthor();
+			String s2 = new TranslatableComponent("gui.shrines.structures").getString() + ": " + this.packet.getStructures().size() + " " + new TranslatableComponent("gui.shrines.templates").getString() + ": " + this.packet.getStructures().size() + " " + new TranslatableComponent("gui.shrines.pools").getString() + ": " + this.getPacket().getPools().size();
 
 			this.minecraft.font.draw(ms, header, left, top + 1, this.packet.hasIssues ? 0xff0000 : 0xffffff);
 			this.minecraft.font.draw(ms, s1, left, top + 9 + 3, 8421504);
@@ -135,19 +134,24 @@ public class StructurePacketsList extends ExtendedList<StructurePacketsList.Entr
 		public void remove() {
 			this.minecraft.setScreen(new DirtConfirmScreen((confirmed) -> {
 				if (confirmed) {
-					this.minecraft.setScreen(new WorkingScreen());
+					this.minecraft.setScreen(new ProgressScreen(true));
 					ShrinesPacketHandler.sendToServer(new CTSDeletedStructurePacketPacket(this.packet.getSaveName()));
-					this.minecraft.setScreen(new WorkingScreen());
+					this.minecraft.setScreen(new ProgressScreen(true));
 				}
 
 				this.minecraft.setScreen(StructurePacketsList.this.screen);
-			}, new TranslationTextComponent("gui.shrines.removeQuestion", this.packet.getDisplayName()),
-					new TranslationTextComponent("gui.shrines.removeWarning"),
-					new TranslationTextComponent("gui.shrines.delete"), DialogTexts.GUI_CANCEL));
+			}, new TranslatableComponent("gui.shrines.removeQuestion", this.packet.getDisplayName()),
+					new TranslatableComponent("gui.shrines.removeWarning"),
+					new TranslatableComponent("gui.shrines.delete"), CommonComponents.GUI_CANCEL));
 		}
 
 		public StructuresPacket getPacket() {
 			return this.packet;
+		}
+
+		@Override
+		public Component getNarration() {
+			return new TextComponent(this.packet.getDisplayName());
 		}
 	}
 }

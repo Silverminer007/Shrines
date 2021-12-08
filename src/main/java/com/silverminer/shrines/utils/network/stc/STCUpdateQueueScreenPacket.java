@@ -6,10 +6,10 @@ import com.silverminer.shrines.gui.packets.WaitInQueueScreen;
 import com.silverminer.shrines.utils.network.IPacket;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 public class STCUpdateQueueScreenPacket implements IPacket {
 	private final int position;
@@ -18,11 +18,11 @@ public class STCUpdateQueueScreenPacket implements IPacket {
 		this.position = position;
 	}
 
-	public static void encode(STCUpdateQueueScreenPacket pkt, PacketBuffer buf) {
+	public static void encode(STCUpdateQueueScreenPacket pkt, FriendlyByteBuf buf) {
 		buf.writeInt(pkt.position);
 	}
 
-	public static STCUpdateQueueScreenPacket decode(PacketBuffer buf) {
+	public static STCUpdateQueueScreenPacket decode(FriendlyByteBuf buf) {
 		return new STCUpdateQueueScreenPacket(buf.readInt());
 	}
 
