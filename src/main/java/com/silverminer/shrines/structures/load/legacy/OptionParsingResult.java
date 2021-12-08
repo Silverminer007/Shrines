@@ -11,30 +11,30 @@
  */
 package com.silverminer.shrines.structures.load.legacy;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class OptionParsingResult {
     private final boolean success;
-    private ITextComponent message;
+    private Component message;
 
-    public OptionParsingResult(boolean success, ITextComponent message) {
+    public OptionParsingResult(boolean success, Component message) {
         this.success = success;
         this.message = message;
     }
 
-    public ITextComponent getMessage() {
+    public Component getMessage() {
         if (this.message != null)
             return message;
         else
-            return new StringTextComponent("");
+            return new TextComponent("");
     }
 
     public boolean isSuccess() {
         return success;
     }
 
-    public OptionParsingResult setMessage(ITextComponent message) {
+    public OptionParsingResult setMessage(Component message) {
         this.message = message;
         return this;
     }

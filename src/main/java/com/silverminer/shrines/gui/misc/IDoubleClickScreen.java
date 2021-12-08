@@ -1,4 +1,4 @@
-package com.silverminer.shrines.gui;
+package com.silverminer.shrines.gui.misc;
 
 import com.silverminer.shrines.gui.misc.IUpdatableScreen;
 

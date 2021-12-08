@@ -6,10 +6,10 @@ import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.stc.STCOpenStructuresPacketEditPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.function.Supplier;
@@ -21,11 +21,11 @@ public class CTSEditedStructurePacketPacket implements IPacket {
         this.packet = packet;
     }
 
-    public static void encode(CTSEditedStructurePacketPacket pkt, PacketBuffer buf) {
+    public static void encode(CTSEditedStructurePacketPacket pkt, FriendlyByteBuf buf) {
         buf.writeNbt(StructuresPacket.saveToNetwork(pkt.packet));
     }
 
-    public static CTSEditedStructurePacketPacket decode(PacketBuffer buf) {
+    public static CTSEditedStructurePacketPacket decode(FriendlyByteBuf buf) {
         return new CTSEditedStructurePacketPacket(StructuresPacket.read(buf.readNbt(), null));
     }
 
@@ -35,7 +35,7 @@ public class CTSEditedStructurePacketPacket implements IPacket {
     }
 
     private static class Handle {
-        public static DistExecutor.SafeRunnable handle(CTSEditedStructurePacketPacket packet, ServerPlayerEntity sender) {
+        public static DistExecutor.SafeRunnable handle(CTSEditedStructurePacketPacket packet, ServerPlayer sender) {
             return new DistExecutor.SafeRunnable() {
 
                 private static final long serialVersionUID = 1L;
@@ -44,7 +44,7 @@ public class CTSEditedStructurePacketPacket implements IPacket {
                 public void run() {
                     StructureLoadUtils.updateStructuresPacket(packet.packet);
                     ArrayList<StructuresPacket> packets = Lists.newArrayList();
-                    packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+                    packets.addAll(StructureLoadUtils.getStructurePackets());
                     ShrinesPacketHandler.sendTo(new STCOpenStructuresPacketEditPacket(packets),
                             sender);
                 }

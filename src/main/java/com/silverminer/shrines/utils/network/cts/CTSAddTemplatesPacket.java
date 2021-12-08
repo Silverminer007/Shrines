@@ -7,12 +7,12 @@ import com.silverminer.shrines.utils.TemplateIdentifier;
 import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.stc.STCEditStructuresPacketPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTSizeTracker;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class CTSAddTemplatesPacket implements IPacket {
         this.packetID = packetID;
     }
 
-    public static void encode(CTSAddTemplatesPacket pkt, PacketBuffer buf) {
+    public static void encode(CTSAddTemplatesPacket pkt, FriendlyByteBuf buf) {
         buf.writeInt(pkt.templates.size());
         for (TemplateIdentifier template : pkt.templates) {
             buf.writeNbt(template.write());
@@ -35,11 +35,11 @@ public class CTSAddTemplatesPacket implements IPacket {
         buf.writeUtf(pkt.packetID);
     }
 
-    public static CTSAddTemplatesPacket decode(PacketBuffer buf) {
+    public static CTSAddTemplatesPacket decode(FriendlyByteBuf buf) {
         int templateCount = buf.readInt();
         ArrayList<TemplateIdentifier> templates = Lists.newArrayList();
         for (int i = 0; i < templateCount; i++) {
-            CompoundNBT nbt = buf.readNbt(NBTSizeTracker.UNLIMITED);// Not really save, but template files can be huge and general size limit is to low
+            CompoundTag nbt = buf.readNbt(NbtAccounter.UNLIMITED);// Not really save, but template files can be huge and general size limit is to low
             if (nbt == null) {
                 continue;
             }
@@ -54,7 +54,7 @@ public class CTSAddTemplatesPacket implements IPacket {
     }
 
     private static class Handle {
-        public static DistExecutor.SafeRunnable handle(CTSAddTemplatesPacket packet, ServerPlayerEntity sender) {
+        public static DistExecutor.SafeRunnable handle(CTSAddTemplatesPacket packet, ServerPlayer sender) {
             return new DistExecutor.SafeRunnable() {
 
                 private static final long serialVersionUID = 1L;
@@ -63,7 +63,7 @@ public class CTSAddTemplatesPacket implements IPacket {
                 public void run() {
                     StructureLoadUtils.addTemplatesToPacket(packet.templates, packet.packetID);
                     ArrayList<StructuresPacket> packets = Lists.newArrayList();
-                    packets.addAll(StructureLoadUtils.STRUCTURE_PACKETS);
+                    packets.addAll(StructureLoadUtils.getStructurePackets());
                     ShrinesPacketHandler.sendTo(new STCEditStructuresPacketPacket(packets, packet.packetID, 1),
                             sender);
                 }

@@ -17,6 +17,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.silverminer.shrines.config.Config;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,128 +44,124 @@ import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.structures.ShrinesStructure;
 import com.silverminer.shrines.structures.load.StructureData;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.FlatChunkGenerator;
-import net.minecraft.world.gen.FlatGenerationSettings;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
 /**
  * @author Silverminer
- *
  */
 public class StructureRegistrationUtils {
-	protected static final Logger LOGGER = LogManager.getLogger(StructureRegistrationUtils.class);
+    protected static final Logger LOGGER = LogManager.getLogger(StructureRegistrationUtils.class);
 
-	public static boolean checkBiome(List<? extends String> blacklistedBiomes,
-			List<? extends String> whitelistedBiomeCategories, ResourceLocation name, Biome.Category category) {
-		if (!whitelistedBiomeCategories.isEmpty()) {
-			if (blacklistedBiomes.isEmpty()) {
-				return !blacklistedBiomes.contains(name.toString())
-						&& whitelistedBiomeCategories.contains(category.toString());
-			} else {
-				return true;
-			}
-		}
-		return false;
-	}
+    public static void setupWorldGen() {
+        registerConfiguredStructureFeatures();
+        registerStructureSeperationSettings();
+    }
 
-	public static void setupWorldGen() {
-		registerConfiguredStructureFeatures();
-		registerStructureSeperationSettings();
-	}
+    public static void registerStructureSeperationSettings() {
+        for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+            ShrinesStructure structure = holder.getStructure();
 
-	public static void registerStructureSeperationSettings() {
-		for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-			ShrinesStructure structure = holder.getStructure();
+            StructureFeatureConfiguration structureSeparationSettings = new StructureFeatureConfiguration(
+                    structure.getDistance(), structure.getSeparation(), structure.getSeedModifier());
 
-			StructureSeparationSettings structureSeparationSettings = new StructureSeparationSettings(
-					structure.getDistance(), structure.getSeparation(), structure.getSeedModifier());
+            StructureSettings.DEFAULTS = ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
+                    .putAll(StructureSettings.DEFAULTS).put(structure, structureSeparationSettings).build();
 
-			DimensionStructuresSettings.DEFAULTS = ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
-					.putAll(DimensionStructuresSettings.DEFAULTS).put(structure, structureSeparationSettings).build();
+            BuiltinRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
+                Map<StructureFeature<?>, StructureFeatureConfiguration> structureMap = settings.getValue().structureSettings()
+                        .structureConfig();
+                if (structureMap instanceof ImmutableMap) {
+                    Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
+                    tempMap.put(structure, structureSeparationSettings);
+                    settings.getValue().structureSettings().structureConfig = tempMap;
+                } else {
+                    structureMap.put(structure, structureSeparationSettings);
+                }
+            });
+            LOGGER.debug("Registered Structure Separation Settings for {}",
+                    holder.getStructure().getConfig().getName());
+        }
+    }
 
-			WorldGenRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
-				Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().structureSettings()
-						.structureConfig();
-				if (structureMap instanceof ImmutableMap) {
-					Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
-					tempMap.put(structure, structureSeparationSettings);
-					settings.getValue().structureSettings().structureConfig = tempMap;
-				} else {
-					structureMap.put(structure, structureSeparationSettings);
-				}
-			});
-			LOGGER.debug("Registered Structure Seperation Settings for {}",
-					holder.getStructure().getConfig().getName());
-		}
-	}
+    public static boolean verifyBiome(Biome biome, StructureRegistryHolder holder) {
+        if (biome.getRegistryName() != null && !Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(biome.getRegistryName().toString())) {
+            return holder.getStructure().getConfig().getGenerate() && StructureRegistrationUtils.checkBiome(
+                    holder.getStructure().getConfig().getBiomeBlacklist(),
+                    holder.getStructure().getConfig().getBiomeCategoryWhitelist(), biome.getRegistryName(), biome.getBiomeCategory());
+        }
+        return false;
+    }
 
-	public static void registerConfiguredStructureFeatures() {
-		for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-			ShrinesStructure structure = holder.getStructure();
-			holder.configure();
-			WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE,
-					structure.getRegistryName().toString(), holder.getConfiguredStructure());
-			FlatGenerationSettings.STRUCTURE_FEATURES.put(structure, holder.getConfiguredStructure());
-			LOGGER.debug("Registered configured structure feature of {}", holder.getStructure().getConfig().getName());
-		}
-	}
+    public static boolean checkBiome(List<? extends String> blacklistedBiomes,
+                                     List<? extends String> whitelistedBiomeCategories, ResourceLocation name, Biome.BiomeCategory category) {
+        if (!whitelistedBiomeCategories.isEmpty()) {
+            if (blacklistedBiomes.isEmpty()) {
+                return !blacklistedBiomes.contains(name.toString())
+                        && whitelistedBiomeCategories.contains(category.toString());
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private static Method GETCODEC_METHOD;
+    public static void registerConfiguredStructureFeatures() {
+        for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+            ShrinesStructure structure = holder.getStructure();
+            if (structure.getRegistryName() == null) {
+                continue;
+            }
+            BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE,
+                    structure.getRegistryName().toString(), holder.getConfiguredStructure());
+            // TODO Removed for now. Recheck. Can be left maybe
+            // FlatGenerationSettings.STRUCTURE_FEATURES.put(structure, holder.getConfiguredStructure());
+            LOGGER.debug("Registered configured structure feature of {}", holder.getStructure().getConfig().getName());
+        }
+    }
 
-	public static void addDimensionalSpacing(ServerWorld world) {
+    private static Method GETCODEC_METHOD;
 
-		/*
-		 * Skip Terraforged's chunk generator as they are a special case of a mod
-		 * locking down their chunkgenerator. They will handle your structure spacing
-		 * for your if you add to WorldGenRegistries.NOISE_GENERATOR_SETTINGS in your
-		 * structure's registration.
-		 */
-		try {
-			if (GETCODEC_METHOD == null)
-				GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
-			@SuppressWarnings("unchecked")
-			// cgRL = chunk generator Resource Location
-			ResourceLocation cgRL = Registry.CHUNK_GENERATOR
-					.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(world.getChunkSource().generator));
-			if (cgRL != null && cgRL.getNamespace().equals("terraforged"))
-				return;
-		} catch (Exception e) {
-			LOGGER.error("Was unable to check if " + world.dimension().location()
-					+ " is using Terraforged's ChunkGenerator.");
-		}
+    public static void addDimensionalSpacing(ServerLevel world) {
 
-		Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(
-				world.getChunkSource().generator.getSettings().structureConfig());
-		if (world.getChunkSource().getGenerator() instanceof FlatChunkGenerator
-				&& world.dimension().equals(World.OVERWORLD)) {
-			NewStructureInit.STRUCTURES.stream().map(StructureRegistryHolder::getStructure)
-					.collect(Collectors.toList()).forEach(tempMap.keySet()::remove);
-		} else {
-			for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-				if (isAllowedForWorld(world, holder.getStructure().getConfig())) {
-					tempMap.putIfAbsent(holder.getStructure(),
-							DimensionStructuresSettings.DEFAULTS.get(holder.getStructure()));
-				} else {
-					tempMap.remove(holder.getStructure());
-				}
-			}
-		}
-		world.getChunkSource().generator.getSettings().structureConfig = tempMap;
-	}
+        /*
+         * Skip Terraforged's chunk generator as they are a special case of a mod
+         * locking down their chunkgenerator. They will handle your structure spacing
+         * for your if you add to WorldGenRegistries.NOISE_GENERATOR_SETTINGS in your
+         * structure's registration.
+         */
+        try {
+            if (GETCODEC_METHOD == null)
+                GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "codec");
+            @SuppressWarnings("unchecked")
+            // cgRL = chunk generator Resource Location
+            ResourceLocation cgRL = Registry.CHUNK_GENERATOR
+                    .getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(world.getChunkSource().getGenerator()));
+            if (cgRL != null && cgRL.getNamespace().equals("terraforged"))
+                return;
+        } catch (Exception e) {
+            LOGGER.error("Was unable to check if " + world.dimension().location()
+                    + " is using Terraforged's ChunkGenerator.");
+        }
 
-	public static boolean isAllowedForWorld(ISeedReader currentWorld, StructureData config) {
-		String worldID = currentWorld.getLevel().dimension().location().toString();
-		return config.getDimension_whitelist().contains(worldID);
-	}
+        Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(
+                world.getChunkSource().getGenerator().getSettings().structureConfig());
+        if (world.getChunkSource().getGenerator() instanceof FlatLevelSource
+                && world.dimension().equals(Level.OVERWORLD)) {
+            NewStructureInit.STRUCTURES.stream().map(StructureRegistryHolder::getStructure)
+                    .collect(Collectors.toList()).forEach(tempMap.keySet()::remove);
+        } else {
+            for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+                if (isAllowedForWorld(world, holder.getStructure().getConfig())) {
+                    tempMap.putIfAbsent(holder.getStructure(),
+                            StructureSettings.DEFAULTS.get(holder.getStructure()));
+                } else {
+                    tempMap.remove(holder.getStructure());
+                }
+            }
+        }
+        world.getChunkSource().getGenerator().getSettings().structureConfig = tempMap;
+    }
+
+    public static boolean isAllowedForWorld(ServerLevel currentWorld, StructureData config) {
+        String worldID = currentWorld.getLevel().dimension().location().toString();
+        return config.getDimension_whitelist().contains(worldID);
+    }
 }

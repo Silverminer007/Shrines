@@ -13,8 +13,8 @@ package com.silverminer.shrines.structures.load;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,10 +36,10 @@ public class DefaultedStructureData {
     protected int distance = 60;
     protected int seperation = 12;
     protected int height_offset;
-    protected ArrayList<Biome.Category> biome_category_whitelist = Lists.newArrayList(Biome.Category.PLAINS,
-            Biome.Category.FOREST, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.JUNGLE,
-            Biome.Category.MESA, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.SWAMP,
-            Biome.Category.MUSHROOM);
+    protected ArrayList<Biome.BiomeCategory> biome_category_whitelist = Lists.newArrayList(Biome.BiomeCategory.PLAINS,
+            Biome.BiomeCategory.FOREST, Biome.BiomeCategory.TAIGA, Biome.BiomeCategory.SAVANNA, Biome.BiomeCategory.JUNGLE,
+            Biome.BiomeCategory.MESA, Biome.BiomeCategory.ICY, Biome.BiomeCategory.DESERT, Biome.BiomeCategory.SWAMP,
+            Biome.BiomeCategory.MUSHROOM);
     protected ArrayList<String> biome_blacklist = Lists.newArrayList();
     protected ArrayList<String> dimension_whitelist = Lists.newArrayList("minecraft:overworld");
     protected String start_pool;
@@ -51,13 +51,13 @@ public class DefaultedStructureData {
         this.seed_modifier = seed_modifier;
     }
 
-    public DefaultedStructureData addToBiomeCategoryWhitelist(Biome.Category... whitelist) {
+    public DefaultedStructureData addToBiomeCategoryWhitelist(Biome.BiomeCategory... whitelist) {
         this.biome_category_whitelist.addAll(Arrays.asList(whitelist));
         return this;
     }
 
-    public DefaultedStructureData removeFromBiomeCategoryWhitelist(Biome.Category... whitelist) {
-        for (Biome.Category s : whitelist) {
+    public DefaultedStructureData removeFromBiomeCategoryWhitelist(Biome.BiomeCategory... whitelist) {
+        for (Biome.BiomeCategory s : whitelist) {
             this.biome_category_whitelist.remove(s);
         }
         return this;
@@ -132,9 +132,9 @@ public class DefaultedStructureData {
         return this.biome_category_whitelist.stream().map(cat -> cat.toString()).collect(Collectors.toList());
     }
 
-    public DefaultedStructureData setBiomeCategoryWhitelist(Biome.Category... whitelist) {
+    public DefaultedStructureData setBiomeCategoryWhitelist(Biome.BiomeCategory... whitelist) {
         this.biome_category_whitelist.clear();
-        for (Biome.Category s : whitelist) {
+        for (Biome.BiomeCategory s : whitelist) {
             this.biome_category_whitelist.add(s);
         }
         return this;

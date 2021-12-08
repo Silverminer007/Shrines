@@ -15,23 +15,28 @@ import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.utils.network.cts.*;
 import com.silverminer.shrines.utils.network.stc.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.server.TickTask;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.thread.BlockableEventLoop;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class ShrinesPacketHandler {
 
-    public static final String PROTOCOL_VERSION = "5.5";
+    public static final String PROTOCOL_VERSION = "6.0";
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(ShrinesMod.MODID, "main_channel"))
             .clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -85,7 +90,6 @@ public class ShrinesPacketHandler {
                 CTSImportStructuresPacketPacket::encode, CTSImportStructuresPacketPacket::decode,
                 CTSImportStructuresPacketPacket::handle);
         CHANNEL.registerMessage(id++, STCErrorPacket.class, STCErrorPacket::encode, STCErrorPacket::decode, STCErrorPacket::handle);
-        CHANNEL.registerMessage(id++, STCClearImagesCachePacket.class, STCClearImagesCachePacket::encode, STCClearImagesCachePacket::decode, STCClearImagesCachePacket::handle);
         CHANNEL.registerMessage(id++, STCCacheStructureIconsPacket.class, STCCacheStructureIconsPacket::encode, STCCacheStructureIconsPacket::decode, STCCacheStructureIconsPacket::handle);
         CHANNEL.registerMessage(id++, CTSDeleteTemplatePoolPacket.class, CTSDeleteTemplatePoolPacket::encode, CTSDeleteTemplatePoolPacket::decode, CTSDeleteTemplatePoolPacket::handle);
         CHANNEL.registerMessage(id++, CTSAddTemplatePoolPacket.class, CTSAddTemplatePoolPacket::encode, CTSAddTemplatePoolPacket::decode, CTSAddTemplatePoolPacket::handle);
@@ -94,13 +98,17 @@ public class ShrinesPacketHandler {
                 PROTOCOL_VERSION, id);
     }
 
-    public static void sendTo(IPacket message, PlayerEntity player) {
-        CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), message);
+    public static void sendTo(IPacket message, Player player) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), message);
     }
 
     public static void sendTo(IPacket message, UUID uuid) {
-        MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
-        CHANNEL.send(PacketDistributor.PLAYER.with(() -> server.getPlayerList().getPlayer(uuid)), message);
+        BlockableEventLoop<? super TickTask> server = LogicalSidedProvider.WORKQUEUE.get(LogicalSide.SERVER);
+        if(server instanceof MinecraftServer) {
+            CHANNEL.send(PacketDistributor.PLAYER.with(() -> ((MinecraftServer) server).getPlayerList().getPlayer(uuid)), message);
+        } else {
+            throw new RuntimeException("Failed to send Shrines packets to client, because there was no server accessible");
+        }
     }
 
     @SuppressWarnings("unused")

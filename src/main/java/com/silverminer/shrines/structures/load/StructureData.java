@@ -2,8 +2,8 @@ package com.silverminer.shrines.structures.load;
 
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.structures.load.options.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.Random;
@@ -31,7 +31,7 @@ public class StructureData implements Comparable<StructureData> {
 
     public StringConfigOption novel;
 
-    public StructureData(CompoundNBT data) {
+    public StructureData(CompoundTag data) {
         this.name = new StringConfigOption(data.getCompound(ConfigOptions.name));
         this.key = new StringConfigOption(data.getCompound(ConfigOptions.key));
         this.transformLand = new BooleanConfigOption(data.getCompound(ConfigOptions.transform_land));
@@ -83,7 +83,7 @@ public class StructureData implements Comparable<StructureData> {
         this.novel = new StringConfigOption(ConfigOptions.novel, data.getNovel(), ConfigOptions.Comments.novel);
     }
 
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundTag write(CompoundTag tag) {
         tag.put(ConfigOptions.name, this.name.write());
         tag.put(ConfigOptions.key, this.key.write());
         tag.put(ConfigOptions.transform_land, this.transformLand.write());

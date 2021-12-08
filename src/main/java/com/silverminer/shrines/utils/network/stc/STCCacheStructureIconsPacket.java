@@ -3,11 +3,11 @@ package com.silverminer.shrines.utils.network.stc;
 import com.google.common.collect.Maps;
 import com.silverminer.shrines.utils.StructureLoadUtils;
 import com.silverminer.shrines.utils.network.IPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class STCCacheStructureIconsPacket implements IPacket {
         this.icons = icons;
     }
 
-    public static void encode(STCCacheStructureIconsPacket pkt, PacketBuffer buf) {
+    public static void encode(STCCacheStructureIconsPacket pkt, FriendlyByteBuf buf) {
         buf.writeInt(pkt.icons.size());
         for(Map.Entry<ResourceLocation, byte[]> icon : pkt.icons.entrySet()){
             buf.writeUtf(icon.getKey().toString());
@@ -28,7 +28,7 @@ public class STCCacheStructureIconsPacket implements IPacket {
         }
     }
 
-    public static STCCacheStructureIconsPacket decode(PacketBuffer buf) {
+    public static STCCacheStructureIconsPacket decode(FriendlyByteBuf buf) {
         HashMap<ResourceLocation, byte[]> icons = Maps.newHashMap();
         int count = buf.readInt();
         for(int i = 0; i < count; i++){

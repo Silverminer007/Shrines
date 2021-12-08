@@ -33,7 +33,7 @@ version = "${mc_version}-${mod_version}"
 group = 'com.silverminer.shrines'
 archivesBaseName = 'Shrines'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
@@ -52,17 +52,6 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            // This allows for optional authentication with Mojang servers
-            // If you want to authenticate, put these properties in GRADLE_HOME/gradle.properties
-            if (project.hasProperty('mc_uuid')) {
-                args '--uuid', project.getProperty('mc_uuid')
-            }
-            if (project.hasProperty('mc_username')) {
-                args '--username', project.getProperty('mc_username')
-            }
-            if (project.hasProperty('mc_accessToken')) {
-                args '--accessToken', project.getProperty('mc_accessToken')
-            }
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
@@ -102,12 +91,8 @@ minecraft {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:20.1.0'
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-
-	runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.6.1-forge")
-    // Apply Mixin AP
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

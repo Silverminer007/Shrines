@@ -1,21 +1,21 @@
 package com.silverminer.shrines.structures.load.options;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.Tag;
 
 public class DoubleConfigOption extends ConfigOption<Double> {
 
-	public DoubleConfigOption(String option, Double value, String... comments) {
-		super(option, value, comments);
-	}
+    public DoubleConfigOption(String option, Double value, String... comments) {
+        super(option, value, comments);
+    }
 
-	public DoubleConfigOption(CompoundNBT tag) {
-		super(tag.getDouble("Value"), tag);
-	}
+    public DoubleConfigOption(CompoundTag tag) {
+        super(tag.getDouble("Value"), tag);
+    }
 
-	@Override
-	protected INBT writeValue() {
-		return DoubleNBT.valueOf(this.getValue());
-	}
+    @Override
+    protected Tag writeValue() {
+        return DoubleTag.valueOf(this.getValue());
+    }
 }

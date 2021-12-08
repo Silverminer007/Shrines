@@ -1,8 +1,8 @@
 package com.silverminer.shrines.structures.load.options;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.Tag;
 
 public class IntegerConfigOption extends ConfigOption<Integer> {
 
@@ -10,12 +10,12 @@ public class IntegerConfigOption extends ConfigOption<Integer> {
 		super(option, value, comments);
 	}
 
-	public IntegerConfigOption(CompoundNBT tag) {
+	public IntegerConfigOption(CompoundTag tag) {
 		super(tag.getInt("Value"), tag);
 	}
 
 	@Override
-	protected INBT writeValue() {
-		return IntNBT.valueOf(this.getValue());
+	protected Tag writeValue() {
+		return IntTag.valueOf(this.getValue());
 	}
 }

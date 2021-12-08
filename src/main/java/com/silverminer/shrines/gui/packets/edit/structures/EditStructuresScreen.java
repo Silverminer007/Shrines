@@ -1,14 +1,13 @@
 package com.silverminer.shrines.gui.packets.edit.structures;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.config.DefaultStructureConfig;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
 import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
 import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -23,7 +22,7 @@ public class EditStructuresScreen extends EditStructurePacketScreen {
         super.init();
         this.structuresList = new EditStructuresList(minecraft, this.width, this.height, this.headerheight,
                 this.bottomheight, 35, () -> this.searchBox.getValue(), packet, this);
-        this.children.add(structuresList);
+        this.addWidget(this.structuresList);
         this.updateButtonStatus();
     }
 
@@ -51,11 +50,11 @@ public class EditStructuresScreen extends EditStructurePacketScreen {
                     });
                 }
                 this.minecraft.setScreen(this);
-            }, new TranslationTextComponent("gui.shrines.removeQuestion",
+            }, new TranslatableComponent("gui.shrines.removeQuestion",
                     this.structuresList.getSelected().getStructure().getName()),
-                    new TranslationTextComponent("gui.shrines.removeWarning"),
-                    new TranslationTextComponent("gui.shrines.delete"),
-                    DialogTexts.GUI_CANCEL));
+                    new TranslatableComponent("gui.shrines.removeWarning"),
+                    new TranslatableComponent("gui.shrines.delete"),
+                    CommonComponents.GUI_CANCEL));
         }
 
     }
@@ -73,7 +72,7 @@ public class EditStructuresScreen extends EditStructurePacketScreen {
     }
 
     @ParametersAreNonnullByDefault
-    public void render(MatrixStack ms, int mouseX, int mouseY, float p_230430_4_) {
+    public void render(PoseStack ms, int mouseX, int mouseY, float p_230430_4_) {
         this.structuresList.render(ms, mouseX, mouseY, p_230430_4_);
         super.render(ms, mouseX, mouseY, p_230430_4_);
     }

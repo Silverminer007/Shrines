@@ -1,15 +1,15 @@
 package com.silverminer.shrines.gui.packets.edit.templates;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
 import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSDeleteTemplatesPacket;
-import net.minecraft.client.gui.DialogTexts;
-import net.minecraft.client.gui.screen.WorkingScreen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.ProgressScreen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,9 +24,9 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
 
     protected void init() {
         super.init();
-        this.configure.setMessage(new TranslationTextComponent("gui.shrines.rename"));
+        this.configure.setMessage(new TranslatableComponent("gui.shrines.rename"));
         this.templatesList = new TemplatesList(minecraft, this.width, this.height, this.headerheight, this.bottomheight, 16, () -> this.searchBox.getValue(), packet, this);
-        this.children.add(templatesList);
+        this.addWidget(this.templatesList);
         this.updateButtonStatus();
     }
 
@@ -40,7 +40,7 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
         if (this.minecraft == null) {
             return;
         }
-        TranslationTextComponent title = new TranslationTextComponent("gui.shrines.templates.add.select");
+        TranslatableComponent title = new TranslatableComponent("gui.shrines.templates.add.select");
         String s = TinyFileDialogs.tinyfd_openFileDialog(title.getString(), null, null, null, true);
         if (s == null) {
             return;
@@ -56,13 +56,13 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
                 if (confirmed) {
                     ShrinesPacketHandler.sendToServer(new CTSDeleteTemplatesPacket(new ResourceLocation(entry.getTemplate()), this.packet.getSaveName()));
 
-                    this.minecraft.setScreen(new WorkingScreen());
+                    this.minecraft.setScreen(new ProgressScreen(true));
                 }
 
                 this.minecraft.setScreen(this);
-            }, new TranslationTextComponent("gui.shrines.removeQuestion", entry.getTemplate()),
-                    new TranslationTextComponent("gui.shrines.removeWarning"),
-                    new TranslationTextComponent("gui.shrines.delete"), DialogTexts.GUI_CANCEL)));
+            }, new TranslatableComponent("gui.shrines.removeQuestion", entry.getTemplate()),
+                    new TranslatableComponent("gui.shrines.removeWarning"),
+                    new TranslatableComponent("gui.shrines.delete"), CommonComponents.GUI_CANCEL)));
 
         }
     }
@@ -84,7 +84,7 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
     }
 
     @ParametersAreNonnullByDefault
-    public void render(MatrixStack ms, int mouseX, int mouseY, float p_230430_4_) {
+    public void render(PoseStack ms, int mouseX, int mouseY, float p_230430_4_) {
         this.templatesList.render(ms, mouseX, mouseY, p_230430_4_);
         super.render(ms, mouseX, mouseY, p_230430_4_);
     }

@@ -11,13 +11,13 @@
  */
 package com.silverminer.shrines.gui.packets.edit.structures;
 
-import com.silverminer.shrines.gui.IDoubleClickScreen;
+import com.silverminer.shrines.gui.misc.IDoubleClickScreen;
 import com.silverminer.shrines.gui.packets.edit.pools.EditPoolsList;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.TemplatePool;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;

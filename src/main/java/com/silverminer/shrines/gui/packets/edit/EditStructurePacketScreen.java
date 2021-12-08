@@ -1,6 +1,6 @@
 package com.silverminer.shrines.gui.packets.edit;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.IUpdatableScreen;
 import com.silverminer.shrines.gui.packets.edit.pools.EditPoolsScreen;
 import com.silverminer.shrines.gui.packets.edit.structures.EditStructuresScreen;
@@ -9,20 +9,20 @@ import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSEditedStructurePacketPacket;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.WorkingScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.ProgressScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 public abstract class EditStructurePacketScreen extends Screen implements IUpdatableScreen {
     protected final StructuresPacket packet;
-    protected TextFieldWidget searchBox;
+    protected EditBox searchBox;
     protected Button structuresButton;
     protected Button templatesButton;
     protected Button poolsButton;
@@ -34,10 +34,10 @@ public abstract class EditStructurePacketScreen extends Screen implements IUpdat
     protected boolean showHeader;
 
     public EditStructurePacketScreen(StructuresPacket packet) {
-        this(new TranslationTextComponent("gui.shrines.edit_packet"), packet, true);
+        this(new TranslatableComponent("gui.shrines.edit_packet"), packet, true);
     }
 
-    public EditStructurePacketScreen(ITextComponent title, StructuresPacket packet, boolean showHeader) {
+    public EditStructurePacketScreen(Component title, StructuresPacket packet, boolean showHeader) {
         super(title);
         this.packet = packet;
         this.showHeader = showHeader;
@@ -45,7 +45,7 @@ public abstract class EditStructurePacketScreen extends Screen implements IUpdat
 
     public void onClose() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(new WorkingScreen());
+            this.minecraft.setScreen(new ProgressScreen(true));
             ShrinesPacketHandler.sendToServer(
                     new CTSEditedStructurePacketPacket(this.packet));
         }
@@ -57,25 +57,25 @@ public abstract class EditStructurePacketScreen extends Screen implements IUpdat
         }
         this.headerheight = 46;
         this.bottomheight = this.height - 26;
-        this.searchBox = new TextFieldWidget(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
-                new StringTextComponent(""));
+        this.searchBox = new EditBox(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
+                new TextComponent(""));
         this.searchBox.setResponder(this::refreshList);
-        this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
+        this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), TextComponent.EMPTY));
         if (this.showHeader) {
             this.structuresButton = this
-                    .addButton(new Button(2, 24, 150, 20, new TranslationTextComponent("gui.shrines.structures"), (button) -> this.minecraft.setScreen(new EditStructuresScreen(this.packet))));
+                    .addRenderableWidget(new Button(2, 24, 150, 20, new TranslatableComponent("gui.shrines.structures"), (button) -> this.minecraft.setScreen(new EditStructuresScreen(this.packet))));
             this.templatesButton = this
-                    .addButton(new Button(165, 24, 150, 20, new TranslationTextComponent("gui.shrines.templates"), (button) -> this.minecraft.setScreen(new EditTemplatesScreen(this.packet))));
+                    .addRenderableWidget(new Button(165, 24, 150, 20, new TranslatableComponent("gui.shrines.templates"), (button) -> this.minecraft.setScreen(new EditTemplatesScreen(this.packet))));
             this.poolsButton = this
-                    .addButton(new Button(326, 24, 150, 20, new TranslationTextComponent("gui.shrines.pools"), (button) -> this.minecraft.setScreen(new EditPoolsScreen(this.packet))));
+                    .addRenderableWidget(new Button(326, 24, 150, 20, new TranslatableComponent("gui.shrines.pools"), (button) -> this.minecraft.setScreen(new EditPoolsScreen(this.packet))));
         }
-        this.delete = this.addButton(new Button(this.width / 2 - 40 - 80 - 3, this.height - 22, 80, 20,
-                new TranslationTextComponent("gui.shrines.delete"), (button) -> this.delete()));
-        this.configure = this.addButton(new Button(this.width / 2 - 40, this.height - 22, 80, 20,
-                new TranslationTextComponent("gui.shrines.configure"), (button) -> this.renameOrConfigure()));
-        this.add = this.addButton(new Button(this.width / 2 + 40 + 3, this.height - 22, 80, 20,
-                new TranslationTextComponent("gui.shrines.add"), (button) -> this.add()));
-        this.children.add(searchBox);
+        this.delete = this.addRenderableWidget(new Button(this.width / 2 - 40 - 80 - 3, this.height - 22, 80, 20,
+                new TranslatableComponent("gui.shrines.delete"), (button) -> this.delete()));
+        this.configure = this.addRenderableWidget(new Button(this.width / 2 - 40, this.height - 22, 80, 20,
+                new TranslatableComponent("gui.shrines.configure"), (button) -> this.renameOrConfigure()));
+        this.add = this.addRenderableWidget(new Button(this.width / 2 + 40 + 3, this.height - 22, 80, 20,
+                new TranslatableComponent("gui.shrines.add"), (button) -> this.add()));
+        this.addWidget(this.searchBox);
         this.setInitialFocus(this.searchBox);
     }
 
@@ -95,7 +95,7 @@ public abstract class EditStructurePacketScreen extends Screen implements IUpdat
     }
 
     @ParametersAreNonnullByDefault
-    public void render(MatrixStack ms, int mouseX, int mouseY, float p_230430_4_) {
+    public void render(PoseStack ms, int mouseX, int mouseY, float p_230430_4_) {
         this.searchBox.render(ms, mouseX, mouseY, p_230430_4_);
         drawCenteredString(ms, this.font, this.title, this.width / 2, 8, 16777215);
         super.render(ms, mouseX, mouseY, p_230430_4_);

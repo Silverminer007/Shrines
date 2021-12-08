@@ -11,15 +11,13 @@
  */
 package com.silverminer.shrines.gui.misc;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -30,7 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @OnlyIn(Dist.CLIENT)
 public class CoomingSoonScreen extends Screen {
 	protected static final Logger LOGGER = LogManager.getLogger(CoomingSoonScreen.class);
-	protected static final TranslationTextComponent TITLE = new TranslationTextComponent(
+	protected static final TranslatableComponent TITLE = new TranslatableComponent(
 			"shrines.general.cooming_soon");
 
 	public CoomingSoonScreen() {
@@ -41,7 +39,7 @@ public class CoomingSoonScreen extends Screen {
 
 	@Override
 	@ParametersAreNonnullByDefault
-	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if(this.minecraft == null){
 			return;
 		}

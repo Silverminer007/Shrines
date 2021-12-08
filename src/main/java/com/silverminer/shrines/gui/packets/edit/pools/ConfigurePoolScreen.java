@@ -1,14 +1,14 @@
 package com.silverminer.shrines.gui.packets.edit.pools;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.TemplatePool;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSAddTemplatePoolPacket;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.WorkingScreen;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.ProgressScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -18,7 +18,7 @@ public class ConfigurePoolScreen extends EditStructurePacketScreen {
     protected ConfigurePoolList poolsList;
 
     public ConfigurePoolScreen(Screen lastScreen, StructuresPacket packet, TemplatePool pool) {
-        super(new TranslationTextComponent("gui.shrines.pools.configure_pool"), packet, false);
+        super(new TranslatableComponent("gui.shrines.pools.configure_pool"), packet, false);
         this.lastScreen = lastScreen;
         this.pool = pool;
     }
@@ -26,7 +26,7 @@ public class ConfigurePoolScreen extends EditStructurePacketScreen {
     @Override
     public void onClose() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(new WorkingScreen());
+            this.minecraft.setScreen(new ProgressScreen(true));
             ShrinesPacketHandler.sendToServer(new CTSAddTemplatePoolPacket(this.pool, this.packet.getSaveName()));
         }
     }
@@ -35,10 +35,10 @@ public class ConfigurePoolScreen extends EditStructurePacketScreen {
     protected void init() {
         super.init();
         this.headerheight = 26;
-        this.delete.setMessage(new TranslationTextComponent("gui.shrines.remove"));
+        this.delete.setMessage(new TranslatableComponent("gui.shrines.remove"));
         this.poolsList = new ConfigurePoolList(minecraft, this.width, this.height, this.headerheight,
                 this.bottomheight, 23, () -> this.searchBox.getValue(), packet, this, pool);
-        this.children.add(poolsList);
+        this.addWidget(this.poolsList);
         this.updateButtonStatus();
         this.refreshList(this.searchBox.getValue());
     }
@@ -73,7 +73,7 @@ public class ConfigurePoolScreen extends EditStructurePacketScreen {
 
     @Override
     @ParametersAreNonnullByDefault
-    public void render(MatrixStack ms, int mouseX, int mouseY, float p_230430_4_) {
+    public void render(PoseStack ms, int mouseX, int mouseY, float p_230430_4_) {
         this.poolsList.render(ms, mouseX, mouseY, p_230430_4_);
         super.render(ms, mouseX, mouseY, p_230430_4_);
     }

@@ -6,10 +6,10 @@ import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.stc.STCErrorPacket;
 import com.silverminer.shrines.utils.network.stc.STCExportStructuresPacketPacket;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,13 +27,13 @@ public class CTSExportStructuresPacketPacket implements IPacket {
         this.exportDestination = exportDestination;
     }
 
-    public static void encode(CTSExportStructuresPacketPacket pkt, PacketBuffer buf) {
+    public static void encode(CTSExportStructuresPacketPacket pkt, FriendlyByteBuf buf) {
         buf.writeUtf(pkt.packetSaveName);
         buf.writeUtf(pkt.packetDisplayName);
         buf.writeUtf(pkt.exportDestination);
     }
 
-    public static CTSExportStructuresPacketPacket decode(PacketBuffer buf) {
+    public static CTSExportStructuresPacketPacket decode(FriendlyByteBuf buf) {
         return new CTSExportStructuresPacketPacket(buf.readUtf(), buf.readUtf(), buf.readUtf());
     }
 
@@ -43,7 +43,7 @@ public class CTSExportStructuresPacketPacket implements IPacket {
     }
 
     private static class Handle {
-        public static DistExecutor.SafeRunnable handle(CTSExportStructuresPacketPacket packet, ServerPlayerEntity sender) {
+        public static DistExecutor.SafeRunnable handle(CTSExportStructuresPacketPacket packet, ServerPlayer sender) {
             return new DistExecutor.SafeRunnable() {
 
                 private static final long serialVersionUID = 1L;

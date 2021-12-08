@@ -11,15 +11,15 @@
  */
 package com.silverminer.shrines.gui.packets.edit.pools;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.IUpdatableScreen;
-import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.TemplatePool;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -38,7 +38,7 @@ import java.util.function.Supplier;
  *
  */
 @OnlyIn(Dist.CLIENT)
-public class EditPoolsList extends ExtendedList<EditPoolsList.Entry> {
+public class EditPoolsList extends ObjectSelectionList<EditPoolsList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger(EditPoolsList.class);
 	protected final IUpdatableScreen screen;
 	protected final StructuresPacket packet;
@@ -87,7 +87,7 @@ public class EditPoolsList extends ExtendedList<EditPoolsList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public class Entry extends ExtendedList.AbstractListEntry<EditPoolsList.Entry> {
+	public class Entry extends ObjectSelectionList.Entry<EditPoolsList.Entry> {
 		protected final Minecraft minecraft;
 		protected final TemplatePool pool;
 		protected long lastClickTime;
@@ -98,9 +98,9 @@ public class EditPoolsList extends ExtendedList<EditPoolsList.Entry> {
 		}
 
 		@ParametersAreNonnullByDefault
-		public void render(MatrixStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
-				int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			StringTextComponent header = new StringTextComponent(pool.getName().toString());
+		public void render(PoseStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
+						   int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+			TextComponent header = new TextComponent(pool.getName().toString());
 			String s1 = "Entries: " + this.pool.getEntries().size();
 
 			this.minecraft.font.draw(ms, header, left, top + 1, 0xffffff);
@@ -124,6 +124,11 @@ public class EditPoolsList extends ExtendedList<EditPoolsList.Entry> {
 
 		public TemplatePool getPool(){
 			return this.pool;
+		}
+
+		@Override
+		public Component getNarration() {
+			return new TextComponent(this.getPool().getName().toString());
 		}
 	}
 }

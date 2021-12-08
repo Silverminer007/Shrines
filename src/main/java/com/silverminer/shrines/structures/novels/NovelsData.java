@@ -1,18 +1,16 @@
 package com.silverminer.shrines.structures.novels;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.Lists;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.nbt.NumericTag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Lists;
-
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.LongNBT;
-import net.minecraft.nbt.NumberNBT;
-import net.minecraft.util.math.BlockPos;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class NovelsData {
 	protected static final Logger LOGGER = LogManager.getLogger(NovelsData.class);
@@ -52,23 +50,23 @@ public class NovelsData {
 		this.found_structures_count++;
 	}
 
-	public CompoundNBT save() {
-		CompoundNBT tag = new CompoundNBT();
+	public CompoundTag save() {
+		CompoundTag tag = new CompoundTag();
 		tag.putString("Structure", structure);
 		tag.putInt("count", found_structures_count);
-		ListNBT list = new ListNBT();
-		list.addAll(this.found_structures.stream().map(pos -> LongNBT.valueOf(pos.asLong())).collect(Collectors.toList()));
+		ListTag list = new ListTag();
+		list.addAll(this.found_structures.stream().map(pos -> LongTag.valueOf(pos.asLong())).collect(Collectors.toList()));
 		tag.put("Places", list);
 		return tag;
 	}
 
-	public static NovelsData read(CompoundNBT tag) {
+	public static NovelsData read(CompoundTag tag) {
 		String structure = tag.getString("Structure");
 		int count = tag.getInt("count");
-		ListNBT list = (ListNBT) tag.get("Places");
+		ListTag list = (ListTag) tag.get("Places");
 		ArrayList<BlockPos> places = Lists.newArrayList();
 		for(int i = 0; i < list.size(); i++) {
-			places.add(BlockPos.of(((NumberNBT)list.get(i)).getAsLong()));
+			places.add(BlockPos.of(((NumericTag)list.get(i)).getAsLong()));
 		}
 		return new NovelsData(structure, places, count);
 	}

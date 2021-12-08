@@ -1,7 +1,7 @@
 package com.silverminer.shrines.gui.packets.edit.structures;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
 import com.silverminer.shrines.gui.misc.screen.BiomeGenerationSettingsScreen;
 import com.silverminer.shrines.gui.misc.screen.StringListOptionsScreen;
@@ -9,15 +9,15 @@ import com.silverminer.shrines.structures.load.StructureData;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.structures.load.options.ConfigOption;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.INestedGuiEventHandler;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
-public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.Entry<?>> {
+public class ConfigureStructureList extends ObjectSelectionList<ConfigureStructureList.Entry<?>> {
     protected StructureData structure;
     protected ConfigureStructureScreen screen;
     protected final StructuresPacket packet;
@@ -95,15 +95,15 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
     @OnlyIn(Dist.CLIENT)
     public abstract class Entry<T>
-            extends ExtendedList.AbstractListEntry<ConfigureStructureList.Entry<?>> implements INestedGuiEventHandler {
+            extends ObjectSelectionList.Entry<ConfigureStructureList.Entry<?>> implements ContainerEventHandler {
         protected final ConfigOption<T> option;
         protected final Consumer<T> setter;
         protected final Supplier<T> getter;
         protected Minecraft minecraft;
-        protected ArrayList<IGuiEventListener> children = Lists.newArrayList();
+        protected ArrayList<GuiEventListener> children = Lists.newArrayList();
         protected T value;
         @Nullable
-        private IGuiEventListener focused;
+        private GuiEventListener focused;
         private boolean dragging;
 
         public Entry(ConfigOption<T> option, Supplier<T> value, Consumer<T> saver) {
@@ -120,24 +120,24 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
-            String description = new TranslationTextComponent("options.shrines." + this.option.getOption()).getString();
+            String description = new TranslatableComponent("options.shrines." + this.option.getOption()).getString();
             int descriptionWidth = minecraft.font.width(description);
             int descriptionTop = top + (ConfigureStructureList.this.itemHeight - minecraft.font.lineHeight) / 2;
             minecraft.font.drawShadow(ms, description, left, descriptionTop, 16777215);
 
             if ((mouseX >= left) && (mouseX < (left + descriptionWidth))
                     && (mouseY >= descriptionTop) && (mouseY < (descriptionTop + minecraft.font.lineHeight))) {
-                List<ITextComponent> comment = Arrays.stream(this.option.getComments())
-                        .map(TranslationTextComponent::new).collect(Collectors.toList());
+                List<Component> comment = Arrays.stream(this.option.getComments())
+                        .map(TranslatableComponent::new).collect(Collectors.toList());
                 ConfigureStructureList.this.screen.renderComponentTooltip(ms, comment, mouseX, mouseY);
             }
         }
 
         @Override
         @Nonnull
-        public List<? extends IGuiEventListener> children() {
+        public List<? extends GuiEventListener> children() {
             return children;
         }
 
@@ -150,12 +150,17 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
         }
 
         @Nullable
-        public IGuiEventListener getFocused() {
+        public GuiEventListener getFocused() {
             return this.focused;
         }
 
-        public void setFocused(@Nullable IGuiEventListener p_231035_1_) {
+        public void setFocused(@Nullable GuiEventListener p_231035_1_) {
             this.focused = p_231035_1_;
+        }
+
+        @Override
+        public Component getNarration() {
+            return new TextComponent(this.option.getOption());
         }
     }
 
@@ -165,7 +170,7 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
         public BooleanEntry(ConfigOption<Boolean> option, Supplier<Boolean> value, Consumer<Boolean> saver) {
             super(option, value, saver);
-            this.button = new BooleanValueButton(0, 0, StringTextComponent.EMPTY, (button) -> {
+            this.button = new BooleanValueButton(0, 0, TextComponent.EMPTY, (button) -> {
                 this.value = ((BooleanValueButton) button).value;
                 this.setter.accept(this.value);
             }, this.value);
@@ -174,7 +179,7 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.button.x = left + (width / 2);
@@ -185,11 +190,11 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
     @OnlyIn(Dist.CLIENT)
     public class StringEntry extends Entry<String> {
-        protected final TextFieldWidget textField;
+        protected final EditBox textField;
 
         public StringEntry(ConfigOption<String> option, Supplier<String> value, Consumer<String> saver, int maxLength) {
             super(option, value, saver);
-            this.textField = new TextFieldWidget(this.minecraft.font, 0, 0, 200, 20, StringTextComponent.EMPTY);
+            this.textField = new EditBox(this.minecraft.font, 0, 0, 200, 20, TextComponent.EMPTY);
             this.textField.setMaxLength(maxLength);
             this.textField.setValue(value.get());
             this.textField.setResponder(text -> {
@@ -205,7 +210,7 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.textField.x = left + (width / 2);
@@ -216,11 +221,11 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
     @OnlyIn(Dist.CLIENT)
     public class DoubleEntry extends Entry<Double> {
-        protected final TextFieldWidget textField;
+        protected final EditBox textField;
 
         public DoubleEntry(ConfigOption<Double> option, Supplier<Double> value, Consumer<Double> saver) {
             super(option, value, saver);
-            this.textField = new TextFieldWidget(this.minecraft.font, 0, 0, 200, 20, StringTextComponent.EMPTY);
+            this.textField = new EditBox(this.minecraft.font, 0, 0, 200, 20, TextComponent.EMPTY);
             this.textField.setValue(value.get().toString());
             this.textField.setResponder(text -> {
                 try {
@@ -237,7 +242,7 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.textField.x = left + (width / 2);
@@ -248,14 +253,14 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
     @OnlyIn(Dist.CLIENT)
     public class IntegerEntry extends Entry<Integer> {
-        protected final TextFieldWidget textField;
+        protected final EditBox textField;
         protected final boolean isNullAllowed;
         protected boolean isNegativeAllowed;
 
         public IntegerEntry(ConfigOption<Integer> option, Supplier<Integer> value, Consumer<Integer> saver,
                             boolean isNullAllowed, boolean isNegativeAllowed) {
             super(option, value, saver);
-            this.textField = new TextFieldWidget(this.minecraft.font, 0, 0, 200, 20, StringTextComponent.EMPTY);
+            this.textField = new EditBox(this.minecraft.font, 0, 0, 200, 20, TextComponent.EMPTY);
             this.textField.setValue(value.get().toString());
             this.isNullAllowed = isNullAllowed;
             this.isNegativeAllowed = isNegativeAllowed;
@@ -276,7 +281,7 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.textField.x = left + (width / 2);
@@ -292,14 +297,14 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
         public StringListEntry(ConfigOption<List<String>> option, Supplier<List<String>> value,
                                Consumer<List<String>> saver, List<String> possibleValues) {
             super(option, value, saver);
-            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new StringListOptionsScreen(ConfigureStructureList.this.screen, possibleValues,
-                    Lists.newArrayList(this.getter.get()), new TranslationTextComponent("options.shrines." + this.option.getOption()), saver)));
+            this.button = new Button(0, 0, 70, 20, new TranslatableComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new StringListOptionsScreen(ConfigureStructureList.this.screen, possibleValues,
+                    Lists.newArrayList(this.getter.get()), new TranslatableComponent("options.shrines." + this.option.getOption()), saver)));
             this.children.add(this.button);
         }
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.button.x = left + (width / 2);
@@ -323,14 +328,14 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
             this.categoriesOption = categoriesOption;
             this.categoriesSetter = categoriesSaver;
             this.categoriesGetter = categories;
-            this.button = new Button(0, 0, 70, 20, new TranslationTextComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new BiomeGenerationSettingsScreen(screen, this.getter.get(),
-                    this.categoriesGetter.get(), new TranslationTextComponent("options.shrines." + this.option.getOption()), this.setter, this.categoriesSetter)));
+            this.button = new Button(0, 0, 70, 20, new TranslatableComponent("gui.shrines.configure"), (button) -> this.minecraft.setScreen(new BiomeGenerationSettingsScreen(screen, this.getter.get(),
+                    this.categoriesGetter.get(), new TranslatableComponent("options.shrines." + this.option.getOption()), this.setter, this.categoriesSetter)));
             this.children.add(this.button);
         }
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.button.x = left + (width / 2);
@@ -347,14 +352,14 @@ public class ConfigureStructureList extends ExtendedList<ConfigureStructureList.
                          Consumer<String> setter) {
             super(option, value, setter);
             this.button = new Button(0, 0, 70, 20,
-                    value.get().isEmpty() ? new TranslationTextComponent("gui.shrines.choose") : new TranslationTextComponent("gui.shrines.change"),
+                    value.get().isEmpty() ? new TranslatableComponent("gui.shrines.choose") : new TranslatableComponent("gui.shrines.change"),
                     (button) -> this.minecraft.setScreen(new SelectPoolScreen(ConfigureStructureList.this.screen, ConfigureStructureList.this.packet, ConfigureStructureList.this.structure, new ResourceLocation(this.value))));
             this.children.add(this.button);
         }
 
         @Override
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+        public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
             super.render(ms, index, top, left, width, height, mouseX, mouseY, isHot, partialTicks);
             this.button.x = left + (width / 2);

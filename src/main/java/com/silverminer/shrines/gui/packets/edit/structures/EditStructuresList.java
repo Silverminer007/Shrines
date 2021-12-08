@@ -11,37 +11,35 @@
  */
 package com.silverminer.shrines.gui.packets.edit.structures;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
+import com.silverminer.shrines.structures.load.StructureData;
+import com.silverminer.shrines.structures.load.StructuresPacket;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
-import com.silverminer.shrines.structures.load.StructureData;
-import com.silverminer.shrines.structures.load.StructuresPacket;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 /**
  * @author Silverminer
  *
  */
 @OnlyIn(Dist.CLIENT)
-public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
+public class EditStructuresList extends ObjectSelectionList<EditStructuresList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger(EditStructuresList.class);
 	private final EditStructurePacketScreen screen;
 	private final StructuresPacket packet;
@@ -92,7 +90,7 @@ public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public final class Entry extends ExtendedList.AbstractListEntry<EditStructuresList.Entry> {
+	public final class Entry extends ObjectSelectionList.Entry<EditStructuresList.Entry> {
 		private final Minecraft minecraft;
 		private final StructureData structure;
 		private long lastClickTime;
@@ -103,9 +101,9 @@ public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
 		}
 
 		@ParametersAreNonnullByDefault
-		public void render(MatrixStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
-				int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-			StringTextComponent header = new StringTextComponent(structure.getName());
+		public void render(PoseStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
+						   int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
+			TextComponent header = new TextComponent(structure.getName());
 			header.withStyle(Style.EMPTY.withItalic(!this.structure.registered));
 			String headerRight = " (" + structure.getKey() + ")";
 			String s1 = "Dimensions: " + this.structure.getDimension_whitelist().toString();
@@ -134,6 +132,11 @@ public class EditStructuresList extends ExtendedList<EditStructuresList.Entry> {
 
 		public StructureData getStructure() {
 			return this.structure;
+		}
+
+		@Override
+		public Component getNarration() {
+			return new TextComponent(this.structure.getName());
 		}
 	}
 }

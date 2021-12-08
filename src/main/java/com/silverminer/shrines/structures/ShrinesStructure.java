@@ -15,50 +15,83 @@ import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.structures.load.StructureData;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SharedSeedRandom;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
-import net.minecraft.world.gen.feature.structure.*;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.Pools;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
+import net.minecraft.world.level.levelgen.structure.NoiseAffectingStructureFeature;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class ShrinesStructure extends Structure<NoFeatureConfig> {
+public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfiguration> {
     protected static final Logger LOGGER = LogManager.getLogger(ShrinesStructure.class);
 
     public final String name;
     public StructureData structureConfig;
 
     public ShrinesStructure(String nameIn, StructureData config) {
-        super(NoFeatureConfig.CODEC);
+        super(JigsawConfiguration.CODEC, (context) -> {
+            if (!ShrinesStructure.checkLocation(context, config)) {
+                return Optional.empty();
+            } else {
+                JigsawConfiguration newConfig = new JigsawConfiguration(
+                        () -> context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY)
+                                .get(new ResourceLocation(config.getStart_pool())),
+                        7
+                );
+                PieceGeneratorSupplier.Context<JigsawConfiguration> newContext = new PieceGeneratorSupplier.Context<>(
+                        context.chunkGenerator(),
+                        context.biomeSource(),
+                        context.seed(),
+                        context.chunkPos(),
+                        newConfig,
+                        context.heightAccessor(),
+                        context.validBiome(),
+                        context.structureManager(),
+                        context.registryAccess()
+                );
+                Pools.bootstrap();
+
+                BlockPos position = new BlockPos(context.chunkPos().x, 0, context.chunkPos().z);
+                if (context.chunkGenerator().getNoiseBiome(position.getX(), position.getY(), position.getZ()).equals(Biome.BiomeCategory.NETHER)) {
+                    NoiseColumn blockReader = context.chunkGenerator().getBaseColumn(position.getX(), position.getZ(), context.heightAccessor());
+                    int i = 0;
+                    while (!blockReader.getBlock(i).isAir()) {
+                        i++;
+                    }
+                    position = new BlockPos(position.getX(), i, position.getZ());
+                    return JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, position, false, false);
+                } else {
+                    return JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, position, false, true);
+                }
+            }
+        });
         this.name = nameIn;
         this.structureConfig = config;
         this.setRegistryName(this.getFeatureName());
     }
 
     @Override
-    public GenerationStage.Decoration step() {
-        return GenerationStage.Decoration.SURFACE_STRUCTURES;
+    public GenerationStep.Decoration step() {
+        return GenerationStep.Decoration.SURFACE_STRUCTURES;
     }
 
     @Override
@@ -82,51 +115,41 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
         return this.getConfig().getSpawn_chance();
     }
 
-    public List<? extends String> getDimensions() {
-        return this.getConfig().getDimension_whitelist();
-    }
-
     public StructureData getConfig() {
         return this.structureConfig;
     }
 
-    @Override
-    protected boolean isFeatureChunk(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
-                                     int chunkX, int chunkZ, Biome biome, ChunkPos pos, NoFeatureConfig config) {
-        rand.setLargeFeatureSeed(seed, chunkX, chunkZ);
-        List<Structure<?>> structures = new ArrayList<>();
+    public static boolean checkLocation(PieceGeneratorSupplier.Context<JigsawConfiguration> context, StructureData structureConfig) {
+        WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(context.seed()));
+        worldgenrandom.setLargeFeatureSeed(context.seed(), context.chunkPos().x, context.chunkPos().z);
+        List<StructureFeature<?>> structures = new ArrayList<>();
 
         for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-            Structure<?> structure = holder.getStructure();
-
-            if (structure.step() == this.step()) {
-                structures.add(structure);
-            }
+            structures.add(holder.getStructure());
         }
-        structures.add(Structure.VILLAGE);
-        if (!this.checkForOtherStructures(this, generator, seed, rand, chunkX, chunkZ, structures)) {
+        structures.add(StructureFeature.VILLAGE);
+        if (!ShrinesStructure.checkForOtherStructures(structureConfig, context.chunkGenerator(), context.seed(), context.chunkPos(), structures)) {
             return false;
         }
-        if (generator.getFirstFreeHeight(chunkX, chunkZ, Heightmap.Type.WORLD_SURFACE_WG) < 60
-                && biome.getBiomeCategory() != Biome.Category.NETHER) {
+        if (context.chunkGenerator().getFirstFreeHeight(context.chunkPos().x, context.chunkPos().z, Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor()) < 60) {
             return false;
         }
-        return rand.nextDouble() < getSpawnChance();
+        return worldgenrandom.nextDouble() < structureConfig.getSpawn_chance();
     }
 
-    protected boolean checkForOtherStructures(Structure<?> structure, ChunkGenerator generator, long seed,
-                                              SharedSeedRandom rand, int chunkX, int chunkZ, List<Structure<?>> structures) {
-        for (Structure<?> structure1 : structures) {
-            StructureSeparationSettings separationSettings = generator.getSettings().getConfig(structure1);
+    public static boolean checkForOtherStructures(StructureData structureConfig, ChunkGenerator generator, long seed,
+                                                  ChunkPos chunkPos, List<StructureFeature<?>> structures) {
+        for (StructureFeature<?> structure1 : structures) {
+            StructureFeatureConfiguration separationSettings = generator.getSettings().getConfig(structure1);
 
-            if (separationSettings == null || structure == structure1) {
+            if (separationSettings == null || (structure1 instanceof ShrinesStructure && ((ShrinesStructure) structure1).structureConfig.getKey().equals(structureConfig.getKey()))) {
                 continue;
             }
 
             int distance = Config.SETTINGS.STRUCTURE_MIN_DISTANCE.get();
-            for (int x = chunkX - distance; x <= chunkX + distance; x++) {
-                for (int z = chunkZ - distance; z <= chunkZ + distance; z++) {
-                    ChunkPos structurePos = structure1.getPotentialFeatureChunk(separationSettings, seed, rand, x, z);
+            for (int x = chunkPos.x - distance; x <= chunkPos.x + distance; x++) {
+                for (int z = chunkPos.z - distance; z <= chunkPos.z + distance; z++) {
+                    ChunkPos structurePos = structure1.getPotentialFeatureChunk(separationSettings, seed, x, z);
 
                     if (x == structurePos.x && z == structurePos.z) {
                         return false;
@@ -136,66 +159,5 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
         }
 
         return true;
-    }
-
-    public int getMaxDepth() {
-        return 7;
-    }
-
-    public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-        return (structure, chunkX, chunkZ, mbb, references, seed) -> new Start(this, chunkX, chunkZ, mbb, references, seed);
-    }
-
-    public static class Start extends MarginedStructureStart<NoFeatureConfig> {
-        private final ShrinesStructure feature;
-
-        public Start(ShrinesStructure structure, int chunkX, int chunkZ, MutableBoundingBox mbb, int references,
-                     long seed) {
-            super(structure, chunkX, chunkZ, mbb, references, seed);
-            this.feature = structure;
-        }
-
-        @SuppressWarnings("deprecation")
-        @Override
-        public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
-                                   TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig no_config) {
-            JigsawPatternRegistry.bootstrap();
-
-            String location = this.feature.structureConfig.getStart_pool();
-            LocalDate localdate = LocalDate.now();
-            if (this.feature.getFeatureName().contains("balloon") && localdate.get(ChronoField.MONTH_OF_YEAR) == 6) {
-                location += "_rainbow";
-            }
-            ResourceLocation pool = new ResourceLocation(location);
-            VillageConfig config = new VillageConfig(
-                    () -> registries.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(pool),
-                    this.feature.getMaxDepth());
-
-            BlockPos blockpos;
-            // Check if the actual Dimension has ceiling. If so we don't want it to be
-            // generated over it so we need to search for another place
-            if (biome.getBiomeCategory().equals(Biome.Category.NETHER)) {
-                blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
-                IBlockReader blockReader = chunkGenerator.getBaseColumn(blockpos.getX(), blockpos.getZ());
-                while (!blockReader.getBlockState(blockpos).isAir(blockReader, blockpos)) {
-                    blockpos = blockpos.above();
-                }
-                JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
-                        blockpos, this.pieces, this.random, false, false);
-            } else {
-                blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
-                JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
-                        blockpos, this.pieces, this.random, false, true);
-            }
-
-            Vector3i structureCenter = this.pieces.get(0).getBoundingBox().getCenter();
-            int xOffset = blockpos.getX() - structureCenter.getX();
-            int zOffset = blockpos.getZ() - structureCenter.getZ();
-            for (StructurePiece structurePiece : this.pieces) {
-                structurePiece.move(xOffset, 0, zOffset);
-            }
-
-            this.calculateBoundingBox();
-        }
     }
 }

@@ -1,16 +1,16 @@
 package com.silverminer.shrines.gui.packets.edit.pools;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.silverminer.shrines.gui.IDoubleClickScreen;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.silverminer.shrines.gui.misc.IDoubleClickScreen;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.TemplatePool;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Collectors;
@@ -20,11 +20,11 @@ public class AddTemplateToPoolScreen extends Screen implements IDoubleClickScree
     protected final StructuresPacket packet;
     protected final TemplatePool templatePool;
     protected Button add;
-    protected TextFieldWidget searchBox;
+    protected EditBox searchBox;
     protected SelectTemplatesList templatesList;
 
     public AddTemplateToPoolScreen(Screen lastScreen, StructuresPacket packet, TemplatePool templatePool) {
-        super(new TranslationTextComponent("gui.shrines.pools.select_templates"));
+        super(new TranslatableComponent("gui.shrines.pools.select_templates"));
         this.lastScreen = lastScreen;
         this.packet = packet;
         this.templatePool = templatePool;
@@ -40,23 +40,23 @@ public class AddTemplateToPoolScreen extends Screen implements IDoubleClickScree
         if (this.minecraft == null) {
             return;
         }
-        this.searchBox = new TextFieldWidget(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
-                StringTextComponent.EMPTY);
+        this.searchBox = new EditBox(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
+                TextComponent.EMPTY);
         this.searchBox.setResponder(this::refreshList);
         this.templatesList = new SelectTemplatesList(minecraft, this.width, this.height, 26, this.height - 26, 16,
                 () -> this.searchBox.getValue(),
                 packet, this, this.templatePool.getEntries().stream().map(TemplatePool.Entry::getTemplate).collect(Collectors.toList()));
-        this.addButton(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), StringTextComponent.EMPTY));
-        this.add = this.addButton(new Button(this.width / 2 - 50, this.height - 22, 100, 20,
-                new TranslationTextComponent("gui.shrines.add"), (button) -> this.add()));
-        this.children.add(searchBox);
-        this.children.add(this.templatesList);
+        this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), TextComponent.EMPTY));
+        this.add = this.addRenderableWidget(new Button(this.width / 2 - 50, this.height - 22, 100, 20,
+                new TranslatableComponent("gui.shrines.add"), (button) -> this.add()));
+        this.addWidget(this.searchBox);
+        this.addWidget(this.templatesList);
         this.setInitialFocus(this.searchBox);
         this.updateButtonStatus(this.templatesList.getSelectedOpt().isPresent());
     }
 
     private void add() {
-        for(SelectTemplatesList.MultipleSelectEntry entry : this.templatesList.getSelectEntries()){
+        for (SelectTemplatesList.MultipleSelectEntry entry : this.templatesList.getSelectEntries()) {
             this.templatePool.getEntries().add(new TemplatePool.Entry(entry.getTemplate()));
         }
         this.onClose();
@@ -77,7 +77,7 @@ public class AddTemplateToPoolScreen extends Screen implements IDoubleClickScree
     }
 
     @ParametersAreNonnullByDefault
-    public void render(MatrixStack ms, int mouseX, int mouseY, float p_230430_4_) {
+    public void render(PoseStack ms, int mouseX, int mouseY, float p_230430_4_) {
         this.templatesList.render(ms, mouseX, mouseY, p_230430_4_);
         super.render(ms, mouseX, mouseY, p_230430_4_);
     }

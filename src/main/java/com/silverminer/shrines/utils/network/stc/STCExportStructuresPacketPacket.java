@@ -2,13 +2,11 @@ package com.silverminer.shrines.utils.network.stc;
 
 import com.silverminer.shrines.utils.ClientUtils;
 import com.silverminer.shrines.utils.network.IPacket;
-import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,13 +24,13 @@ public class STCExportStructuresPacketPacket implements IPacket {
         this.archive = archive;
     }
 
-    public static void encode(STCExportStructuresPacketPacket pkt, PacketBuffer buf) {
+    public static void encode(STCExportStructuresPacketPacket pkt, FriendlyByteBuf buf) {
         buf.writeUtf(pkt.exportDestination);
         buf.writeUtf(pkt.fileName);
         buf.writeByteArray(pkt.archive);
     }
 
-    public static STCExportStructuresPacketPacket decode(PacketBuffer buf) {
+    public static STCExportStructuresPacketPacket decode(FriendlyByteBuf buf) {
         return new STCExportStructuresPacketPacket(buf.readUtf(), buf.readUtf(), buf.readByteArray());
     }
 

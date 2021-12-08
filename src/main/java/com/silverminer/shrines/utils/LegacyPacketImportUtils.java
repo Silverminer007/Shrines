@@ -8,8 +8,8 @@ import com.silverminer.shrines.structures.load.legacy.LegacyStructureData;
 import com.silverminer.shrines.structures.load.legacy.PieceData;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.utils.network.cts.CTSImportLegacyStructuresPacket;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class LegacyPacketImportUtils {
 
-    public static void importLegacyPacket(Path path, PlayerEntity sender) {
+    public static void importLegacyPacket(Path path, Player sender) {
         ArrayList<LegacyStructureData> structureData = Lists.newArrayList();
         try {
             File f = path.toFile();

@@ -11,13 +11,14 @@
  */
 package com.silverminer.shrines.gui.packets.edit.pools;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.structures.load.StructuresPacket;
 import com.silverminer.shrines.utils.TemplatePool;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +36,7 @@ import java.util.function.Supplier;
  * @author Silverminer
  */
 @OnlyIn(Dist.CLIENT)
-public class ConfigurePoolList extends ExtendedList<ConfigurePoolList.Entry> {
+public class ConfigurePoolList extends ObjectSelectionList<ConfigurePoolList.Entry> {
     protected static final Logger LOGGER = LogManager.getLogger(ConfigurePoolList.class);
     private final ConfigurePoolScreen screen;
     private final StructuresPacket packet;
@@ -88,7 +89,7 @@ public class ConfigurePoolList extends ExtendedList<ConfigurePoolList.Entry> {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public final class Entry extends ExtendedList.AbstractListEntry<ConfigurePoolList.Entry> {
+    public final class Entry extends ObjectSelectionList.Entry<ConfigurePoolList.Entry> {
         private final Minecraft minecraft;
         private final TemplatePool.Entry entry;
         private long lastClickTime;
@@ -99,9 +100,9 @@ public class ConfigurePoolList extends ExtendedList<ConfigurePoolList.Entry> {
         }
 
         @ParametersAreNonnullByDefault
-        public void render(MatrixStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
+        public void render(PoseStack ms, int p_230432_2_, int top, int left, int p_230432_5_, int p_230432_6_,
                            int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
-            StringTextComponent header = new StringTextComponent(entry.getTemplate().toString());
+            TextComponent header = new TextComponent(entry.getTemplate().toString());
             String s1 = "Weight: " + this.entry.getWeight() + "    " + (this.entry.isTerrain_matching() ? "Terrain Matching" : "Rigid");
 
             this.minecraft.font.draw(ms, header, left, top + 1, 0xffffff);
@@ -125,6 +126,11 @@ public class ConfigurePoolList extends ExtendedList<ConfigurePoolList.Entry> {
 
         public TemplatePool.Entry getPoolEntry() {
             return this.entry;
+        }
+
+        @Override
+        public Component getNarration() {
+            return new TextComponent(this.entry.getTemplate().toString());
         }
     }
 }

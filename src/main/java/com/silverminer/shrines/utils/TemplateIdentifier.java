@@ -1,15 +1,15 @@
 package com.silverminer.shrines.utils;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.File;
 
 public class TemplateIdentifier {
-    private final CompoundNBT template;
+    private final CompoundTag template;
     private final ResourceLocation location;
 
-    public TemplateIdentifier(CompoundNBT nbt, ResourceLocation location) {
+    public TemplateIdentifier(CompoundTag nbt, ResourceLocation location) {
         this.template = nbt;
         this.location = location;
     }
@@ -22,8 +22,8 @@ public class TemplateIdentifier {
         this.location = location;
     }
 
-    public static TemplateIdentifier read(CompoundNBT tag) {
-        CompoundNBT template = tag.getCompound("template");
+    public static TemplateIdentifier read(CompoundTag tag) {
+        CompoundTag template = tag.getCompound("template");
         ResourceLocation location = new ResourceLocation(tag.getString("location"));
         return new TemplateIdentifier(template, location);
     }
@@ -32,12 +32,12 @@ public class TemplateIdentifier {
         return location;
     }
 
-    public CompoundNBT getTemplate() {
+    public CompoundTag getTemplate() {
         return template;
     }
 
-    public CompoundNBT write() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag write() {
+        CompoundTag tag = new CompoundTag();
         tag.put("template", this.template);
         tag.putString("location", this.location.toString());
         return tag;

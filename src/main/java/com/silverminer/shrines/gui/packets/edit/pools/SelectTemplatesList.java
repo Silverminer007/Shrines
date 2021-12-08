@@ -1,18 +1,17 @@
 package com.silverminer.shrines.gui.packets.edit.pools;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.gui.IDoubleClickScreen;
+import com.silverminer.shrines.gui.misc.IDoubleClickScreen;
 import com.silverminer.shrines.gui.packets.edit.templates.TemplatesList;
 import com.silverminer.shrines.structures.load.StructuresPacket;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
