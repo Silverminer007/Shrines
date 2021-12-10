@@ -54,10 +54,9 @@ public class ShrinesMod {
     * <p>
     * TODO Add missing novels @pea_sh0ter
     * <p>
-    *    TODO Test Narration usage of GUI components
+    * TODO Test Narration usage of GUI components
     * </p>
-    * FIXME Templates add button doesn't work -> Issue with third party function, so ask on forge discord
-    * FIXME Loot-table for watchtower
+    * FIXME Templates add button doesn't work
     */
    public ShrinesMod() {
       ModList.get().getModContainerById(ShrinesMod.MODID)
