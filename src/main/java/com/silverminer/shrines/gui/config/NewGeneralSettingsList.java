@@ -129,7 +129,7 @@ public class NewGeneralSettingsList extends ObjectSelectionList<NewGeneralSettin
         }
 
         @Override
-        public Component getNarration() {// TODO Check for usages
+        public Component getNarration() {
             return new TextComponent(option);
         }
     }

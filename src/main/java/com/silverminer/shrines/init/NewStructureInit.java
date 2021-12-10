@@ -46,7 +46,6 @@ public class NewStructureInit {
         StructureLoadUtils.FINAL_STRUCTURES_PACKETS = ImmutableList.copyOf
                 (StructureLoadUtils.getStructurePackets());
         ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
-        LOGGER.info("Registering shrines structures");
         for (StructuresPacket packet : StructureLoadUtils.FINAL_STRUCTURES_PACKETS) {
             for (StructureData structure : packet.getStructures()) {
                 if (structure.successful) {
@@ -66,35 +65,7 @@ public class NewStructureInit {
     public static void registerStructures(RegistryEvent.Register<StructureFeature<?>> event) {
         LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
         for (StructureRegistryHolder holder : STRUCTURES) {
-            StructureFeature.STRUCTURES_REGISTRY.putIfAbsent(holder.getStructure().getConfig().getKey(),
-                    holder.getStructure());
-
-            if (holder.getStructure().getConfig().getTransformLand()) {
-                StructureFeature.NOISE_AFFECTING_FEATURES = ImmutableList.<StructureFeature<?>>builder()
-                        .addAll(StructureFeature.NOISE_AFFECTING_FEATURES).add(holder.getStructure()).build();
-            }
-
-            ShrinesStructure structure = holder.getStructure();
-
-            StructureFeatureConfiguration structureSeparationSettings = new StructureFeatureConfiguration(
-                    structure.getDistance(), structure.getSeparation(), structure.getSeedModifier());
-
-            StructureSettings.DEFAULTS = ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
-                    .putAll(StructureSettings.DEFAULTS).put(structure, structureSeparationSettings).build();
-
-            BuiltinRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
-                Map<StructureFeature<?>, StructureFeatureConfiguration> structureMap = settings.getValue().structureSettings()
-                        .structureConfig();
-                if (structureMap instanceof ImmutableMap) {
-                    Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(structureMap);
-                    tempMap.put(structure, structureSeparationSettings);
-                    settings.getValue().structureSettings().structureConfig = tempMap;
-                } else {
-                    structureMap.put(structure, structureSeparationSettings);
-                }
-            });
-
-            event.getRegistry().register(structure);
+            event.getRegistry().register(holder.getStructure());
         }
     }
 }
