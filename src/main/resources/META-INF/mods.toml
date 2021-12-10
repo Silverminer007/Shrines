@@ -7,9 +7,9 @@ issueTrackerURL="https://github.com/Silverminer007/Shrines/issues"
 modId="shrines"
 version="${file.jarVersion}"
 displayName="Shrines"
-updateJSONURL="https://github.com/Silverminer007/Shrines/raw/master/updateJSON.json"
+updateJSONURL="https://raw.githubusercontent.com/Silverminer007/MinecraftModsUpdateChecker/master/shrines-structures.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/shrines-structures"
-credits="https://github.com/Silverminer007/Shrines/blob/experimental/Credits.md"
+credits="https://github.com/Silverminer007/MinecraftModsUpdateChecker/blob/master/Credits-Shrines.md"
 authors="Silverminer007 and S1lencegamer"
 description='''
 Shrines Structures is a World generation modication for Minecraft Java Edition focused on Structures
