@@ -443,7 +443,7 @@ public abstract class IconList<E extends IconList.AbstractListEntry<E>> extends 
                 RenderSystem.setShader(GameRenderer::getPositionShader);
                 float f = this.isFocused() ? 1.0F : 0.5F;
                 RenderSystem.setShaderColor(f, f, f, 1.0F);
-                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);// TODO CHeck Vertex Mode
+                bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
                 bufferbuilder.vertex(x3, y4, 0.0D).endVertex();
                 bufferbuilder.vertex(x4, y4, 0.0D).endVertex();
                 bufferbuilder.vertex(x4, y3, 0.0D).endVertex();

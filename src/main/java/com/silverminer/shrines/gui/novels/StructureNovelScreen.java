@@ -11,6 +11,7 @@ import com.silverminer.shrines.utils.network.cts.CTSFetchStructuresPacket;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -121,7 +122,6 @@ public class StructureNovelScreen extends Screen {
     }
 
     @ParametersAreNonnullByDefault
-    @SuppressWarnings("deprecation")
     public void render(PoseStack matrixStack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
         if (this.minecraft == null) {
             return;
@@ -157,6 +157,7 @@ public class StructureNovelScreen extends Screen {
         int j = i + 6;
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, GuiComponent.BACKGROUND_LOCATION);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32.0F;
@@ -182,6 +183,7 @@ public class StructureNovelScreen extends Screen {
                     0xffffff);
         }
 
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, GuiComponent.BACKGROUND_LOCATION);
         RenderSystem.enableDepthTest();
         RenderSystem.depthFunc(519);
@@ -210,8 +212,9 @@ public class StructureNovelScreen extends Screen {
                 GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO,
                 GlStateManager.DestFactor.ONE);
         RenderSystem.disableTexture();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         int m = 4;
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         bufferbuilder.vertex(0, this.headerHeight + m, 0.0D).uv(0.0F, 1.0F).color(0, 0, 0, 0)
                 .endVertex();
         bufferbuilder.vertex(this.width, this.headerHeight + m, 0.0D).uv(1.0F, 1.0F)
@@ -233,6 +236,7 @@ public class StructureNovelScreen extends Screen {
         int k1 = this.getMaxScroll();
         if (k1 > 0) {
             RenderSystem.disableTexture();
+            RenderSystem.setShader(GameRenderer::getPositionColorShader);
             int l1 = (int) ((float) ((this.bottomHeight - this.headerHeight) * (this.bottomHeight - this.headerHeight))
                     / (float) this.getMaxPosition());
             l1 = Mth.clamp(l1, 32, this.bottomHeight - this.headerHeight - 8);
@@ -242,7 +246,7 @@ public class StructureNovelScreen extends Screen {
                 i2 = this.headerHeight;
             }
 
-            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             bufferbuilder.vertex(i, this.bottomHeight, 0.0D).uv(0.0F, 1.0F).color(0, 0, 0, 255)
                     .endVertex();
             bufferbuilder.vertex(j, this.bottomHeight, 0.0D).uv(1.0F, 1.0F).color(0, 0, 0, 255)

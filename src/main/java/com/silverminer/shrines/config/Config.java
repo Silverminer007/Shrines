@@ -13,6 +13,10 @@ package com.silverminer.shrines.config;
 
 import java.io.File;
 
+import com.silverminer.shrines.utils.ClientUtils;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
@@ -45,5 +49,20 @@ public class Config {
 	public static void register(final ModLoadingContext context) {
 		context.registerConfig(ModConfig.Type.COMMON, SERVER_SETTINGS_CONFIG);
 		Config.loadConfig(SERVER_SETTINGS_CONFIG, FMLPaths.CONFIGDIR.get().resolve(ShrinesMod.MODID + "-common.toml").toString());
+		// Config UI Accessible trough forges mods overview
+		DistExecutor.safeRunWhenOn(Dist.CLIENT, Config::registerConfigGuiHandler);
+	}
+
+	private static DistExecutor.SafeRunnable registerConfigGuiHandler() {
+		return new DistExecutor.SafeRunnable() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void run() {
+				ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
+						() -> new ConfigGuiHandler.ConfigGuiFactory(ClientUtils::getConfigGui));
+			}
+		};
 	}
 }

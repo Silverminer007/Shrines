@@ -219,7 +219,6 @@
 ##### Notes
 
 - These versions are beta builds so major issues may arise
-- Random variant was moved back to 2.0.1
 - It's always a good idea to create a new structure packet if something does not work as expected
 
 #### Outstanding
@@ -229,9 +228,11 @@
 # 3.0.0
 
 ### Beta 1
+
 - Bumped Forge version to 38.0.0 (MC 1.18)
 - Removed unused ClearImagesCachePacket
 - Removed unused checkbox button
+- Changed behavior of icon size slider in novels screen
 
 ## 1.8.1
 
