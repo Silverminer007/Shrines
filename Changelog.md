@@ -234,6 +234,11 @@
 - Removed unused checkbox button
 - Changed behavior of icon size slider in novels screen
 
+### Beta 2
+
+- Added loot table for watchtower
+- Make use of the new updateChecker place
+
 ## 1.8.1
 
 ### Beta1
