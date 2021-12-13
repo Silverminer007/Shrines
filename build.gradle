@@ -37,7 +37,6 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-// Remove next line when you try to use this project in your local workspace. This contains private key that I don't want to share around so I added it to '.gitignore' file. This is not necessary
 apply from: 'gradle/curseforge.gradle'
 
 
