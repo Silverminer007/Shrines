@@ -13,12 +13,6 @@ buildscript {
 }
 repositories {
     maven {
-        url "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-    maven {
         // Blame
         url "https://nexus.resourcefulbees.com/repository/maven-public/"
     }
