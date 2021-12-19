@@ -48,7 +48,7 @@ public class StructureNovelsList extends IconList<StructureNovelsEntry> {
 
 	@Override
 	public NarrationPriority narrationPriority() {
-		return null;
+		return NarrationPriority.HOVERED;
 	}
 
 	@Override
