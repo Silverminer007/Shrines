@@ -239,6 +239,12 @@
 - Added loot table for watchtower
 - Make use of the new updateChecker place
 
+### Beta 3
+
+- Fixed item Size slider in structure novel screen
+- Fixed #25
+- Updated to 1.18.1
+
 ## 1.8.1
 
 ### Beta1
