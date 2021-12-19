@@ -20,7 +20,7 @@
   "gui.shrines.novels.title": "Geschichten von Shrines Bauwerken",
   "gui.shrines.novel.title": "Einblicke in: %s",
   "gui.shrines.novels.find_more": "Du must noch mehr Bauwerke dieses Typs finden um die ganze Geschichte frei zu schalten",
-  "gui.shrines.novels.item_size": "Gr\u00f6ße der Eintr\u00e4ge",
+  "gui.shrines.novels.item_size": "Gr\u00f6ße der Eintr\u00e4ge: ",
   "gui.shrines.open_admin_mode": "\u00f6ffne Administrator Modus",
   "gui.shrines.packets.add": "Bauwerk-Paket hinzuf\u00fcgen",
   "gui.shrines.packets.add.enter_name": "Bitte gib einen Namen ein",

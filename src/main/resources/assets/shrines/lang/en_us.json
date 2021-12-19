@@ -20,7 +20,7 @@
   "gui.shrines.novels.title": "Stories of Shrines buildings",
   "gui.shrines.novel.title": "Insights from: %s",
   "gui.shrines.novels.find_more": "You need to find more buildings of this type to unlock the whole story",
-  "gui.shrines.novels.item_size": "Entry sizes",
+  "gui.shrines.novels.item_size": "Entry sizes: ",
   "gui.shrines.open_admin_mode": "Open admin mode",
   "gui.shrines.packets.add": "Add building package",
   "gui.shrines.packets.add.enter_name": "Please insert name",
