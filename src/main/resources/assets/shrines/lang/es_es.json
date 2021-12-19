@@ -20,7 +20,7 @@
   "gui.shrines.novels.title": "Historias de los edificios de los santuarios",
   "gui.shrines.novel.title": "Información sobre: %s",
   "gui.shrines.novels.find_more": "Tienes que encontrar más edificios de este tipo para desbloquear toda la historia.",
-  "gui.shrines.novels.item_size": "Tamaño de la entrada",
+  "gui.shrines.novels.item_size": "Tamaño de la entrada: ",
   "gui.shrines.open_admin_mode": "Abrir el modo administrador",
   "gui.shrines.packets.add": "Añadir paquete de estructuras",
   "gui.shrines.packets.add.enter_name": "Por favor, introduzca un nombre",

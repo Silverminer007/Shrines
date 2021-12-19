@@ -53,28 +53,22 @@ public class StructureNovelsScreen extends Screen {
       double sliderValue = sizeSlider == null ? -1 : Mth.floor(Mth.clampedLerp(50.0D, 150.0D, sizeSlider.sliderValue));
       sizeSlider = this.addRenderableWidget(new Slider((this.width / 4) * 3 - 20, 29, 100, 20,
             new TranslatableComponent("gui.shrines.novels.item_size"), new TextComponent(""),
-            50.0D, 150.0D, 100.0, false, true, (slider) -> {
+            50.0D, 150.0D, sliderValue == -1 ? 100.0 : sliderValue, false, true, (slider) -> {
       }, slider -> {
-         StructureNovelsScreen.this.itemSize = Mth.floor(Mth.clampedLerp(50.0D, 150.0D, slider.sliderValue));
-         this.list = new StructureNovelsList(this.minecraft, this.width, this.height, this.isExpanded ? 52 : 26,
-               this.height, this.itemSize, () -> this.searchBox
-               .getValue(), packets);
-      }) {
-      });
-      sizeSlider.setValue(sliderValue == -1 ? sizeSlider.sliderValue : sliderValue);
-      sizeSlider.updateSlider();
+         this.itemSize = Mth.floor(Mth.clampedLerp(50.0D, 150.0D, slider.sliderValue));
+         this.list.setEntrySize(this.itemSize);
+      }));
       sizeSlider.visible = this.isExpanded;
       // Slider End
       Button opMode = this.addRenderableWidget(new Button((this.width / 2) - 75, 29, 150, 20,
             new TranslatableComponent("gui.shrines.open_admin_mode"), (button) -> this.addPlayerToQueue()));
       opMode.active = this.minecraft.player.hasPermissions(2);
       opMode.visible = this.isExpanded;
-      Button expand = this.addRenderableWidget(new Button((this.width / 4) * 3 + 90, 4, 20, 20,
+      this.addRenderableWidget(new Button((this.width / 4) * 3 + 90, 4, 20, 20,
             new TextComponent(this.isExpanded ? "^" : "˅"), (button) -> {
          this.isExpanded = !this.isExpanded;
          this.minecraft.setScreen(this);
       }));
-      expand.visible = opMode.visible;
       this.addWidget(this.searchBox);
       this.addWidget(this.list);
       this.setInitialFocus(this.searchBox);
