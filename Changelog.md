@@ -221,6 +221,11 @@
 - Added loot table to Watchtower
 - Moved update checker and wiki to new repository
 
+### Beta 8
+
+- Fixed some english translations
+- Added traditional chinese translations
+
 ##### Notes
 
 - These versions are beta builds so major issues may arise
