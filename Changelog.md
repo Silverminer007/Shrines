@@ -245,6 +245,11 @@
 - Fixed #25
 - Updated to 1.18.1
 
+### Beta 4
+
+- Fixed some english translations
+- Added traditional chinese translations
+
 ## 1.8.1
 
 ### Beta1
