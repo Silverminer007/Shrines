@@ -44,8 +44,8 @@ apply from: 'gradle/curseforge.gradle'
 minecraft {
     mappings channel: 'official', version: "${mc_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    
-     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -86,7 +86,7 @@ minecraft {
             }
         }
 
-         data {
+        data {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -105,7 +105,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:20.1.0'
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-	runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.6.1-forge")
+    runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.6.1-forge")
     // Apply Mixin AP
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
@@ -131,13 +131,13 @@ mixin {
 jar {
     manifest {
         attributes([
-            "Specification-Title": "shrines",
-            "Specification-Vendor": "Silverm7ner",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"Silverm7ner",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title"     : "shrines",
+                "Specification-Vendor"    : "Silverm7ner",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "Silverm7ner",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
