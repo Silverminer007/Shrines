@@ -1,0 +1,24 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+    }
+}
+
+apply plugin: 'com.matthewprenger.cursegradle'
+
+curseforge {
+    project {
+        apiKey = 'f680a549-2347-463d-bcf8-5750adbba6ee'
+        id = '418915'
+        changelog = file('Changelog.md')
+        changelogType = 'markdown'
+        releaseType = mod_version.contains('SNAPSHOT') ? 'alpha' : mod_version.contains('Beta') ? 'beta' : 'release'
+        addGameVersion '1.16.3'
+        addGameVersion '1.16.4'
+        addGameVersion '1.16.5'
+        addGameVersion 'Forge'
+    }
+}
