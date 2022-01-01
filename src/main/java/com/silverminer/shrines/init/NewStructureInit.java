@@ -14,9 +14,9 @@ package com.silverminer.shrines.init;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.structures.load.StructureData;
-import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.StructureLoadUtils;
+import com.silverminer.shrines.packages.PackageManagerProvider;
+import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,34 +31,26 @@ import java.util.ArrayList;
  */
 @EventBusSubscriber(modid = ShrinesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class NewStructureInit {
-    protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
-    public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
-            .<StructureRegistryHolder>builder().addAll(initStructures()).build();
+   protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
+   public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
+         .<StructureRegistryHolder>builder().addAll(initStructures()).build();
 
-    private static ArrayList<StructureRegistryHolder> initStructures() {
-        StructureLoadUtils.FINAL_STRUCTURES_PACKETS = ImmutableList.copyOf
-                (StructureLoadUtils.getStructurePackets());
-        ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
-        for (StructuresPacket packet : StructureLoadUtils.FINAL_STRUCTURES_PACKETS) {
-            for (StructureData structure : packet.getStructures()) {
-                if (structure.successful) {
-                    String name = structure.getKey();
+   private static ArrayList<StructureRegistryHolder> initStructures() {
+      PackageManagerProvider.SERVER.bootstrapPackages();
+      ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
+      for (StructuresPackageWrapper packet : PackageManagerProvider.SERVER.getInitialStructurePackages().getAsIterable()) {
+         for (StructureData structure : packet.getStructures().getAsIterable()) {
+            structures.add(new StructureRegistryHolder(structure.getKey(), structure));
+         }
+      }
+      return structures;
+   }
 
-                    structures.add(new StructureRegistryHolder(name, structure));
-                    structure.registered = true;
-                } else {
-                    structure.registered = false;
-                }
-            }
-        }
-        return structures;
-    }
-
-    @SubscribeEvent
-    public static void registerStructures(RegistryEvent.Register<StructureFeature<?>> event) {
-        LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
-        for (StructureRegistryHolder holder : STRUCTURES) {
-            event.getRegistry().register(holder.getStructure());
-        }
-    }
+   @SubscribeEvent
+   public static void registerStructures(RegistryEvent.Register<StructureFeature<?>> event) {
+      LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
+      for (StructureRegistryHolder holder : STRUCTURES) {
+         event.getRegistry().register(holder.getStructure());
+      }
+   }
 }

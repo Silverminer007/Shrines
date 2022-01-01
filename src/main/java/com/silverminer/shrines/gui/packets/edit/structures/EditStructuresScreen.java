@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.config.DefaultStructureConfig;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
 import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
-import com.silverminer.shrines.structures.load.StructureData;
-import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.TranslatableComponent;
 
@@ -14,8 +14,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class EditStructuresScreen extends EditStructurePacketScreen {
     protected EditStructuresList structuresList;
 
-    public EditStructuresScreen(StructuresPacket packet) {
-        super(packet);
+    public EditStructuresScreen(Screen lastScreen, StructuresPackageWrapper packet) {
+        super(lastScreen, packet);
     }
 
     protected void init() {
@@ -33,7 +33,7 @@ public class EditStructuresScreen extends EditStructurePacketScreen {
 
     @Override
     protected void add() {
-        this.packet.getStructures().add(new StructureData(DefaultStructureConfig.CUSTOM));
+        this.packet.getStructures().add(DefaultStructureConfig.CUSTOM.toStructureData());
         this.structuresList.refreshList(() -> this.searchBox.getValue());
         this.structuresList.setSelected(this.structuresList.children().get(0));
         this.structuresList.getSelectedOpt().ifPresent(EditStructuresList.Entry::configure);
@@ -45,7 +45,7 @@ public class EditStructuresScreen extends EditStructurePacketScreen {
             this.minecraft.setScreen(new DirtConfirmScreen((confirmed) -> {
                 if (confirmed) {
                     this.structuresList.getSelectedOpt().ifPresent(entry -> {
-                        this.packet.getStructures().remove(entry.getStructure());
+                        this.packet.getStructures().remove(entry.getStructure().getKey());
                         this.structuresList.refreshList(() -> this.searchBox.getValue());
                     });
                 }

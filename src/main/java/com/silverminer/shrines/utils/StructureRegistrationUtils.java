@@ -15,7 +15,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import com.silverminer.shrines.config.Config;
@@ -38,8 +37,8 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.init.NewStructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
-import com.silverminer.shrines.structures.ShrinesStructure;
-import com.silverminer.shrines.structures.load.StructureData;
+import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
+import com.silverminer.shrines.packages.datacontainer.StructureData;
 
 /**
  * @author Silverminer
@@ -55,10 +54,10 @@ public class StructureRegistrationUtils {
    public static void registerStructureSeparationSettings() {
       for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
          ShrinesStructure structure = holder.getStructure();
-         StructureFeature.STRUCTURES_REGISTRY.put(structure.getConfig().getKey(),
+         StructureFeature.STRUCTURES_REGISTRY.put(structure.getConfig().getKey().toString(),
                structure);
 
-         if (structure.getConfig().getTransformLand()) {
+         if (structure.getConfig().isTransformLand()) {
             StructureFeature.NOISE_AFFECTING_FEATURES = ImmutableList.<StructureFeature<?>>builder()
                   .addAll(StructureFeature.NOISE_AFFECTING_FEATURES).add(structure).build();
          }
@@ -87,9 +86,9 @@ public class StructureRegistrationUtils {
 
    public static boolean verifyBiome(Biome biome, StructureRegistryHolder holder) {
       if (biome.getRegistryName() != null && !Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(biome.getRegistryName().toString())) {
-         return holder.getStructure().getConfig().getGenerate() && StructureRegistrationUtils.checkBiome(
-               holder.getStructure().getConfig().getBiomeBlacklist(),
-               holder.getStructure().getConfig().getBiomeCategoryWhitelist(), biome.getRegistryName(), biome.getBiomeCategory());
+         return holder.getStructure().getConfig().isGenerate() && StructureRegistrationUtils.checkBiome(
+               holder.getStructure().getConfig().getBiome_blacklist(),
+               holder.getStructure().getConfig().getBiome_category_whitelist(), biome.getRegistryName(), biome.getBiomeCategory());
       }
       return false;
    }

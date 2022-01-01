@@ -13,8 +13,8 @@ package com.silverminer.shrines.gui.packets.edit.structures;
 
 import com.silverminer.shrines.gui.misc.IDoubleClickScreen;
 import com.silverminer.shrines.gui.packets.edit.pools.EditPoolsList;
-import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.TemplatePool;
+import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
+import com.silverminer.shrines.packages.datacontainer.TemplatePool;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -39,8 +39,8 @@ public class SelectPoolList extends EditPoolsList {
     protected final IDoubleClickScreen doubleClickScreen;
     protected ResourceLocation selectedPool;
 
-    public SelectPoolList(Minecraft mc, int p_i49846_3_, int p_i49846_4_, int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, Supplier<String> search, StructuresPacket packet, IDoubleClickScreen screen, ResourceLocation selectedPool) {
-        super(mc, p_i49846_3_, p_i49846_4_, p_i49846_5_, p_i49846_6_, p_i49846_7_, search, packet, screen);
+    public SelectPoolList(Minecraft mc, int p_i49846_3_, int p_i49846_4_, int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, StructuresPackageWrapper packet, IDoubleClickScreen screen, ResourceLocation selectedPool) {
+        super(mc, p_i49846_3_, p_i49846_4_, p_i49846_5_, p_i49846_6_, p_i49846_7_, packet, screen);
         this.doubleClickScreen = screen;
         this.selectedPool = selectedPool;
     }
@@ -52,7 +52,7 @@ public class SelectPoolList extends EditPoolsList {
         }
         this.clearEntries();
 
-        List<TemplatePool> pools = packet.getPools();
+        List<TemplatePool> pools = packet.getPools().getAsList();
         Collections.sort(pools);
         String s = search.get().toLowerCase(Locale.ROOT);
 

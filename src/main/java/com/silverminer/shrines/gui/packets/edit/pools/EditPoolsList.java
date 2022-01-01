@@ -13,8 +13,8 @@ package com.silverminer.shrines.gui.packets.edit.pools;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.IUpdatableScreen;
-import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.TemplatePool;
+import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
+import com.silverminer.shrines.packages.datacontainer.TemplatePool;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -24,6 +24,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -41,10 +42,10 @@ import java.util.function.Supplier;
 public class EditPoolsList extends ObjectSelectionList<EditPoolsList.Entry> {
 	protected static final Logger LOGGER = LogManager.getLogger(EditPoolsList.class);
 	protected final IUpdatableScreen screen;
-	protected final StructuresPacket packet;
+	protected final StructuresPackageWrapper packet;
 
 	public EditPoolsList(Minecraft mc, int p_i49846_3_, int p_i49846_4_,
-                         int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, Supplier<String> search, StructuresPacket packet, IUpdatableScreen screen) {
+								int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, StructuresPackageWrapper packet, IUpdatableScreen screen) {
 		super(mc, p_i49846_3_, p_i49846_4_, p_i49846_5_, p_i49846_6_, p_i49846_7_);
 		this.screen = screen;
 		this.packet = packet;
@@ -53,7 +54,7 @@ public class EditPoolsList extends ObjectSelectionList<EditPoolsList.Entry> {
 	public void refreshList(Supplier<String> search) {
 		this.clearEntries();
 
-		List<TemplatePool> pools = packet.getPools();
+		List<TemplatePool> pools = packet.getPools().getAsList();
 		Collections.sort(pools);
 		String s = search.get().toLowerCase(Locale.ROOT);
 
@@ -127,7 +128,7 @@ public class EditPoolsList extends ObjectSelectionList<EditPoolsList.Entry> {
 		}
 
 		@Override
-		public Component getNarration() {
+		public @NotNull Component getNarration() {
 			return new TextComponent(this.getPool().getName().toString());
 		}
 	}

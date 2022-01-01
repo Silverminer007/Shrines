@@ -2,127 +2,109 @@ package com.silverminer.shrines.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Enumeration;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class ZIPUtils {
-    protected static final Logger LOGGER = LogManager.getLogger(ZIPUtils.class);
+   protected static final Logger LOGGER = LogManager.getLogger(ZIPUtils.class);
 
-    public static boolean extractArchive(File archive, File destDir) throws Exception {
-        BufferedOutputStream bos = null;
-        BufferedInputStream bis = null;
-
-        if (!destDir.exists()) {
-            if (!destDir.mkdirs()) {
-                LOGGER.error("Failed to create Directory to extract Structures Packet Import");
-                return false;
+   public static void unzipFile(final byte[] zipFile, final @NotNull Path zipDirectory, final Path destinationDirectory) throws IOException {
+      Path zipPath = zipDirectory.resolve("temp.zip");
+      Files.write(zipPath, zipFile);
+      final byte[] buffer = new byte[1024];
+      final ZipInputStream zis = new ZipInputStream(new FileInputStream(zipPath.toFile()));
+      ZipEntry zipEntry = zis.getNextEntry();
+      while (zipEntry != null) {
+         final File newFile = newFile(destinationDirectory.toFile(), zipEntry);
+         if (zipEntry.isDirectory()) {
+            if (!newFile.isDirectory() && !newFile.mkdirs()) {
+               throw new IOException("Failed to create directory " + newFile);
             }
-        }
-
-        ZipFile zipFile = new ZipFile(archive);
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-        byte[] buffer = new byte[16384];
-        int len;
-
-        while (entries.hasMoreElements()) {
-
-            ZipEntry entry = entries.nextElement();
-
-            String entryFileName = entry.getName();
-
-            if (entry.isDirectory()) {
-                File dir = new File(destDir, entryFileName);
-
-                if (!dir.exists()) {
-                    if (!dir.mkdirs()) {
-                        LOGGER.error("Failed to create Directory to extract Structures Packet Import");
-                        return false;
-                    }
-                }
-
-            } else {
-
-                File f = new File(destDir, entryFileName);
-                if(!f.getParentFile().exists() && !f.getParentFile().mkdirs()){
-                    LOGGER.error("Failed to create Directory to extract Structures Packet Import");
-                    return false;
-                }
-                bos = new BufferedOutputStream(new FileOutputStream(f));
-                bis = new BufferedInputStream(zipFile.getInputStream(entry));
-
-                while ((len = bis.read(buffer)) > 0) {
-                    bos.write(buffer, 0, len);
-                }
+         } else {
+            File parent = newFile.getParentFile();
+            if (!parent.isDirectory() && !parent.mkdirs()) {
+               throw new IOException("Failed to create directory " + parent);
             }
-        }
 
-        if (bos != null) {
-            bos.flush();
-        }
-        if (bos != null) {
-            bos.close();
-        }
-        if (bis != null) {
-            bis.close();
-        }
-        return true;
-    }
-
-    public static File compressArchive(File sourceDirectory, File destinationDirectory, String targetName) {
-        byte[] buffer = new byte[8192];
-        try {
-            File destinationFile = new File(destinationDirectory, targetName + ".zip");
-            int i = 1;
-            while (destinationFile.exists()) {
-                destinationFile = new File(destinationDirectory, targetName + " (" + i + ")" + ".zip");
-                i++;
+            final FileOutputStream fos = new FileOutputStream(newFile);
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+               fos.write(buffer, 0, len);
             }
-            if(!destinationDirectory.exists() && !destinationDirectory.mkdirs()){
-                LOGGER.error("Failed to create Export Cache Directory {}", destinationDirectory);
-                return null;
-            }
-            FileOutputStream fos = new FileOutputStream(destinationFile);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-
-            Path relativeDirectory = sourceDirectory.getParentFile().toPath();
-            Files.find(sourceDirectory.toPath(), Integer.MAX_VALUE, ((path, basicFileAttributes) -> true)).forEach(path -> {
-                try {
-                    File fileName = path.toFile();
-                    if(fileName.isDirectory()){
-                        return;
-                    }
-                    FileInputStream fis = new FileInputStream(fileName);
-
-                    zos.putNextEntry(new ZipEntry(relativeDirectory.relativize(path).toFile().toString()));
-
-                    int length;
-                    while ((length = fis.read(buffer)) > 0) {
-                        zos.write(buffer, 0, length);
-                    }
-                    zos.closeEntry();
-                    fis.close();
-                } catch (IOException e) {
-                    LOGGER.error("Failed to zip File {}", path, e);
-                }
-            });
-
-            zos.close();
             fos.close();
+         }
+         zipEntry = zis.getNextEntry();
+      }
+      zis.closeEntry();
+      zis.close();
+      Files.delete(zipPath);
+   }
 
-            return destinationFile;
+   protected static @NotNull File newFile(File destinationDir, @NotNull ZipEntry zipEntry) throws IOException {
+      File destFile = new File(destinationDir, zipEntry.getName());
 
-        } catch (IOException fileNotFoundException) {
-            fileNotFoundException.printStackTrace();
-        }
+      String destDirPath = destinationDir.getCanonicalPath();
+      String destFilePath = destFile.getCanonicalPath();
 
-        return null;
+      if (!destFilePath.startsWith(destDirPath + File.separator)) {
+         throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+      }
 
-    }
+      return destFile;
+   }
+
+   public static byte[] zipDirectory(@NotNull Path directory, Path zipDirectory) throws IOException {
+      Files.createDirectories(zipDirectory);
+      Path destinationPath = zipDirectory.resolve("temp.zip");
+      FileOutputStream fos = new FileOutputStream(destinationPath.toFile());
+      ZipOutputStream zipOut = new ZipOutputStream(fos);
+      File fileToZip = directory.toFile();
+
+      zipFile(fileToZip, fileToZip.getName(), zipOut);
+      zipOut.close();
+      fos.close();
+      byte[] packageFile = Files.readAllBytes(destinationPath);
+      Files.delete(destinationPath);
+      return packageFile;
+   }
+
+   private static void zipFile(@NotNull File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
+      if (fileToZip.isHidden()) {
+         return;
+      }
+      if (fileToZip.isDirectory()) {
+         if (fileName.endsWith("/")) {
+            zipOut.putNextEntry(new ZipEntry(fileName));
+            zipOut.closeEntry();
+         } else {
+            zipOut.putNextEntry(new ZipEntry(fileName + "/"));
+            zipOut.closeEntry();
+         }
+         File[] children = fileToZip.listFiles();
+         if (children != null) {
+            for (File childFile : children) {
+               zipFile(childFile, fileName + "/" + childFile.getName(), zipOut);
+            }
+         }
+         return;
+      }
+      FileInputStream fis = new FileInputStream(fileToZip);
+      ZipEntry zipEntry = new ZipEntry(fileName);
+      zipOut.putNextEntry(zipEntry);
+      byte[] bytes = new byte[1024];
+      int length;
+      while ((length = fis.read(bytes)) >= 0) {
+         zipOut.write(bytes, 0, length);
+      }
+      fis.close();
+   }
 }
