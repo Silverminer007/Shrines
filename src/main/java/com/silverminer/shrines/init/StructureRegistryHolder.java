@@ -1,8 +1,10 @@
 package com.silverminer.shrines.init;
 
-import com.silverminer.shrines.structures.ShrinesStructure;
-import com.silverminer.shrines.structures.load.StructureData;
+import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
+import com.silverminer.shrines.packages.datacontainer.StructureData;
+
 import net.minecraft.data.worldgen.PlainVillagePools;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +15,7 @@ public class StructureRegistryHolder {
     private final ShrinesStructure structure;
     private ConfiguredStructureFeature<?, ?> configuredStructure;
 
-    public StructureRegistryHolder(String name, StructureData config) {
+    public StructureRegistryHolder(ResourceLocation name, StructureData config) {
         this.structure = new ShrinesStructure(name, config);
         this.configure();
     }

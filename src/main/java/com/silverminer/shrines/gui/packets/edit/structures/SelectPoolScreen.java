@@ -2,8 +2,8 @@ package com.silverminer.shrines.gui.packets.edit.structures;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.IDoubleClickScreen;
-import com.silverminer.shrines.structures.load.StructureData;
-import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
 import com.silverminer.shrines.utils.ClientUtils;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -17,14 +17,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class SelectPoolScreen extends Screen implements IDoubleClickScreen {
     protected final Screen lastScreen;
-    protected final StructuresPacket packet;
+    protected final StructuresPackageWrapper packet;
     protected final StructureData structure;
     protected final ResourceLocation selectedPool;
     protected Button set;
     protected EditBox searchBox;
     protected SelectPoolList templatesList;
 
-    public SelectPoolScreen(Screen lastScreen, StructuresPacket packet, StructureData structure, ResourceLocation selectedPool) {
+    public SelectPoolScreen(Screen lastScreen, StructuresPackageWrapper packet, StructureData structure, ResourceLocation selectedPool) {
         super(new TranslatableComponent("gui.shrines.structures.select_pool"));
         this.lastScreen = lastScreen;
         this.packet = packet;
@@ -46,8 +46,7 @@ public class SelectPoolScreen extends Screen implements IDoubleClickScreen {
                 new TextComponent(""));
         this.searchBox.setResponder(this::refreshList);
         this.templatesList = new SelectPoolList(minecraft, this.width, this.height, 26, this.height - 26, 23,
-                () -> this.searchBox.getValue(),
-                this.packet, this, selectedPool);
+              this.packet, this, selectedPool);
         this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), TextComponent.EMPTY));
         this.set = this.addRenderableWidget(new Button(this.width / 2 - 50, this.height - 22, 100, 20,
                 new TranslatableComponent("gui.shrines.set"), (button) -> this.set()));

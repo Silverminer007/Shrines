@@ -3,13 +3,10 @@ package com.silverminer.shrines.gui.packets.edit.templates;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
 import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
-import com.silverminer.shrines.structures.load.StructuresPacket;
-import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import com.silverminer.shrines.utils.network.cts.CTSDeleteTemplatesPacket;
-import net.minecraft.client.gui.screens.ProgressScreen;
+import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -18,8 +15,8 @@ import java.util.Optional;
 public class EditTemplatesScreen extends EditStructurePacketScreen {
     protected TemplatesList templatesList;
 
-    public EditTemplatesScreen(StructuresPacket packet) {
-        super(packet);
+    public EditTemplatesScreen(Screen lastScreen, StructuresPackageWrapper packet) {
+        super(lastScreen, packet);
     }
 
     protected void init() {
@@ -54,9 +51,8 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
             Optional<TemplatesList.Entry> opt = this.templatesList.getSelectedOpt();
             opt.ifPresent(entry -> this.minecraft.setScreen(new DirtConfirmScreen((confirmed) -> {
                 if (confirmed) {
-                    ShrinesPacketHandler.sendToServer(new CTSDeleteTemplatesPacket(new ResourceLocation(entry.getTemplate()), this.packet.getSaveName()));
-
-                    this.minecraft.setScreen(new ProgressScreen(true));
+                    this.packet.getTemplates().remove(entry.getTemplate().getTemplateID());
+                    this.minecraft.setScreen(this.lastScreen);
                 }
 
                 this.minecraft.setScreen(this);
@@ -71,7 +67,7 @@ public class EditTemplatesScreen extends EditStructurePacketScreen {
     protected void renameOrConfigure() {
         if (this.minecraft != null) {
             Optional<TemplatesList.Entry> opt = this.templatesList.getSelectedOpt();
-            opt.ifPresent(entry -> this.minecraft.setScreen(new RenameTemplateScreen(this, new ResourceLocation(entry.getTemplate()), this.packet)));
+            opt.ifPresent(entry -> this.minecraft.setScreen(new RenameTemplateScreen(this, entry.getTemplate(), this.packet)));
         }
     }
 

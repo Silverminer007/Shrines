@@ -1,7 +1,7 @@
 package com.silverminer.shrines.config;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.structures.load.DefaultedStructureData;
+import com.silverminer.shrines.packages.configuration.DefaultedStructureData;
 import net.minecraft.world.level.biome.Biome;
 
 public class DefaultStructureConfig {

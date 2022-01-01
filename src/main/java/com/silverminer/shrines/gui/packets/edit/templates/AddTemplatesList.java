@@ -3,7 +3,7 @@ package com.silverminer.shrines.gui.packets.edit.templates;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.structures.load.StructuresPacket;
+import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -14,6 +14,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,11 +29,11 @@ import java.util.stream.Collectors;
 public class AddTemplatesList extends ObjectSelectionList<AddTemplatesList.Entry> {
     protected static final Logger LOGGER = LogManager.getLogger(AddTemplatesList.class);
     private final AddTemplatesScreen screen;
-    private final StructuresPacket packet;
+    private final StructuresPackageWrapper packet;
     private final String[] files;
 
 
-    public AddTemplatesList(Minecraft p_i45010_1_, int p_i45010_2_, int p_i45010_3_, int p_i45010_4_, int p_i45010_5_, int p_i45010_6_, StructuresPacket packet, AddTemplatesScreen screen, String[] files) {
+    public AddTemplatesList(Minecraft p_i45010_1_, int p_i45010_2_, int p_i45010_3_, int p_i45010_4_, int p_i45010_5_, int p_i45010_6_, StructuresPackageWrapper packet, AddTemplatesScreen screen, String[] files) {
         super(p_i45010_1_, p_i45010_2_, p_i45010_3_, p_i45010_4_, p_i45010_5_, p_i45010_6_);
         this.packet = packet;
         this.screen = screen;
@@ -50,7 +51,7 @@ public class AddTemplatesList extends ObjectSelectionList<AddTemplatesList.Entry
     }
 
     private boolean hasTemplate(ResourceLocation template) {
-        if (packet.getTemplates().stream().map(Object::toString).map(temp -> temp.replace(".nbt", "")).anyMatch(temp -> temp.equals(template.toString().replace(".nbt", "")))) {
+        if (packet.getTemplates().getAsStream().map(Object::toString).map(temp -> temp.replace(".nbt", "")).anyMatch(temp -> temp.equals(template.toString().replace(".nbt", "")))) {
             // This expression looks a bit strange at first glance, but I strip the extension .nbt stand and then add it back to avoid duplicate extensions if one was already there
             return true;
         }
@@ -67,7 +68,7 @@ public class AddTemplatesList extends ObjectSelectionList<AddTemplatesList.Entry
         // Second part checks if there are duplicates. Sets don't allow duplicated elements so any duplicate is going to be removed and the size will be smaller
         boolean hasErrors = templates.size() < this.children().size() || templates.stream().distinct().count() < this.children().size();
         // Now add all old templates and check if there is a duplicate
-        templates.addAll(this.packet.getTemplates().stream().map(Object::toString).map(loc -> loc.replace(".nbt", "")).collect(Collectors.toList()));
+        templates.addAll(this.packet.getTemplates().getAsStream().map(Object::toString).map(loc -> loc.replace(".nbt", "")).toList());
         hasErrors = hasErrors || templates.stream().distinct().count() < templates.size();
         this.screen.toggleSave(!hasErrors);
     }
@@ -164,7 +165,7 @@ public class AddTemplatesList extends ObjectSelectionList<AddTemplatesList.Entry
         }
 
         @Override
-        public Component getNarration() {
+        public @NotNull Component getNarration() {
             return new TextComponent(this.getPath());
         }
     }

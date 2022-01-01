@@ -3,7 +3,7 @@ package com.silverminer.shrines.gui.packets.edit.pools;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
-import com.silverminer.shrines.utils.TemplatePool;
+import com.silverminer.shrines.packages.datacontainer.TemplatePool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -14,17 +14,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
 public class ConfigurePoolEntryList extends ObjectSelectionList<ConfigurePoolEntryList.Entry<?>> {
@@ -90,9 +89,8 @@ public class ConfigurePoolEntryList extends ObjectSelectionList<ConfigurePoolEnt
         @ParametersAreNonnullByDefault
         public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                            boolean isHot, float partialTicks) {
-            String description = this.option;
             int descriptionTop = top + (ConfigurePoolEntryList.this.itemHeight - minecraft.font.lineHeight) / 2;
-            minecraft.font.drawShadow(ms, description, left, descriptionTop, 16777215);
+            minecraft.font.drawShadow(ms, this.option, left, descriptionTop, 16777215);
         }
 
         @Override
@@ -119,7 +117,7 @@ public class ConfigurePoolEntryList extends ObjectSelectionList<ConfigurePoolEnt
         }
 
         @Override
-        public Component getNarration() {
+        public @NotNull Component getNarration() {
             return new TextComponent(this.option);
         }
     }
