@@ -10,11 +10,17 @@ buildscript {
 apply plugin: 'com.matthewprenger.cursegradle'
 
 curseforge {
-  project {
-  	apiKey = System.getenv('CURSEFORGE')
-    id = '418915'
-    changelog = file('changelog-3.x.x.txt')
-    changelogType = 'text'
-    releaseType = 'beta'
-  }
+    project {
+        apiKey = System.getenv('CURSEFORGE')
+        id = '418915'
+        changelog = file('changelog-3.x.x.txt')
+        changelogType = 'text'
+        releaseType = 'beta'
+        addGameVersion '1.18'
+        addGameVersion '1.18.1'
+        addGameVersion 'Forge'
+    }
+    options {
+        detectNewerJava = true // defaults to false
+    }
 }

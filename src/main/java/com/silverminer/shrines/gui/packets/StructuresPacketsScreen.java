@@ -49,15 +49,15 @@ public class StructuresPacketsScreen extends Screen {
          } else {
             this.minecraft.setScreen(this);
          }
-      }, new TranslatableComponent("Are you sure that you want to exit without saving?"),// TRANSLATION
-            new TranslatableComponent("All unsaved changes will be lost forever"),
-            new TranslatableComponent("Leave"),
-            new TranslatableComponent("Back")));
+      }, new TranslatableComponent("gui.shrines.exit.question"),
+            new TranslatableComponent("gui.shrines.exit.message"),
+            new TranslatableComponent("gui.shrines.exit.confirm"),
+            new TranslatableComponent("gui.shrines.exit.back")));
    }
 
    public void save() {
       if (this.minecraft != null) {
-         this.minecraft.setScreen(new WorkingScreen(this.lastScreen, this, new TranslatableComponent("gui.shrines.saving"), new TranslatableComponent("gui.shrines.saving.info")));// TRANSLATION
+         this.minecraft.setScreen(new WorkingScreen(this.lastScreen, this, new TranslatableComponent("gui.shrines.saving"), new TranslatableComponent("gui.shrines.saving.info")));
          PackageManagerProvider.CLIENT.savePackages();
       }
    }
@@ -85,7 +85,7 @@ public class StructuresPacketsScreen extends Screen {
             ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), TextComponent.EMPTY));
 
       this.addRenderableWidget(new Button(95, 2, 60, 20,
-            new TranslatableComponent("gui.shrines.save"), (button) -> this.save()));// TRANSLATION
+            new TranslatableComponent("gui.shrines.save"), (button) -> this.save()));
 
       this.delete = this.addRenderableWidget(new Button(this.width / 2 - 80 - 80 - 9, this.height - 45, 80, 20,
             new TranslatableComponent("gui.shrines.delete"), (button) -> this.list.getSelectedOpt().ifPresent(StructurePacketsList.Entry::remove)));
@@ -116,7 +116,7 @@ public class StructuresPacketsScreen extends Screen {
             (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(
                   new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Silverminer007/Shrines/wiki")))));
       this.addRenderableWidget(new Button(this.width / 2 - 80 - 80 - 9, this.height - 22, 166, 20,
-            new TranslatableComponent("gui.shrines.import"), (button) -> this.importPackage()));// TRANSLATION gui.shrines.import.legacy remove key
+            new TranslatableComponent("gui.shrines.import"), (button) -> this.importPackage()));
       this.export = this.addRenderableWidget(new Button(this.width / 2 + 80 + 9, this.height - 45, 80, 20,
             new TranslatableComponent("gui.shrines.export"), (button) -> this.list.getSelectedOpt().ifPresent(entry -> this.exportPackage(entry.getPacket()))));
       this.updateButtonStatus(false);
@@ -135,10 +135,10 @@ public class StructuresPacketsScreen extends Screen {
          } else {
             this.minecraft.setScreen(this);
          }
-      }, new TranslatableComponent("Do you want to save changes?"),// TRANSLATION
-            new TranslatableComponent("You need to save changes before you can import packages"),
-            new TranslatableComponent("Save"),
-            new TranslatableComponent("Back")));
+      }, new TranslatableComponent("gui.shrines.import.question"),
+            new TranslatableComponent("gui.shrines.import.message"),
+            new TranslatableComponent("gui.shrines.import.confirm"),
+            new TranslatableComponent("gui.shrines.import.back")));
    }
 
    public void exportPackage(StructuresPackageWrapper structuresPackageWrapper) {
@@ -151,10 +151,10 @@ public class StructuresPacketsScreen extends Screen {
          } else {
             this.minecraft.setScreen(this);
          }
-      }, new TranslatableComponent("Do you want to save changes?"),// TRANSLATION
-            new TranslatableComponent("You need to save changes before you can export packages"),
-            new TranslatableComponent("Save"),
-            new TranslatableComponent("Back")));
+      }, new TranslatableComponent("gui.shrines.export.question"),
+            new TranslatableComponent("gui.shrines.export.message"),
+            new TranslatableComponent("gui.shrines.export.confirm"),
+            new TranslatableComponent("gui.shrines.export.back")));
    }
 
    @ParametersAreNonnullByDefault

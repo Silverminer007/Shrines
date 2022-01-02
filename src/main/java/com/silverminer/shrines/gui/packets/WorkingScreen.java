@@ -19,7 +19,7 @@ public class WorkingScreen extends Screen implements SkipableScreen {
    private final Component info;
 
    public WorkingScreen(Screen screenOnSuccess, Screen screenOnFail, Component message, Component info) {
-      super(message);//TRANSLATION
+      super(message);
       this.screenOnSuccess = screenOnSuccess;
       this.screenOnFail = screenOnFail;
       this.info = info;
@@ -37,7 +37,7 @@ public class WorkingScreen extends Screen implements SkipableScreen {
       drawCenteredString(matrixStack, this.font, this.info,
             this.width / 2, this.height / 2, 0xffffff);
       drawCenteredString(matrixStack, this.font,
-            new TranslatableComponent("gui.shrines.patient")// TRANSLATION Move out of queue to use it here too
+            new TranslatableComponent("gui.shrines.patient")
                   .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(this.loop.getRGB()))),
             this.width / 2, this.height / 2 + 15, 0xffffff);
       drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 0xffffff);

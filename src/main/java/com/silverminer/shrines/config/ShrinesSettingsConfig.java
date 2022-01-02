@@ -19,7 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 
-// TRANSLATION Remove needed novels from translations
 public class ShrinesSettingsConfig {
 
    public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
