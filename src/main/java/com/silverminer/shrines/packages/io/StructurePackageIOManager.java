@@ -6,7 +6,6 @@ import com.silverminer.shrines.packages.datacontainer.StructureData;
 import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
 import com.silverminer.shrines.packages.io.legacy_181.Legacy181StructurePackageLoader;
 import com.silverminer.shrines.packages.io.legacy_200.Legacy200StructurePackageLoader;
-import com.silverminer.shrines.packages.io.recent.RecentDirectoryStructureAccessor;
 import com.silverminer.shrines.packages.io.recent.RecentStructurePackageIOManager;
 import com.silverminer.shrines.utils.CalculationError;
 import com.silverminer.shrines.utils.ZIPUtils;
