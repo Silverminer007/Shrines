@@ -151,7 +151,6 @@ public abstract class IconList<E extends IconList.AbstractListEntry<E>> extends 
         return row * (this.itemSize + 4);
     }
 
-    @SuppressWarnings("deprecation")
     public void render(PoseStack p_230430_1_, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
         int i = this.getScrollbarPosition();
         int j = i + 6;
@@ -242,7 +241,7 @@ public abstract class IconList<E extends IconList.AbstractListEntry<E>> extends 
                 i2 = this.y0;
             }
 
-            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             bufferbuilder.vertex((double) i, (double) this.y1, 0.0D).uv(0.0F, 1.0F).color(0, 0, 0, 255).endVertex();
             bufferbuilder.vertex((double) j, (double) this.y1, 0.0D).uv(1.0F, 1.0F).color(0, 0, 0, 255).endVertex();
             bufferbuilder.vertex((double) j, (double) this.y0, 0.0D).uv(1.0F, 0.0F).color(0, 0, 0, 255).endVertex();
