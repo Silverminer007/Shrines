@@ -35,7 +35,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.init.StructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
@@ -52,7 +52,7 @@ public class StructureRegistrationUtils {
    }
 
    public static void registerStructureSeparationSettings() {
-      for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+      for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
          ShrinesStructure structure = holder.getStructure();
          StructureFeature.STRUCTURES_REGISTRY.put(structure.getConfig().getKey().toString(),
                structure);
@@ -107,7 +107,7 @@ public class StructureRegistrationUtils {
    }
 
    public static void registerConfiguredStructureFeatures() {
-      for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+      for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
          ShrinesStructure structure = holder.getStructure();
          if (structure.getRegistryName() == null) {
             continue;
@@ -148,7 +148,7 @@ public class StructureRegistrationUtils {
             && world.dimension().equals(Level.OVERWORLD)) {
          return;
       }
-      for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+      for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
          if (isAllowedForWorld(world, holder.getStructure().getConfig())) {
             tempMap.put(holder.getStructure(),
                   StructureSettings.DEFAULTS.get(holder.getStructure()));

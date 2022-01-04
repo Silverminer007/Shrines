@@ -12,9 +12,11 @@
 package com.silverminer.shrines;
 
 import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.NovelsRegistry;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,13 +39,12 @@ public class ShrinesMod {
     * https://github.com/TelepathicGrunt/StructureTutorialMod
     * <p>
     * TODO 3.0.1 Use processors to perform Color Structure Piece's work (Or maybe PostPlacementProcessors?)
-    * <p>
-    * TODO Rework novel save system
     */
    public ShrinesMod() {
       ModList.get().getModContainerById(ShrinesMod.MODID)
             .ifPresent(container -> VERSION = container.getModInfo().getVersion().toString());
       LOGGER.info("Shrines " + VERSION + " initialized");
       Config.register(ModLoadingContext.get());
+      NovelsRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
    }
 }

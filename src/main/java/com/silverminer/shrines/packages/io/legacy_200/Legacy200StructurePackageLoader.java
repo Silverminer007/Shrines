@@ -106,7 +106,6 @@ public class Legacy200StructurePackageLoader implements StructurePackageLoader {
             StructureData structureData = new StructureData(
                   structureCompound.getCompound(ConfigOptions.LEGACY_2xx.name()).getString("Value"),
                   new ResourceLocation(structureCompound.getCompound(ConfigOptions.LEGACY_2xx.key()).getString("Value")),
-                  structureCompound.getCompound(ConfigOptions.LEGACY_2xx.novel()).getString("Value"),
                   new SpawnConfiguration(
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.transformLand()).getBoolean("Value"),
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.generate()).getBoolean("Value"),
@@ -121,6 +120,7 @@ public class Legacy200StructurePackageLoader implements StructurePackageLoader {
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.dimensionWhitelist()).getList("Value", 8).stream().map(Tag::getAsString).collect(Collectors.toList()),
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.startPool()).getString("Value"),
                         7),
+                  null,
                   null
             );
             structures.add(structureData);

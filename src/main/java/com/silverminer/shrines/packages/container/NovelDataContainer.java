@@ -1,13 +1,26 @@
 package com.silverminer.shrines.packages.container;
 
-import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.silverminer.shrines.packages.datacontainer.NovelsData;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Stream;
 
 public class NovelDataContainer implements DataContainer<NovelsData, String> {
+   protected static final Logger LOGGER = LogManager.getLogger(NovelDataContainer.class);
+   public static final Codec<NovelDataContainer> CODEC = RecordCodecBuilder.create(novelDataContainerInstance ->
+         novelDataContainerInstance.group(
+               Codec.list(NovelsData.CODEC).fieldOf("novels_data").forGetter(NovelDataContainer::getAsList))
+               .apply(novelDataContainerInstance, NovelDataContainer::new));
    private final HashMap<String, NovelsData> novels = new HashMap<>();
 
    public NovelDataContainer(List<NovelsData> novelsDataList) {
@@ -81,25 +94,14 @@ public class NovelDataContainer implements DataContainer<NovelsData, String> {
    }
 
    public static CompoundTag save(NovelDataContainer novelDataContainer) {
-      CompoundTag tag = new CompoundTag();
-      int i = 0;
-      for (NovelsData novel : novelDataContainer.getAsIterable()) {
-         tag.put(String.valueOf(i++), novel.save());
-      }
-      tag.putInt("Novels", i);
-      return tag;
+      DataResult<Tag> dataResult = CODEC.encode(novelDataContainer, NbtOps.INSTANCE, new CompoundTag());
+      Optional<Tag> optionalTag = dataResult.resultOrPartial(LOGGER::error);
+      return optionalTag.map(compound -> (CompoundTag) compound).orElse(new CompoundTag());
    }
 
-   public static NovelDataContainer load(CompoundTag tag) {
-      ArrayList<NovelsData> novelsData = Lists.newArrayList();
-      int novels = tag.getInt("Novels");
-      for (int i = 0; i < novels; i++) {
-         try {
-            novelsData.add(NovelsData.read(tag.getCompound(String.valueOf(i))));
-         } catch (Throwable t) {
-            t.printStackTrace();
-         }
-      }
-      return new NovelDataContainer(novelsData);
+   public static NovelDataContainer load(@Nullable CompoundTag tag) {
+      DataResult<Pair<NovelDataContainer, Tag>> dataResult = CODEC.decode(NbtOps.INSTANCE, tag);
+      Optional<Pair<NovelDataContainer, Tag>> pairOptional = dataResult.resultOrPartial(LOGGER::error);
+      return pairOptional.map(Pair::getFirst).orElse(null);
    }
 }

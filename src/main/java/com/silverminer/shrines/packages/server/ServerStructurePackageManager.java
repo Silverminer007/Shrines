@@ -1,6 +1,5 @@
 package com.silverminer.shrines.packages.server;
 
-import com.silverminer.shrines.packages.StructurePackageManager;
 import com.silverminer.shrines.packages.container.NovelDataContainer;
 import com.silverminer.shrines.packages.container.StructurePackageContainer;
 import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
@@ -19,14 +18,19 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.UUID;
 
-public class ServerStructurePackageManager extends StructurePackageManager {
+public class ServerStructurePackageManager {
    protected static final Logger LOGGER = LogManager.getLogger(ServerStructurePackageManager.class);
    protected final StructurePackageIOManager ioManager = StructurePackageIOManager.INSTANCE;
-   protected StructurePackageContainer initialStructurePackages;
    protected final PlayerQueue playerQueue = new PlayerQueue();
+   protected StructurePackageContainer packages = new StructurePackageContainer();
+   protected StructurePackageContainer initialStructurePackages;
 
    public StructurePackageContainer getInitialStructurePackages() {
       return initialStructurePackages;
+   }
+
+   public StructurePackageContainer getPackages() {
+      return this.packages;
    }
 
    public void bootstrapPackages() {
@@ -52,13 +56,17 @@ public class ServerStructurePackageManager extends StructurePackageManager {
       }
    }
 
+   public void syncInitialPackagesToClient(UUID playerID) {
+      ShrinesPacketHandler.sendTo(new STCSyncInitialPackages(this.getPackages()), playerID);
+   }
+
    public void syncAvailableDimensionsToClient(UUID uuid) {
       List<String> availableDimensions = ServerLifecycleHooks.getCurrentServer().levelKeys().stream().map(ResourceKey::location).map(ResourceLocation::toString).toList();
       ShrinesPacketHandler.sendTo(new STCSyncAvailableDimensions(availableDimensions), uuid);
    }
 
    public void syncNovelsToClient(UUID uuid) {
-      ShrinesPacketHandler.sendTo(new STCSyncNovels(this.getNovels()), uuid);
+      ShrinesPacketHandler.sendTo(new STCSyncNovels(this.getNovels(uuid)), uuid);
    }
 
    public void syncStructureIconsToClient(UUID uuid) {
@@ -107,17 +115,14 @@ public class ServerStructurePackageManager extends StructurePackageManager {
       }
    }
 
-   @Override
-   public NovelDataContainer getNovels() {
-      return NovelsDataRegistry.INSTANCE.getNovelsData();
+   public NovelDataContainer getNovels(UUID playerID) {
+      return NovelsDataRegistry.INSTANCE.getNovelsData(playerID);
    }
 
-   @Override
-   public void setNovels(NovelDataContainer novels) {
-      NovelsDataRegistry.INSTANCE.setNovelsData(novels);
+   public void setNovels(UUID playerID, NovelDataContainer novels) {
+      NovelsDataRegistry.INSTANCE.setNovelsData(playerID, novels);
    }
 
-   @Override
    public void onError(CalculationError error) {
       if (this.playerQueue.getQueue().size() > 0 && this.playerQueue.getQueue().get(0) != null) {
          this.onError(error, this.playerQueue.getQueue().get(0));

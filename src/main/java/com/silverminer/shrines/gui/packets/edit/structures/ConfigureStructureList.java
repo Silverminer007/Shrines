@@ -76,7 +76,7 @@ public class ConfigureStructureList extends ObjectSelectionList<ConfigureStructu
       this.addEntry(new StringListEntry(ConfigOptions.LATEST.dimensionWhitelist(), this.structure::getDimension_whitelist,
             this.structure::setDimension_whitelist, PackageManagerProvider.CLIENT.getAvailableDimensions()));
       this.addEntry(new PoolEntry(ConfigOptions.LATEST.startPool(), this.structure::getStart_pool, this.structure::setStart_pool));
-      this.addEntry(new StringEntry(ConfigOptions.LATEST.novel(), this.structure::getNovel, this.structure::setNovel, Integer.MAX_VALUE));
+      this.addEntry(new ResourceLocationEntry(ConfigOptions.LATEST.novel(), this.structure::getNovel, this.structure::setNovel, Integer.MAX_VALUE));
       this.addEntry(new IntegerEntry(ConfigOptions.LATEST.jigsawMaxDepth(), this.structure::getJigsawMaxDepth, this.structure::setJigsawMaxDepth, false, false));
       this.addEntry(new ResourceLocationEntry(ConfigOptions.LATEST.iconPath(), this.structure::getIconPath, this.structure::setIconPath, Integer.MAX_VALUE));
    }

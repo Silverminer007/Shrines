@@ -1,6 +1,6 @@
 package com.silverminer.shrines.mixins;
 
-import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.init.StructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.utils.StructureRegistrationUtils;
 import net.minecraft.core.Registry;
@@ -20,7 +20,7 @@ import java.util.function.BiConsumer;
 public class MixinStructureFeatures {
     @Inject(method = "registerStructures", at = @At(value = "HEAD"))
     private static void onRegisterStructures(BiConsumer<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> registry, CallbackInfo callbackInfo) {
-        for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+        for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
             for (Biome biome : ForgeRegistries.BIOMES) {
                 if (biome.getRegistryName() != null && StructureRegistrationUtils.verifyBiome(biome, holder)) {
                     registry.accept(holder.getConfiguredStructure(), ResourceKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName()));

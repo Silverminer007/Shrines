@@ -77,7 +77,7 @@ public class RecentDirectoryStructureAccessor implements DirectoryStructureAcces
 
    @Override
    public Path getStructuresPath(@NotNull ResourceLocation location, Path packagePath, boolean extension) {
-      return packagePath.resolve("data").resolve(location.getNamespace()).resolve("worldgen").resolve("structures").resolve(location.getPath() + (extension ? ".json" : ""));
+      return packagePath.resolve("data").resolve(location.getNamespace()).resolve("shrines_structures").resolve(location.getPath() + (extension ? ".json" : ""));
    }
 
    @Override

@@ -5,7 +5,7 @@ import com.silverminer.shrines.packages.configuration.DefaultedStructureData;
 import net.minecraft.world.level.biome.Biome;
 
 public class DefaultStructureConfig {
-    public static final DefaultedStructureData CUSTOM = new DefaultedStructureData("", "", 0).setStartPool("").setDistance(50)
+    public static final DefaultedStructureData CUSTOM = new DefaultedStructureData("Custom Structure", "custom", 0).setStartPool("").setDistance(50)
             .setSeperation(8);
 
     public static final DefaultedStructureData ABANDONEDWITCHHOUSE_CONFIG = new DefaultedStructureData(
@@ -37,7 +37,7 @@ public class DefaultStructureConfig {
             651398043).setDistance(50).setSeperation(8).setTransformLand(false).setBiomeCategoryWhitelist(Biome.BiomeCategory.OCEAN);
 
     public static final DefaultedStructureData HIGHTEMPLE_CONFIG = new DefaultedStructureData("High Temple",
-            "high_temple", 536987987).setDistance(85).setSeperation(18).setNovel(Novels.HIGH_TEMPLE);
+            "high_temple", 536987987).setDistance(85).setSeperation(18);
 
     public static final DefaultedStructureData JUNGLETOWER_CONFIG = new DefaultedStructureData("Jungle Tower",
             "jungle_tower", 987531843).setDistance(60).setSeperation(11).setBiomeCategoryWhitelist(Biome.BiomeCategory.JUNGLE);
@@ -75,5 +75,5 @@ public class DefaultStructureConfig {
             "watchtower", 432189012).setDistance(77).setSeperation(16);
 
     public static final DefaultedStructureData WATERSHRINE_CONFIG = new DefaultedStructureData("Water Shrine",
-            "water_shrine", 643168754).setDistance(80).setSeperation(15).setNovel("");
+            "water_shrine", 643168754).setDistance(80).setSeperation(15);
 }

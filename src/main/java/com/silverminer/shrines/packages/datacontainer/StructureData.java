@@ -14,7 +14,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,27 +27,27 @@ public class StructureData implements Comparable<StructureData> {
    public static final Codec<StructureData> CODEC = RecordCodecBuilder.create((structureDataInstance) -> structureDataInstance.group(
                Codec.STRING.fieldOf(ConfigOptions.LATEST.name()).forGetter(StructureData::getName),
                ResourceLocation.CODEC.fieldOf(ConfigOptions.LATEST.key()).forGetter(StructureData::getKey),
-               Codec.STRING.optionalFieldOf(ConfigOptions.LATEST.novel(), "").forGetter(StructureData::getNovel),
                SpawnConfiguration.CODEC.fieldOf("spawn_configuration").forGetter(StructureData::getSpawnConfiguration),
-               ResourceLocation.CODEC.optionalFieldOf(ConfigOptions.LATEST.iconPath(), null).forGetter(StructureData::getIconPath))
+               ResourceLocation.CODEC.optionalFieldOf(ConfigOptions.LATEST.iconPath(), null).forGetter(StructureData::getIconPath),
+               ResourceLocation.CODEC.optionalFieldOf(ConfigOptions.LATEST.novel(), new ResourceLocation("")).forGetter(StructureData::getNovel))
          .apply(structureDataInstance, StructureData::new));
    private String name;
    private ResourceLocation key;
-   private String novel;
+   private ResourceLocation novel;
    private ResourceLocation iconPath;
    private final SpawnConfiguration spawnConfiguration;
 
    /**
     * @param name               the Displayname for the Structure
     * @param key                the Key of the structure. This identifies this structure
-    * @param novel              the novel of this structure
     * @param spawnConfiguration spawn configuration options of this structure
     * @param iconPath           the path to the icon of this structure or null to use key's value
+    * @param novel              the path to the structure's Novels or null to use key's value
     */
-   public StructureData(String name, ResourceLocation key, String novel, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath) {
+   public StructureData(String name, ResourceLocation key, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath, @Nullable ResourceLocation novel) {
       this.name = name;
       this.key = key;
-      this.novel = novel;
+      this.novel = Objects.requireNonNullElse(novel, key);
       this.iconPath = Objects.requireNonNullElse(iconPath, key);
       this.spawnConfiguration = spawnConfiguration;
    }
@@ -137,7 +136,7 @@ public class StructureData implements Comparable<StructureData> {
       return this.getSpawnConfiguration().getStart_pool();
    }
 
-   public String getNovel() {
+   public ResourceLocation getNovel() {
       return novel;
    }
 
@@ -204,7 +203,7 @@ public class StructureData implements Comparable<StructureData> {
       this.getSpawnConfiguration().setStart_pool(start_pool);
    }
 
-   public void setNovel(String novel) {
+   public void setNovel(ResourceLocation novel) {
       this.novel = novel;
    }
 
@@ -225,7 +224,7 @@ public class StructureData implements Comparable<StructureData> {
    }
 
    @Override
-   public int compareTo(@NotNull StructureData o) {
+   public int compareTo(StructureData o) {
       return this.getName().compareTo(o.getName());
    }
 }

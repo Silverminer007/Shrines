@@ -30,8 +30,8 @@ import java.util.ArrayList;
  * @author Silverminer
  */
 @EventBusSubscriber(modid = ShrinesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
-public class NewStructureInit {
-   protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
+public class StructureInit {
+   protected static final Logger LOGGER = LogManager.getLogger(StructureInit.class);
    public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
          .<StructureRegistryHolder>builder().addAll(initStructures()).build();
 

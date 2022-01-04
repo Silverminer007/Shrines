@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.silverminer.shrines.init.NovelsRegistry;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.StructureNovel;
 import com.silverminer.shrines.utils.ClientUtils;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.ImageButton;
@@ -22,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
@@ -39,13 +42,13 @@ public class StructureNovelInsightsScreen extends Screen {
    public StructureNovelInsightsScreen(Screen lastScreen, StructureData structure, int unlockedParts) {
       super(new TranslatableComponent("gui.shrines.novel.title", structure.getName()));
       this.lastScreen = lastScreen;
-      String[] parts = structure.getNovel().split("\\|");
-      if (unlockedParts < parts.length) {
+      StructureNovel structureNovel = Objects.requireNonNull(NovelsRegistry.NOVELS_REGISTRY.get().getValue(structure.getNovel()));
+      if (unlockedParts < structureNovel.getParts().size()) {
          this.renderInfo = true;
       }
       this.words = Lists.newArrayList();
       for (int i = 0; i < unlockedParts; i++) {
-         this.words.addAll(Arrays.asList(parts[i].replace("\n", " \n ").split(" ")));
+         this.words.addAll(Arrays.asList(structureNovel.getParts().get(i).replace("\n", " \n ").split(" ")));
       }
    }
 
