@@ -12,7 +12,7 @@
 package com.silverminer.shrines.worldgen.structures;
 
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.init.StructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
 import net.minecraft.core.BlockPos;
@@ -123,7 +123,7 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
       worldgenrandom.setLargeFeatureSeed(context.seed(), context.chunkPos().x, context.chunkPos().z);
       List<StructureFeature<?>> structures = new ArrayList<>();
 
-      for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+      for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
          structures.add(holder.getStructure());
       }
       structures.add(StructureFeature.VILLAGE);

@@ -8,6 +8,9 @@
 - Packages aren't saved per default -> added save button
 - Updated link to shrines wiki
 - Fixed typos in german translations
+- Changed Novels Data saved format
+- Found Novels are now indicated per player and no longer per world
+- Added Novel of Shrine of Savanna and Nether pyramid
 
 ===========
 3.0.0-Beta4 --- 21.12.2021 17:15 UTC

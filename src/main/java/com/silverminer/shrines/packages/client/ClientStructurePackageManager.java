@@ -1,9 +1,10 @@
 package com.silverminer.shrines.packages.client;
 
+import com.silverminer.shrines.gui.novels.StructureNovelsOverviewScreen;
 import com.silverminer.shrines.gui.packets.SkipableScreen;
 import com.silverminer.shrines.gui.packets.StructuresPacketsScreen;
 import com.silverminer.shrines.gui.packets.WaitInQueueScreen;
-import com.silverminer.shrines.packages.StructurePackageManager;
+import com.silverminer.shrines.gui.packets.WorkingScreen;
 import com.silverminer.shrines.packages.container.NovelDataContainer;
 import com.silverminer.shrines.packages.container.StructureIconContainer;
 import com.silverminer.shrines.packages.container.StructurePackageContainer;
@@ -30,13 +31,23 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
-public class ClientStructurePackageManager extends StructurePackageManager {
+public class ClientStructurePackageManager {
    protected static final Logger LOGGER = LogManager.getLogger(ClientStructurePackageManager.class);
    private Stage currentStage = Stage.EMPTY;
    private int queuePosition = -1;
    private UUID playerID = null;
    private NovelDataContainer novelDataContainer;
    private List<String> availableDimensions;
+   private StructurePackageContainer initialPackages;
+   protected StructurePackageContainer packages = new StructurePackageContainer();
+
+   public StructurePackageContainer getPackages() {
+      return this.packages;
+   }
+
+   private Minecraft getMinecraft() {
+      return Minecraft.getInstance();
+   }
 
    public Stage getCurrentStage() {
       return currentStage;
@@ -59,7 +70,7 @@ public class ClientStructurePackageManager extends StructurePackageManager {
       if (this.getCurrentStage().equals(Stage.AVAILABLE)) {
          this.setCurrentStage(Stage.QUEUE);
          ShrinesPacketHandler.sendToServer(new CTSPlayerJoinQueue(this.getPlayerID()));
-         Minecraft.getInstance().setScreen(new WaitInQueueScreen(Minecraft.getInstance().screen));
+         this.getMinecraft().setScreen(new WaitInQueueScreen(this.getMinecraft().screen));
       }
    }
 
@@ -95,7 +106,7 @@ public class ClientStructurePackageManager extends StructurePackageManager {
       try {
          byte[] archive = Files.readAllBytes(Paths.get(s));
          ShrinesPacketHandler.sendToServer(new CTSImportPackage(archive, this.getPackages()));
-         Minecraft.getInstance().setScreen(new ProgressScreen(true));
+         this.getMinecraft().setScreen(new ProgressScreen(true));
       } catch (IOException e) {
          this.onError(new CalculationError("Failed to import package", "Caused by IO Error: %s", e));
       }
@@ -125,11 +136,11 @@ public class ClientStructurePackageManager extends StructurePackageManager {
    public void setPackages(StructurePackageContainer packages) {
       this.packages = packages;
       this.setCurrentStage(Stage.EDIT);
-      Screen lastScreen = Minecraft.getInstance().screen;
+      Screen lastScreen = this.getMinecraft().screen;
       while (lastScreen instanceof SkipableScreen skipableScreen) {
          lastScreen = skipableScreen.getLastScreen();
       }
-      Minecraft.getInstance().setScreen(new StructuresPacketsScreen(lastScreen));
+      this.getMinecraft().setScreen(new StructuresPacketsScreen(lastScreen));
    }
 
    public void savePackages() {
@@ -141,6 +152,18 @@ public class ClientStructurePackageManager extends StructurePackageManager {
       this.setCurrentStage(Stage.AVAILABLE);
    }
 
+   public void handleSaveResult(boolean success) {
+      if (this.getMinecraft().screen instanceof WorkingScreen savingScreen) {
+         this.getMinecraft().setScreen(success ? savingScreen.getLastScreen() : savingScreen.getScreenOnFail());
+         if (success) {
+            this.stopEditing();
+         }
+      } else {
+         this.getMinecraft().setScreen(null);
+         this.stopEditing();
+      }
+   }
+
    public List<String> getAvailableDimensions() {
       return availableDimensions;
    }
@@ -149,12 +172,26 @@ public class ClientStructurePackageManager extends StructurePackageManager {
       this.availableDimensions = availableDimensions;
    }
 
-   @Override
+   public void showNovelsOverview() {
+      ShrinesPacketHandler.sendToServer(new CTSSyncNovelsRequest());
+   }
+
+   public void openNovelsOverviewScreen() {
+      this.getMinecraft().setScreen(new StructureNovelsOverviewScreen(this.getMinecraft().screen));
+   }
+
+   public StructurePackageContainer getInitialPackages() {
+      return initialPackages;
+   }
+
+   public void setInitialPackages(StructurePackageContainer initialPackages) {
+      this.initialPackages = initialPackages;
+   }
+
    public NovelDataContainer getNovels() {
       return this.novelDataContainer;
    }
 
-   @Override
    public void setNovels(NovelDataContainer novels) {
       this.novelDataContainer = novels;
    }
@@ -186,7 +223,6 @@ public class ClientStructurePackageManager extends StructurePackageManager {
       }
    }
 
-   @Override
    public void onError(CalculationError error) {
       ClientUtils.showErrorToast(error);
       LOGGER.error(error);

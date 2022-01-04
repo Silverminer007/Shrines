@@ -12,15 +12,15 @@
 package com.silverminer.shrines.events;
 
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.init.NewStructureInit;
+import com.silverminer.shrines.init.StructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.packages.PackageManagerProvider;
-import com.silverminer.shrines.utils.StructureRegistrationUtils;
-import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.packages.datacontainer.NovelsData;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
 import com.silverminer.shrines.packages.io.DirectoryStructureAccessor;
 import com.silverminer.shrines.packages.server.NovelsDataRegistry;
+import com.silverminer.shrines.utils.StructureRegistrationUtils;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.worldgen.processors.ProcessorTypes;
 import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
 import net.minecraft.core.BlockPos;
@@ -37,7 +37,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,18 +80,18 @@ public class CommonEvents {
       @SubscribeEvent
       public static void onPlayerTick(PlayerTickEvent event) {
          if (event.phase == Phase.END) {
-            if (event.player instanceof ServerPlayer) {
+            if (event.player instanceof ServerPlayer serverPlayer) {
                if (event.player.tickCount % 50 == 0) {
                   NovelsDataRegistry.INSTANCE.setDirty();
-                  BlockPos playerPos = event.player.blockPosition();
-                  for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+                  BlockPos playerPos = serverPlayer.blockPosition();
+                  for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
                      ShrinesStructure structure = holder.getStructure();
-                     ServerLevel world = ((ServerPlayer) event.player).getLevel();
+                     ServerLevel world = serverPlayer.getLevel();
                      if (world.structureFeatureManager().getStructureAt(playerPos, structure).isValid()) {
                         StructureData data = structure.getConfig();
                         NovelsData novel = null;
-                        if (NovelsDataRegistry.INSTANCE.hasNovelOf(data.getKey().toString())) {
-                           novel = NovelsDataRegistry.INSTANCE.getNovelOf(data.getKey().toString());
+                        if (NovelsDataRegistry.INSTANCE.hasNovelOf(serverPlayer.getUUID(), data.getKey().toString())) {
+                           novel = NovelsDataRegistry.INSTANCE.getNovelOf(serverPlayer.getUUID(), data.getKey().toString());
                         }
                         if (novel == null) {
                            novel = new NovelsData(data.getKey().toString());
@@ -108,7 +107,7 @@ public class CommonEvents {
                            break;
                         }
                         novel.addFoundStructure(playerPos);
-                        NovelsDataRegistry.INSTANCE.setNovelOf(data.getKey().toString(), novel);
+                        NovelsDataRegistry.INSTANCE.setNovelOf(serverPlayer.getUUID(), data.getKey().toString(), novel);
                      }
                   }
                }

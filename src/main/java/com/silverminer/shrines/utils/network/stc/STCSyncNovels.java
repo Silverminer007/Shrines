@@ -24,7 +24,10 @@ public class STCSyncNovels implements IPacket {
    }
 
    public void handle(Supplier<NetworkEvent.Context> ctx) {
-      ctx.get().enqueueWork(() -> PackageManagerProvider.CLIENT.setNovels(this.novelDataContainer));
+      ctx.get().enqueueWork(() -> {
+         PackageManagerProvider.CLIENT.setNovels(this.novelDataContainer);
+         PackageManagerProvider.CLIENT.openNovelsOverviewScreen();
+      });
       ctx.get().setPacketHandled(true);
    }
 }

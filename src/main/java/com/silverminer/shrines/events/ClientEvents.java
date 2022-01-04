@@ -15,6 +15,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.silverminer.shrines.gui.novels.StructureNovelsOverviewScreen;
 import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.io.DirectoryStructureAccessor;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSSyncNovelsRequest;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
@@ -48,7 +50,7 @@ public class ClientEvents {
             PackageManagerProvider.CLIENT.joinQueue();
          }
          if (ClientUtils.openNovelsKeyMapping.isDown()) {
-            mc.setScreen(new StructureNovelsOverviewScreen(mc.screen));
+            PackageManagerProvider.CLIENT.showNovelsOverview();
          }
       }
    }
@@ -57,9 +59,9 @@ public class ClientEvents {
    public static class ModEventBus {
       @SubscribeEvent
       public static void clientSetupEvent(FMLClientSetupEvent event) {
-         ClientUtils.openNovelsKeyMapping = new KeyMapping("key.showStructureNovels", KeyConflictContext.IN_GAME, KeyModifier.NONE, InputConstants.getKey(InputConstants.KEY_K, 0), "key.categories.shrines");
+         ClientUtils.openNovelsKeyMapping = new KeyMapping("key.showStructureNovels", KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.getKey(InputConstants.KEY_K, 0), "key.categories.shrines");
          ClientRegistry.registerKeyBinding(ClientUtils.openNovelsKeyMapping);
-         ClientUtils.editPackagesKeyMapping = new KeyMapping("key.customStructuresScreen", KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.getKey(InputConstants.KEY_K, 0), "key.categories.shrines");
+         ClientUtils.editPackagesKeyMapping = new KeyMapping("key.customStructuresScreen", KeyConflictContext.IN_GAME, KeyModifier.CONTROL, InputConstants.getKey(InputConstants.KEY_K, 0), "key.categories.shrines");
          ClientRegistry.registerKeyBinding(ClientUtils.editPackagesKeyMapping);
       }
       @SubscribeEvent

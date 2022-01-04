@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.silverminer.shrines.gui.misc.IconList;
 import com.silverminer.shrines.gui.novels.StructureNovelsOverviewList.StructureNovelsEntry;
+import com.silverminer.shrines.init.NovelsRegistry;
 import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.datacontainer.NovelsData;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
@@ -34,11 +35,11 @@ public class StructureNovelsOverviewList extends IconList<StructureNovelsEntry> 
    public void refreshList(Supplier<String> filter) {
       this.clearEntries();
       String s = filter.get().toLowerCase(Locale.ROOT);
-      for (StructuresPackageWrapper packet : PackageManagerProvider.CLIENT.getPackages().getAsList()) {
+      for (StructuresPackageWrapper packet : PackageManagerProvider.CLIENT.getInitialPackages().getAsList()) {
          for (StructureData data : packet.getStructures().getAsIterable()) {
             if (data.getName().toLowerCase(Locale.ROOT).contains(s)
                   || data.getKey().toString().toLowerCase(Locale.ROOT).contains(s)) {
-               if (!data.getNovel().isEmpty()) {
+               if (NovelsRegistry.NOVELS_REGISTRY.get().containsKey(data.getNovel())) {
                   this.addEntry(new StructureNovelsEntry(data));
                }
             }

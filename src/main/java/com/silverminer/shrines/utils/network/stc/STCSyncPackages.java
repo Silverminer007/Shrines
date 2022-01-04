@@ -9,7 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class STCSyncPackages implements IPacket {
-   private final StructurePackageContainer packages;
+   protected final StructurePackageContainer packages;
 
    public STCSyncPackages(StructurePackageContainer packages) {
       this.packages = packages;

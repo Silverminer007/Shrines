@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultedStructureData {
    protected final String name;
-   protected final String key;
+   protected final ResourceLocation key;
    protected final int seed_modifier;
    protected boolean transformLand = true;
    protected boolean generate = true;
@@ -45,11 +45,11 @@ public class DefaultedStructureData {
    protected ArrayList<String> biome_blacklist = Lists.newArrayList();
    protected ArrayList<String> dimension_whitelist = Lists.newArrayList("minecraft:overworld");
    protected String start_pool;
-   protected String novel = "";
+   protected ResourceLocation novel;
 
    public DefaultedStructureData(String name, String key, int seed_modifier) {
       this.name = name;
-      this.key = new ResourceLocation(ShrinesMod.MODID, key).toString();
+      this.key = new ResourceLocation(ShrinesMod.MODID, key);
       this.seed_modifier = seed_modifier;
    }
 
@@ -185,15 +185,21 @@ public class DefaultedStructureData {
       return this;
    }
 
-   public String getKey() {
+   public ResourceLocation getKey() {
       return key;
    }
 
-   public String getNovel() {
+   public ResourceLocation getNovel() {
       return this.novel;
    }
 
-   public DefaultedStructureData setNovel(String novel) {
+   /**
+    * Only required to set if the key is different to the structure's key
+    *
+    * @param novel the path to the structure's novel
+    * @return the builder
+    */
+   public DefaultedStructureData setNovel(ResourceLocation novel) {
       this.novel = novel;
       return this;
    }
@@ -205,8 +211,7 @@ public class DefaultedStructureData {
    public StructureData toStructureData() {
       return new StructureData(
             this.getName(),
-            new ResourceLocation(this.getKey()),
-            this.getNovel(),
+            this.getKey(),
             new SpawnConfiguration(
                   this.isTransformLand(),
                   this.getGenerate(),
@@ -221,6 +226,7 @@ public class DefaultedStructureData {
                   this.getDimensionWhitelist(),
                   this.getStart_pool(),
                   7),
-            new ResourceLocation(this.getKey()));
+            this.getKey(),
+            this.getNovel());
    }
 }

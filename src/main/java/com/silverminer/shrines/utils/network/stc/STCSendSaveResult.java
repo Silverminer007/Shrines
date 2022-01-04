@@ -1,9 +1,7 @@
 package com.silverminer.shrines.utils.network.stc;
 
-import com.silverminer.shrines.gui.packets.WorkingScreen;
-import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.packages.PackageManagerProvider;
-import net.minecraft.client.Minecraft;
+import com.silverminer.shrines.utils.network.IPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -25,17 +23,7 @@ public class STCSendSaveResult implements IPacket {
    }
 
    public void handle(Supplier<NetworkEvent.Context> ctx) {
-      ctx.get().enqueueWork(() -> {
-         if (Minecraft.getInstance().screen instanceof WorkingScreen savingScreen) {
-            Minecraft.getInstance().setScreen(this.success ? savingScreen.getLastScreen() : savingScreen.getScreenOnFail());
-            if (success) {
-               PackageManagerProvider.CLIENT.stopEditing();
-            }
-         } else {
-            Minecraft.getInstance().setScreen(null);
-            PackageManagerProvider.CLIENT.stopEditing();
-         }
-      });
+      ctx.get().enqueueWork(() -> PackageManagerProvider.CLIENT.handleSaveResult(this.success));
       ctx.get().setPacketHandled(true);
    }
 }

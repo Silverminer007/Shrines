@@ -24,9 +24,7 @@ public class STCSaveExportedPackage implements IPacket {
    }
 
    public void handle(@NotNull Supplier<NetworkEvent.Context> ctx) {
-      ctx.get().enqueueWork(() -> {
-         PackageManagerProvider.CLIENT.saveExportedPackage(this.packageFile);
-      });
+      ctx.get().enqueueWork(() -> PackageManagerProvider.CLIENT.saveExportedPackage(this.packageFile));
       ctx.get().setPacketHandled(true);
    }
 }
