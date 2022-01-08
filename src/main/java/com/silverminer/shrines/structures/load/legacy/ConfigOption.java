@@ -1,13 +1,8 @@
 /*
- * Silverminer (and Team)
- * <p>
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * <p>
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines.structures.load.legacy;
 
@@ -18,48 +13,48 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class ConfigOption<T> implements IConfigOption<T> {
-    protected static final Logger LOGGER = LogManager.getLogger(ConfigOption.class);
-    private final String name;
-    private T value;
-    private final Function<String, T> fromString;
-    private final Function<T, String> toString;
+   protected static final Logger LOGGER = LogManager.getLogger(ConfigOption.class);
+   private final String name;
+   private final Function<String, T> fromString;
+   private final Function<T, String> toString;
+   private T value;
 
-    public ConfigOption(String name, T value, Function<String, T> fromString) {
-        this(name, value, fromString, String::valueOf);
-    }
+   public ConfigOption(String name, T value, Function<String, T> fromString) {
+      this(name, value, fromString, String::valueOf);
+   }
 
-    public ConfigOption(String name, T value, Function<String, T> fromString, Function<T, String> toString) {
-        this.name = name;
-        this.value = value;
-        this.fromString = fromString;
-        this.toString = toString;
-    }
+   public ConfigOption(String name, T value, Function<String, T> fromString, Function<T, String> toString) {
+      this.name = name;
+      this.value = value;
+      this.fromString = fromString;
+      this.toString = toString;
+   }
 
-    public Function<String, T> getFromString(String option) {
-        return fromString;
-    }
+   public boolean equals(Object o) {
+      if (o instanceof IConfigOption) {
+         return Objects.equals(((IConfigOption<?>) o).getName(), this.getName());
+      } else {
+         return false;
+      }
+   }
 
-    public boolean equals(Object o) {
-        if (o instanceof IConfigOption) {
-            return Objects.equals(((IConfigOption<?>) o).getName(), this.getName());
-        } else {
-            return false;
-        }
-    }
+   public String toString() {
+      return this.name + ":" + this.toString.apply(this.getValue());
+   }
 
-    public void setValue(T v, String structure) {
-        this.value = v;
-    }
+   public T getValue() {
+      return value;
+   }
 
-    public String toString() {
-        return this.name + ":" + this.toString.apply(this.getValue());
-    }
+   public String getName() {
+      return this.name;
+   }
 
-    public T getValue() {
-        return value;
-    }
+   public Function<String, T> getFromString(String option) {
+      return fromString;
+   }
 
-    public String getName() {
-        return this.name;
-    }
+   public void setValue(T v, String structure) {
+      this.value = v;
+   }
 }

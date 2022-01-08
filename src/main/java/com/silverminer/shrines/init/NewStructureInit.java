@@ -1,13 +1,8 @@
-/**
- * Silverminer (and Team)
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * 
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines.init;
 
@@ -37,66 +32,65 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 /**
  * @author Silverminer
- *
  */
 @EventBusSubscriber(modid = ShrinesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class NewStructureInit {
-	protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
-	public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
-			.<StructureRegistryHolder>builder().addAll(initStructures()).build();
+   protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
+   public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
+         .<StructureRegistryHolder>builder().addAll(initStructures()).build();
 
-	private static ArrayList<StructureRegistryHolder> initStructures() {
-		StructureLoadUtils.FINAL_STRUCTURES_PACKETS = ImmutableList.copyOf(StructureLoadUtils.STRUCTURE_PACKETS);
-		ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
-		LOGGER.info("Registering shrines structures");
-		for (StructuresPacket packet : StructureLoadUtils.FINAL_STRUCTURES_PACKETS) {
-			for (StructureData structure : packet.getStructures()) {
-				if (structure.successful) {
-					String name = structure.getKey();
+   private static ArrayList<StructureRegistryHolder> initStructures() {
+      StructureLoadUtils.FINAL_STRUCTURES_PACKETS = ImmutableList.copyOf(StructureLoadUtils.STRUCTURE_PACKETS);
+      ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
+      LOGGER.info("Registering shrines structures");
+      for (StructuresPacket packet : StructureLoadUtils.FINAL_STRUCTURES_PACKETS) {
+         for (StructureData structure : packet.getStructures()) {
+            if (structure.successful) {
+               String name = structure.getKey();
 
-					structures.add(new StructureRegistryHolder(name, structure));
-					structure.registered = true;
-				} else {
-					structure.registered = false;
-				}
-			}
-		}
-		return structures;
-	}
+               structures.add(new StructureRegistryHolder(name, structure));
+               structure.registered = true;
+            } else {
+               structure.registered = false;
+            }
+         }
+      }
+      return structures;
+   }
 
-	@SubscribeEvent
-	public static void registerStructures(RegistryEvent.Register<Structure<?>> event) {
-		LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
-		for (StructureRegistryHolder holder : STRUCTURES) {
-			Structure.STRUCTURES_REGISTRY.putIfAbsent(holder.getStructure().getConfig().getKey(),
-					holder.getStructure());
+   @SubscribeEvent
+   public static void registerStructures(RegistryEvent.Register<Structure<?>> event) {
+      LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
+      for (StructureRegistryHolder holder : STRUCTURES) {
+         Structure.STRUCTURES_REGISTRY.putIfAbsent(holder.getStructure().getConfig().getKey(),
+               holder.getStructure());
 
-			if (holder.getStructure().getConfig().getTransformLand()) {
-				Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()
-						.addAll(Structure.NOISE_AFFECTING_FEATURES).add(holder.getStructure()).build();
-			}
+         if (holder.getStructure().getConfig().getTransformLand()) {
+            Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()
+                  .addAll(Structure.NOISE_AFFECTING_FEATURES).add(holder.getStructure()).build();
+         }
 
-			ShrinesStructure structure = holder.getStructure();
+         ShrinesStructure structure = holder.getStructure();
 
-			StructureSeparationSettings structureSeparationSettings = new StructureSeparationSettings(
-					structure.getDistance(), structure.getSeparation(), structure.getSeedModifier());
+         StructureSeparationSettings structureSeparationSettings = new StructureSeparationSettings(
+               structure.getDistance(), structure.getSeparation(), structure.getSeedModifier());
 
-			DimensionStructuresSettings.DEFAULTS = ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
-					.putAll(DimensionStructuresSettings.DEFAULTS).put(structure, structureSeparationSettings).build();
+         DimensionStructuresSettings.DEFAULTS = ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
+               .putAll(DimensionStructuresSettings.DEFAULTS).put(structure, structureSeparationSettings).build();
 
-			WorldGenRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
-				Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().structureSettings()
-						.structureConfig();
-				if (structureMap instanceof ImmutableMap) {
-					Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
-					tempMap.put(structure, structureSeparationSettings);
-					settings.getValue().structureSettings().structureConfig = tempMap;
-				} else {
-					structureMap.put(structure, structureSeparationSettings);
-				}
-			});
+         WorldGenRegistries.NOISE_GENERATOR_SETTINGS.entrySet().forEach(settings -> {
+            Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().structureSettings()
+                  .structureConfig();
+            if (structureMap instanceof ImmutableMap) {
+               Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
+               tempMap.put(structure, structureSeparationSettings);
+               settings.getValue().structureSettings().structureConfig = tempMap;
+            } else {
+               structureMap.put(structure, structureSeparationSettings);
+            }
+         });
 
-			event.getRegistry().register(structure.getStructure());
-		}
-	}
+         event.getRegistry().register(structure.getStructure());
+      }
+   }
 }

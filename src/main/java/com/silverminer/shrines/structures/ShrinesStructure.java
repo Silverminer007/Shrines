@@ -1,13 +1,8 @@
-/**
- * Silverminer (and Team)
- * <p>
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * <p>
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines.structures;
 
@@ -44,158 +39,158 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShrinesStructure extends Structure<NoFeatureConfig> {
-    protected static final Logger LOGGER = LogManager.getLogger(ShrinesStructure.class);
+   protected static final Logger LOGGER = LogManager.getLogger(ShrinesStructure.class);
 
-    public final String name;
-    public StructureData structureConfig;
+   public final String name;
+   public StructureData structureConfig;
 
-    public ShrinesStructure(String nameIn, StructureData config) {
-        super(NoFeatureConfig.CODEC);
-        this.name = nameIn;
-        this.structureConfig = config;
-        this.setRegistryName(this.getFeatureName());
-    }
+   public ShrinesStructure(String nameIn, StructureData config) {
+      super(NoFeatureConfig.CODEC);
+      this.name = nameIn;
+      this.structureConfig = config;
+      this.setRegistryName(this.getFeatureName());
+   }
 
-    @Override
-    public GenerationStage.Decoration step() {
-        return GenerationStage.Decoration.SURFACE_STRUCTURES;
-    }
+   public int getDistance() {
+      return (int) (this.getConfig().getDistance() * Config.SETTINGS.DISTANCE_FACTOR.get());
+   }   @Override
+   public GenerationStage.Decoration step() {
+      return GenerationStage.Decoration.SURFACE_STRUCTURES;
+   }
 
-    @Override
-    public String getFeatureName() {
-        return this.name;
-    }
+   public StructureData getConfig() {
+      return this.structureConfig;
+   }   @Override
+   public String getFeatureName() {
+      return this.name;
+   }
 
-    public int getDistance() {
-        return (int) (this.getConfig().getDistance() * Config.SETTINGS.DISTANCE_FACTOR.get());
-    }
+   public int getSeparation() {
+      return (int) (this.getConfig().getSeperation() * Config.SETTINGS.SEPERATION_FACTOR.get());
+   }
 
-    public int getSeparation() {
-        return (int) (this.getConfig().getSeperation() * Config.SETTINGS.SEPERATION_FACTOR.get());
-    }
+   public int getSeedModifier() {
+      return this.getConfig().getSeed_modifier();
+   }
 
-    public int getSeedModifier() {
-        return this.getConfig().getSeed_modifier();
-    }
+   public List<? extends String> getDimensions() {
+      return this.getConfig().getDimension_whitelist();
+   }
 
-    public double getSpawnChance() {
-        return this.getConfig().getSpawn_chance();
-    }
+   public int getMaxDepth() {
+      return 7;
+   }   public double getSpawnChance() {
+      return this.getConfig().getSpawn_chance();
+   }
 
-    public List<? extends String> getDimensions() {
-        return this.getConfig().getDimension_whitelist();
-    }
+   public static class Start extends MarginedStructureStart<NoFeatureConfig> {
+      private final ShrinesStructure feature;
 
-    public StructureData getConfig() {
-        return this.structureConfig;
-    }
+      public Start(ShrinesStructure structure, int chunkX, int chunkZ, MutableBoundingBox mbb, int references,
+                   long seed) {
+         super(structure, chunkX, chunkZ, mbb, references, seed);
+         this.feature = structure;
+      }
 
-    @Override
-    protected boolean isFeatureChunk(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
-                                     int chunkX, int chunkZ, Biome biome, ChunkPos pos, NoFeatureConfig config) {
-        rand.setLargeFeatureSeed(seed, chunkX, chunkZ);
-        List<Structure<?>> structures = new ArrayList<>();
+      @SuppressWarnings("deprecation")
+      @Override
+      public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
+                                 TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig no_config) {
+         JigsawPatternRegistry.bootstrap();
 
-        for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
-            Structure<?> structure = holder.getStructure();
+         String location = this.feature.structureConfig.getStart_pool();
+         LocalDate localdate = LocalDate.now();
+         if (this.feature.getFeatureName().contains("balloon") && localdate.get(ChronoField.MONTH_OF_YEAR) == 6) {
+            location += "_rainbow";
+         }
+         ResourceLocation pool = new ResourceLocation(location);
+         VillageConfig config = new VillageConfig(
+               () -> registries.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(pool),
+               this.feature.getMaxDepth());
 
-            if (structure.step() == this.step()) {
-                structures.add(structure);
+         BlockPos blockpos;
+         // Check if the actual Dimension has ceiling. If so we don't want it to be
+         // generated over it so we need to search for another place
+         if (biome.getBiomeCategory().equals(Biome.Category.NETHER)) {
+            blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
+            IBlockReader blockReader = chunkGenerator.getBaseColumn(blockpos.getX(), blockpos.getZ());
+            while (!blockReader.getBlockState(blockpos).isAir(blockReader, blockpos)) {
+               blockpos = blockpos.above();
             }
-        }
-        structures.add(Structure.VILLAGE);
-        if (!this.checkForOtherStructures(this, generator, seed, rand, chunkX, chunkZ, structures)) {
-            return false;
-        }
-        if (generator.getFirstFreeHeight(chunkX, chunkZ, Heightmap.Type.WORLD_SURFACE_WG) < 60
-                && biome.getBiomeCategory() != Biome.Category.NETHER) {
-            return false;
-        }
-        return rand.nextDouble() < getSpawnChance();
-    }
+            JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
+                  blockpos, this.pieces, this.random, false, false);
+         } else {
+            blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
+            JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
+                  blockpos, this.pieces, this.random, false, true);
+         }
 
-    protected boolean checkForOtherStructures(Structure<?> structure, ChunkGenerator generator, long seed,
-                                              SharedSeedRandom rand, int chunkX, int chunkZ, List<Structure<?>> structures) {
-        for (Structure<?> structure1 : structures) {
-            StructureSeparationSettings separationSettings = generator.getSettings().getConfig(structure1);
+         Vector3i structureCenter = this.pieces.get(0).getBoundingBox().getCenter();
+         int xOffset = blockpos.getX() - structureCenter.getX();
+         int zOffset = blockpos.getZ() - structureCenter.getZ();
+         for (StructurePiece structurePiece : this.pieces) {
+            structurePiece.move(xOffset, 0, zOffset);
+         }
 
-            if (separationSettings == null || structure == structure1) {
-                continue;
+         this.calculateBoundingBox();
+      }
+   }
+
+
+
+   @Override
+   protected boolean isFeatureChunk(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
+                                    int chunkX, int chunkZ, Biome biome, ChunkPos pos, NoFeatureConfig config) {
+      rand.setLargeFeatureSeed(seed, chunkX, chunkZ);
+      List<Structure<?>> structures = new ArrayList<>();
+
+      for (StructureRegistryHolder holder : NewStructureInit.STRUCTURES) {
+         Structure<?> structure = holder.getStructure();
+
+         if (structure.step() == this.step()) {
+            structures.add(structure);
+         }
+      }
+      structures.add(Structure.VILLAGE);
+      if (!this.checkForOtherStructures(this, generator, seed, rand, chunkX, chunkZ, structures)) {
+         return false;
+      }
+      if (generator.getFirstFreeHeight(chunkX, chunkZ, Heightmap.Type.WORLD_SURFACE_WG) < 60
+            && biome.getBiomeCategory() != Biome.Category.NETHER) {
+         return false;
+      }
+      return rand.nextDouble() < getSpawnChance();
+   }
+
+   protected boolean checkForOtherStructures(Structure<?> structure, ChunkGenerator generator, long seed,
+                                             SharedSeedRandom rand, int chunkX, int chunkZ, List<Structure<?>> structures) {
+      for (Structure<?> structure1 : structures) {
+         StructureSeparationSettings separationSettings = generator.getSettings().getConfig(structure1);
+
+         if (separationSettings == null || structure == structure1) {
+            continue;
+         }
+
+         int distance = Config.SETTINGS.STRUCTURE_MIN_DISTANCE.get();
+         for (int x = chunkX - distance; x <= chunkX + distance; x++) {
+            for (int z = chunkZ - distance; z <= chunkZ + distance; z++) {
+               ChunkPos structurePos = structure1.getPotentialFeatureChunk(separationSettings, seed, rand, x, z);
+
+               if (x == structurePos.x && z == structurePos.z) {
+                  return false;
+               }
             }
+         }
+      }
 
-            int distance = Config.SETTINGS.STRUCTURE_MIN_DISTANCE.get();
-            for (int x = chunkX - distance; x <= chunkX + distance; x++) {
-                for (int z = chunkZ - distance; z <= chunkZ + distance; z++) {
-                    ChunkPos structurePos = structure1.getPotentialFeatureChunk(separationSettings, seed, rand, x, z);
+      return true;
+   }
 
-                    if (x == structurePos.x && z == structurePos.z) {
-                        return false;
-                    }
-                }
-            }
-        }
 
-        return true;
-    }
 
-    public int getMaxDepth() {
-        return 7;
-    }
+   public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
+      return (structure, chunkX, chunkZ, mbb, references, seed) -> new Start(this, chunkX, chunkZ, mbb, references, seed);
+   }
 
-    public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-        return (structure, chunkX, chunkZ, mbb, references, seed) -> new Start(this, chunkX, chunkZ, mbb, references, seed);
-    }
 
-    public static class Start extends MarginedStructureStart<NoFeatureConfig> {
-        private final ShrinesStructure feature;
-
-        public Start(ShrinesStructure structure, int chunkX, int chunkZ, MutableBoundingBox mbb, int references,
-                     long seed) {
-            super(structure, chunkX, chunkZ, mbb, references, seed);
-            this.feature = structure;
-        }
-
-        @SuppressWarnings("deprecation")
-        @Override
-        public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
-                                   TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig no_config) {
-            JigsawPatternRegistry.bootstrap();
-
-            String location = this.feature.structureConfig.getStart_pool();
-            LocalDate localdate = LocalDate.now();
-            if (this.feature.getFeatureName().contains("balloon") && localdate.get(ChronoField.MONTH_OF_YEAR) == 6) {
-                location += "_rainbow";
-            }
-            ResourceLocation pool = new ResourceLocation(location);
-            VillageConfig config = new VillageConfig(
-                    () -> registries.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(pool),
-                    this.feature.getMaxDepth());
-
-            BlockPos blockpos;
-            // Check if the actual Dimension has ceiling. If so we don't want it to be
-            // generated over it so we need to search for another place
-            if (biome.getBiomeCategory().equals(Biome.Category.NETHER)) {
-                blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
-                IBlockReader blockReader = chunkGenerator.getBaseColumn(blockpos.getX(), blockpos.getZ());
-                while (!blockReader.getBlockState(blockpos).isAir(blockReader, blockpos)) {
-                    blockpos = blockpos.above();
-                }
-                JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
-                        blockpos, this.pieces, this.random, false, false);
-            } else {
-                blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
-                JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
-                        blockpos, this.pieces, this.random, false, true);
-            }
-
-            Vector3i structureCenter = this.pieces.get(0).getBoundingBox().getCenter();
-            int xOffset = blockpos.getX() - structureCenter.getX();
-            int zOffset = blockpos.getZ() - structureCenter.getZ();
-            for (StructurePiece structurePiece : this.pieces) {
-                structurePiece.move(xOffset, 0, zOffset);
-            }
-
-            this.calculateBoundingBox();
-        }
-    }
 }

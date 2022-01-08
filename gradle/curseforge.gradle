@@ -13,8 +13,8 @@ curseforge {
     project {
         apiKey = System.getenv('CURSEFORGE')
         id = '418915'
-        changelog = file('Changelog.md')
-        changelogType = 'markdown'
+        changelog = file('changelog-2.x.x.txt')
+        changelogType = 'text'
         releaseType = mod_version.contains('SNAPSHOT') ? 'alpha' : mod_version.contains('Beta') ? 'beta' : 'release'
         addGameVersion '1.16.3'
         addGameVersion '1.16.4'

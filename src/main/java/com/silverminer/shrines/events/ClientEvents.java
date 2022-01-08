@@ -1,13 +1,8 @@
-/**
- * Silverminer (and Team)
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * 
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines.events;
 
@@ -31,31 +26,31 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ClientEvents {
-	protected static final Logger LOGGER = LogManager.getLogger(ClientEvents.class);
+   protected static final Logger LOGGER = LogManager.getLogger(ClientEvents.class);
 
-	@EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.FORGE, value = Dist.CLIENT)
-	public static class ForgeEventBus {
-		@SubscribeEvent
-		public static void onKeyInput(InputEvent.KeyInputEvent event) {
-			int keyCode = event.getKey();
-			int scanCode = event.getScanCode();
-			Minecraft mc = Minecraft.getInstance();
-			if (ClientUtils.structuresScreen.matches(keyCode, scanCode) && mc.screen == null && mc.player != null) {
-				ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(false));
-				mc.setScreen(new WorkingScreen());
-			}
-		}
-	}
+   @EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.FORGE, value = Dist.CLIENT)
+   public static class ForgeEventBus {
+      @SubscribeEvent
+      public static void onKeyInput(InputEvent.KeyInputEvent event) {
+         int keyCode = event.getKey();
+         int scanCode = event.getScanCode();
+         Minecraft mc = Minecraft.getInstance();
+         if (ClientUtils.structuresScreen.matches(keyCode, scanCode) && mc.screen == null && mc.player != null) {
+            ShrinesPacketHandler.sendToServer(new CTSFetchStructuresPacket(false));
+            mc.setScreen(new WorkingScreen());
+         }
+      }
+   }
 
-	@EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.MOD, value = Dist.CLIENT)
-	public static class ModEventBus {
-		@SubscribeEvent
-		public static void clientSetupEvent(FMLClientSetupEvent event) {
-			Minecraft mc = event.getMinecraftSupplier().get();
-			KeyBinding[] keyMappings = mc.options.keyMappings;
-			ClientUtils.structuresScreen = new KeyBinding("key.customStructuresScreen", 75, "key.categories.shrines");
-			keyMappings = ArrayUtils.addAll(keyMappings, ClientUtils.structuresScreen);
-			mc.options.keyMappings = keyMappings;
-		}
-	}
+   @EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.MOD, value = Dist.CLIENT)
+   public static class ModEventBus {
+      @SubscribeEvent
+      public static void clientSetupEvent(FMLClientSetupEvent event) {
+         Minecraft mc = event.getMinecraftSupplier().get();
+         KeyBinding[] keyMappings = mc.options.keyMappings;
+         ClientUtils.structuresScreen = new KeyBinding("key.customStructuresScreen", 75, "key.categories.shrines");
+         keyMappings = ArrayUtils.addAll(keyMappings, ClientUtils.structuresScreen);
+         mc.options.keyMappings = keyMappings;
+      }
+   }
 }
