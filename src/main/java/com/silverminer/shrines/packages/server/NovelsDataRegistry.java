@@ -33,10 +33,11 @@ import java.util.UUID;
 public class NovelsDataRegistry extends SavedData {
    public static final Codec<NovelsDataRegistry> CODEC = RecordCodecBuilder.create(novelsDataRegistryInstance ->
          novelsDataRegistryInstance.group(
-               Codec.list(Codec.pair(
-                     Codec.STRING.xmap(UUID::fromString, UUID::toString),
-                     NovelDataContainer.CODEC
-               )).fieldOf("novels_per_player").forGetter(novelsDataRegistry -> novelsDataRegistry.novelsData)).apply(novelsDataRegistryInstance, NovelsDataRegistry::new));
+                     Codec.mapPair(
+                                 Codec.STRING.xmap(UUID::fromString, UUID::toString).fieldOf("player_id"),
+                                 NovelDataContainer.CODEC.fieldOf("novels_data"))
+                           .codec().listOf().fieldOf("novels_per_player").forGetter(novelsDataRegistry -> novelsDataRegistry.novelsData))
+               .apply(novelsDataRegistryInstance, NovelsDataRegistry::new));
    protected static final Logger LOGGER = LogManager.getLogger(NovelsDataRegistry.class);
    private static final String DATA_NAME = "shrines_novels";
    public static NovelsDataRegistry INSTANCE = new NovelsDataRegistry(Lists.newArrayList());
@@ -47,8 +48,7 @@ public class NovelsDataRegistry extends SavedData {
    }
 
    public static void loadData(ServerLevel world) {
-      if (world == null)
-         return;
+      if (world == null) return;
       DimensionDataStorage storage = world.getDataStorage();
 
       NovelsDataRegistry.INSTANCE = storage.computeIfAbsent(NovelsDataRegistry::load, () -> NovelsDataRegistry.INSTANCE, DATA_NAME);
@@ -77,15 +77,7 @@ public class NovelsDataRegistry extends SavedData {
       NovelDataContainer novelDataContainer = this.getNovelsData(playerID);
       novelDataContainer.remove(structure);
       novelDataContainer.add(newNovel);
-      for (Pair<UUID, NovelDataContainer> novelDataContainerPair : this.novelsData) {
-         if (novelDataContainerPair.getFirst().equals(playerID)) {
-            this.novelsData.remove(novelDataContainerPair);
-            this.novelsData.add(Pair.of(playerID, novelDataContainer));
-            this.setDirty();
-            return;
-         }
-      }
-      this.novelsData.add(Pair.of(playerID, novelDataContainer));
+      this.setNovelsData(playerID, novelDataContainer);
       this.setDirty();
    }
 

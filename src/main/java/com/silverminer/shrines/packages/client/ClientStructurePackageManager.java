@@ -15,6 +15,7 @@ import com.silverminer.shrines.gui.packets.WorkingScreen;
 import com.silverminer.shrines.packages.container.NovelDataContainer;
 import com.silverminer.shrines.packages.container.StructureIconContainer;
 import com.silverminer.shrines.packages.container.StructurePackageContainer;
+import com.silverminer.shrines.packages.datacontainer.StructureNovel;
 import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
 import com.silverminer.shrines.packages.io.DirectoryStructureAccessor;
 import com.silverminer.shrines.packages.io.PackageIOException;
@@ -36,6 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class ClientStructurePackageManager {
@@ -45,6 +47,7 @@ public class ClientStructurePackageManager {
    private int queuePosition = -1;
    private UUID playerID = null;
    private NovelDataContainer novelDataContainer;
+   private Map<ResourceLocation, StructureNovel> novelsRegistryData;
    private List<String> availableDimensions;
    private StructurePackageContainer initialPackages;
 
@@ -213,6 +216,14 @@ public class ClientStructurePackageManager {
 
    public void setNovels(NovelDataContainer novels) {
       this.novelDataContainer = novels;
+   }
+
+   public Map<ResourceLocation, StructureNovel> getNovelsRegistryData() {
+      return this.novelsRegistryData;
+   }
+
+   public void setNovelsRegistryData(Map<ResourceLocation, StructureNovel> novelsRegistryData) {
+      this.novelsRegistryData = novelsRegistryData;
    }
 
    public void cacheStructureIcons(StructureIconContainer structureIconContainer) {

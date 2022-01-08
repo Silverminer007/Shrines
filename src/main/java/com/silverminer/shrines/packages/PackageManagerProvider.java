@@ -22,9 +22,9 @@ import org.apache.logging.log4j.Logger;
 
 @Mod.EventBusSubscriber(modid = ShrinesMod.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PackageManagerProvider {
-   protected static final Logger LOGGER = LogManager.getLogger(PackageManagerProvider.class);
    public static final ServerStructurePackageManager SERVER = new ServerStructurePackageManager();
    public static final ClientStructurePackageManager CLIENT = new ClientStructurePackageManager();
+   protected static final Logger LOGGER = LogManager.getLogger(PackageManagerProvider.class);
 
    @SubscribeEvent
    public static void onPlayerLoggedIn(ClientPlayerNetworkEvent.LoggedInEvent event) {
@@ -48,6 +48,7 @@ public class PackageManagerProvider {
          CLIENT.setCurrentStage(ClientStructurePackageManager.Stage.EMPTY);
          CLIENT.setPlayerID(null);
          CLIENT.setNovels(null);
+         CLIENT.setNovelsRegistryData(null);
          CLIENT.setAvailableDimensions(null);
          CLIENT.clearCache();
       }
