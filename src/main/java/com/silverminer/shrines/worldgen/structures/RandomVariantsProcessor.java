@@ -27,8 +27,6 @@ import java.util.Map;
 import java.util.Random;
 
 public class RandomVariantsProcessor implements PostPlacementProcessor {
-   // TODO Find best place to clear remap list to do not have the same 'variation' all the time for the
-   // structure
    protected static final List<Variation<?>> VARIATIONS = ImmutableList.of(
          VariationsPool.WOOL_VARIATION, VariationsPool.TERRACOTTA_VARIATION, VariationsPool.GLAZED_TERRACOTTA_VARIATION,
          VariationsPool.CONCRETE_VARIATION, VariationsPool.CONCRETE_POWDERS_VARIATION, VariationsPool.PLANKS_VARIATION, VariationsPool.ORES_VARIATION,
@@ -46,12 +44,15 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
    @Override
    public void afterPlace(@NotNull WorldGenLevel worldGenLevel, @NotNull StructureFeatureManager structureFeatureManager, @NotNull ChunkGenerator chunkGenerator,
                           @NotNull Random random, @NotNull BoundingBox chunkBounds, @NotNull ChunkPos chunkPos, @NotNull PiecesContainer pieces) {
-      BoundingBox structuresBounds = pieces.calculateBoundingBox();
+      BoundingBox structureBounds = pieces.calculateBoundingBox();
       createBlockRemaps(random);
-      for (int x = structuresBounds.minX(); x < structuresBounds.maxX(); x++) {
-         for (int y = structuresBounds.minY(); y < structuresBounds.maxY(); y++) {
-            for (int z = structuresBounds.minZ(); z < structuresBounds.maxZ(); z++) {
+      for (int x = chunkBounds.minX(); x <= chunkBounds.maxX(); x++) {
+         for (int y = chunkBounds.minY(); y <= chunkBounds.maxY(); y++) {
+            for (int z = chunkBounds.minZ(); z <= chunkBounds.maxZ(); z++) {
                BlockPos position = new BlockPos(x, y, z);
+               if (worldGenLevel.isEmptyBlock(position) || !structureBounds.isInside(position) || !pieces.isInsidePiece(position)) {
+                  continue;
+               }
                BlockState blockStateAtPos = worldGenLevel.getBlockState(position);
                if (blockStateAtPos.isAir()) {
                   continue;
@@ -64,7 +65,6 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
    }
 
    private void createBlockRemaps(Random rand) {
-      // BLOCK_REMAPS.clear();
       for (Variation<?> variation : VARIATIONS) {
          Map<Block, Block> remaps = variation.createRemaps(rand);
          for (Block key : remaps.keySet()) {
@@ -85,5 +85,12 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
          }
       }
       return oldBlockState;
+   }
+
+   public void resetRemaps() {
+      // We're currently using a VERY hacky method to reset our remaps. We reset them on every world load, so we don't guarantee that maps are unique, but we can assume that.
+      // Also, user are able to reset the list their self by reloading the world.
+      // Another option is to use mixins to reset this map, but I don't think the effort is worth
+      this.BLOCK_REMAPS.clear();
    }
 }

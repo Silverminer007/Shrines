@@ -17,6 +17,7 @@ import com.silverminer.shrines.packages.server.NovelsDataRegistry;
 import com.silverminer.shrines.utils.StructureRegistrationUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.worldgen.processors.ProcessorTypes;
+import com.silverminer.shrines.worldgen.structures.RandomVariantsProcessor;
 import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -24,6 +25,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.structure.PostPlacementProcessor;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
@@ -32,6 +35,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -68,6 +72,13 @@ public class CommonEvents {
             StructureRegistrationUtils.addDimensionalSpacing(serverLevel);
             if (!serverLevel.isClientSide() && serverLevel.dimension() == Level.OVERWORLD) {
                NovelsDataRegistry.loadData(serverLevel);
+            }
+         }
+         // Very hacky reset of the random variation remaps at every world load
+         for (StructureFeature<?> structureFeature : ForgeRegistries.STRUCTURE_FEATURES) {
+            PostPlacementProcessor postPlacementProcessor = structureFeature.getPostPlacementProcessor();
+            if (postPlacementProcessor instanceof RandomVariantsProcessor randomVariantsProcessor) {
+               randomVariantsProcessor.resetRemaps();
             }
          }
       }
