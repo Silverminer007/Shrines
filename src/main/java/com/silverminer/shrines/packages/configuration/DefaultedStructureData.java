@@ -1,4 +1,11 @@
 /*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+/*
  * Silverminer (and Team)
  * <p>
  * This library is distributed in the hope that it will be useful,
@@ -15,6 +22,7 @@ import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.packages.datacontainer.SpawnConfiguration;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 
@@ -216,7 +224,6 @@ public class DefaultedStructureData {
                   this.isTransformLand(),
                   this.getGenerate(),
                   this.getSpawnChance(),
-                  this.getUseRandomVarianting(),
                   this.getDistance(),
                   this.getSeperation(),
                   this.getSeedModifier(),
@@ -227,6 +234,7 @@ public class DefaultedStructureData {
                   this.getStart_pool(),
                   7),
             this.getKey(),
-            this.getNovel());
+            this.getNovel(),
+            this.getUseRandomVarianting() ? VariationConfiguration.ALL_ENABLED : VariationConfiguration.ALL_DISABLED);
    }
 }

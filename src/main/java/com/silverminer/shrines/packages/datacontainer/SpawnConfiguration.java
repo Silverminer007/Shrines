@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.silverminer.shrines.packages.datacontainer;
 
 import com.mojang.serialization.Codec;
@@ -11,7 +18,6 @@ public class SpawnConfiguration {
                Codec.BOOL.optionalFieldOf(ConfigOptions.LATEST.transformLand(), true).forGetter(SpawnConfiguration::isTransformLand),
                Codec.BOOL.optionalFieldOf(ConfigOptions.LATEST.generate(), true).forGetter(SpawnConfiguration::isGenerate),
                Codec.DOUBLE.fieldOf(ConfigOptions.LATEST.spawnChance()).forGetter(SpawnConfiguration::getSpawn_chance),
-               Codec.BOOL.optionalFieldOf(ConfigOptions.LATEST.useRandomVarianting(), false).forGetter(SpawnConfiguration::isUse_random_varianting),
                Codec.intRange(1, Integer.MAX_VALUE).fieldOf(ConfigOptions.LATEST.distance()).forGetter(SpawnConfiguration::getDistance),
                Codec.intRange(1, Integer.MAX_VALUE).fieldOf(ConfigOptions.LATEST.separation()).forGetter(SpawnConfiguration::getSeparation),
                Codec.INT.fieldOf(ConfigOptions.LATEST.seedModifier()).forGetter(SpawnConfiguration::getSeed_modifier),
@@ -25,7 +31,6 @@ public class SpawnConfiguration {
    private boolean transformLand;
    private boolean generate;
    private double spawn_chance;
-   private boolean use_random_varianting;
    private int distance;
    private int separation;
    private int seed_modifier;
@@ -38,11 +43,10 @@ public class SpawnConfiguration {
    private String start_pool;
    private int jigsawMaxDepth;
 
-   public SpawnConfiguration(boolean transformLand, boolean generate, double spawn_chance, boolean use_random_varianting, int distance, int separation, int seed_modifier, int height_offset, List<String> biome_blacklist, List<String> biome_category_whitelist, List<String> dimension_whitelist, String start_pool, int jigsawMaxDepth) {
+   public SpawnConfiguration(boolean transformLand, boolean generate, double spawn_chance, int distance, int separation, int seed_modifier, int height_offset, List<String> biome_blacklist, List<String> biome_category_whitelist, List<String> dimension_whitelist, String start_pool, int jigsawMaxDepth) {
       this.transformLand = transformLand;
       this.generate = generate;
       this.spawn_chance = spawn_chance;
-      this.use_random_varianting = use_random_varianting;
       this.distance = distance;
       this.separation = separation;
       this.seed_modifier = seed_modifier;
@@ -76,14 +80,6 @@ public class SpawnConfiguration {
 
    public void setSpawn_chance(double spawn_chance) {
       this.spawn_chance = spawn_chance;
-   }
-
-   public boolean isUse_random_varianting() {
-      return use_random_varianting;
-   }
-
-   public void setUse_random_varianting(boolean use_random_varianting) {
-      this.use_random_varianting = use_random_varianting;
    }
 
    public int getDistance() {

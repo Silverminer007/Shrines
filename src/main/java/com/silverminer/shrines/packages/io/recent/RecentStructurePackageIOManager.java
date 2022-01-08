@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.silverminer.shrines.packages.io.recent;
 
 import com.google.gson.JsonElement;
@@ -29,14 +36,59 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 public class RecentStructurePackageIOManager implements StructurePackageLoader, StructurePackageSaver {
-   private final RecentDirectoryStructureAccessor directoryStructureAccessor = new RecentDirectoryStructureAccessor();
    private static final HashMap<UUID, String> packageID_SaveDirectory = new HashMap<>();
    private static final HashMap<UUID, List<StructureTemplate>> templateID_SaveName = new HashMap<>();
+   private final RecentDirectoryStructureAccessor directoryStructureAccessor = new RecentDirectoryStructureAccessor();
    // Make these two above static, so multiple threads don't matter. -> Instances don't need to be stable
 
    @Override
-   public DirectoryStructureAccessor getDirectoryStructureAccessor() {
-      return this.directoryStructureAccessor;
+   public void savePackages(StructurePackageContainer structurePackages) throws PackageIOException {
+      // What to do with removed or renamed elements?
+      // Option one: Compare saved data with modified data and only remove changed files and then save everything -> Huge bunch of work, Lesser IO stressing, No extra data is deleted
+      // Option two: Remove the whole Packages directory and then save everything. -> More easy, needs extra attention to templates, because we do not load the bunch of data
+      // Option three: compare package differences (just package directories) and delete all directory that doesn't belong to a package -> stable directory ids to identify packages
+      // Clear structures and pools directory and save the ones that our runtime data has. Compare templates and delete removed ones. Rename is requires extra attention!
+      // Probably I'm going to choose option three, because it combines option one and two and their advantages
+
+      // Before anything else, we should create the base directory. That is important to mark that we've already used this format and don't want to fall back to legacy formats
+      if (Files.notExists(this.getDirectoryStructureAccessor().getPackagesPath())) {
+         try {
+            Files.createDirectories(this.getDirectoryStructureAccessor().getPackagesPath());
+         } catch (IOException e) {
+            throw new PackageIOException(new CalculationError("Failed to save packages", "Unable to create packages directory. Caused by: %s", e));
+         }
+      }
+      // We need one file to identify that we have already read packages in this format one time, so let's create a README with link to our wiki
+      try {
+         Files.writeString(this.getDirectoryStructureAccessor().getPackagesPath().resolve("README.txt"), ShrinesMod.WIKI_LINK);
+      } catch (IOException e) {
+         throw new PackageIOException(new CalculationError("Failed to write README.txt", "Unable to write File. Caused by: %s", e));
+      }
+      // First delete All removed packages
+      try {
+         // These packages existed while last loading
+         List<UUID> packageIDsLoad = new ArrayList<>(this.getPackageID_SaveDirectory().keySet());// We need to prevent changes on the original map, so we're forced to copy the set
+         List<UUID> packagesIDsSave = structurePackages.getAsStream().map(StructuresPackageWrapper::getPackageID).toList();// These packages want to be saved. These and only these
+         packageIDsLoad.removeAll(packagesIDsSave);// If we remove all packages here that still exists, only the packages that were removed persist
+         for (UUID deletedPackageID : packageIDsLoad) {
+            Path packagePath = this.getDirectoryStructureAccessor().getPackagesPath().resolve(this.getPackageID_SaveDirectory().get(deletedPackageID));
+            if (Files.isDirectory(packagePath)) {
+               // Deletes the directory recursively
+               this.deleteDirectoryRecursively(packagePath);
+            }
+            // Mark that package as removed, no matter if the package truly needed to be removed, because we don't need to try to remove it all the time if it doesn't exist anymore
+            this.getPackageID_SaveDirectory().remove(deletedPackageID);
+         }
+      } catch (IOException e) {
+         throw new PackageIOException(new CalculationError("Failed to save packages", "Failed to delete packages, that we're removed by the user. Caused by: %s", e));
+      }
+
+      // Now save remaining packages
+      for (StructuresPackageWrapper structuresPackageWrapper : structurePackages.getAsIterable()) {
+         if (structuresPackageWrapper != null) {
+            this.savePackage(structuresPackageWrapper);
+         }
+      }
    }
 
    @Override
@@ -57,8 +109,9 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
       return RecentStructurePackageIOManager.packageID_SaveDirectory;
    }
 
-   protected HashMap<UUID, List<StructureTemplate>> getTemplateID_SaveName() {
-      return RecentStructurePackageIOManager.templateID_SaveName;
+   @Override
+   public DirectoryStructureAccessor getDirectoryStructureAccessor() {
+      return this.directoryStructureAccessor;
    }
 
    @Override
@@ -74,6 +127,47 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
    @Override
    public StructurePackageContainer earlyLoadPackages() throws PackageIOException {
       return this.loadPackages(true);
+   }
+
+   @Override
+   public boolean canLoadStructureIcons() {
+      return true;
+   }
+
+   @Override
+   public StructureIconContainer loadStructureIcons(StructurePackageContainer packageContainer) throws PackageIOException {
+      StructureIconContainer structureIconContainer = new StructureIconContainer();
+      for (StructuresPackageWrapper structuresPackageWrapper : packageContainer.getAsIterable()) {
+         for (StructureData d : structuresPackageWrapper.getStructures().getAsIterable()) {
+            ResourceLocation key = new ResourceLocation(d.getKey() + ".png");
+            if (!this.getPackageID_SaveDirectory().containsKey(structuresPackageWrapper.getPackageID())) {
+               continue;
+            }
+            Path iconPath = this.getDirectoryStructureAccessor().getStructureIconPath(key, this.getPackageID_SaveDirectory().get(structuresPackageWrapper.getPackageID()), true);
+            if (Files.exists(iconPath) && Files.isRegularFile(iconPath)) {
+               try {
+                  structureIconContainer.add(key, Files.readAllBytes(iconPath));
+               } catch (IOException e) {
+                  throw new PackageIOException(new CalculationError("Failed to read structure icon", "Caused by: %s", e));
+               }
+            }
+         }
+      }
+      return structureIconContainer;
+   }
+
+   @Override
+   public StructuresPackageWrapper tryImportPackage(Path source) {
+      try {
+         StructuresPackageWrapper structuresPackageWrapper = this.loadStructurePackage(source, false);
+         Path packagePath = this.getDirectoryStructureAccessor().getBasePath()
+               .resolve(this.getDirectoryStructureAccessor().findUnusedPackageFilename(structuresPackageWrapper.getStructuresPacketInfo().getDisplayName(), "structures package"));
+         Files.copy(source, packagePath);
+         this.getPackageID_SaveDirectory().put(structuresPackageWrapper.getPackageID(), packagePath.getFileName().toString());
+         return structuresPackageWrapper;
+      } catch (PackageIOException | IOException e) {
+         return null;
+      }
    }
 
    protected StructurePackageContainer loadPackages(boolean earlyLoad) throws PackageIOException {
@@ -147,7 +241,7 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
             for (Path namespacePath : this.findDataNamespaces(packagePath)) {
                try {
                   // Create the template pools base directory for the current namespace
-                  Path poolsPath = namespacePath.resolve("worldgen").resolve("structures");
+                  Path poolsPath = namespacePath.resolve("shrines_structures");
                   if (Files.isDirectory(poolsPath)) {
                      for (Path poolPath : Files.find(poolsPath, Integer.MAX_VALUE, (p, basicFileAttributes) -> Files.isRegularFile(p) && p.toString().endsWith(".json")).toList()) {
                         try {
@@ -213,7 +307,6 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
       return templates;
    }
 
-
    protected TemplatePoolContainer loadStructureTemplatePools(Path packagePath) throws PackageIOException {
       Path data = packagePath.resolve("data");
       TemplatePoolContainer templates = new TemplatePoolContainer();
@@ -260,94 +353,25 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
       })).toList();
    }
 
-   @Override
-   public boolean canLoadStructureIcons() {
-      return true;
+   protected HashMap<UUID, List<StructureTemplate>> getTemplateID_SaveName() {
+      return RecentStructurePackageIOManager.templateID_SaveName;
    }
 
-   @Override
-   public StructureIconContainer loadStructureIcons(StructurePackageContainer packageContainer) throws PackageIOException {
-      StructureIconContainer structureIconContainer = new StructureIconContainer();
-      for (StructuresPackageWrapper structuresPackageWrapper : packageContainer.getAsIterable()) {
-         for (StructureData d : structuresPackageWrapper.getStructures().getAsIterable()) {
-            ResourceLocation key = new ResourceLocation(d.getKey() + ".png");
-            if (!this.getPackageID_SaveDirectory().containsKey(structuresPackageWrapper.getPackageID())) {
-               continue;
+   protected void deleteDirectoryRecursively(Path directory) throws IOException {
+      if (Files.exists(directory)) {
+         Files.walkFileTree(directory, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+               Files.delete(file);
+               return FileVisitResult.CONTINUE;
             }
-            Path iconPath = this.getDirectoryStructureAccessor().getStructureIconPath(key, this.getPackageID_SaveDirectory().get(structuresPackageWrapper.getPackageID()), true);
-            if (Files.exists(iconPath) && Files.isRegularFile(iconPath)) {
-               try {
-                  structureIconContainer.add(key, Files.readAllBytes(iconPath));
-               } catch (IOException e) {
-                  throw new PackageIOException(new CalculationError("Failed to read structure icon", "Caused by: %s", e));
-               }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+               Files.delete(dir);
+               return FileVisitResult.CONTINUE;
             }
-         }
-      }
-      return structureIconContainer;
-   }
-
-   @Override
-   public StructuresPackageWrapper tryImportPackage(Path source) {
-      try {
-         StructuresPackageWrapper structuresPackageWrapper = this.loadStructurePackage(source, false);
-         Path packagePath = this.getDirectoryStructureAccessor().getBasePath()
-               .resolve(this.getDirectoryStructureAccessor().findUnusedPackageFilename(structuresPackageWrapper.getStructuresPacketInfo().getDisplayName(), "structures package"));
-         Files.copy(source, packagePath);
-         this.getPackageID_SaveDirectory().put(structuresPackageWrapper.getPackageID(), packagePath.getFileName().toString());
-         return structuresPackageWrapper;
-      } catch (PackageIOException | IOException e) {
-         return null;
-      }
-   }
-
-   @Override
-   public void savePackages(StructurePackageContainer structurePackages) throws PackageIOException {
-      // What to do with removed or renamed elements?
-      // Option one: Compare saved data with modified data and only remove changed files and then save everything -> Huge bunch of work, Lesser IO stressing, No extra data is deleted
-      // Option two: Remove the whole Packages directory and then save everything. -> More easy, needs extra attention to templates, because we do not load the bunch of data
-      // Option three: compare package differences (just package directories) and delete all directory that doesn't belong to a package -> stable directory ids to identify packages
-      // Clear structures and pools directory and save the ones that our runtime data has. Compare templates and delete removed ones. Rename is requires extra attention!
-      // Probably I'm going to choose option three, because it combines option one and two and their advantages
-
-      // Before anything else, we should create the base directory. That is important to mark that we've already used this format and don't want to fall back to legacy formats
-      if (Files.notExists(this.getDirectoryStructureAccessor().getPackagesPath())) {
-         try {
-            Files.createDirectories(this.getDirectoryStructureAccessor().getPackagesPath());
-         } catch (IOException e) {
-            throw new PackageIOException(new CalculationError("Failed to save packages", "Unable to create packages directory. Caused by: %s", e));
-         }
-      }
-      // We need one file to identify that we have already read packages in this format one time, so let's create a README with link to our wiki
-      try {
-         Files.writeString(this.getDirectoryStructureAccessor().getPackagesPath().resolve("README.txt"), ShrinesMod.WIKI_LINK);
-      } catch (IOException e) {
-         throw new PackageIOException(new CalculationError("Failed to write README.txt", "Unable to write File. Caused by: %s", e));
-      }
-      // First delete All removed packages
-      try {
-         // These packages existed while last loading
-         List<UUID> packageIDsLoad = new ArrayList<>(this.getPackageID_SaveDirectory().keySet());// We need to prevent changes on the original map, so we're forced to copy the set
-         List<UUID> packagesIDsSave = structurePackages.getAsStream().map(StructuresPackageWrapper::getPackageID).toList();// These packages want to be saved. These and only these
-         packageIDsLoad.removeAll(packagesIDsSave);// If we remove all packages here that still exists, only the packages that were removed persist
-         for (UUID deletedPackageID : packageIDsLoad) {
-            Path packagePath = this.getDirectoryStructureAccessor().getPackagesPath().resolve(this.getPackageID_SaveDirectory().get(deletedPackageID));
-            if (Files.isDirectory(packagePath)) {
-               // Deletes the directory recursively
-               this.deleteDirectoryRecursively(packagePath);
-            }
-            // Mark that package as removed, no matter if the package truly needed to be removed, because we don't need to try to remove it all the time if it doesn't exist anymore
-            this.getPackageID_SaveDirectory().remove(deletedPackageID);
-         }
-      } catch (IOException e) {
-         throw new PackageIOException(new CalculationError("Failed to save packages", "Failed to delete packages, that we're removed by the user. Caused by: %s", e));
-      }
-
-      // Now save remaining packages
-      for (StructuresPackageWrapper structuresPackageWrapper : structurePackages.getAsIterable()) {
-         if (structuresPackageWrapper != null) {
-            this.savePackage(structuresPackageWrapper);
-         }
+         });
       }
    }
 
@@ -400,21 +424,6 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
       this.saveStructurePackageMeta(packagePath);
    }
 
-   protected void saveStructurePackageMeta(@NotNull Path packagePath) throws PackageIOException {
-      // Create the data pack metadata for minecraft data packs that loads our templates and template pools on runtime
-      Path metadataPath = packagePath.resolve("pack.meta");
-      JsonObject metadataObject = new JsonObject();
-      JsonObject metadataPackObject = new JsonObject();
-      metadataPackObject.add("pack_format", new JsonPrimitive(8));// Version 8 since 21w37
-      metadataObject.add("description", new JsonPrimitive(""));
-      metadataObject.add("pack", metadataPackObject);
-      try {
-         Files.writeString(metadataPath, metadataObject.toString());
-      } catch (IOException e) {
-         throw new PackageIOException(new CalculationError("Unable to create metadata file for structure package", "Might fail to load templates and template pools on runtime. Caused by: %s", e));
-      }
-   }
-
    protected void clearStructuresAndPoolsDirectories(Path packagePath) throws PackageIOException {
       try {
          for (Path namespace : this.findDataNamespaces(packagePath)) {
@@ -434,29 +443,9 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
       }
    }
 
-   protected void saveStructure(@NotNull StructureData structureData, Path packagePath) throws PackageIOException {
-      Path structuresPath = this.getDirectoryStructureAccessor().getStructuresPath(structureData.getKey(), packagePath, true);
-      try {
-         Files.createDirectories(structuresPath.getParent());
-         Files.writeString(structuresPath, StructureData.saveToJSON(structureData).toString());
-      } catch (IOException e) {
-         throw new PackageIOException(new CalculationError("Unable to save structure", "Caused By: %s", e));
-      }
-   }
-
    protected void saveTemplatePoolContainer(@NotNull TemplatePoolContainer templatePoolContainer, Path packagePath) throws PackageIOException {
       for (TemplatePool templatePool : templatePoolContainer.getAsIterable()) {
          this.saveTemplatePool(templatePool, packagePath);
-      }
-   }
-
-   protected void saveTemplatePool(@NotNull TemplatePool templatePool, Path packagePath) throws PackageIOException {
-      Path poolPath = this.getDirectoryStructureAccessor().getTemplatePoolPath(templatePool.getSaveName(), packagePath, true);
-      try {
-         Files.createDirectories(poolPath.getParent());
-         Files.writeString(poolPath, templatePool.toString());
-      } catch (IOException e) {
-         throw new PackageIOException(new CalculationError("Unable to save structure template pool", "Caused By: %s", e));
       }
    }
 
@@ -505,21 +494,38 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
       }
    }
 
-   protected void deleteDirectoryRecursively(Path directory) throws IOException {
-      if (Files.exists(directory)) {
-         Files.walkFileTree(directory, new SimpleFileVisitor<>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-               Files.delete(file);
-               return FileVisitResult.CONTINUE;
-            }
+   protected void saveStructurePackageMeta(@NotNull Path packagePath) throws PackageIOException {
+      // Create the data pack metadata for minecraft data packs that loads our templates and template pools on runtime
+      Path metadataPath = packagePath.resolve("pack.meta");
+      JsonObject metadataObject = new JsonObject();
+      JsonObject metadataPackObject = new JsonObject();
+      metadataPackObject.add("pack_format", new JsonPrimitive(8));// Version 8 since 21w37
+      metadataObject.add("description", new JsonPrimitive(""));
+      metadataObject.add("pack", metadataPackObject);
+      try {
+         Files.writeString(metadataPath, metadataObject.toString());
+      } catch (IOException e) {
+         throw new PackageIOException(new CalculationError("Unable to create metadata file for structure package", "Might fail to load templates and template pools on runtime. Caused by: %s", e));
+      }
+   }
 
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-               Files.delete(dir);
-               return FileVisitResult.CONTINUE;
-            }
-         });
+   protected void saveStructure(@NotNull StructureData structureData, Path packagePath) throws PackageIOException {
+      Path structuresPath = this.getDirectoryStructureAccessor().getStructuresPath(structureData.getKey(), packagePath, true);
+      try {
+         Files.createDirectories(structuresPath.getParent());
+         Files.writeString(structuresPath, StructureData.saveToJSON(structureData).toString());
+      } catch (IOException e) {
+         throw new PackageIOException(new CalculationError("Unable to save structure", "Caused By: %s", e));
+      }
+   }
+
+   protected void saveTemplatePool(@NotNull TemplatePool templatePool, Path packagePath) throws PackageIOException {
+      Path poolPath = this.getDirectoryStructureAccessor().getTemplatePoolPath(templatePool.getSaveName(), packagePath, true);
+      try {
+         Files.createDirectories(poolPath.getParent());
+         Files.writeString(poolPath, templatePool.toString());
+      } catch (IOException e) {
+         throw new PackageIOException(new CalculationError("Unable to save structure template pool", "Caused By: %s", e));
       }
    }
 }

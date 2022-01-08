@@ -1,4 +1,11 @@
 /*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+/*
  * Silverminer (and Team)
  *
  * This library is distributed in the hope that it will be useful,
@@ -13,6 +20,8 @@ package com.silverminer.shrines.packages.io.legacy_181.configuration;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.config.DefaultStructureConfig;
+import com.silverminer.shrines.packages.datacontainer.NestedVariationConfiguration;
+import com.silverminer.shrines.packages.datacontainer.SimpleVariationConfiguration;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -56,6 +65,90 @@ public class LegacyStructureData implements IStructureConfig {
    public LegacyStructureData(String name, int seed) {
       this.name = name;
       this.seed.setValue(seed, this.getName());
+   }
+
+   public String getName() {
+      return this.name;
+   }
+
+   @Override
+   public boolean getGenerate() {
+      return this.generate.getValue();
+   }
+
+   @Override
+   public double getSpawnChance() {
+      return this.spawn_chance.getValue();
+   }
+
+   @Override
+   public boolean getNeedsGround() {
+      return this.needs_ground.getValue();
+   }
+
+   @Override
+   public int getDistance() {
+      return this.distance.getValue();
+   }
+
+   @Override
+   public int getSeparation() {
+      return this.seperation.getValue();
+   }
+
+   @Override
+   public int getSeed() {
+      return this.seed.getValue();
+   }
+
+   @Override
+   public List<? extends Biome.BiomeCategory> getWhitelist() {
+      return this.categories.getValue();
+   }
+
+   @Override
+   public List<? extends String> getBlacklist() {
+      return this.blacklist.getValue();
+   }
+
+   @Override
+   public List<? extends String> getDimensions() {
+      return this.dimensions.getValue();
+   }
+
+   @Override
+   public boolean getUseRandomVarianting() {
+      return this.use_random_varianting.getValue();
+   }
+
+   @Override
+   public double getLootChance() {
+      throw new RuntimeException("Tried to access loot chance of custom structure but there is no");
+   }
+
+   @Override
+   public boolean getSpawnVillagers() {
+      throw new RuntimeException("Tried to access spawn villagers of custom structure but there is no");
+   }
+
+   @Override
+   public boolean isBuiltIn() {
+      return false;
+   }
+
+   @Override
+   public boolean getActive() {
+      return this.getGenerate();
+   }
+
+   @Override
+   public void setActive(boolean value) {
+      this.generate.setValue(value, this.getName());
+   }
+
+   @Override
+   public List<? extends IConfigOption<?>> getAllOptions() {
+      return this.CONFIGS;
    }
 
    public static List<Biome.BiomeCategory> readCategories(String s) {
@@ -150,10 +243,6 @@ public class LegacyStructureData implements IStructureConfig {
       return option;
    }
 
-   public String getName() {
-      return this.name;
-   }
-
    public String toString() {
       StringBuilder config = new StringBuilder();
       for (ConfigOption<?> co : CONFIGS) {
@@ -183,88 +272,8 @@ public class LegacyStructureData implements IStructureConfig {
    }
 
    @Override
-   public boolean getGenerate() {
-      return this.generate.getValue();
-   }
-
-   @Override
-   public double getSpawnChance() {
-      return this.spawn_chance.getValue();
-   }
-
-   @Override
-   public boolean getNeedsGround() {
-      return this.needs_ground.getValue();
-   }
-
-   @Override
-   public int getDistance() {
-      return this.distance.getValue();
-   }
-
-   @Override
-   public int getSeparation() {
-      return this.seperation.getValue();
-   }
-
-   @Override
-   public int getSeed() {
-      return this.seed.getValue();
-   }
-
-   @Override
-   public List<? extends Biome.BiomeCategory> getWhitelist() {
-      return this.categories.getValue();
-   }
-
-   @Override
-   public List<? extends String> getBlacklist() {
-      return this.blacklist.getValue();
-   }
-
-   @Override
-   public List<? extends String> getDimensions() {
-      return this.dimensions.getValue();
-   }
-
-   @Override
-   public boolean getUseRandomVarianting() {
-      return this.use_random_varianting.getValue();
-   }
-
-   @Override
-   public double getLootChance() {
-      throw new RuntimeException("Tried to access loot chance of custom structure but there is no");
-   }
-
-   @Override
-   public boolean getSpawnVillagers() {
-      throw new RuntimeException("Tried to access spawn villagers of custom structure but there is no");
-   }
-
-   @Override
    public int compareTo(IStructureConfig o) {
       return this.getName().compareTo(o.getName());
-   }
-
-   @Override
-   public boolean isBuiltIn() {
-      return false;
-   }
-
-   @Override
-   public boolean getActive() {
-      return this.getGenerate();
-   }
-
-   @Override
-   public void setActive(boolean value) {
-      this.generate.setValue(value, this.getName());
-   }
-
-   @Override
-   public List<? extends IConfigOption<?>> getAllOptions() {
-      return this.CONFIGS;
    }
 
    public StructureData toUpToDateData() {
@@ -274,7 +283,9 @@ public class LegacyStructureData implements IStructureConfig {
       structure.setTransformLand(this.getNeedsGround());
       structure.setGenerate(this.getGenerate());
       structure.setSpawn_chance(this.getSpawnChance());
-      structure.setUse_random_varianting(this.getUseRandomVarianting());
+      structure.getVariationConfiguration().setEnabled(this.getUseRandomVarianting());
+      structure.getVariationConfiguration().setNestedVariationConfiguration(this.getUseRandomVarianting() ? NestedVariationConfiguration.ALL_ENABLED : NestedVariationConfiguration.ALL_DISABLED);
+      structure.getVariationConfiguration().setSimpleVariationConfiguration(this.getUseRandomVarianting() ? SimpleVariationConfiguration.ALL_ENABLED : SimpleVariationConfiguration.ALL_DISABLED);
       structure.setDistance(this.getDistance());
       structure.setSeparation(this.getSeparation());
       structure.setSeed_modifier(this.getSeed());

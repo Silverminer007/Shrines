@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 /**
  * Silverminer (and Team)
  * <p>
@@ -85,7 +92,7 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
                return JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, position, false, true);
             }
          }
-      });
+      }, new RandomVariantsProcessor(config));
       this.name = nameIn;
       this.structureConfig = config;
       this.setRegistryName(this.getFeatureName());
