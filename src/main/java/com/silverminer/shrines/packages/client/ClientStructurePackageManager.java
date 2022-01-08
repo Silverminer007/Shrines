@@ -40,20 +40,22 @@ import java.util.UUID;
 
 public class ClientStructurePackageManager {
    protected static final Logger LOGGER = LogManager.getLogger(ClientStructurePackageManager.class);
+   protected StructurePackageContainer packages = new StructurePackageContainer();
    private Stage currentStage = Stage.EMPTY;
    private int queuePosition = -1;
    private UUID playerID = null;
    private NovelDataContainer novelDataContainer;
    private List<String> availableDimensions;
    private StructurePackageContainer initialPackages;
-   protected StructurePackageContainer packages = new StructurePackageContainer();
 
-   public StructurePackageContainer getPackages() {
-      return this.packages;
-   }
-
-   private Minecraft getMinecraft() {
-      return Minecraft.getInstance();
+   public void joinQueue() {
+      // You can only join the queue if you aren't in it yet or were already allowed to edit packages. You should also only join the queue if the packages are actually available
+      // or if we are in Novels screen. At that stages, packages are also available
+      if (this.getCurrentStage().equals(Stage.AVAILABLE) || this.getCurrentStage().equals(Stage.NOVELS)) {
+         this.setCurrentStage(Stage.QUEUE);
+         ShrinesPacketHandler.sendToServer(new CTSPlayerJoinQueue(this.getPlayerID()));
+         this.getMinecraft().setScreen(new WaitInQueueScreen(this.getMinecraft().screen));
+      }
    }
 
    public Stage getCurrentStage() {
@@ -68,17 +70,12 @@ public class ClientStructurePackageManager {
       return playerID;
    }
 
-   public void setPlayerID(UUID playerID) {
-      this.playerID = playerID;
+   private Minecraft getMinecraft() {
+      return Minecraft.getInstance();
    }
 
-   public void joinQueue() {
-      // You can only join the queue if you aren't in it yet or were already allowed to edit packages. You should also only join the queue if the packages are actually available
-      if (this.getCurrentStage().equals(Stage.AVAILABLE)) {
-         this.setCurrentStage(Stage.QUEUE);
-         ShrinesPacketHandler.sendToServer(new CTSPlayerJoinQueue(this.getPlayerID()));
-         this.getMinecraft().setScreen(new WaitInQueueScreen(this.getMinecraft().screen));
-      }
+   public void setPlayerID(UUID playerID) {
+      this.playerID = playerID;
    }
 
    public int getQueuePosition() {
@@ -89,6 +86,14 @@ public class ClientStructurePackageManager {
       }
    }
 
+   public void leaveQueue() {
+      if (this.getCurrentStage().equals(Stage.QUEUE)) {
+         this.setCurrentStage(Stage.AVAILABLE);
+      }
+      this.updateQueuePosition(-1);
+      ShrinesPacketHandler.sendToServer(new CTSPlayerLeaveQueue(this.getPlayerID()));
+   }
+
    public void updateQueuePosition(int queuePosition) {
       this.queuePosition = queuePosition;
       if (this.queuePosition == 0 && this.getCurrentStage() != Stage.EDIT) {
@@ -96,12 +101,8 @@ public class ClientStructurePackageManager {
       }
    }
 
-   public void leaveQueue() {
-      if (this.getCurrentStage().equals(Stage.QUEUE)) {
-         this.setCurrentStage(Stage.AVAILABLE);
-      }
-      this.updateQueuePosition(-1);
-      ShrinesPacketHandler.sendToServer(new CTSPlayerLeaveQueue(this.getPlayerID()));
+   public void loadPackages() {
+      ShrinesPacketHandler.sendToServer(new CTSSyncPackagesRequest());
    }
 
    public void importPackage() {
@@ -117,6 +118,25 @@ public class ClientStructurePackageManager {
       } catch (IOException e) {
          this.onError(new CalculationError("Failed to import package", "Caused by IO Error: %s", e));
       }
+   }
+
+   public StructurePackageContainer getPackages() {
+      return this.packages;
+   }
+
+   public void setPackages(StructurePackageContainer packages) {
+      this.packages = packages;
+      this.setCurrentStage(Stage.EDIT);
+      Screen lastScreen = this.getMinecraft().screen;
+      while (lastScreen instanceof SkipableScreen skipableScreen) {
+         lastScreen = skipableScreen.getLastScreen();
+      }
+      this.getMinecraft().setScreen(new StructuresPacketsScreen(lastScreen));
+   }
+
+   public void onError(CalculationError error) {
+      ClientUtils.showErrorToast(error);
+      LOGGER.error(error);
    }
 
    public void exportPackage(StructuresPackageWrapper packageWrapper) {
@@ -136,26 +156,8 @@ public class ClientStructurePackageManager {
       }
    }
 
-   public void loadPackages() {
-      ShrinesPacketHandler.sendToServer(new CTSSyncPackagesRequest());
-   }
-
-   public void setPackages(StructurePackageContainer packages) {
-      this.packages = packages;
-      this.setCurrentStage(Stage.EDIT);
-      Screen lastScreen = this.getMinecraft().screen;
-      while (lastScreen instanceof SkipableScreen skipableScreen) {
-         lastScreen = skipableScreen.getLastScreen();
-      }
-      this.getMinecraft().setScreen(new StructuresPacketsScreen(lastScreen));
-   }
-
    public void savePackages() {
       ShrinesPacketHandler.sendToServer(new CTSSavePackages(this.getPackages()));
-      this.setCurrentStage(Stage.AVAILABLE);
-   }
-
-   public void stopEditing() {
       this.setCurrentStage(Stage.AVAILABLE);
    }
 
@@ -171,6 +173,10 @@ public class ClientStructurePackageManager {
       }
    }
 
+   public void stopEditing() {
+      this.setCurrentStage(Stage.AVAILABLE);
+   }
+
    public List<String> getAvailableDimensions() {
       return availableDimensions;
    }
@@ -180,11 +186,17 @@ public class ClientStructurePackageManager {
    }
 
    public void showNovelsOverview() {
-      ShrinesPacketHandler.sendToServer(new CTSSyncNovelsRequest());
+      if (this.getCurrentStage().equals(Stage.AVAILABLE)) {
+         ShrinesPacketHandler.sendToServer(new CTSSyncNovelsRequest());
+         this.setCurrentStage(Stage.NOVELS_WAITING);
+      }
    }
 
    public void openNovelsOverviewScreen() {
-      this.getMinecraft().setScreen(new StructureNovelsOverviewScreen(this.getMinecraft().screen));
+      if (this.getCurrentStage().equals(Stage.NOVELS_WAITING)) {
+         this.getMinecraft().setScreen(new StructureNovelsOverviewScreen(this.getMinecraft().screen));
+         this.setCurrentStage(Stage.NOVELS);
+      }
    }
 
    public StructurePackageContainer getInitialPackages() {
@@ -230,12 +242,7 @@ public class ClientStructurePackageManager {
       }
    }
 
-   public void onError(CalculationError error) {
-      ClientUtils.showErrorToast(error);
-      LOGGER.error(error);
-   }
-
    public enum Stage {
-      EMPTY, AVAILABLE, QUEUE, EDIT
+      EMPTY, AVAILABLE, NOVELS_WAITING, NOVELS, QUEUE, EDIT
    }
 }

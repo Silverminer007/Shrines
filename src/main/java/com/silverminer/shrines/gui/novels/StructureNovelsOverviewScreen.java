@@ -9,6 +9,7 @@ package com.silverminer.shrines.gui.novels;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.packages.PackageManagerProvider;
+import com.silverminer.shrines.packages.client.ClientStructurePackageManager;
 import com.silverminer.shrines.utils.ClientUtils;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -89,6 +90,7 @@ public class StructureNovelsOverviewScreen extends Screen {
       if (this.minecraft == null) {
          return;
       }
+      PackageManagerProvider.CLIENT.setCurrentStage(ClientStructurePackageManager.Stage.AVAILABLE);
       this.minecraft.setScreen(this.lastScreen);
    }
 
