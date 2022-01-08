@@ -4,46 +4,29 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-
-/**
- * Silverminer (and Team)
- * <p>
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * <p>
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
- */
 package com.silverminer.shrines.events;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.silverminer.shrines.gui.novels.StructureNovelsOverviewScreen;
+import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.io.DirectoryStructureAccessor;
-import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
-import com.silverminer.shrines.utils.network.cts.CTSSyncNovelsRequest;
+import com.silverminer.shrines.utils.ClientUtils;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.TickEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.utils.ClientUtils;
-
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ClientEvents {
    protected static final Logger LOGGER = LogManager.getLogger(ClientEvents.class);
@@ -71,6 +54,7 @@ public class ClientEvents {
          ClientUtils.editPackagesKeyMapping = new KeyMapping("key.customStructuresScreen", KeyConflictContext.IN_GAME, KeyModifier.CONTROL, InputConstants.getKey(InputConstants.KEY_K, 0), "key.categories.shrines");
          ClientRegistry.registerKeyBinding(ClientUtils.editPackagesKeyMapping);
       }
+
       @SubscribeEvent
       public static void addPackFinder(AddPackFindersEvent event) {
          // Register the icons Cache here on client only and the packages in CommonEvents, because we need these on both sides
