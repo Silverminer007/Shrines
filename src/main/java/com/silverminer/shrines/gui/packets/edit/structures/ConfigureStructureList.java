@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.silverminer.shrines.gui.packets.edit.structures;
 
 import com.google.common.collect.Lists;
@@ -6,9 +13,9 @@ import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
 import com.silverminer.shrines.gui.misc.screen.BiomeGenerationSettingsScreen;
 import com.silverminer.shrines.gui.misc.screen.StringListOptionsScreen;
 import com.silverminer.shrines.packages.PackageManagerProvider;
+import com.silverminer.shrines.packages.configuration.ConfigOptions;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
 import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
-import com.silverminer.shrines.packages.configuration.ConfigOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -36,9 +43,9 @@ import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
 public class ConfigureStructureList extends ObjectSelectionList<ConfigureStructureList.Entry<?>> {
+   protected final StructuresPackageWrapper packet;
    protected StructureData structure;
    protected ConfigureStructureScreen screen;
-   protected final StructuresPackageWrapper packet;
 
    public ConfigureStructureList(Minecraft p_i45010_1_, int p_i45010_2_, int p_i45010_3_, int p_i45010_4_,
                                  int p_i45010_5_, int p_i45010_6_, ConfigureStructureScreen screen, StructureData structure, StructuresPackageWrapper packet) {
@@ -60,8 +67,6 @@ public class ConfigureStructureList extends ObjectSelectionList<ConfigureStructu
             this.structure::setTransformLand));
       this.addEntry(new DoubleEntry(ConfigOptions.LATEST.spawnChance(), this.structure::getSpawn_chance,
             this.structure::setSpawn_chance));
-      this.addEntry(new BooleanEntry(ConfigOptions.LATEST.useRandomVarianting(), this.structure::isUse_random_varianting,
-            this.structure::setUse_random_varianting));
       this.addEntry(
             new IntegerEntry(ConfigOptions.LATEST.distance(), this.structure::getDistance, this.structure::setDistance, false, false));
       this.addEntry(new IntegerEntry(ConfigOptions.LATEST.separation(), this.structure::getSeparation,
@@ -81,20 +86,20 @@ public class ConfigureStructureList extends ObjectSelectionList<ConfigureStructu
       this.addEntry(new ResourceLocationEntry(ConfigOptions.LATEST.iconPath(), this.structure::getIconPath, this.structure::setIconPath, Integer.MAX_VALUE));
    }
 
-   protected int getScrollbarPosition() {
-      return this.width - 5;
-   }
-
    public int getRowWidth() {
       return this.width - 10;
    }
 
-   public Optional<ConfigureStructureList.Entry<?>> getSelectedOpt() {
-      return Optional.ofNullable(this.getSelected());
+   protected int getScrollbarPosition() {
+      return this.width - 5;
    }
 
    protected boolean isFocused() {
       return this.screen.getFocused() == this;
+   }
+
+   public Optional<ConfigureStructureList.Entry<?>> getSelectedOpt() {
+      return Optional.ofNullable(this.getSelected());
    }
 
    @OnlyIn(Dist.CLIENT)

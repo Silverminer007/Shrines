@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.silverminer.shrines.packages.io.legacy_200;
 
 import com.silverminer.shrines.packages.configuration.ConfigOptions;
@@ -110,7 +117,6 @@ public class Legacy200StructurePackageLoader implements StructurePackageLoader {
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.transformLand()).getBoolean("Value"),
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.generate()).getBoolean("Value"),
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.spawnChance()).getDouble("Value"),
-                        structureCompound.getCompound(ConfigOptions.LEGACY_2xx.useRandomVarianting()).getBoolean("Value"),
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.distance()).getInt("Value"),
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.separation()).getInt("Value"),
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.seedModifier()).getInt("Value"),
@@ -121,7 +127,8 @@ public class Legacy200StructurePackageLoader implements StructurePackageLoader {
                         structureCompound.getCompound(ConfigOptions.LEGACY_2xx.startPool()).getString("Value"),
                         7),
                   null,
-                  null
+                  null,
+                  structureCompound.getCompound(ConfigOptions.LEGACY_2xx.useRandomVarianting()).getBoolean("Value") ? VariationConfiguration.ALL_ENABLED : VariationConfiguration.ALL_DISABLED
             );
             structures.add(structureData);
          }

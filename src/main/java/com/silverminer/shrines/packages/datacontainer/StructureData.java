@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.silverminer.shrines.packages.datacontainer;
 
 import com.google.gson.JsonElement;
@@ -23,19 +30,25 @@ import java.util.Optional;
 import java.util.Random;
 
 public class StructureData implements Comparable<StructureData> {
-   protected static final Logger LOGGER = LogManager.getLogger(StructureData.class);
    public static final Codec<StructureData> CODEC = RecordCodecBuilder.create((structureDataInstance) -> structureDataInstance.group(
                Codec.STRING.fieldOf(ConfigOptions.LATEST.name()).forGetter(StructureData::getName),
                ResourceLocation.CODEC.fieldOf(ConfigOptions.LATEST.key()).forGetter(StructureData::getKey),
                SpawnConfiguration.CODEC.fieldOf("spawn_configuration").forGetter(StructureData::getSpawnConfiguration),
                ResourceLocation.CODEC.optionalFieldOf(ConfigOptions.LATEST.iconPath(), null).forGetter(StructureData::getIconPath),
-               ResourceLocation.CODEC.optionalFieldOf(ConfigOptions.LATEST.novel(), new ResourceLocation("")).forGetter(StructureData::getNovel))
+               ResourceLocation.CODEC.optionalFieldOf(ConfigOptions.LATEST.novel(), new ResourceLocation("")).forGetter(StructureData::getNovel),
+               VariationConfiguration.CODEC.optionalFieldOf("variation_configuration", VariationConfiguration.ALL_DISABLED).forGetter(StructureData::getVariationConfiguration))
          .apply(structureDataInstance, StructureData::new));
+   protected static final Logger LOGGER = LogManager.getLogger(StructureData.class);
+   private final SpawnConfiguration spawnConfiguration;
+   private final VariationConfiguration variationConfiguration;
    private String name;
    private ResourceLocation key;
    private ResourceLocation novel;
    private ResourceLocation iconPath;
-   private final SpawnConfiguration spawnConfiguration;
+
+   public StructureData(String name, ResourceLocation key, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath, @Nullable ResourceLocation novel) {
+      this(name, key, spawnConfiguration, iconPath, novel, VariationConfiguration.ALL_DISABLED);
+   }
 
    /**
     * @param name               the Displayname for the Structure
@@ -44,12 +57,13 @@ public class StructureData implements Comparable<StructureData> {
     * @param iconPath           the path to the icon of this structure or null to use key's value
     * @param novel              the path to the structure's Novels or null to use key's value
     */
-   public StructureData(String name, ResourceLocation key, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath, @Nullable ResourceLocation novel) {
+   public StructureData(String name, ResourceLocation key, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath, @Nullable ResourceLocation novel, VariationConfiguration variationConfiguration) {
       this.name = name;
       this.key = key;
       this.novel = Objects.requireNonNullElse(novel, key);
       this.iconPath = Objects.requireNonNullElse(iconPath, key);
       this.spawnConfiguration = spawnConfiguration;
+      this.variationConfiguration = variationConfiguration;
    }
 
    @Nonnull
@@ -80,100 +94,64 @@ public class StructureData implements Comparable<StructureData> {
       return optional.map(Pair::getFirst).orElse(null);
    }
 
-   public String getName() {
-      return name;
+   public VariationConfiguration getVariationConfiguration() {
+      return variationConfiguration;
    }
 
    public ResourceLocation getKey() {
       return key;
    }
 
-   public boolean isTransformLand() {
-      return this.getSpawnConfiguration().isTransformLand();
-   }
-
-   public boolean isGenerate() {
-      return this.getSpawnConfiguration().isGenerate();
-   }
-
-   public double getSpawn_chance() {
-      return this.getSpawnConfiguration().getSpawn_chance();
-   }
-
-   public boolean isUse_random_varianting() {
-      return this.getSpawnConfiguration().isUse_random_varianting();
-   }
-
-   public int getDistance() {
-      return this.getSpawnConfiguration().getDistance();
-   }
-
-   public int getSeparation() {
-      return this.getSpawnConfiguration().getSeparation();
-   }
-
-   public int getSeed_modifier() {
-      return this.getSpawnConfiguration().getSeed_modifier();
-   }
-
-   public int getHeight_offset() {
-      return this.getSpawnConfiguration().getHeight_offset();
-   }
-
-   public List<String> getBiome_blacklist() {
-      return this.getSpawnConfiguration().getBiome_blacklist();
-   }
-
-   public List<String> getBiome_category_whitelist() {
-      return this.getSpawnConfiguration().getBiome_category_whitelist();
-   }
-
-   public List<String> getDimension_whitelist() {
-      return this.getSpawnConfiguration().getDimension_whitelist();
-   }
-
-   public String getStart_pool() {
-      return this.getSpawnConfiguration().getStart_pool();
-   }
-
-   public ResourceLocation getNovel() {
-      return novel;
-   }
-
-   public int getJigsawMaxDepth() {
-      return this.getSpawnConfiguration().getJigsawMaxDepth();
-   }
-
-   public void setName(String name) {
-      this.name = name;
-   }
-
    public void setKey(ResourceLocation key) {
       this.key = key;
+   }
+
+   public boolean isTransformLand() {
+      return this.getSpawnConfiguration().isTransformLand();
    }
 
    public void setTransformLand(boolean transformLand) {
       this.getSpawnConfiguration().setTransformLand(transformLand);
    }
 
+   public SpawnConfiguration getSpawnConfiguration() {
+      return spawnConfiguration;
+   }
+
+   public boolean isGenerate() {
+      return this.getSpawnConfiguration().isGenerate();
+   }
+
    public void setGenerate(boolean generate) {
       this.getSpawnConfiguration().setGenerate(generate);
+   }
+
+   public double getSpawn_chance() {
+      return this.getSpawnConfiguration().getSpawn_chance();
    }
 
    public void setSpawn_chance(double spawn_chance) {
       this.getSpawnConfiguration().setSpawn_chance(spawn_chance);
    }
 
-   public void setUse_random_varianting(boolean use_random_varianting) {
-      this.getSpawnConfiguration().setUse_random_varianting(use_random_varianting);
+   public int getDistance() {
+      return this.getSpawnConfiguration().getDistance();
    }
 
    public void setDistance(int distance) {
       this.getSpawnConfiguration().setDistance(distance);
    }
 
+   public int getSeparation() {
+      return this.getSpawnConfiguration().getSeparation();
+   }
+
    public void setSeparation(int separation) {
       this.getSpawnConfiguration().setSeparation(separation);
+   }
+
+   public int getSeed_modifier() {
+      return this.getSpawnConfiguration().getSeed_modifier();
    }
 
    public void setSeed_modifier(int seed_modifier) {
@@ -183,36 +161,60 @@ public class StructureData implements Comparable<StructureData> {
       this.getSpawnConfiguration().setSeed_modifier(seed_modifier);
    }
 
+   public int getHeight_offset() {
+      return this.getSpawnConfiguration().getHeight_offset();
+   }
+
    public void setHeight_offset(int height_offset) {
       this.getSpawnConfiguration().setHeight_offset(height_offset);
+   }
+
+   public List<String> getBiome_blacklist() {
+      return this.getSpawnConfiguration().getBiome_blacklist();
    }
 
    public void setBiome_blacklist(List<String> biome_blacklist) {
       this.getSpawnConfiguration().setBiome_blacklist(biome_blacklist);
    }
 
+   public List<String> getBiome_category_whitelist() {
+      return this.getSpawnConfiguration().getBiome_category_whitelist();
+   }
+
    public void setBiome_category_whitelist(List<String> biome_category_whitelist) {
       this.getSpawnConfiguration().setBiome_category_whitelist(biome_category_whitelist);
+   }
+
+   public List<String> getDimension_whitelist() {
+      return this.getSpawnConfiguration().getDimension_whitelist();
    }
 
    public void setDimension_whitelist(List<String> dimension_whitelist) {
       this.getSpawnConfiguration().setDimension_whitelist(dimension_whitelist);
    }
 
+   public String getStart_pool() {
+      return this.getSpawnConfiguration().getStart_pool();
+   }
+
    public void setStart_pool(String start_pool) {
       this.getSpawnConfiguration().setStart_pool(start_pool);
+   }
+
+   public ResourceLocation getNovel() {
+      return novel;
    }
 
    public void setNovel(ResourceLocation novel) {
       this.novel = novel;
    }
 
-   public void setJigsawMaxDepth(int jigsawMaxDepth) {
-      this.getSpawnConfiguration().setJigsawMaxDepth(jigsawMaxDepth);
+   public int getJigsawMaxDepth() {
+      return this.getSpawnConfiguration().getJigsawMaxDepth();
    }
 
-   public SpawnConfiguration getSpawnConfiguration() {
-      return spawnConfiguration;
+   public void setJigsawMaxDepth(int jigsawMaxDepth) {
+      this.getSpawnConfiguration().setJigsawMaxDepth(jigsawMaxDepth);
    }
 
    public ResourceLocation getIconPath() {
@@ -226,5 +228,13 @@ public class StructureData implements Comparable<StructureData> {
    @Override
    public int compareTo(StructureData o) {
       return this.getName().compareTo(o.getName());
+   }
+
+   public String getName() {
+      return name;
+   }
+
+   public void setName(String name) {
+      this.name = name;
    }
 }

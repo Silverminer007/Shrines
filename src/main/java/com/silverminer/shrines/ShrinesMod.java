@@ -1,4 +1,11 @@
 /*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+/*
  * Silverminer (and Team)
  *
  * This library is distributed in the hope that it will be useful,
@@ -17,11 +24,8 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.File;
 
 /**
  * @author Silverminer
@@ -30,15 +34,13 @@ import java.io.File;
 public class ShrinesMod {
    public static final String MODID = "shrines";
    public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
-   public static String VERSION = "N/A";
    public static final String WIKI_LINK = "https://github.com/Silverminer007/MinecraftModsUpdateChecker/blob/master/wiki/SelectLanguage.md";
+   public static String VERSION = "N/A";
 
    /**
     * If you're looking for example code on how to make a structure Mod see
     * TelepathicGrunt's Example Mod on how to do that:
     * https://github.com/TelepathicGrunt/StructureTutorialMod
-    * <p>
-    * TODO 3.0.1 Use processors to perform Color Structure Piece's work (Or maybe PostPlacementProcessors?)
     */
    public ShrinesMod() {
       ModList.get().getModContainerById(ShrinesMod.MODID)
