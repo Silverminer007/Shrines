@@ -11,7 +11,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.silverminer.shrines.gui.misc.IconList;
 import com.silverminer.shrines.gui.novels.StructureNovelsOverviewList.StructureNovelsEntry;
-import com.silverminer.shrines.init.NovelsRegistry;
 import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.datacontainer.NovelsData;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
@@ -46,7 +45,7 @@ public class StructureNovelsOverviewList extends IconList<StructureNovelsEntry> 
          for (StructureData data : packet.getStructures().getAsIterable()) {
             if (data.getName().toLowerCase(Locale.ROOT).contains(s)
                   || data.getKey().toString().toLowerCase(Locale.ROOT).contains(s)) {
-               if (NovelsRegistry.NOVELS_REGISTRY.get().containsKey(data.getNovel())) {// TODO We can access Registry on client. We must access data on server and sync it
+               if (PackageManagerProvider.CLIENT.getNovelsRegistryData().containsKey(data.getNovel())) {
                   this.addEntry(new StructureNovelsEntry(data));
                }
             }
@@ -120,8 +119,8 @@ public class StructureNovelsOverviewList extends IconList<StructureNovelsEntry> 
                   this.minecraft.screen,
                   this.data,
                   Optional.ofNullable(
-                        PackageManagerProvider.CLIENT.getNovels()
-                              .getByKey(this.data.getKey().toString()))
+                              PackageManagerProvider.CLIENT.getNovels()
+                                    .getByKey(this.data.getKey().toString()))
                         .map(NovelsData::getFoundStructuresCount)
                         .orElse(0)));
             return true;

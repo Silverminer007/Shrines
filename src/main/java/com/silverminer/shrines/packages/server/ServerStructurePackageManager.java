@@ -7,8 +7,10 @@
 
 package com.silverminer.shrines.packages.server;
 
+import com.silverminer.shrines.init.NovelsRegistry;
 import com.silverminer.shrines.packages.container.NovelDataContainer;
 import com.silverminer.shrines.packages.container.StructurePackageContainer;
+import com.silverminer.shrines.packages.datacontainer.StructureNovel;
 import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
 import com.silverminer.shrines.packages.io.PackageIOException;
 import com.silverminer.shrines.packages.io.StructurePackageIOManager;
@@ -22,7 +24,9 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class ServerStructurePackageManager {
@@ -89,7 +93,11 @@ public class ServerStructurePackageManager {
    }
 
    public void syncNovelsToClient(UUID uuid) {
-      ShrinesPacketHandler.sendTo(new STCSyncNovels(this.getNovels(uuid)), uuid);
+      Map<ResourceLocation, StructureNovel> novelsRegistryData = new HashMap<>();
+      for (Map.Entry<ResourceKey<StructureNovel>, StructureNovel> entry : NovelsRegistry.NOVELS_REGISTRY.get().getEntries()) {
+         novelsRegistryData.put(entry.getKey().location(), entry.getValue());
+      }
+      ShrinesPacketHandler.sendTo(new STCSyncNovels(this.getNovels(uuid), novelsRegistryData), uuid);
    }
 
    public NovelDataContainer getNovels(UUID playerID) {
@@ -159,10 +167,6 @@ public class ServerStructurePackageManager {
       } catch (PackageIOException e) {
          this.onError(new CalculationError("Failed to export package", "Caused by: %s", e));
       }
-   }
-
-   public void setNovels(UUID playerID, NovelDataContainer novels) {
-      NovelsDataRegistry.INSTANCE.setNovelsData(playerID, novels);
    }
 
    public void loadPackages() {
