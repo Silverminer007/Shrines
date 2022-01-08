@@ -44,21 +44,23 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
    @Override
    public void afterPlace(@NotNull WorldGenLevel worldGenLevel, @NotNull StructureFeatureManager structureFeatureManager, @NotNull ChunkGenerator chunkGenerator,
                           @NotNull Random random, @NotNull BoundingBox chunkBounds, @NotNull ChunkPos chunkPos, @NotNull PiecesContainer pieces) {
-      BoundingBox structureBounds = pieces.calculateBoundingBox();
-      createBlockRemaps(random);
-      for (int x = chunkBounds.minX(); x <= chunkBounds.maxX(); x++) {
-         for (int y = chunkBounds.minY(); y <= chunkBounds.maxY(); y++) {
-            for (int z = chunkBounds.minZ(); z <= chunkBounds.maxZ(); z++) {
-               BlockPos position = new BlockPos(x, y, z);
-               if (worldGenLevel.isEmptyBlock(position) || !structureBounds.isInside(position) || !pieces.isInsidePiece(position)) {
-                  continue;
+      if (this.structureData.getVariationConfiguration().isEnabled()) {
+         BoundingBox structureBounds = pieces.calculateBoundingBox();
+         createBlockRemaps(random);
+         for (int x = chunkBounds.minX(); x <= chunkBounds.maxX(); x++) {
+            for (int y = chunkBounds.minY(); y <= chunkBounds.maxY(); y++) {
+               for (int z = chunkBounds.minZ(); z <= chunkBounds.maxZ(); z++) {
+                  BlockPos position = new BlockPos(x, y, z);
+                  if (worldGenLevel.isEmptyBlock(position) || !structureBounds.isInside(position) || !pieces.isInsidePiece(position)) {
+                     continue;
+                  }
+                  BlockState blockStateAtPos = worldGenLevel.getBlockState(position);
+                  if (blockStateAtPos.isAir()) {
+                     continue;
+                  }
+                  BlockState newBlockState = this.calculateNewBlock(blockStateAtPos);
+                  worldGenLevel.setBlock(position, newBlockState, 3);
                }
-               BlockState blockStateAtPos = worldGenLevel.getBlockState(position);
-               if (blockStateAtPos.isAir()) {
-                  continue;
-               }
-               BlockState newBlockState = this.calculateNewBlock(blockStateAtPos);
-               worldGenLevel.setBlock(position, newBlockState, 3);
             }
          }
       }

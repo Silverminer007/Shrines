@@ -58,6 +58,9 @@ public class ConfigureStructureList extends ObjectSelectionList<ConfigureStructu
 
    public void refreshList() {
       this.clearEntries();
+      // TODO Add Category Entry to expand and collapse child entries
+      // Potential child entry are spawn configurations and variation configurations
+      // TODO Add Variation configuration options
       this.addEntry(
             new StringEntry(ConfigOptions.LATEST.name(), this.structure::getName, this.structure::setName, 256));
       this.addEntry(new ResourceLocationEntry(ConfigOptions.LATEST.key(), this.structure::getKey, this.structure::setKey, 256));
