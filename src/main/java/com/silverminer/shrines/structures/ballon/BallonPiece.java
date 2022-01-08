@@ -1,13 +1,8 @@
-/**
- * Silverminer (and Team)
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * 
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines.structures.ballon;
 
@@ -39,93 +34,93 @@ import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class BallonPiece {
-	private static final ArrayList<ResourceLocation> location = Lists.newArrayList(
-			new ResourceLocation("shrines:ballon/ballon_1"), new ResourceLocation("shrines:ballon/ballon_2"),
-			new ResourceLocation("shrines:ballon/ballon_3"), new ResourceLocation("shrines:ballon/ballon_4"),
-			new ResourceLocation("shrines:ballon/ballon_5"), new ResourceLocation("shrines:ballon/ballon_6"),
-			new ResourceLocation("shrines:ballon/ballon_7"), new ResourceLocation("shrines:ballon/ballon2_1"),
-			new ResourceLocation("shrines:ballon/ballon2_2"), new ResourceLocation("shrines:ballon/ballon2_3"),
-			new ResourceLocation("shrines:ballon/ballon2_4"));
+   private static final ArrayList<ResourceLocation> location = Lists.newArrayList(
+         new ResourceLocation("shrines:ballon/ballon_1"), new ResourceLocation("shrines:ballon/ballon_2"),
+         new ResourceLocation("shrines:ballon/ballon_3"), new ResourceLocation("shrines:ballon/ballon_4"),
+         new ResourceLocation("shrines:ballon/ballon_5"), new ResourceLocation("shrines:ballon/ballon_6"),
+         new ResourceLocation("shrines:ballon/ballon_7"), new ResourceLocation("shrines:ballon/ballon2_1"),
+         new ResourceLocation("shrines:ballon/ballon2_2"), new ResourceLocation("shrines:ballon/ballon2_3"),
+         new ResourceLocation("shrines:ballon/ballon2_4"));
 
-	public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-			List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
-		int size = 16;
-		MutableBoundingBox mbb = MutableBoundingBox.createProper(-size, 0, -size, size, 0, size);
-		mbb.move(pos);
-		int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb,
-				random);
-		boolean flag = true;
-		if (flag)
-			pieces.add(new BallonPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-					rotation, 0, random, height));
-		else
-			// Test function for single variant
-			pieces.add(new BallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random, height));
-	}
+   public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
+                               List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+      int size = 16;
+      MutableBoundingBox mbb = MutableBoundingBox.createProper(-size, 0, -size, size, 0, size);
+      mbb.move(pos);
+      int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb,
+            random);
+      boolean flag = true;
+      if (flag)
+         pieces.add(new BallonPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
+               rotation, 0, random, height));
+      else
+         // Test function for single variant
+         pieces.add(new BallonPiece.Piece(templateManager, location.get(0), pos, rotation, 0, random, height));
+   }
 
-	public static class Piece extends ColorStructurePiece {
-		protected int heightOffset = 0;
+   public static class Piece extends ColorStructurePiece {
+      protected int heightOffset = 0;
 
-		public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-				int componentTypeIn, Random rand, int height) {
-			super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true, height);
-			this.heightOffset = 5 + rand.nextInt(25);
-		}
+      public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
+                   int componentTypeIn, Random rand, int height) {
+         super(StructurePieceTypes.BALLON, templateManager, location, pos, rotation, componentTypeIn, true, height);
+         this.heightOffset = 5 + rand.nextInt(25);
+      }
 
-		public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
-			super(StructurePieceTypes.BALLON, templateManager, cNBT);
-			this.heightOffset = cNBT.getInt("height");
-		}
+      public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
+         super(StructurePieceTypes.BALLON, templateManager, cNBT);
+         this.heightOffset = cNBT.getInt("height");
+      }
 
-		protected void addAdditionalSaveData(CompoundNBT tagCompound) {
-			super.addAdditionalSaveData(tagCompound);
-			tagCompound.putInt("height", this.heightOffset);
-		}
+      protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+         super.addAdditionalSaveData(tagCompound);
+         tagCompound.putInt("height", this.heightOffset);
+      }
 
-		@Override
-		protected int getHeight(ISeedReader world, BlockPos blockpos1) {
-			return super.getHeight(world, blockpos1) + this.heightOffset - 1;
-		}
+      @Override
+      protected boolean useRandomVarianting() {
+         return NewStructureInit.STRUCTURES.get("ballon").getConfig().getUseRandomVarianting();
+      }
 
-		@Override
-		public StructureProcessor getProcessor() {
-			return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
-		}
+      public boolean overwriteWool() {
+         return true;
+      }
 
-		public boolean overwriteWool() {
-			return true;
-		}
+      public boolean overwriteWood() {
+         return true;
+      }
 
-		public boolean overwriteWood() {
-			return true;
-		}
+      public boolean overwritePlanks() {
+         return true;
+      }
 
-		public boolean overwritePlanks() {
-			return true;
-		}
+      public boolean overwriteSlabs() {
+         return true;
+      }
 
-		public boolean overwriteSlabs() {
-			return true;
-		}
+      public Block getDefaultPlank() {
+         return Blocks.SPRUCE_PLANKS;
+      }
 
-		public Block getDefaultPlank() {
-			return Blocks.SPRUCE_PLANKS;
-		}
+      @Override
+      protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
+                                      MutableBoundingBox sbb) {
+         boolean loot = NewStructureInit.STRUCTURES.get("ballon").getConfig().getLootChance() > rand.nextDouble();
+         if (function.equals("chest")) {
+            worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            LockableLootTileEntity.setLootTable(worldIn, rand, pos.above(2),
+                  loot ? ShrinesLootTables.BALLON : ShrinesLootTables.EMPTY);
+         }
+      }
 
-		@Override
-		protected boolean useRandomVarianting() {
-			return NewStructureInit.STRUCTURES.get("ballon").getConfig().getUseRandomVarianting();
-		}
+      @Override
+      public StructureProcessor getProcessor() {
+         return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
+      }
 
-		@Override
-		protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
-				MutableBoundingBox sbb) {
-			boolean loot = NewStructureInit.STRUCTURES.get("ballon").getConfig().getLootChance() > rand.nextDouble();
-			if (function.equals("chest")) {
-				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-				LockableLootTileEntity.setLootTable(worldIn, rand, pos.above(2),
-						loot ? ShrinesLootTables.BALLON : ShrinesLootTables.EMPTY);
-			}
-		}
-	}
+      @Override
+      protected int getHeight(ISeedReader world, BlockPos blockpos1) {
+         return super.getHeight(world, blockpos1) + this.heightOffset - 1;
+      }
+   }
 }

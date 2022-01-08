@@ -1,13 +1,8 @@
-/**
- * Silverminer (and Team)
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * 
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines.init;
 
@@ -52,63 +47,62 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 /**
  * @author Silverminer
- *
  */
 @EventBusSubscriber(modid = ShrinesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class NewStructureInit {
-	protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
-	public static final HashMap<String, AbstractStructure<NoFeatureConfig>> STRUCTURES = Maps.newHashMap();
+   public static final HashMap<String, AbstractStructure<NoFeatureConfig>> STRUCTURES = Maps.newHashMap();
+   protected static final Logger LOGGER = LogManager.getLogger(NewStructureInit.class);
 
-	public static void initStructures() {
-		STRUCTURES.put("ballon", new BallonStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("bees", new BeesStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("end_temple", new EndTempleStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("flooded_temple", new FloodedTempleStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("guardian_meeting", new GuardianMeetingStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("harbour", new HarbourStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("high_tempel", new HighTempelStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("jungle_tower", new JungleTowerStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("mineral_temple", new MineralTempleStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("nether_pyramid", new NetherPyramidStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("nether_shrine", new NetherShrineStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("oriental_sanctuary", new OrientalSanctuaryStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("player_house", new PlayerhouseStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("infested_prison", new InfestedPrisonStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("small_tempel", new SmallTempelStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("water_shrine", new WaterShrineStructure(NoFeatureConfig.CODEC));
-		STRUCTURES.put("witch_house", new AbandonedWitchHouseStructure(NoFeatureConfig.CODEC));
-		initCustomStructures();
-	}
+   @SubscribeEvent
+   public static void regsiterStructures(RegistryEvent.Register<Structure<?>> event) {
+      if (STRUCTURES.isEmpty()) {
+         initStructures();
+      }
+      for (Entry<String, AbstractStructure<NoFeatureConfig>> structure : STRUCTURES.entrySet()) {
+         if (!Structure.STRUCTURES_REGISTRY.containsValue(structure.getValue())) {
+            Structure.STRUCTURES_REGISTRY.putIfAbsent(
+                  new ResourceLocation(ShrinesMod.MODID, structure.getKey()).toString(), structure.getValue());
+         }
+         if (!Structure.STEP.containsValue(structure.getValue().step())) {
+            Structure.STEP.putIfAbsent(structure.getValue(), structure.getValue().step());
+         }
 
-	public static void initCustomStructures() {
-		LOGGER.debug("Registering custom structures");
-		for (CustomStructureData csd : Utils.getStructures(true)) {
-			String name = csd.getName().toLowerCase(Locale.ROOT);
-			CustomStructure cS = new CustomStructure(NoFeatureConfig.CODEC, name, csd);
-			Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()
-					.addAll(Structure.NOISE_AFFECTING_FEATURES).add(cS).build();
+         Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()
+               .addAll(Structure.NOISE_AFFECTING_FEATURES).add(structure.getValue()).build();
+         event.getRegistry().register(structure.getValue());
+      }
+   }
 
-			STRUCTURES.put(name, cS);
-		}
-	}
+   public static void initStructures() {
+      STRUCTURES.put("ballon", new BallonStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("bees", new BeesStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("end_temple", new EndTempleStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("flooded_temple", new FloodedTempleStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("guardian_meeting", new GuardianMeetingStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("harbour", new HarbourStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("high_tempel", new HighTempelStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("jungle_tower", new JungleTowerStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("mineral_temple", new MineralTempleStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("nether_pyramid", new NetherPyramidStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("nether_shrine", new NetherShrineStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("oriental_sanctuary", new OrientalSanctuaryStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("player_house", new PlayerhouseStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("infested_prison", new InfestedPrisonStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("small_tempel", new SmallTempelStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("water_shrine", new WaterShrineStructure(NoFeatureConfig.CODEC));
+      STRUCTURES.put("witch_house", new AbandonedWitchHouseStructure(NoFeatureConfig.CODEC));
+      initCustomStructures();
+   }
 
-	@SubscribeEvent
-	public static void regsiterStructures(RegistryEvent.Register<Structure<?>> event) {
-		if (STRUCTURES.isEmpty()) {
-			initStructures();
-		}
-		for (Entry<String, AbstractStructure<NoFeatureConfig>> structure : STRUCTURES.entrySet()) {
-			if (!Structure.STRUCTURES_REGISTRY.containsValue(structure.getValue())) {
-				Structure.STRUCTURES_REGISTRY.putIfAbsent(
-						new ResourceLocation(ShrinesMod.MODID, structure.getKey()).toString(), structure.getValue());
-			}
-			if (!Structure.STEP.containsValue(structure.getValue().step())) {
-				Structure.STEP.putIfAbsent(structure.getValue(), structure.getValue().step());
-			}
+   public static void initCustomStructures() {
+      LOGGER.debug("Registering custom structures");
+      for (CustomStructureData csd : Utils.getStructures(true)) {
+         String name = csd.getName().toLowerCase(Locale.ROOT);
+         CustomStructure cS = new CustomStructure(NoFeatureConfig.CODEC, name, csd);
+         Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()
+               .addAll(Structure.NOISE_AFFECTING_FEATURES).add(cS).build();
 
-			Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder()
-					.addAll(Structure.NOISE_AFFECTING_FEATURES).add(structure.getValue()).build();
-			event.getRegistry().register(structure.getValue());
-		}
-	}
+         STRUCTURES.put(name, cS);
+      }
+   }
 }

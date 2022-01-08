@@ -1,13 +1,8 @@
-/**
- * Silverminer (and Team)
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * 
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines;
 
@@ -30,32 +25,32 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 @Mod(value = ShrinesMod.MODID)
 public class ForgeShrines extends ShrinesMod {
 
-	public ForgeShrines() {
-		super();
-		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
-				() -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-	}
+   public ForgeShrines() {
+      super();
+      ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
+            () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+   }
 
-	@Override
-	public void setProxy() {
-		this.proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ForgeServerProxy::new);
-	}
+   @Override
+   public void registerConfig() {
+      // Make sure structures are initialized before config will be loaded
+      NewStructureInit.initStructures();
+      // Config
+      Config.register(ModLoadingContext.get());
+      // Setup config UI
+      DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
+               () -> ClientUtils::getConfigGui);
+      });
+   }
 
-	@Override
-	public void setFunctionProvider() {
-		this.functionProvider = new ForgeFunctionProvider();
-	}
+   @Override
+   public void setProxy() {
+      this.proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ForgeServerProxy::new);
+   }
 
-	@Override
-	public void registerConfig() {
-		// Make sure structures are initialized before config will be loaded
-		NewStructureInit.initStructures();
-		// Config
-		Config.register(ModLoadingContext.get());
-		// Setup config UI
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
-					() -> ClientUtils::getConfigGui);
-		});
-	}
+   @Override
+   public void setFunctionProvider() {
+      this.functionProvider = new ForgeFunctionProvider();
+   }
 }

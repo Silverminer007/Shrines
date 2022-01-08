@@ -1,13 +1,8 @@
-/**
- * Silverminer (and Team)
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * 
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines.config;
 
@@ -21,58 +16,57 @@ import net.minecraft.world.biome.Biome.Category;
 
 /**
  * @author Silverminer
- *
  */
 public interface IStructureConfig extends Comparable<IStructureConfig> {
-	public String getName();
+   public boolean getGenerate();
 
-	public boolean getGenerate();
+   public double getSpawnChance();
 
-	public double getSpawnChance();
+   public boolean getNeedsGround();
 
-	public boolean getNeedsGround();
+   public int getDistance();
 
-	public int getDistance();
+   public int getSeparation();
 
-	public int getSeparation();
+   public int getSeed();
 
-	public int getSeed();
+   public List<? extends Category> getWhitelist();
 
-	public List<? extends Category> getWhitelist();
+   public List<? extends String> getBlacklist();
 
-	public List<? extends String> getBlacklist();
+   public List<? extends String> getDimensions();
 
-	public List<? extends String> getDimensions();
+   public boolean getUseRandomVarianting();
 
-	public boolean getUseRandomVarianting();
+   public double getLootChance();
 
-	public double getLootChance();
+   public boolean getSpawnVillagers();
 
-	public boolean getSpawnVillagers();
+   public boolean isBuiltIn();
 
-	public boolean isBuiltIn();
+   default String getDataName() {
+      return this.getName().toLowerCase(Locale.ROOT).replaceAll(" ", "_");
+   }
 
-	default String getDataName() {
-		return this.getName().toLowerCase(Locale.ROOT).replaceAll(" ", "_");
-	}
+   public String getName();
 
-	public boolean getActive();
+   public boolean getActive();
 
-	public void setActive(boolean value);
+   public void setActive(boolean value);
 
-	public List<? extends IConfigOption<?>> getAllOptions();
+   /**
+    * @param option
+    * @param string
+    */
+   default OptionParsingResult fromString(String option, String value) {
+      for (IConfigOption<?> co : this.getAllOptions()) {
+         if (co.getName().equals(option)) {
+            OptionParsingResult res = co.fromString(value, this);
+            return res;
+         }
+      }
+      return new OptionParsingResult(false, new StringTextComponent("There is no such option as provided"));
+   }
 
-	/**
-	 * @param option
-	 * @param string
-	 */
-	default OptionParsingResult fromString(String option, String value) {
-		for (IConfigOption<?> co : this.getAllOptions()) {
-			if (co.getName().equals(option)) {
-				OptionParsingResult res = co.fromString(value, this);
-				return res;
-			}
-		}
-		return new OptionParsingResult(false, new StringTextComponent("There is no such option as provided"));
-	}
+   public List<? extends IConfigOption<?>> getAllOptions();
 }

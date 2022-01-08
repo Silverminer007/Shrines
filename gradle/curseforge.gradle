@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+    }
+}
+
+apply plugin: 'com.matthewprenger.cursegradle'
+
+curseforge {
+    project {
+        apiKey = System.getenv('CURSEFORGE')
+        id = '418915'
+        changelog = file('changelog-1.x.x.txt')
+        changelogType = 'text'
+        releaseType = 'beta'
+        addGameVersion '1.16.3'
+        addGameVersion '1.16.4'
+        addGameVersion '1.16.5'
+        addGameVersion 'Forge'
+    }
+    options {
+        detectNewerJava = true // defaults to false
+    }
+}

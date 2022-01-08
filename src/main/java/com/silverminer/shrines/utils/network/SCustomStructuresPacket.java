@@ -1,13 +1,8 @@
-/**
- * Silverminer (and Team)
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the MPL
- * (Mozilla Public License 2.0) for more details.
- * 
- * You should have received a copy of the MPL (Mozilla Public License 2.0)
- * License along with this library; if not see here: https://www.mozilla.org/en-US/MPL/2.0/
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 package com.silverminer.shrines.utils.network;
 
@@ -23,32 +18,31 @@ import net.minecraft.network.PacketBuffer;
 
 /**
  * Packet to send from server to client
- * 
- * @author Silverminer
  *
+ * @author Silverminer
  */
 public class SCustomStructuresPacket implements IPacket {
-	protected static final Logger LOGGER = LogManager.getLogger(SCustomStructuresPacket.class);
+   protected static final Logger LOGGER = LogManager.getLogger(SCustomStructuresPacket.class);
 
-	public final ArrayList<CustomStructureData> datas;
+   public final ArrayList<CustomStructureData> datas;
 
-	public SCustomStructuresPacket(ArrayList<CustomStructureData> datas) {
-		this.datas = datas;
-	}
+   public SCustomStructuresPacket(ArrayList<CustomStructureData> datas) {
+      this.datas = datas;
+   }
 
-	public static void encode(SCustomStructuresPacket pkt, PacketBuffer buf) {
-		buf.writeInt(pkt.datas.size());
-		for (CustomStructureData csd : pkt.datas) {
-			buf.writeNbt(CustomStructureData.write(csd));
-		}
-	}
+   public static void encode(SCustomStructuresPacket pkt, PacketBuffer buf) {
+      buf.writeInt(pkt.datas.size());
+      for (CustomStructureData csd : pkt.datas) {
+         buf.writeNbt(CustomStructureData.write(csd));
+      }
+   }
 
-	public static SCustomStructuresPacket decode(PacketBuffer buf) {
-		ArrayList<CustomStructureData> datas = Lists.newArrayList();
-		int size = buf.readInt();
-		for (int i = 0; i < size; i++) {
-			datas.add(CustomStructureData.read(buf.readNbt()));
-		}
-		return new SCustomStructuresPacket(datas);
-	}
+   public static SCustomStructuresPacket decode(PacketBuffer buf) {
+      ArrayList<CustomStructureData> datas = Lists.newArrayList();
+      int size = buf.readInt();
+      for (int i = 0; i < size; i++) {
+         datas.add(CustomStructureData.read(buf.readNbt()));
+      }
+      return new SCustomStructuresPacket(datas);
+   }
 }
