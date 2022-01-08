@@ -55,7 +55,10 @@ public class StructureNovelInsightsScreen extends Screen {
       }
       this.words = Lists.newArrayList();
       for (int i = 0; i < unlockedParts; i++) {
-         this.words.addAll(Arrays.asList(structureNovel.getParts().get(i).replace("\n", " \n ").split(" ")));
+         String part = structureNovel.getParts().get(i);
+         part = new TranslatableComponent(part).getString();// Enable translations of novels even if we don't ship them by default
+         String[] wordsInPart = part.replace("\n", " \n ").split(" ");
+         this.words.addAll(Arrays.asList(wordsInPart));
       }
    }
 

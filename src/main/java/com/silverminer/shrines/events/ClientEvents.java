@@ -12,7 +12,6 @@ import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.io.DirectoryStructureAccessor;
 import com.silverminer.shrines.utils.ClientUtils;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,7 +34,6 @@ public class ClientEvents {
    public static class ForgeEventBus {
       @SubscribeEvent
       public static void onClientTick(TickEvent.ClientTickEvent event) {
-         Minecraft mc = Minecraft.getInstance();
          if (ClientUtils.editPackagesKeyMapping.isDown()) {
             PackageManagerProvider.CLIENT.joinQueue();
          }

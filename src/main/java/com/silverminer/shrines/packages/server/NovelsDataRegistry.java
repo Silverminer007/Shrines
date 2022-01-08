@@ -25,7 +25,10 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class NovelsDataRegistry extends SavedData {
    public static final Codec<NovelsDataRegistry> CODEC = RecordCodecBuilder.create(novelsDataRegistryInstance ->
@@ -35,16 +38,35 @@ public class NovelsDataRegistry extends SavedData {
                      NovelDataContainer.CODEC
                )).fieldOf("novels_per_player").forGetter(novelsDataRegistry -> novelsDataRegistry.novelsData)).apply(novelsDataRegistryInstance, NovelsDataRegistry::new));
    protected static final Logger LOGGER = LogManager.getLogger(NovelsDataRegistry.class);
-   public static NovelsDataRegistry INSTANCE = new NovelsDataRegistry(Lists.newArrayList());
    private static final String DATA_NAME = "shrines_novels";
+   public static NovelsDataRegistry INSTANCE = new NovelsDataRegistry(Lists.newArrayList());
    private final List<Pair<UUID, NovelDataContainer>> novelsData;
 
    public NovelsDataRegistry(List<Pair<UUID, NovelDataContainer>> pairs) {
-      this.novelsData = pairs;
+      this.novelsData = new ArrayList<>(pairs);
+   }
+
+   public static void loadData(ServerLevel world) {
+      if (world == null)
+         return;
+      DimensionDataStorage storage = world.getDataStorage();
+
+      NovelsDataRegistry.INSTANCE = storage.computeIfAbsent(NovelsDataRegistry::load, () -> NovelsDataRegistry.INSTANCE, DATA_NAME);
+   }
+
+   public static NovelsDataRegistry load(CompoundTag tag) {
+      DataResult<Pair<NovelsDataRegistry, Tag>> dataResult = CODEC.decode(NbtOps.INSTANCE, tag);
+      Optional<Pair<NovelsDataRegistry, Tag>> pairOptional = dataResult.resultOrPartial(LOGGER::error);
+      return pairOptional.map(Pair::getFirst).orElse(null);
    }
 
    public boolean hasNovelOf(UUID playerID, String structure) {
       return this.getNovelsData(playerID).containsKey(structure);
+   }
+
+   public NovelDataContainer getNovelsData(UUID playerID) {
+      List<Pair<UUID, NovelDataContainer>> novel_of_player = this.novelsData.stream().filter(pair -> pair.getFirst().equals(playerID)).toList();
+      return novel_of_player.size() > 0 ? novel_of_player.get(0).getSecond() : new NovelDataContainer(new ArrayList<>());
    }
 
    public NovelsData getNovelOf(UUID playerID, String structure) {
@@ -55,12 +77,16 @@ public class NovelsDataRegistry extends SavedData {
       NovelDataContainer novelDataContainer = this.getNovelsData(playerID);
       novelDataContainer.remove(structure);
       novelDataContainer.add(newNovel);
+      for (Pair<UUID, NovelDataContainer> novelDataContainerPair : this.novelsData) {
+         if (novelDataContainerPair.getFirst().equals(playerID)) {
+            this.novelsData.remove(novelDataContainerPair);
+            this.novelsData.add(Pair.of(playerID, novelDataContainer));
+            this.setDirty();
+            return;
+         }
+      }
+      this.novelsData.add(Pair.of(playerID, novelDataContainer));
       this.setDirty();
-   }
-
-   public NovelDataContainer getNovelsData(UUID playerID) {
-      List<Pair<UUID, NovelDataContainer>> novel_of_player = this.novelsData.stream().filter(pair -> pair.getFirst().equals(playerID)).toList();
-      return novel_of_player.size() > 0 ? novel_of_player.get(0).getSecond() : new NovelDataContainer(new ArrayList<>());
    }
 
    public void setNovelsData(UUID playerID, @Nonnull NovelDataContainer novelsData) {
@@ -74,19 +100,5 @@ public class NovelsDataRegistry extends SavedData {
       DataResult<Tag> dataResult = CODEC.encode(this, NbtOps.INSTANCE, tag);
       Optional<Tag> optionalTag = dataResult.resultOrPartial(LOGGER::error);
       return optionalTag.map(compound -> (CompoundTag) compound).orElse(tag);
-   }
-
-   public static NovelsDataRegistry load(CompoundTag tag) {
-      DataResult<Pair<NovelsDataRegistry, Tag>> dataResult = CODEC.decode(NbtOps.INSTANCE, tag);
-      Optional<Pair<NovelsDataRegistry, Tag>> pairOptional = dataResult.resultOrPartial(LOGGER::error);
-      return pairOptional.map(Pair::getFirst).orElse(null);
-   }
-
-   public static void loadData(ServerLevel world) {
-      if (world == null)
-         return;
-      DimensionDataStorage storage = world.getDataStorage();
-
-      NovelsDataRegistry.INSTANCE = storage.computeIfAbsent(NovelsDataRegistry::load, () -> NovelsDataRegistry.INSTANCE, DATA_NAME);
    }
 }

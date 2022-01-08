@@ -36,15 +36,39 @@ public class ServerStructurePackageManager {
       return initialStructurePackages;
    }
 
-   public StructurePackageContainer getPackages() {
-      return this.packages;
-   }
-
    public void bootstrapPackages() {
       if (this.getPackages() == null || this.getPackages().getSize() == 0) {
          this.earlyLoadPackages();
       }
       this.initialStructurePackages = this.getPackages();
+   }
+
+   public StructurePackageContainer getPackages() {
+      return this.packages;
+   }
+
+   public void earlyLoadPackages() {
+      try {
+         this.packages = this.ioManager.earlyLoadPackages();
+      } catch (PackageIOException e) {
+         this.onError(new CalculationError("Failed to load packages", "Caused by: %s", e.getReason()));
+         e.printStackTrace();
+      }
+   }
+
+   public void onError(CalculationError error) {
+      if (this.playerQueue.getQueue().size() > 0 && this.playerQueue.getQueue().get(0) != null) {
+         this.onError(error, this.playerQueue.getQueue().get(0));
+      } else {
+         this.onError(error, new UUID[0]);
+      }
+   }
+
+   public void onError(CalculationError error, UUID... clientIDs) {
+      for (UUID client : clientIDs) {
+         ShrinesPacketHandler.sendTo(new STCError(error), client, false);
+      }
+      LOGGER.error(error);
    }
 
    public void onPlayerJoinQueue(UUID playerID) {
@@ -53,14 +77,6 @@ public class ServerStructurePackageManager {
 
    public void onPlayerLeaveQueue(UUID playerID) {
       this.playerQueue.leave(playerID);
-   }
-
-   public void syncPackagesToClient(UUID playerID) {
-      if (this.playerQueue.getQueue().size() > 0 && this.playerQueue.getQueue().get(0).equals(playerID)) {
-         ShrinesPacketHandler.sendTo(new STCSyncPackages(this.getPackages()), playerID);
-      } else {
-         this.onError(new CalculationError("Received invalid save request from client", "Got package save request from client that hadn't had the permission to do that"), playerID);
-      }
    }
 
    public void syncInitialPackagesToClient(UUID playerID) {
@@ -74,6 +90,10 @@ public class ServerStructurePackageManager {
 
    public void syncNovelsToClient(UUID uuid) {
       ShrinesPacketHandler.sendTo(new STCSyncNovels(this.getNovels(uuid)), uuid);
+   }
+
+   public NovelDataContainer getNovels(UUID playerID) {
+      return NovelsDataRegistry.INSTANCE.getNovelsData(playerID);
    }
 
    public void syncStructureIconsToClient(UUID uuid) {
@@ -92,6 +112,17 @@ public class ServerStructurePackageManager {
       }
    }
 
+   public boolean savePackages() {
+      try {
+         this.ioManager.savePackages(this.packages);
+         return true;
+      } catch (PackageIOException e) {
+         this.onError(new CalculationError("Failed to save packages", "Caused by: %s", e.getReason()));
+         e.printStackTrace();
+         return false;
+      }
+   }
+
    public void importPackage(byte[] packageFile) {
       try {
          StructuresPackageWrapper structuresPackageWrapper = this.ioManager.importPackage(packageFile);
@@ -103,6 +134,14 @@ public class ServerStructurePackageManager {
          }
       } catch (PackageIOException e) {
          this.onError(new CalculationError("Failed to import package", "Caused by: %s", e));
+      }
+   }
+
+   public void syncPackagesToClient(UUID playerID) {
+      if (this.playerQueue.getQueue().size() > 0 && this.playerQueue.getQueue().get(0).equals(playerID)) {
+         ShrinesPacketHandler.sendTo(new STCSyncPackages(this.getPackages()), playerID);
+      } else {
+         this.onError(new CalculationError("Received invalid save request from client", "Got package save request from client that hadn't had the permission to do that"), playerID);
       }
    }
 
@@ -122,27 +161,8 @@ public class ServerStructurePackageManager {
       }
    }
 
-   public NovelDataContainer getNovels(UUID playerID) {
-      return NovelsDataRegistry.INSTANCE.getNovelsData(playerID);
-   }
-
    public void setNovels(UUID playerID, NovelDataContainer novels) {
       NovelsDataRegistry.INSTANCE.setNovelsData(playerID, novels);
-   }
-
-   public void onError(CalculationError error) {
-      if (this.playerQueue.getQueue().size() > 0 && this.playerQueue.getQueue().get(0) != null) {
-         this.onError(error, this.playerQueue.getQueue().get(0));
-      } else {
-         this.onError(error, new UUID[0]);
-      }
-   }
-
-   public void onError(CalculationError error, UUID... clientIDs) {
-      for (UUID client : clientIDs) {
-         ShrinesPacketHandler.sendTo(new STCError(error), client, false);
-      }
-      LOGGER.error(error);
    }
 
    public void loadPackages() {
@@ -151,26 +171,6 @@ public class ServerStructurePackageManager {
       } catch (PackageIOException e) {
          this.onError(new CalculationError("Failed to load packages", "Caused by: %s", e.getReason()));
          e.printStackTrace();
-      }
-   }
-
-   public void earlyLoadPackages() {
-      try {
-         this.packages = this.ioManager.earlyLoadPackages();
-      } catch (PackageIOException e) {
-         this.onError(new CalculationError("Failed to load packages", "Caused by: %s", e.getReason()));
-         e.printStackTrace();
-      }
-   }
-
-   public boolean savePackages() {
-      try {
-         this.ioManager.savePackages(this.packages);
-         return true;
-      } catch (PackageIOException e) {
-         this.onError(new CalculationError("Failed to save packages", "Caused by: %s", e.getReason()));
-         e.printStackTrace();
-         return false;
       }
    }
 }

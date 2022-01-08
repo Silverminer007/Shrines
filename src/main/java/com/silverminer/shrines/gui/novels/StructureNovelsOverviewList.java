@@ -46,7 +46,7 @@ public class StructureNovelsOverviewList extends IconList<StructureNovelsEntry> 
          for (StructureData data : packet.getStructures().getAsIterable()) {
             if (data.getName().toLowerCase(Locale.ROOT).contains(s)
                   || data.getKey().toString().toLowerCase(Locale.ROOT).contains(s)) {
-               if (NovelsRegistry.NOVELS_REGISTRY.get().containsKey(data.getNovel())) {
+               if (NovelsRegistry.NOVELS_REGISTRY.get().containsKey(data.getNovel())) {// TODO We can access Registry on client. We must access data on server and sync it
                   this.addEntry(new StructureNovelsEntry(data));
                }
             }
@@ -116,7 +116,14 @@ public class StructureNovelsOverviewList extends IconList<StructureNovelsEntry> 
 
       public boolean mouseClicked(double mouseX, double mouseY, int scrolledAmount) {
          if (StructureNovelsOverviewList.this.getSelected() == this) {
-            this.minecraft.setScreen(new StructureNovelInsightsScreen(this.minecraft.screen, this.data, Optional.ofNullable(PackageManagerProvider.CLIENT.getNovels().getByKey(this.data.getKey().toString())).map(NovelsData::getFoundStructuresCount).orElse(0)));
+            this.minecraft.setScreen(new StructureNovelInsightsScreen(
+                  this.minecraft.screen,
+                  this.data,
+                  Optional.ofNullable(
+                        PackageManagerProvider.CLIENT.getNovels()
+                              .getByKey(this.data.getKey().toString()))
+                        .map(NovelsData::getFoundStructuresCount)
+                        .orElse(0)));
             return true;
          } else {
             StructureNovelsOverviewList.this.setSelected(this);
