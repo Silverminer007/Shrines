@@ -83,12 +83,9 @@ public class Legacy200StructurePackageLoader implements StructurePackageLoader {
       Path packageInfoPath = source.resolve("structures.nbt");
       CompoundTag packageInfoTag;
       try {
-         packageInfoTag = NbtIo.read(packageInfoPath.toFile());
+         packageInfoTag = NbtIo.readCompressed(packageInfoPath.toFile());
       } catch (IOException e) {
          throw new PackageIOException(new CalculationError("Failed to load legacy 2.0.0 structures package", "Failed to read structure package info. Caused by: %s", e));
-      }
-      if (packageInfoTag == null) {
-         throw new PackageIOException(new CalculationError("Failed to load legacy 2.0.0 structures package", "Loaded structure package info was null"));
       }
       StructuresPackageInfo structuresPackageInfo = this.loadStructurePackageInfo(packageInfoTag);
       StructureDataContainer structures = this.loadStructures(packageInfoTag.getList("Structures", 10));
