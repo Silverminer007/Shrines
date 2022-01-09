@@ -37,10 +37,6 @@ public class StructurePackageIOManager {
    };// Add all possible package loaders here. They are tested from first to last element, so put the latest one at place 0
    private final StructurePackageLoader fallbackPackageLoader = new DefaultStructurePackageLoader();
 
-   public void savePackages(StructurePackageContainer structurePackages) throws PackageIOException {
-      this.packageSaver.savePackages(structurePackages);
-   }
-
    public StructurePackageContainer earlyLoadPackages() throws PackageIOException {
       StructurePackageContainer structurePackageContainer = this.earlyLoadPackageFromLoaders();
       this.makeStructureKeysAndSeedUnique(structurePackageContainer);
@@ -56,23 +52,6 @@ public class StructurePackageIOManager {
       return this.fallbackPackageLoader.loadPackages();
    }
 
-   public StructurePackageContainer loadPackages() throws PackageIOException {
-      StructurePackageContainer structurePackageContainer = this.loadPackageFromLoaders();
-      this.makeStructureKeysAndSeedUnique(structurePackageContainer);
-      // Save the packages to make sure we have all changes in the latest save format. Especially important for default structure data this is important
-      this.savePackages(structurePackageContainer);
-      return structurePackageContainer;
-   }
-
-   private StructurePackageContainer loadPackageFromLoaders() throws PackageIOException {
-      for (StructurePackageLoader packageLoader : this.packageLoaders) {
-         if (packageLoader.matchesFormat()) {
-            return packageLoader.loadPackages();
-         }
-      }
-      return this.fallbackPackageLoader.loadPackages();
-   }
-
    protected void makeStructureKeysAndSeedUnique(StructurePackageContainer structurePackageContainer) {
       Random random = new Random();
       for (StructuresPackageWrapper structuresPackageWrapper : structurePackageContainer.getAsIterable()) {
@@ -80,7 +59,6 @@ public class StructurePackageIOManager {
                .forEach(structureData -> this.changeStructureKeyAndSeed(structureData.getKey(), () -> random.nextInt(Integer.MAX_VALUE), structurePackageContainer));
       }
    }
-
 
    protected void changeStructureKeyAndSeed(ResourceLocation oldKey, Supplier<Integer> seedCalculator, StructurePackageContainer structurePackageContainer) {
       for (StructuresPackageWrapper structuresPackageWrapper : structurePackageContainer.getAsIterable()) {
@@ -90,8 +68,8 @@ public class StructurePackageIOManager {
             structureDataList.remove(0);
          }
          for (StructureData structureData : structureDataList) {
-            if (structureData.getSeed_modifier() == 0) {
-               structureData.setSeed_modifier(seedCalculator.get());
+            if (structureData.getSpawnConfiguration().getSeed_modifier() == 0) {
+               structureData.getSpawnConfiguration().setSeed_modifier(seedCalculator.get());
             }
             structureData.setKey(this.calculateNewStructureKey(oldKey, structurePackageContainer));
          }
@@ -111,6 +89,27 @@ public class StructurePackageIOManager {
          newStructureKey = new ResourceLocation(oldStructureKey.getNamespace(), keyPath);
       }
       return newStructureKey;
+   }
+
+   public StructurePackageContainer loadPackages() throws PackageIOException {
+      StructurePackageContainer structurePackageContainer = this.loadPackageFromLoaders();
+      this.makeStructureKeysAndSeedUnique(structurePackageContainer);
+      // Save the packages to make sure we have all changes in the latest save format. Especially important for default structure data this is important
+      this.savePackages(structurePackageContainer);
+      return structurePackageContainer;
+   }
+
+   private StructurePackageContainer loadPackageFromLoaders() throws PackageIOException {
+      for (StructurePackageLoader packageLoader : this.packageLoaders) {
+         if (packageLoader.matchesFormat()) {
+            return packageLoader.loadPackages();
+         }
+      }
+      return this.fallbackPackageLoader.loadPackages();
+   }
+
+   public void savePackages(StructurePackageContainer structurePackages) throws PackageIOException {
+      this.packageSaver.savePackages(structurePackages);
    }
 
    public StructureIconContainer loadStructureIcons(StructurePackageContainer packageContainer) throws PackageIOException {

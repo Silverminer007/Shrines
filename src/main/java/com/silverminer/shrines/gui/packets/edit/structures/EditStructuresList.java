@@ -14,7 +14,6 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -63,21 +62,21 @@ public class EditStructuresList extends ObjectSelectionList<EditStructuresList.E
 
    }
 
-   protected int getScrollbarPosition() {
-      return super.getScrollbarPosition() + 60;
-   }
-
    public int getRowWidth() {
       return super.getRowWidth() + 160;
-   }
-
-   protected boolean isFocused() {
-      return this.screen.getFocused() == this;
    }
 
    public void setSelected(@Nullable EditStructuresList.Entry entry) {
       this.screen.updateButtonStatus(true);
       super.setSelected(entry);
+   }
+
+   protected int getScrollbarPosition() {
+      return super.getScrollbarPosition() + 60;
+   }
+
+   protected boolean isFocused() {
+      return this.screen.getFocused() == this;
    }
 
    public Optional<EditStructuresList.Entry> getSelectedOpt() {
@@ -100,8 +99,8 @@ public class EditStructuresList extends ObjectSelectionList<EditStructuresList.E
                          int p_230432_7_, int p_230432_8_, boolean p_230432_9_, float p_230432_10_) {
          TextComponent header = new TextComponent(structure.getName());
          String headerRight = " (" + structure.getKey() + ")";
-         String s1 = "Dimensions: " + this.structure.getDimension_whitelist().toString();
-         String s2 = "Distance: " + this.structure.getDistance() + "  Seperation: " + this.structure.getSeparation();
+         String s1 = "Dimensions: " + this.structure.getSpawnConfiguration().getDimension_whitelist().toString();
+         String s2 = "Distance: " + this.structure.getSpawnConfiguration().getDistance() + "  Seperation: " + this.structure.getSpawnConfiguration().getSeparation();
 
          this.minecraft.font.draw(ms, header, left, top + 1, 0xffffff);
          this.minecraft.font.draw(ms, headerRight, left + this.minecraft.font.width(header), top + 1, 0xc0c0c0);

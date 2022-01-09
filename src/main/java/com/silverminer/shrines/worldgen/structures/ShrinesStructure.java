@@ -58,8 +58,8 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
       } else {
          JigsawConfiguration newConfig = new JigsawConfiguration(
                () -> context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY)
-                     .get(new ResourceLocation(structureConfig.getStart_pool())),
-               structureConfig.getJigsawMaxDepth()
+                     .get(new ResourceLocation(structureConfig.getSpawnConfiguration().getStart_pool())),
+               structureConfig.getSpawnConfiguration().getJigsawMaxDepth()
          );
          PieceGeneratorSupplier.Context<JigsawConfiguration> newContext = new PieceGeneratorSupplier.Context<>(
                context.chunkGenerator(),
@@ -104,7 +104,7 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
       if (context.chunkGenerator().getFirstFreeHeight(context.chunkPos().x, context.chunkPos().z, Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor()) < 60) {
          return false;
       }
-      return worldgenrandom.nextDouble() < structureConfig.getSpawn_chance();
+      return worldgenrandom.nextDouble() < structureConfig.getSpawnConfiguration().getSpawn_chance();
    }
 
    private static boolean checkForOtherStructures(StructureData structureConfig, ChunkGenerator generator, long seed,
@@ -144,7 +144,7 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
    }
 
    public int getDistance() {
-      return (int) (this.getConfig().getDistance() * Config.SETTINGS.DISTANCE_FACTOR.get());
+      return (int) (this.getConfig().getSpawnConfiguration().getDistance() * Config.SETTINGS.DISTANCE_FACTOR.get());
    }
 
    public StructureData getConfig() {
@@ -152,10 +152,6 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
    }
 
    public int getSeparation() {
-      return (int) (this.getConfig().getSeparation() * Config.SETTINGS.SEPARATION_FACTOR.get());
-   }
-
-   public int getSeedModifier() {
-      return this.getConfig().getSeed_modifier();
+      return (int) (this.getConfig().getSpawnConfiguration().getSeparation() * Config.SETTINGS.SEPARATION_FACTOR.get());
    }
 }

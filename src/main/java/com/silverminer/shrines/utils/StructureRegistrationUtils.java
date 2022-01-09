@@ -6,13 +6,15 @@
  */
 package com.silverminer.shrines.utils;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.Codec;
 import com.silverminer.shrines.config.Config;
+import com.silverminer.shrines.init.StructureInit;
+import com.silverminer.shrines.init.StructureRegistryHolder;
+import com.silverminer.shrines.packages.datacontainer.SpawnConfiguration;
+import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -28,37 +30,49 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.ImmutableMap;
-import com.mojang.serialization.Codec;
-import com.silverminer.shrines.init.StructureInit;
-import com.silverminer.shrines.init.StructureRegistryHolder;
-import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
-import com.silverminer.shrines.packages.datacontainer.StructureData;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Silverminer
  */
 public class StructureRegistrationUtils {
    protected static final Logger LOGGER = LogManager.getLogger(StructureRegistrationUtils.class);
+   private static Method GETCODEC_METHOD;
 
    public static void setupWorldGen() {
       registerConfiguredStructureFeatures();
       registerStructureSeparationSettings();
    }
 
+   public static void registerConfiguredStructureFeatures() {
+      for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
+         ShrinesStructure structure = holder.getStructure();
+         if (structure.getRegistryName() == null) {
+            continue;
+         }
+         BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE,
+               structure.getRegistryName().toString(), holder.getConfiguredStructure());
+         LOGGER.debug("Registered configured structure feature of {}", holder.getStructure().getConfig().getName());
+      }
+   }
+
    public static void registerStructureSeparationSettings() {
       for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
          ShrinesStructure structure = holder.getStructure();
+         SpawnConfiguration spawnConfiguration = structure.getConfig().getSpawnConfiguration();
          StructureFeature.STRUCTURES_REGISTRY.put(structure.getConfig().getKey().toString(),
                structure);
 
-         if (structure.getConfig().isTransformLand()) {
+         if (spawnConfiguration.isTransformLand()) {
             StructureFeature.NOISE_AFFECTING_FEATURES = ImmutableList.<StructureFeature<?>>builder()
                   .addAll(StructureFeature.NOISE_AFFECTING_FEATURES).add(structure).build();
          }
 
          StructureFeatureConfiguration structureSeparationSettings = new StructureFeatureConfiguration(
-               structure.getDistance(), structure.getSeparation(), structure.getSeedModifier());
+               spawnConfiguration.getDistance(), spawnConfiguration.getSeparation(), spawnConfiguration.getSeed_modifier());
 
          StructureSettings.DEFAULTS = ImmutableMap.<StructureFeature<?>, StructureFeatureConfiguration>builder()
                .putAll(StructureSettings.DEFAULTS).put(structure, structureSeparationSettings).build();
@@ -81,9 +95,9 @@ public class StructureRegistrationUtils {
 
    public static boolean verifyBiome(Biome biome, StructureRegistryHolder holder) {
       if (biome.getRegistryName() != null && !Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(biome.getRegistryName().toString())) {
-         return holder.getStructure().getConfig().isGenerate() && StructureRegistrationUtils.checkBiome(
-               holder.getStructure().getConfig().getBiome_blacklist(),
-               holder.getStructure().getConfig().getBiome_category_whitelist(), biome.getRegistryName(), biome.getBiomeCategory());
+         return holder.getStructure().getConfig().getSpawnConfiguration().isGenerate() && StructureRegistrationUtils.checkBiome(
+               holder.getStructure().getConfig().getSpawnConfiguration().getBiome_blacklist(),
+               holder.getStructure().getConfig().getSpawnConfiguration().getBiome_category_whitelist(), biome.getRegistryName(), biome.getBiomeCategory());
       }
       return false;
    }
@@ -100,20 +114,6 @@ public class StructureRegistrationUtils {
       }
       return false;
    }
-
-   public static void registerConfiguredStructureFeatures() {
-      for (StructureRegistryHolder holder : StructureInit.STRUCTURES) {
-         ShrinesStructure structure = holder.getStructure();
-         if (structure.getRegistryName() == null) {
-            continue;
-         }
-         BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE,
-               structure.getRegistryName().toString(), holder.getConfiguredStructure());
-         LOGGER.debug("Registered configured structure feature of {}", holder.getStructure().getConfig().getName());
-      }
-   }
-
-   private static Method GETCODEC_METHOD;
 
    public static void addDimensionalSpacing(ServerLevel world) {
 
@@ -156,6 +156,6 @@ public class StructureRegistrationUtils {
 
    public static boolean isAllowedForWorld(ServerLevel currentWorld, StructureData config) {
       String worldID = currentWorld.getLevel().dimension().location().toString();
-      return config.getDimension_whitelist().contains(worldID);
+      return config.getSpawnConfiguration().getDimension_whitelist().contains(worldID);
    }
 }

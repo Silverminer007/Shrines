@@ -12,6 +12,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.silverminer.shrines.packages.configuration.ConfigOptions;
 
 import java.util.List;
+import java.util.Random;
 
 public class SpawnConfiguration {
    public static final Codec<SpawnConfiguration> CODEC = RecordCodecBuilder.create((structureDataInstance) -> structureDataInstance.group(
@@ -103,6 +104,9 @@ public class SpawnConfiguration {
    }
 
    public void setSeed_modifier(int seed_modifier) {
+      if (seed_modifier == 0) {
+         seed_modifier = new Random().nextInt(Integer.MIN_VALUE, Integer.MAX_VALUE);
+      }
       this.seed_modifier = seed_modifier;
    }
 
