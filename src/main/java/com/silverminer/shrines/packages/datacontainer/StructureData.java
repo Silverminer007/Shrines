@@ -24,10 +24,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 
 public class StructureData implements Comparable<StructureData> {
    public static final Codec<StructureData> CODEC = RecordCodecBuilder.create((structureDataInstance) -> structureDataInstance.group(
@@ -106,99 +104,8 @@ public class StructureData implements Comparable<StructureData> {
       this.key = key;
    }
 
-   public boolean isTransformLand() {
-      return this.getSpawnConfiguration().isTransformLand();
-   }
-
-   public void setTransformLand(boolean transformLand) {
-      this.getSpawnConfiguration().setTransformLand(transformLand);
-   }
-
    public SpawnConfiguration getSpawnConfiguration() {
       return spawnConfiguration;
-   }
-
-   public boolean isGenerate() {
-      return this.getSpawnConfiguration().isGenerate();
-   }
-
-   public void setGenerate(boolean generate) {
-      this.getSpawnConfiguration().setGenerate(generate);
-   }
-
-   public double getSpawn_chance() {
-      return this.getSpawnConfiguration().getSpawn_chance();
-   }
-
-   public void setSpawn_chance(double spawn_chance) {
-      this.getSpawnConfiguration().setSpawn_chance(spawn_chance);
-   }
-
-   public int getDistance() {
-      return this.getSpawnConfiguration().getDistance();
-   }
-
-   public void setDistance(int distance) {
-      this.getSpawnConfiguration().setDistance(distance);
-   }
-
-   public int getSeparation() {
-      return this.getSpawnConfiguration().getSeparation();
-   }
-
-   public void setSeparation(int separation) {
-      this.getSpawnConfiguration().setSeparation(separation);
-   }
-
-   public int getSeed_modifier() {
-      return this.getSpawnConfiguration().getSeed_modifier();
-   }
-
-   public void setSeed_modifier(int seed_modifier) {
-      if (seed_modifier == 0) {
-         seed_modifier = new Random().nextInt(Integer.MIN_VALUE, Integer.MAX_VALUE);
-      }
-      this.getSpawnConfiguration().setSeed_modifier(seed_modifier);
-   }
-
-   public int getHeight_offset() {
-      return this.getSpawnConfiguration().getHeight_offset();
-   }
-
-   public void setHeight_offset(int height_offset) {
-      this.getSpawnConfiguration().setHeight_offset(height_offset);
-   }
-
-   public List<String> getBiome_blacklist() {
-      return this.getSpawnConfiguration().getBiome_blacklist();
-   }
-
-   public void setBiome_blacklist(List<String> biome_blacklist) {
-      this.getSpawnConfiguration().setBiome_blacklist(biome_blacklist);
-   }
-
-   public List<String> getBiome_category_whitelist() {
-      return this.getSpawnConfiguration().getBiome_category_whitelist();
-   }
-
-   public void setBiome_category_whitelist(List<String> biome_category_whitelist) {
-      this.getSpawnConfiguration().setBiome_category_whitelist(biome_category_whitelist);
-   }
-
-   public List<String> getDimension_whitelist() {
-      return this.getSpawnConfiguration().getDimension_whitelist();
-   }
-
-   public void setDimension_whitelist(List<String> dimension_whitelist) {
-      this.getSpawnConfiguration().setDimension_whitelist(dimension_whitelist);
-   }
-
-   public String getStart_pool() {
-      return this.getSpawnConfiguration().getStart_pool();
-   }
-
-   public void setStart_pool(String start_pool) {
-      this.getSpawnConfiguration().setStart_pool(start_pool);
    }
 
    public ResourceLocation getNovel() {
@@ -207,14 +114,6 @@ public class StructureData implements Comparable<StructureData> {
 
    public void setNovel(ResourceLocation novel) {
       this.novel = novel;
-   }
-
-   public int getJigsawMaxDepth() {
-      return this.getSpawnConfiguration().getJigsawMaxDepth();
-   }
-
-   public void setJigsawMaxDepth(int jigsawMaxDepth) {
-      this.getSpawnConfiguration().setJigsawMaxDepth(jigsawMaxDepth);
    }
 
    public ResourceLocation getIconPath() {

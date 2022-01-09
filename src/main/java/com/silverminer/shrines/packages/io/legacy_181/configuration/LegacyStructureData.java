@@ -7,10 +7,9 @@
 package com.silverminer.shrines.packages.io.legacy_181.configuration;
 
 import com.google.common.collect.Lists;
-import com.silverminer.shrines.config.DefaultStructureConfig;
-import com.silverminer.shrines.packages.datacontainer.NestedVariationConfiguration;
-import com.silverminer.shrines.packages.datacontainer.SimpleVariationConfiguration;
+import com.silverminer.shrines.packages.datacontainer.SpawnConfiguration;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -265,22 +264,11 @@ public class LegacyStructureData implements IStructureConfig {
    }
 
    public StructureData toUpToDateData() {
-      StructureData structure = DefaultStructureConfig.CUSTOM.toStructureData();
-      structure.setName(this.getName());
-      structure.setKey(new ResourceLocation(this.getDataName()));
-      structure.setTransformLand(this.getNeedsGround());
-      structure.setGenerate(this.getGenerate());
-      structure.setSpawn_chance(this.getSpawnChance());
-      structure.getVariationConfiguration().setEnabled(this.getUseRandomVarianting());
-      structure.getVariationConfiguration().setNestedVariationConfiguration(this.getUseRandomVarianting() ? NestedVariationConfiguration.ALL_ENABLED : NestedVariationConfiguration.ALL_DISABLED);
-      structure.getVariationConfiguration().setSimpleVariationConfiguration(this.getUseRandomVarianting() ? SimpleVariationConfiguration.ALL_ENABLED : SimpleVariationConfiguration.ALL_DISABLED);
-      structure.setDistance(this.getDistance());
-      structure.setSeparation(this.getSeparation());
-      structure.setSeed_modifier(this.getSeed());
-      structure.setHeight_offset(this.base_height_offset.getValue());
-      structure.setBiome_blacklist(this.getBlacklist().stream().map(Objects::toString).collect(Collectors.toList()));
-      structure.setBiome_category_whitelist(this.getWhitelist().stream().map(Enum::toString).collect(Collectors.toList()));
-      structure.setDimension_whitelist(this.getDimensions().stream().map(Objects::toString).collect(Collectors.toList()));
-      return structure;
+      VariationConfiguration variationConfiguration = this.getUseRandomVarianting() ? VariationConfiguration.ALL_ENABLED : VariationConfiguration.ALL_DISABLED;
+      SpawnConfiguration spawnConfiguration = new SpawnConfiguration(this.getNeedsGround(), this.getGenerate(), this.getSpawnChance(), this.getDistance(), this.getSeparation(),
+            this.getSeed(), this.base_height_offset.getValue(), this.getBlacklist().stream().map(Objects::toString).collect(Collectors.toList()),
+            this.getWhitelist().stream().map(Enum::toString).collect(Collectors.toList()), this.getDimensions().stream().map(Objects::toString).collect(Collectors.toList()), "",
+            7);
+      return new StructureData(this.getName(), new ResourceLocation(this.getDataName()), spawnConfiguration, null, null, variationConfiguration);
    }
 }

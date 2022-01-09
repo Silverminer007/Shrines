@@ -6,32 +6,28 @@
  */
 package com.silverminer.shrines.gui.misc.screen;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.Lists;
-import com.silverminer.shrines.gui.misc.buttons.BooleanValueButton;
-
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author Silverminer
@@ -40,8 +36,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenerationSettingsList.Entry> {
    protected static final Logger LOGGER = LogManager.getLogger();
    private final BiomeGenerationSettingsScreen screen;
-   @Nullable
-   private List<String> options;
 
    public BiomeGenerationSettingsList(BiomeGenerationSettingsScreen screen, Minecraft mc, int p_i49846_3_,
                                       int p_i49846_4_, int p_i49846_5_, int p_i49846_6_, int p_i49846_7_, Supplier<String> search) {
@@ -56,8 +50,8 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
 
       ArrayList<Biome.BiomeCategory> possibleCategories = Lists.newArrayList(Biome.BiomeCategory.values());
       ArrayList<String> selectedCategories = this.screen.selectedBiomeCategories;
-      ArrayList<Biome> possibleBiomes = Lists.newArrayList(ForgeRegistries.BIOMES.getEntries().stream()
-            .map(entry -> entry.getValue()).collect(Collectors.toList()));
+      ArrayList<Biome> possibleBiomes = ForgeRegistries.BIOMES.getEntries().stream()
+            .map(Map.Entry::getValue).collect(Collectors.toCollection(ArrayList::new));
       ArrayList<String> selectedBiomes = this.screen.selectedBiomes;
 
       String s = search.get().toLowerCase(Locale.ROOT);
@@ -67,8 +61,7 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
             boolean selected = selectedCategories.contains(opt.toString());
             this.addEntry(new BiomeGenerationSettingsList.CategoryEntry(opt, selected));
             if (selected) {
-               for (Biome opt1 : possibleBiomes.stream().filter(biome -> biome.getBiomeCategory().equals(opt))
-                     .collect(Collectors.toList())) {
+               for (Biome opt1 : possibleBiomes.stream().filter(biome -> biome.getBiomeCategory().equals(opt)).toList()) {
                   boolean selected1 = !selectedBiomes.contains(opt1.toString());
                   this.addEntry(new BiomeGenerationSettingsList.BiomeEntry(opt1, selected1));
                }
@@ -78,20 +71,20 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
 
    }
 
-   protected int getScrollbarPosition() {
-      return this.width - 5;
-   }
-
    public int getRowWidth() {
       return this.width - 10;
    }
 
-   protected boolean isFocused() {
-      return this.screen.getFocused() == this;
-   }
-
    public void setSelected(@Nullable BiomeGenerationSettingsList.Entry entry) {
       super.setSelected(entry);
+   }
+
+   protected int getScrollbarPosition() {
+      return this.width - 5;
+   }
+
+   protected boolean isFocused() {
+      return this.screen.getFocused() == this;
    }
 
    public Optional<BiomeGenerationSettingsList.Entry> getSelectedOpt() {
@@ -101,13 +94,13 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
    @OnlyIn(Dist.CLIENT)
    public abstract class Entry extends ObjectSelectionList.Entry<BiomeGenerationSettingsList.Entry>
          implements ContainerEventHandler {
-      @Nullable
-      private GuiEventListener focused;
-      private boolean dragging;
-      protected ArrayList<GuiEventListener> children = Lists.newArrayList();
       protected final Minecraft minecraft;
       protected final BooleanValueButton button;
       protected final String opt;
+      protected ArrayList<GuiEventListener> children = Lists.newArrayList();
+      @Nullable
+      private GuiEventListener focused;
+      private boolean dragging;
 
       public Entry(String option, boolean active) {
          this.opt = option;
@@ -123,7 +116,7 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
       public abstract void updateList(boolean active);
 
       @Override
-      public void render(PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
+      public void render(@NotNull PoseStack ms, int index, int top, int left, int width, int height, int mouseX, int mouseY,
                          boolean isHot, float partialTicks) {
          int descriptionTop = top + (BiomeGenerationSettingsList.this.itemHeight - minecraft.font.lineHeight) / 2;
          minecraft.font.drawShadow(ms, this.opt, left, descriptionTop, this.isCategoryOption() ? 0xffffff : 0x999999);
@@ -135,7 +128,7 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
       public abstract boolean isCategoryOption();
 
       @Override
-      public List<? extends GuiEventListener> children() {
+      public @NotNull List<? extends GuiEventListener> children() {
          return children;
       }
 
@@ -147,17 +140,17 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
          this.dragging = p_231037_1_;
       }
 
-      public void setFocused(@Nullable GuiEventListener p_231035_1_) {
-         this.focused = p_231035_1_;
-      }
-
       @Nullable
       public GuiEventListener getFocused() {
          return this.focused;
       }
 
+      public void setFocused(@Nullable GuiEventListener p_231035_1_) {
+         this.focused = p_231035_1_;
+      }
+
       @Override
-      public Component getNarration() {
+      public @NotNull Component getNarration() {
          return new TextComponent(this.opt);
       }
    }
@@ -175,7 +168,10 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
             BiomeGenerationSettingsList.this.screen.selectedBiomeCategories.add(this.opt);
             for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
                if (biome.getBiomeCategory().toString().equals(this.opt)) {
-                  BiomeGenerationSettingsList.this.screen.selectedBiomes.remove(biome.getRegistryName().toString());
+                  ResourceLocation resourceLocation = biome.getRegistryName();
+                  if (resourceLocation != null) {
+                     BiomeGenerationSettingsList.this.screen.selectedBiomes.remove(resourceLocation.toString());
+                  }
                }
             }
          } else {
@@ -194,7 +190,7 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
    public class BiomeEntry extends Entry {
 
       public BiomeEntry(Biome option, boolean active) {
-         super(option.getRegistryName().toString(), active);
+         super(Optional.ofNullable(option.getRegistryName()).orElse(new ResourceLocation("error", "unknown_biome")).toString(), active);
       }
 
       @Override
