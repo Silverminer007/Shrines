@@ -14,8 +14,6 @@
   "config.shrines.banned_blocks.tooltip": "Todos los bloques de esta lista no se colocarán con las estructuras. Así, es posible que los bloques que se consideran demasiado valiosos no aparezcan en el mundo.",
   "config.shrines.banned_entities": "Criaturas prohibidas",
   "config.shrines.banned_entities.tooltip": "Todas las criaturas de esta lista no se colocarán con las estructuras",
-  "config.shrines.needed_novels": "estructuras necesarios",
-  "config.shrines.needed_novels.tooltip": "El número de estructuras que debe encontrar un tipo para desbloquear la historia completa.",
   "_comment_gui": "",
   "gui.shrines.novels.title": "Historias de los edificios de los santuarios",
   "gui.shrines.novel.title": "Información sobre: %s",

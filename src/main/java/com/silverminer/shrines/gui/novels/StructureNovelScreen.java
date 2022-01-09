@@ -47,14 +47,15 @@ public class StructureNovelScreen extends Screen {
    private boolean scrolling;
 
    public StructureNovelScreen(StructureData structure, double novelAmount) {
+      // Novel amount is no longer a value between 0 and 1. Instead, it directly gives the amount of unlocked parts
       super(new TranslationTextComponent("gui.shrines.novel.title", structure.getName()));
       String novel = structure.getNovel();
-      if (novelAmount < 1.0D) {
+      String[] parts = novel.split("\\|");
+      if (novelAmount < parts.length) {
          this.renderInfo = true;
       }
-      String[] parts = novel.split("\\|");
       StringBuilder stringBuilder = new StringBuilder();
-      for (int i = 0; i < (parts.length * novelAmount); i++) {
+      for (int i = 0; i < novelAmount && i < parts.length; i++) {
          stringBuilder.append(parts[i]);
       }
       novel = stringBuilder.toString();

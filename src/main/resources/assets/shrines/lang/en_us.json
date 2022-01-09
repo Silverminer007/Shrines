@@ -14,8 +14,6 @@
   "config.shrines.banned_blocks.tooltip": "All blocks in this list will not be placed with the structures. So it is possible to make blocks that are considered too valuable not appear in the world",
   "config.shrines.banned_entities": "banned creatures",
   "config.shrines.banned_entities.tooltip": "All creatures in this list will not be placed with the structures",
-  "config.shrines.needed_novels": "Required structures",
-  "config.shrines.needed_novels.tooltip": "The number of buildings of one type that must be found to unlock the full story.",
   "_comment_gui": "",
   "gui.shrines.novels.title": "Stories of Shrines buildings",
   "gui.shrines.novel.title": "Insights from: %s",

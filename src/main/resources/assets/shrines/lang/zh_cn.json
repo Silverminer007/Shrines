@@ -14,8 +14,6 @@
   "config.shrines.banned_blocks.tooltip": "此列表中的所有方塊都不會與結構一起放置。因此可以使被認為太有價值的方塊不會出現在世界中",
   "config.shrines.banned_entities": "禁止生物",
   "config.shrines.banned_entities.tooltip": "此列表中的所有生物都不會與結構一起放置",
-  "config.shrines.needed_novels": "必需的結構",
-  "config.shrines.needed_novels.tooltip": "必須找到一種類型的建築物才能解鎖完整故事。",
   "_comment_gui": "",
   "gui.shrines.novels.title": "神殿建築的故事",
   "gui.shrines.novel.title": "見解來自：%s",

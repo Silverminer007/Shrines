@@ -53,24 +53,24 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 
    public int getDistance() {
       return (int) (this.getConfig().getDistance() * Config.SETTINGS.DISTANCE_FACTOR.get());
-   }   @Override
-   public GenerationStage.Decoration step() {
-      return GenerationStage.Decoration.SURFACE_STRUCTURES;
    }
 
    public StructureData getConfig() {
       return this.structureConfig;
    }   @Override
-   public String getFeatureName() {
-      return this.name;
+   public GenerationStage.Decoration step() {
+      return GenerationStage.Decoration.SURFACE_STRUCTURES;
    }
 
    public int getSeparation() {
-      return (int) (this.getConfig().getSeperation() * Config.SETTINGS.SEPERATION_FACTOR.get());
+      return (int) (this.getConfig().getSeperation() * Config.SETTINGS.SEPARATION_FACTOR.get());
    }
 
    public int getSeedModifier() {
       return this.getConfig().getSeed_modifier();
+   }   @Override
+   public String getFeatureName() {
+      return this.name;
    }
 
    public List<? extends String> getDimensions() {
@@ -79,8 +79,6 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 
    public int getMaxDepth() {
       return 7;
-   }   public double getSpawnChance() {
-      return this.getConfig().getSpawn_chance();
    }
 
    public static class Start extends MarginedStructureStart<NoFeatureConfig> {
@@ -138,6 +136,13 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 
 
 
+   public double getSpawnChance() {
+      return this.getConfig().getSpawn_chance();
+   }
+
+
+
+
    @Override
    protected boolean isFeatureChunk(ChunkGenerator generator, BiomeProvider provider, long seed, SharedSeedRandom rand,
                                     int chunkX, int chunkZ, Biome biome, ChunkPos pos, NoFeatureConfig config) {
@@ -185,7 +190,6 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
 
       return true;
    }
-
 
 
    public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {

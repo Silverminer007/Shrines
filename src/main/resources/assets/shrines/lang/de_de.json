@@ -14,8 +14,6 @@
   "config.shrines.banned_blocks.tooltip": "Alle Bl\u00f6cke in dieser Liste werden nicht mit den Strukturen platziert werden. So ist es m\u00f6glich Bl\u00f6cke, die als zu wertvoll erachtet werden nicht in der Welt erscheinen zu lassen",
   "config.shrines.banned_entities": "Verbotene Kreaturen",
   "config.shrines.banned_entities.tooltip": "Alle Kreaturen in dieser Liste werden nicht mit den Strukturen platziert werden",
-  "config.shrines.needed_novels": "Ben\u00f6tigte Bauwerke",
-  "config.shrines.needed_novels.tooltip": "Die Anzahl der Bauwerke die von einem Typ gefunden werden m\u00fcssen um die vollst\u00e4ndige Geschichte Frei zu schalten.",
   "_comment_gui": "",
   "gui.shrines.novels.title": "Geschichten von Shrines Bauwerken",
   "gui.shrines.novel.title": "Einblicke in: %s",

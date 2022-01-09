@@ -1,3 +1,9 @@
+2.0.0-Beta11 --- NOT RELEASED YET
+- Introduced Novels Part separator '|'
+- Added Novel of Shrine of Savanna and Nether Pyramid
+- Removed Config Option 'NEEDED_NOVELS', because parts are now have a fixed amount
+
+===========
 2.0.0-Beta10 --- 08.01.2022 16.07 UTC
 - Fixed #30
 

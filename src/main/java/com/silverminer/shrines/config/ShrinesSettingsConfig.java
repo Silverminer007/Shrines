@@ -6,13 +6,12 @@
  */
 package com.silverminer.shrines.config;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 public class
 ShrinesSettingsConfig {
@@ -20,14 +19,12 @@ ShrinesSettingsConfig {
    public final ForgeConfigSpec.ConfigValue<List<? extends String>> BLACKLISTED_BIOMES;
 
    public final ForgeConfigSpec.DoubleValue DISTANCE_FACTOR;
-   public final ForgeConfigSpec.DoubleValue SEPERATION_FACTOR;
+   public final ForgeConfigSpec.DoubleValue SEPARATION_FACTOR;
    public final ForgeConfigSpec.IntValue STRUCTURE_MIN_DISTANCE;
    public final ForgeConfigSpec.BooleanValue ADVANCED_LOGGING;
 
    public final ForgeConfigSpec.ConfigValue<List<? extends String>> BANNED_BLOCKS;
    public final ForgeConfigSpec.ConfigValue<List<? extends String>> BANNED_ENTITIES;
-
-   public final ForgeConfigSpec.IntValue NEEDED_NOVELS;
 
    public ShrinesSettingsConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
       BLACKLISTED_BIOMES = SERVER_BUILDER
@@ -38,8 +35,8 @@ ShrinesSettingsConfig {
                   "Distance Factor (Default 1.0) Is multiplied on the structures distance. Allows changing distance of every structure at once. See 'Structure Min Distance' too")
             .translation("config.shrines.distance_factor")
             .defineInRange("structures.distance_factor", 1.0, 0.0, 100.0);
-      SEPERATION_FACTOR = SERVER_BUILDER.comment(
-                  "Seperation Factor (Default 1.0) Is multiplied on the structures separation. Allows changing separation of every structure at once. See 'Structure Min Distance' too")
+      SEPARATION_FACTOR = SERVER_BUILDER.comment(
+                  "Separation Factor (Default 1.0) Is multiplied on the structures separation. Allows changing separation of every structure at once. See 'Structure Min Distance' too")
             .translation("config.shrines.seperation_factor")
             .defineInRange("structures.seperation_factor", 1.0, 0.0, 100.0);
       STRUCTURE_MIN_DISTANCE = SERVER_BUILDER.comment(
@@ -56,9 +53,6 @@ ShrinesSettingsConfig {
       BANNED_ENTITIES = SERVER_BUILDER.comment("All entities in this list will not be placed with the structures")
             .translation("config.shrines.banned_entities")
             .defineList("structures.banned_entities", Lists.newArrayList(), ShrinesSettingsConfig::validateEntity);
-      NEEDED_NOVELS = SERVER_BUILDER
-            .comment("How many times you need to find a structure to enable it's complete story")
-            .translation("config.shrines.needed_novels").defineInRange("structures.needed_novels", 5, 0, 100);
    }
 
    private static boolean validateBiome(Object o) {
