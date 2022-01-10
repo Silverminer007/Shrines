@@ -10,9 +10,11 @@ package com.silverminer.shrines.utils.network.cts;
 import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.container.StructurePackageContainer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class CTSImportPackage extends CTSSavePackages {
@@ -37,7 +39,7 @@ public class CTSImportPackage extends CTSSavePackages {
       super.handle(ctx);
       ctx.get().enqueueWork(() -> {
          // All packages are saved from super class, and we can now import the package
-         PackageManagerProvider.SERVER.importPackage(this.packageFile);
+         PackageManagerProvider.SERVER.importPackage(this.packageFile, Optional.ofNullable(ctx.get().getSender()).map(ServerPlayer::getUUID).orElse(null));
       });
       ctx.get().setPacketHandled(true);
    }

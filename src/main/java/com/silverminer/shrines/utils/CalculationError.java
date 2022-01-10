@@ -11,6 +11,8 @@ import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 public record CalculationError(String header, String text) {
+   public static final CalculationError PLAYER_MISSING_PERMISSION = new CalculationError("Failed to run action on server", "Player doesn't have permission!");
+
    public CalculationError(String header, String text, @NotNull Throwable cause) {
       this(header, text, cause.getClass().getName() + ": " + cause.getMessage());
    }

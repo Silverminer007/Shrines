@@ -9,13 +9,12 @@ package com.silverminer.shrines.utils.network.cts;
 
 import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.container.StructurePackageContainer;
-import com.silverminer.shrines.utils.CalculationError;
-import com.silverminer.shrines.utils.network.IPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -39,7 +38,7 @@ public class CTSExportPackage extends CTSSavePackages {
 
    public void handle(@NotNull Supplier<NetworkEvent.Context> ctx) {
       super.handle(ctx);
-      ctx.get().enqueueWork(() -> PackageManagerProvider.SERVER.exportPackage(this.packageID));
+      ctx.get().enqueueWork(() -> PackageManagerProvider.SERVER.exportPackage(this.packageID, Optional.ofNullable(ctx.get().getSender()).map(ServerPlayer::getUUID).orElse(null)));
       ctx.get().setPacketHandled(true);
    }
 }
