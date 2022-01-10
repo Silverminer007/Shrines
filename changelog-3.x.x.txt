@@ -1,4 +1,4 @@
-3.0.0-Beta5 --- NOT RELEASED YET
+3.0.0-Beta5 --- 10.01.2022 14:30 UTC
 - Internal rewrite
 - changed save format of structure packages
 - added backwards compatible package loaders
@@ -16,7 +16,7 @@
 - removed 'use_random_varianting' option
 - Added error message to biome selection if the current biome doesn't have a registry name
 - Enhanced Structure Configuration Screen with toggleable categories
-- Changed key of separation factor (from 'seperation_factor' to 'separation_factor'
+- Changed key of separation factor (from 'seperation_factor' to 'separation_factor')
 
 ===========
 3.0.0-Beta4 --- 21.12.2021 17:15 UTC
