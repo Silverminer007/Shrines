@@ -20,10 +20,12 @@ import com.silverminer.shrines.utils.network.stc.*;
 import com.silverminer.shrines.utils.queue.PlayerQueue;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,10 +115,12 @@ public class ServerStructurePackageManager {
    }
 
    public void clientSavedPackages(StructurePackageContainer packageContainer, UUID clientID) {
-      if (this.playerQueue.getQueue().size() > 0 && this.playerQueue.getQueue().get(0).equals(clientID)) {
+      if (this.playerIDIsValid(clientID) && this.playerHasPermission(clientID, 2)) {
          this.packages = packageContainer;
          boolean success = this.savePackages();
          ShrinesPacketHandler.sendTo(new STCSendSaveResult(success), clientID);
+      } else {
+         this.onError(CalculationError.PLAYER_MISSING_PERMISSION);
       }
    }
 
@@ -131,38 +135,47 @@ public class ServerStructurePackageManager {
       }
    }
 
-   public void importPackage(byte[] packageFile) {
+   public void importPackage(byte[] packageFile, @Nullable UUID playerID) {
       try {
-         StructuresPackageWrapper structuresPackageWrapper = this.ioManager.importPackage(packageFile);
-         this.getPackages().add(structuresPackageWrapper);
-         if (this.playerQueue.getQueue().size() > 0) {
-            this.syncPackagesToClient(this.playerQueue.getQueue().get(0));
+         if (this.playerIDIsValid(playerID) && this.playerHasPermission(playerID, 2)) {
+            StructuresPackageWrapper structuresPackageWrapper = this.ioManager.importPackage(packageFile);
+            this.getPackages().add(structuresPackageWrapper);
+            this.syncPackagesToClient(playerID);
          } else {
-            this.onError(new CalculationError("Failed to sync packages back to client after import", "No player was found"));
+            this.onError(CalculationError.PLAYER_MISSING_PERMISSION);
          }
       } catch (PackageIOException e) {
          this.onError(new CalculationError("Failed to import package", "Caused by: %s", e));
       }
    }
 
+   private boolean playerIDIsValid(@Nullable UUID playerID) {
+      return this.playerQueue.getQueue().size() > 0 && this.playerQueue.getQueue().get(0).equals(playerID);
+   }
+
+   private boolean playerHasPermission(UUID playerID, int permissionLevel) {
+      ServerPlayer player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(playerID);
+      return player != null && player.hasPermissions(permissionLevel);
+   }
+
    public void syncPackagesToClient(UUID playerID) {
-      if (this.playerQueue.getQueue().size() > 0 && this.playerQueue.getQueue().get(0).equals(playerID)) {
+      if (this.playerIDIsValid(playerID)) {
          ShrinesPacketHandler.sendTo(new STCSyncPackages(this.getPackages()), playerID);
       } else {
          this.onError(new CalculationError("Received invalid save request from client", "Got package save request from client that hadn't had the permission to do that"), playerID);
       }
    }
 
-   public void exportPackage(UUID packageID) {
+   public void exportPackage(UUID packageID, @Nullable UUID playerID) {
       try {
-         StructuresPackageWrapper structuresPackageWrapper = this.getPackages().getByKey(packageID);
-         if (structuresPackageWrapper != null) {
-            byte[] packageFile = this.ioManager.exportPackage(structuresPackageWrapper);
-            if (this.playerQueue.getQueue().size() > 0) {
-               ShrinesPacketHandler.sendTo(new STCSaveExportedPackage(packageFile), this.playerQueue.getQueue().get(0));
-            } else {
-               this.onError(new CalculationError("Failed to send exported package to client", "No player was found"));
+         if (this.playerIDIsValid(playerID) && this.playerHasPermission(playerID, 1)) {
+            StructuresPackageWrapper structuresPackageWrapper = this.getPackages().getByKey(packageID);
+            if (structuresPackageWrapper != null) {
+               byte[] packageFile = this.ioManager.exportPackage(structuresPackageWrapper);
+               ShrinesPacketHandler.sendTo(new STCSaveExportedPackage(packageFile), playerID);
             }
+         } else {
+            this.onError(CalculationError.PLAYER_MISSING_PERMISSION);
          }
       } catch (PackageIOException e) {
          this.onError(new CalculationError("Failed to export package", "Caused by: %s", e));
