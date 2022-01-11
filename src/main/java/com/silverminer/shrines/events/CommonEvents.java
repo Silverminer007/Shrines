@@ -74,6 +74,10 @@ public class CommonEvents {
                NovelsDataRegistry.loadData(serverLevel);
             }
          }
+      }
+
+      @SubscribeEvent
+      public static void onWorldSave(WorldEvent.Save event) {
          // Very hacky reset of the random variation remaps at every world load
          for (StructureFeature<?> structureFeature : ForgeRegistries.STRUCTURE_FEATURES) {
             PostPlacementProcessor postPlacementProcessor = structureFeature.getPostPlacementProcessor();
