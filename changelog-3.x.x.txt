@@ -1,3 +1,7 @@
+3.0.0-Beta6 --- 11.01.2022 14:47 UTC
+- Fixed loading client classes on dedicated server (close #32 and #33 may #26 too)
+
+===========
 3.0.0-Beta5 --- 10.01.2022 14:30 UTC
 - Internal rewrite
 - changed save format of structure packages
