@@ -7,7 +7,6 @@
 package com.silverminer.shrines.init;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
@@ -26,13 +25,13 @@ import java.util.ArrayList;
  */
 @EventBusSubscriber(modid = ShrinesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class StructureInit {
-   protected static final Logger LOGGER = LogManager.getLogger(StructureInit.class);
    public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
          .<StructureRegistryHolder>builder().addAll(initStructures()).build();
+   protected static final Logger LOGGER = LogManager.getLogger(StructureInit.class);
 
    private static ArrayList<StructureRegistryHolder> initStructures() {
       PackageManagerProvider.SERVER.bootstrapPackages();
-      ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
+      ArrayList<StructureRegistryHolder> structures = new ArrayList<>();
       for (StructuresPackageWrapper packet : PackageManagerProvider.SERVER.getInitialStructurePackages().getAsIterable()) {
          for (StructureData structure : packet.getStructures().getAsIterable()) {
             structures.add(new StructureRegistryHolder(structure.getKey(), structure));
