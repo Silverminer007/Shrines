@@ -9,14 +9,20 @@ package com.silverminer.shrines.events;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.packages.PackageManagerProvider;
+import com.silverminer.shrines.packages.client.ClientStructurePackageManager;
 import com.silverminer.shrines.packages.io.DirectoryStructureAccessor;
 import com.silverminer.shrines.utils.ClientUtils;
+import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
+import com.silverminer.shrines.utils.network.cts.CTSSyncAvailableDimensionsRequest;
+import com.silverminer.shrines.utils.network.cts.CTSSyncInitialPackagesRequest;
+import com.silverminer.shrines.utils.network.cts.CTSSyncStructureIconsRequest;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.event.AddPackFindersEvent;
@@ -40,6 +46,34 @@ public class ClientEvents {
          }
          if (ClientUtils.openNovelsKeyMapping.isDown()) {
             PackageManagerProvider.CLIENT.showNovelsOverview();
+         }
+      }
+
+      @SubscribeEvent
+      public static void onPlayerLoggedIn(ClientPlayerNetworkEvent.LoggedInEvent event) {
+         if (event.getPlayer() != null) {
+            PackageManagerProvider.CLIENT.setCurrentStage(ClientStructurePackageManager.Stage.AVAILABLE);
+            PackageManagerProvider.CLIENT.setPlayerID(event.getPlayer().getUUID());
+            ShrinesPacketHandler.sendToServer(new CTSSyncStructureIconsRequest());
+            ShrinesPacketHandler.sendToServer(new CTSSyncAvailableDimensionsRequest());
+            ShrinesPacketHandler.sendToServer(new CTSSyncInitialPackagesRequest());
+         } else {
+            LOGGER.error("Failed to initialise CLIENT Package Manager, because no player was available");
+         }
+      }
+
+      @SubscribeEvent
+      public static void onPlayerLoggedOut(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+         // Make sure that we're able to contact the server before we clear everything
+         // Don't show an error, because Minecraft logs the player out before a world can be entered and the player is logged in again. At the first log out the connections aren't available
+         if (event.getConnection() != null) {
+            PackageManagerProvider.CLIENT.leaveQueue();
+            PackageManagerProvider.CLIENT.setCurrentStage(ClientStructurePackageManager.Stage.EMPTY);
+            PackageManagerProvider.CLIENT.setPlayerID(null);
+            PackageManagerProvider.CLIENT.setNovels(null);
+            PackageManagerProvider.CLIENT.setNovelsRegistryData(null);
+            PackageManagerProvider.CLIENT.setAvailableDimensions(null);
+            PackageManagerProvider.CLIENT.clearCache();
          }
       }
    }

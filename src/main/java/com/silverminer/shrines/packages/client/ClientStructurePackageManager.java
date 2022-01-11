@@ -42,6 +42,7 @@ import java.util.UUID;
 
 public class ClientStructurePackageManager {
    protected static final Logger LOGGER = LogManager.getLogger(ClientStructurePackageManager.class);
+   private static final ClientStructurePackageManager INSTANCE = new ClientStructurePackageManager();
    protected StructurePackageContainer packages = new StructurePackageContainer();
    private Stage currentStage = Stage.EMPTY;
    private int queuePosition = -1;
@@ -50,6 +51,10 @@ public class ClientStructurePackageManager {
    private Map<ResourceLocation, StructureNovel> novelsRegistryData;
    private List<String> availableDimensions;
    private StructurePackageContainer initialPackages;
+
+   public static ClientStructurePackageManager getInstance() {
+      return INSTANCE;
+   }
 
    public void joinQueue() {
       // You can only join the queue if you aren't in it yet or were already allowed to edit packages. You should also only join the queue if the packages are actually available
