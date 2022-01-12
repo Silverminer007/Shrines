@@ -233,7 +233,9 @@ public class ClientStructurePackageManager {
 
    public void cacheStructureIcons(StructureIconContainer structureIconContainer) {
       try {
-         Files.delete(DirectoryStructureAccessor.RECENT.getImagesCachePath());
+         if (Files.exists(DirectoryStructureAccessor.RECENT.getImagesCachePath())) {
+            Files.delete(DirectoryStructureAccessor.RECENT.getImagesCachePath());
+         }
       } catch (IOException e) {
          this.onError(new CalculationError("Unable to cache structure icons", "Caused by: %s", e));
       }
