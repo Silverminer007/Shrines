@@ -1,3 +1,7 @@
+3.0.0-Beta8 --- 12.01.2022 17:09 UTC
+- Fixed wrong warning about structure icon cache error
+
+===========
 3.0.0-Beta7 --- 11.01.2022 19:34 UTC
 - Reset Random variation remaps on world save instead of world load
 
