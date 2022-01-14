@@ -9,6 +9,7 @@ package com.silverminer.shrines.worldgen.structures;
 
 import com.silverminer.shrines.packages.datacontainer.SimpleVariationConfiguration;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -38,8 +39,8 @@ public class SimpleVariation implements Variation<SimpleVariationConfiguration> 
    }
 
    @Override
-   public SimpleVariationConfiguration getConfiguration(@NotNull StructureData structureConfiguration) {
-      return structureConfiguration.getVariationConfiguration().getSimpleVariationConfiguration();
+   public SimpleVariationConfiguration getConfiguration(@NotNull VariationConfiguration variationConfiguration) {
+      return variationConfiguration.getSimpleVariationConfiguration();
    }
 
    @Override

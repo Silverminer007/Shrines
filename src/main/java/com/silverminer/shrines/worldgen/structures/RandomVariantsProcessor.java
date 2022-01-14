@@ -9,6 +9,7 @@ package com.silverminer.shrines.worldgen.structures;
 
 import com.google.common.collect.ImmutableList;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureFeatureManager;
@@ -35,16 +36,20 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
          VariationsPool.NORMAL_LOGS_VARIATION, VariationsPool.STRIPPED_LOGS_VARIATION, VariationsPool.TRAPDOORS_VARIATION, VariationsPool.DOORS_VARIATION,
          VariationsPool.STANDING_SIGNS_VARIATION, VariationsPool.WALL_SIGNS_VARIATION);
    protected final HashMap<Block, Block> BLOCK_REMAPS = new HashMap<>();
-   private final StructureData structureData;
+   private final VariationConfiguration variationConfiguration;
 
    public RandomVariantsProcessor(StructureData structureData) {
-      this.structureData = structureData;
+      this(structureData.getVariationConfiguration());
+   }
+
+   public RandomVariantsProcessor(VariationConfiguration variationConfiguration) {
+      this.variationConfiguration = variationConfiguration;
    }
 
    @Override
    public void afterPlace(@NotNull WorldGenLevel worldGenLevel, @NotNull StructureFeatureManager structureFeatureManager, @NotNull ChunkGenerator chunkGenerator,
                           @NotNull Random random, @NotNull BoundingBox chunkBounds, @NotNull ChunkPos chunkPos, @NotNull PiecesContainer pieces) {
-      if (this.structureData.getVariationConfiguration().isEnabled()) {
+      if (this.variationConfiguration.isEnabled()) {
          BoundingBox structureBounds = pieces.calculateBoundingBox();
          createBlockRemaps(random);
          for (int x = chunkBounds.minX(); x <= chunkBounds.maxX(); x++) {
@@ -81,7 +86,7 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
          return oldBlockState;
       }
       for (Variation<?> variation : VARIATIONS) {
-         if (variation.isEnabled(this.structureData) && variation.getPossibleValues().contains(oldBlock)) {
+         if (variation.isEnabled(this.variationConfiguration) && variation.getPossibleValues().contains(oldBlock)) {
             Block newBlock = variation.getBlockRemap(oldBlock, BLOCK_REMAPS);
             return variation.applyAllProperties(oldBlockState, newBlock.defaultBlockState());
          }
