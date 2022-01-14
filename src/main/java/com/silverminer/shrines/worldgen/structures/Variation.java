@@ -8,6 +8,7 @@
 package com.silverminer.shrines.worldgen.structures;
 
 import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -16,13 +17,13 @@ import java.util.Map;
 import java.util.Random;
 
 public interface Variation<C> {
-   default boolean isEnabled(StructureData structureConfiguration) {
+   default boolean isEnabled(VariationConfiguration structureConfiguration) {
       return this.isEnabled(this.getConfiguration(structureConfiguration));
    }
 
    boolean isEnabled(C variationConfiguration);
 
-   C getConfiguration(StructureData structureConfiguration);
+   C getConfiguration(VariationConfiguration structureConfiguration);
 
    List<Block> getPossibleValues();
 

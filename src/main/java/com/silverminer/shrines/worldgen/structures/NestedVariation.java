@@ -10,6 +10,7 @@ package com.silverminer.shrines.worldgen.structures;
 import com.google.common.collect.ImmutableList;
 import com.silverminer.shrines.packages.datacontainer.NestedVariationConfiguration;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.logging.log4j.LogManager;
@@ -42,8 +43,8 @@ public class NestedVariation implements Variation<NestedVariationConfiguration> 
    }
 
    @Override
-   public NestedVariationConfiguration getConfiguration(StructureData structureConfiguration) {
-      return structureConfiguration.getVariationConfiguration().getNestedVariationConfiguration();
+   public NestedVariationConfiguration getConfiguration(VariationConfiguration variationConfiguration) {
+      return variationConfiguration.getNestedVariationConfiguration();
    }
 
    @Override

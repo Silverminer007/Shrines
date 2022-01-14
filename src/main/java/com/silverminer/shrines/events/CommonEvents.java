@@ -18,6 +18,7 @@ import com.silverminer.shrines.utils.StructureRegistrationUtils;
 import com.silverminer.shrines.utils.network.ShrinesPacketHandler;
 import com.silverminer.shrines.worldgen.processors.ProcessorTypes;
 import com.silverminer.shrines.worldgen.structures.RandomVariantsProcessor;
+import com.silverminer.shrines.worldgen.structures.RandomVariationProcessable;
 import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -80,10 +81,7 @@ public class CommonEvents {
       public static void onWorldSave(WorldEvent.Save event) {
          // Very hacky reset of the random variation remaps at every world load
          for (StructureFeature<?> structureFeature : ForgeRegistries.STRUCTURE_FEATURES) {
-            PostPlacementProcessor postPlacementProcessor = structureFeature.getPostPlacementProcessor();
-            if (postPlacementProcessor instanceof RandomVariantsProcessor randomVariantsProcessor) {
-               randomVariantsProcessor.resetRemaps();
-            }
+            ((RandomVariationProcessable) structureFeature).getRandomVariationProcessor().resetRemaps();
          }
       }
 
