@@ -1,3 +1,8 @@
+2.0.0-rc1 --- 09.01.2022 15.28 UTC
+- Updated link to shrines wiki
+- Fixed some spelling mistakes in german translations
+
+===========
 2.0.0-Beta11 --- 09.01.2022 15.28 UTC
 - Introduced Novels Part separator '|'
 - Added Novel of Shrine of Savanna and Nether Pyramid
