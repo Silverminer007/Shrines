@@ -31,7 +31,7 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
          VariationMaterialPool.TERRACOTTA, VariationMaterialPool.GLAZED_TERRACOTTA, VariationMaterialPool.CONCRETE, VariationMaterialPool.CONCRETE_POWDER,
          VariationMaterialPool.ORE, VariationMaterialPool.BEES, VariationMaterialPool.STONE);
    protected final HashMap<VariationMaterial, VariationMaterial> BLOCK_REMAPS = new HashMap<>();
-   private final VariationConfiguration variationConfiguration;
+   private VariationConfiguration variationConfiguration;
 
    public RandomVariantsProcessor(VariationConfiguration variationConfiguration) {
       this.variationConfiguration = variationConfiguration;
@@ -100,5 +100,13 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
       // Also, user are able to reset the list their self by reloading the world.
       // Another option is to use mixins to reset this map, but I don't think the effort is worth
       this.BLOCK_REMAPS.clear();
+   }
+
+   public void setVariationConfiguration(VariationConfiguration variationConfiguration) {
+      this.variationConfiguration = variationConfiguration;
+   }
+
+   public VariationConfiguration getVariationConfiguration() {
+      return variationConfiguration;
    }
 }

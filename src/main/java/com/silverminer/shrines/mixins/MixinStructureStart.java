@@ -1,6 +1,10 @@
 package com.silverminer.shrines.mixins;
 
+import com.silverminer.shrines.init.VariationConfigurationRegistry;
+import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
+import com.silverminer.shrines.worldgen.structures.variation.RandomVariantsProcessor;
 import com.silverminer.shrines.worldgen.structures.variation.RandomVariationProcessable;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
@@ -32,8 +36,12 @@ public class MixinStructureStart {
    private void shrines_onPlaceInChunk(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random,
                                        BoundingBox boundingBox, ChunkPos chunkPos, CallbackInfo ci) {
       if (!this.pieceContainer.pieces().isEmpty()) {
-         ((RandomVariationProcessable) this.feature).getRandomVariationProcessor().afterPlace(worldGenLevel, structureFeatureManager, chunkGenerator, random, boundingBox,
-               chunkPos, this.pieceContainer);
+         RandomVariantsProcessor randomVariantsProcessor = ((RandomVariationProcessable) this.feature).getRandomVariationProcessor();
+         VariationConfiguration variationConfiguration =
+               VariationConfigurationRegistry.VARIATION_CONFIGURATION_CONFIGURATION_REGISTRY.get().getValue(new ResourceLocation(this.feature.getFeatureName()));
+         variationConfiguration = variationConfiguration == null ? VariationConfiguration.ALL_DISABLED : variationConfiguration;
+         randomVariantsProcessor.setVariationConfiguration(variationConfiguration);
+         randomVariantsProcessor.afterPlace(worldGenLevel, structureFeatureManager, chunkGenerator, random, boundingBox, chunkPos, this.pieceContainer);
       }
    }
 }

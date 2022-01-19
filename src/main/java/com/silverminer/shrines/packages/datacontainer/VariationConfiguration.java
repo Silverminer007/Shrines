@@ -9,8 +9,9 @@ package com.silverminer.shrines.packages.datacontainer;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class VariationConfiguration {
+public class VariationConfiguration extends ForgeRegistryEntry<VariationConfiguration> {
    public static final Codec<VariationConfiguration> CODEC = RecordCodecBuilder.create(variationConfigurationInstance -> variationConfigurationInstance.group(
          Codec.BOOL.fieldOf("is_enabled").forGetter(VariationConfiguration::isEnabled),
          SimpleVariationConfiguration.CODEC.optionalFieldOf("simple", SimpleVariationConfiguration.ALL_DISABLED).forGetter(VariationConfiguration::getSimpleVariationConfiguration),
