@@ -2,8 +2,8 @@ package com.silverminer.shrines.mixins;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
-import com.silverminer.shrines.worldgen.structures.RandomVariantsProcessor;
-import com.silverminer.shrines.worldgen.structures.RandomVariationProcessable;
+import com.silverminer.shrines.worldgen.structures.variation.RandomVariantsProcessor;
+import com.silverminer.shrines.worldgen.structures.variation.RandomVariationProcessable;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.PostPlacementProcessor;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;

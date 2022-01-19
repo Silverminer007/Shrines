@@ -10,6 +10,7 @@ import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.StructureInit;
 import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
+import com.silverminer.shrines.worldgen.structures.variation.RandomVariantsProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
@@ -46,7 +47,7 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
    public StructureData structureConfig;
 
    public ShrinesStructure(ResourceLocation nameIn, StructureData config) {
-      super(JigsawConfiguration.CODEC, (context) -> ShrinesStructure.place(context, config), new RandomVariantsProcessor(config));
+      super(JigsawConfiguration.CODEC, (context) -> ShrinesStructure.place(context, config), new RandomVariantsProcessor(config.getVariationConfiguration()));
       this.name = nameIn;
       this.structureConfig = config;
       this.setRegistryName(this.getFeatureName());

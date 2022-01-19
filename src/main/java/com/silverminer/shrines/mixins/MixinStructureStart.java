@@ -1,6 +1,6 @@
 package com.silverminer.shrines.mixins;
 
-import com.silverminer.shrines.worldgen.structures.RandomVariationProcessable;
+import com.silverminer.shrines.worldgen.structures.variation.RandomVariationProcessable;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
