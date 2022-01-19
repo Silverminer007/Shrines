@@ -37,13 +37,28 @@ public final class NestedVariationMaterial implements VariationMaterial {
       this.type = "wood";
    }
 
-   public NestedVariationMaterial(Block block, Block slab, Block stair) {
+   public NestedVariationMaterial(Block block, Block slab, Block stair, Block wall) {
       VariationMaterialElement blockElement = VariationMaterialElement.createSimpleVariationElement(block, SimpleVariationConfiguration::areStonesEnabled);
       VariationMaterialElement slabElement = VariationMaterialElement.createNestedVariationElement(slab, NestedVariationConfiguration::isAreSlabsEnabled,
             BlockStateAppliers::applySlabProperties);
       VariationMaterialElement stairElement = VariationMaterialElement.createNestedVariationElement(stair, NestedVariationConfiguration::isStairEnabled, BlockStateAppliers::applyStairProperties);
-      this.elements = ImmutableList.of(blockElement, slabElement, stairElement);
+      VariationMaterialElement wallElement = VariationMaterialElement.createNestedVariationElement(wall, NestedVariationConfiguration::isFenceEnabled,
+            BlockStateAppliers::applyWallProperties);
+      this.elements = ImmutableList.of(blockElement, slabElement, stairElement, wallElement);
       this.type = "stone";
+   }
+
+   public NestedVariationMaterial(Block wool, Block carpet){
+      VariationMaterialElement woolElement = VariationMaterialElement.createSimpleVariationElement(wool, SimpleVariationConfiguration::isWoolEnabled);
+      VariationMaterialElement carpetElement = VariationMaterialElement.createSimpleVariationElement(carpet, SimpleVariationConfiguration::isWoolEnabled);
+      this.elements = ImmutableList.of(woolElement, carpetElement);
+      this.type = "wool";
+   }
+
+   @SuppressWarnings("unused")
+   public NestedVariationMaterial(ImmutableList<VariationMaterialElement> elementList, String type){
+      this.elements = elementList;
+      this.type = type;
    }
 
    @Override
