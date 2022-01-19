@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(StructureFeature.class)
-public abstract class MixinStructureFeature extends ForgeRegistryEntry implements RandomVariationProcessable {
+public abstract class MixinStructureFeature extends ForgeRegistryEntry<StructureFeature<?>> implements RandomVariationProcessable {
    private RandomVariantsProcessor randomVariantsProcessor;
 
    @Inject(method = "<init>(Lcom/mojang/serialization/Codec;Lnet/minecraft/world/level/levelgen/structure/pieces/PieceGeneratorSupplier;Lnet/minecraft/world/level/levelgen/structure/PostPlacementProcessor;)V", at = @At(value = "RETURN"))
@@ -22,7 +22,7 @@ public abstract class MixinStructureFeature extends ForgeRegistryEntry implement
       if (postPlacementProcessor instanceof RandomVariantsProcessor randomVariantsProcessor) {
          this.randomVariantsProcessor = randomVariantsProcessor;
       } else {
-         this.randomVariantsProcessor = new RandomVariantsProcessor(VariationConfiguration.ALL_ENABLED);
+         this.randomVariantsProcessor = new RandomVariantsProcessor(VariationConfiguration.ALL_DISABLED);
       }
    }
 

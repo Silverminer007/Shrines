@@ -8,6 +8,7 @@ package com.silverminer.shrines;
 
 import com.silverminer.shrines.config.Config;
 import com.silverminer.shrines.init.NovelsRegistry;
+import com.silverminer.shrines.init.VariationConfigurationRegistry;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -36,5 +37,6 @@ public class ShrinesMod {
       LOGGER.info("Shrines " + VERSION + " initialized");
       Config.register(ModLoadingContext.get());
       NovelsRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
+      VariationConfigurationRegistry.VARIATION_CONFIGURATION.register(FMLJavaModLoadingContext.get().getModEventBus());
    }
 }
