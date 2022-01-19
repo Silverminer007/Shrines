@@ -1,10 +1,13 @@
 package com.silverminer.shrines.worldgen.structures.variation;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.silverminer.shrines.packages.datacontainer.SimpleVariationConfiguration;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -49,10 +52,15 @@ public class VariationMaterialPool {
          Blocks.CYAN_GLAZED_TERRACOTTA, Blocks.PURPLE_GLAZED_TERRACOTTA, Blocks.BLUE_GLAZED_TERRACOTTA,
          Blocks.BROWN_GLAZED_TERRACOTTA, Blocks.GREEN_GLAZED_TERRACOTTA, Blocks.RED_GLAZED_TERRACOTTA);
 
-   public static final List<? extends VariationMaterial> WOOL = createSimpleVariation(SimpleVariationConfiguration::isWoolEnabled, Blocks.WHITE_WOOL, Blocks.ORANGE_WOOL,
-         Blocks.MAGENTA_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.YELLOW_WOOL, Blocks.LIME_WOOL, Blocks.PINK_WOOL,
-         Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.BLACK_WOOL, Blocks.CYAN_WOOL, Blocks.PURPLE_WOOL,
-         Blocks.BLUE_WOOL, Blocks.BROWN_WOOL, Blocks.GREEN_WOOL, Blocks.RED_WOOL);
+   public static final List<? extends VariationMaterial> WOOL = createWoolVariation(
+         Lists.newArrayList(Blocks.WHITE_WOOL, Blocks.ORANGE_WOOL,
+               Blocks.MAGENTA_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.YELLOW_WOOL, Blocks.LIME_WOOL, Blocks.PINK_WOOL,
+               Blocks.GRAY_WOOL, Blocks.LIGHT_GRAY_WOOL, Blocks.BLACK_WOOL, Blocks.CYAN_WOOL, Blocks.PURPLE_WOOL,
+               Blocks.BLUE_WOOL, Blocks.BROWN_WOOL, Blocks.GREEN_WOOL, Blocks.RED_WOOL),
+         Lists.newArrayList(Blocks.WHITE_CARPET, Blocks.ORANGE_CARPET,
+               Blocks.MAGENTA_CARPET, Blocks.LIGHT_BLUE_CARPET, Blocks.YELLOW_CARPET, Blocks.LIME_CARPET, Blocks.PINK_CARPET,
+               Blocks.GRAY_CARPET, Blocks.LIGHT_GRAY_CARPET, Blocks.BLACK_CARPET, Blocks.CYAN_CARPET, Blocks.PURPLE_CARPET,
+               Blocks.BLUE_CARPET, Blocks.BROWN_CARPET, Blocks.GREEN_CARPET, Blocks.RED_CARPET));
 
    public static final List<? extends VariationMaterial> CONCRETE = createSimpleVariation(SimpleVariationConfiguration::isConcreteEnabled, Blocks.WHITE_CONCRETE, Blocks.ORANGE_CONCRETE,
          Blocks.MAGENTA_CONCRETE, Blocks.LIGHT_BLUE_CONCRETE, Blocks.YELLOW_CONCRETE, Blocks.LIME_CONCRETE,
@@ -72,22 +80,38 @@ public class VariationMaterialPool {
 
    public static final List<? extends VariationMaterial> BEES = createSimpleVariation(SimpleVariationConfiguration::areBeesEnabled, Blocks.BEEHIVE, Blocks.BEE_NEST);
 
-   private static final NestedVariationMaterial COBBLESTONE = new NestedVariationMaterial(Blocks.COBBLESTONE, Blocks.COBBLESTONE_SLAB, Blocks.COBBLESTONE_STAIRS);
+   private static final NestedVariationMaterial COBBLESTONE = new NestedVariationMaterial(Blocks.COBBLESTONE, Blocks.COBBLESTONE_SLAB, Blocks.COBBLESTONE_STAIRS, Blocks.COBBLESTONE_WALL);
 
-   private static final NestedVariationMaterial STONE_BRICKS = new NestedVariationMaterial(Blocks.STONE_BRICKS, Blocks.STONE_BRICK_SLAB, Blocks.STONE_BRICK_STAIRS);
+   private static final NestedVariationMaterial STONE_BRICKS = new NestedVariationMaterial(Blocks.STONE_BRICKS, Blocks.STONE_BRICK_SLAB, Blocks.STONE_BRICK_STAIRS,
+         Blocks.STONE_BRICK_WALL);
 
    private static final NestedVariationMaterial POLISHED_BLACKSTONE_BRICKS = new NestedVariationMaterial(Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.POLISHED_BLACKSTONE_BRICK_SLAB,
-         Blocks.POLISHED_BLACKSTONE_BRICK_STAIRS);
+         Blocks.POLISHED_BLACKSTONE_BRICK_STAIRS, Blocks.POLISHED_BLACKSTONE_WALL);
 
    private static final NestedVariationMaterial MOSSY_COBBLESTONE = new NestedVariationMaterial(Blocks.MOSSY_COBBLESTONE, Blocks.MOSSY_COBBLESTONE_SLAB,
-         Blocks.MOSSY_COBBLESTONE_STAIRS);
+         Blocks.MOSSY_COBBLESTONE_STAIRS, Blocks.MOSSY_COBBLESTONE_WALL);
 
    private static final NestedVariationMaterial MOSSY_STONE_BRICKS = new NestedVariationMaterial(Blocks.MOSSY_STONE_BRICKS, Blocks.MOSSY_STONE_BRICK_SLAB,
-         Blocks.MOSSY_STONE_BRICK_STAIRS);
+         Blocks.MOSSY_STONE_BRICK_STAIRS, Blocks.MOSSY_STONE_BRICK_WALL);
 
-   public static final List<? extends VariationMaterial> STONE = ImmutableList.of(COBBLESTONE, STONE_BRICKS, POLISHED_BLACKSTONE_BRICKS, MOSSY_COBBLESTONE, MOSSY_STONE_BRICKS);
+   private static final NestedVariationMaterial SANDSTONE = new NestedVariationMaterial(Blocks.SANDSTONE, Blocks.SANDSTONE_SLAB,
+         Blocks.SANDSTONE_STAIRS, Blocks.SANDSTONE_WALL);
+
+   public static final List<? extends VariationMaterial> STONE = ImmutableList.of(COBBLESTONE, STONE_BRICKS, POLISHED_BLACKSTONE_BRICKS, MOSSY_COBBLESTONE, MOSSY_STONE_BRICKS,
+         SANDSTONE);
 
    private static List<? extends VariationMaterial> createSimpleVariation(Function<SimpleVariationConfiguration, Boolean> property, Block... blocks) {
       return Arrays.stream(blocks).map(block -> new SimpleVariationMaterial(block, property)).toList();
+   }
+
+   private static @NotNull List<? extends VariationMaterial> createWoolVariation(@NotNull List<Block> wool, @NotNull List<Block> carpets) {
+      if (wool.size() == carpets.size()) {
+         List<VariationMaterial> variationMaterialList = new ArrayList<>();
+         for (int i = 0; i < wool.size(); i++) {
+            variationMaterialList.add(new NestedVariationMaterial(wool.get(i), carpets.get(i)));
+         }
+         return variationMaterialList;
+      }
+      return ImmutableList.of();
    }
 }
