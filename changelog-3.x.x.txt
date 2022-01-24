@@ -1,4 +1,4 @@
-3.0.0-Beta9 --- 12.01.2022 17:09 UTC
+3.0.0-Beta9 --- 24.01.2022 15:35 UTC
 - Added Novels:
     - Player House
     - Small Temple
