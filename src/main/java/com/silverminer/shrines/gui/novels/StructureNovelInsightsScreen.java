@@ -38,11 +38,11 @@ import java.util.Optional;
 public class StructureNovelInsightsScreen extends Screen {
    protected static final Logger LOGGER = LogManager.getLogger(StructureNovelInsightsScreen.class);
    private final Screen lastScreen;
+   private final List<String> words;
    private double scrollAmount;
    private int bottomHeight;
    private int headerHeight;
    private List<String> lines = Lists.newArrayList();
-   private final List<String> words;
    private boolean renderInfo = false;
    private boolean scrolling;
 
@@ -54,7 +54,7 @@ public class StructureNovelInsightsScreen extends Screen {
          this.renderInfo = true;
       }
       this.words = Lists.newArrayList();
-      for (int i = 0; i < unlockedParts; i++) {
+      for (int i = 0; i < unlockedParts && i < structureNovel.getParts().size(); i++) {
          String part = structureNovel.getParts().get(i);
          part = new TranslatableComponent(part).getString();// Enable translations of novels even if we don't ship them by default
          String[] wordsInPart = part.replace("\n", " \n ").split(" ");
@@ -62,16 +62,27 @@ public class StructureNovelInsightsScreen extends Screen {
       }
    }
 
-   public void onClose() {
-      if (this.minecraft == null) {
-         return;
-      }
-      this.minecraft.setScreen(this.lastScreen);
+   public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
+      super.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
+      this.updateScrollingState(p_231044_1_, p_231044_5_);
+      return true;
    }
 
-   public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {
-      this.setScrollAmount(this.getScrollAmount() - p_231043_5_ * 20.0D);
-      return true;
+   protected void updateScrollingState(double p_230947_1_, int p_230947_5_) {
+      this.scrolling = p_230947_5_ == 0 && p_230947_1_ >= (double) this.getScrollbarPosition()
+            && p_230947_1_ < (double) (this.getScrollbarPosition() + 6);
+   }
+
+   protected int getScrollbarPosition() {
+      return this.width - 5;
+   }
+
+   public boolean mouseReleased(double p_231048_1_, double p_231048_3_, int p_231048_5_) {
+      if (this.getFocused() != null) {
+         this.getFocused().mouseReleased(p_231048_1_, p_231048_3_, p_231048_5_);
+      }
+
+      return false;
    }
 
    public boolean mouseDragged(double p_231045_1_, double p_231045_3_, int p_231045_5_, double p_231045_6_,
@@ -97,46 +108,28 @@ public class StructureNovelInsightsScreen extends Screen {
       }
    }
 
-   private void scroll(int p_230937_1_) {
-      this.setScrollAmount(this.getScrollAmount() + (double) p_230937_1_);
-   }
-
-   public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
-      if (super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_)) {
-         return true;
-      } else if (p_231046_1_ == 264) {
-         this.scroll(10);
-         return true;
-      } else if (p_231046_1_ == 265) {
-         this.scroll(-10);
-         return true;
-      } else {
-         return false;
-      }
-   }
-
-   protected void init() {
-      this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20,
-            ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), TextComponent.EMPTY));
-   }
-
-   public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_) {
-      super.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_);
-      this.updateScrollingState(p_231044_1_, p_231044_5_);
+   public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {
+      this.setScrollAmount(this.getScrollAmount() - p_231043_5_ * 20.0D);
       return true;
    }
 
-   protected void updateScrollingState(double p_230947_1_, int p_230947_5_) {
-      this.scrolling = p_230947_5_ == 0 && p_230947_1_ >= (double) this.getScrollbarPosition()
-            && p_230947_1_ < (double) (this.getScrollbarPosition() + 6);
+   public double getScrollAmount() {
+      return this.scrollAmount;
    }
 
-   public boolean mouseReleased(double p_231048_1_, double p_231048_3_, int p_231048_5_) {
-      if (this.getFocused() != null) {
-         this.getFocused().mouseReleased(p_231048_1_, p_231048_3_, p_231048_5_);
-      }
+   public void setScrollAmount(double p_230932_1_) {
+      this.scrollAmount = Mth.clamp(p_230932_1_, 0.0D, this.getMaxScroll());
+   }
 
-      return false;
+   public int getMaxScroll() {
+      return Math.max(0, this.getMaxPosition() - (this.bottomHeight - this.headerHeight - 4));
+   }
+
+   private int getMaxPosition() {
+      if (this.minecraft == null) {
+         return -1;
+      }
+      return 5 + this.lines.size() * (this.minecraft.font.lineHeight + 1) + this.headerHeight;
    }
 
    @ParametersAreNonnullByDefault
@@ -302,26 +295,33 @@ public class StructureNovelInsightsScreen extends Screen {
       super.render(matrixStack, p_230430_2_, p_230430_3_, p_230430_4_);
    }
 
-   public double getScrollAmount() {
-      return this.scrollAmount;
-   }
-
-   public void setScrollAmount(double p_230932_1_) {
-      this.scrollAmount = Mth.clamp(p_230932_1_, 0.0D, this.getMaxScroll());
-   }
-
-   public int getMaxScroll() {
-      return Math.max(0, this.getMaxPosition() - (this.bottomHeight - this.headerHeight - 4));
-   }
-
-   private int getMaxPosition() {
-      if (this.minecraft == null) {
-         return -1;
+   public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
+      if (super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_)) {
+         return true;
+      } else if (p_231046_1_ == 264) {
+         this.scroll(10);
+         return true;
+      } else if (p_231046_1_ == 265) {
+         this.scroll(-10);
+         return true;
+      } else {
+         return false;
       }
-      return 5 + this.lines.size() * (this.minecraft.font.lineHeight + 1) + this.headerHeight;
    }
 
-   protected int getScrollbarPosition() {
-      return this.width - 5;
+   public void onClose() {
+      if (this.minecraft == null) {
+         return;
+      }
+      this.minecraft.setScreen(this.lastScreen);
+   }
+
+   protected void init() {
+      this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20,
+            ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> this.onClose(), TextComponent.EMPTY));
+   }
+
+   private void scroll(int p_230937_1_) {
+      this.setScrollAmount(this.getScrollAmount() + (double) p_230937_1_);
    }
 }

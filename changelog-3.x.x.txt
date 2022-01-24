@@ -1,3 +1,12 @@
+3.0.0-Beta9 --- 12.01.2022 17:09 UTC
+- Added Novels:
+    - Player House
+    - Small Temple
+    - Mineral Temple
+    - Water Shrine
+- Fixed crash when opening structure insights screen, but you've found the structure more often then there are parts of the novel
+
+===========
 3.0.0-Beta8 --- 12.01.2022 17:09 UTC
 - Fixed wrong warning about structure icon cache error
 
