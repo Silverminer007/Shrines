@@ -1,7 +1,7 @@
-[![](https://cf.way2muchnoise.eu/title/418915.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
-[![](https://cf.way2muchnoise.eu/full_418915_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
-[![](https://cf.way2muchnoise.eu/versions/418915.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
-[![GitHub Downloads](https://img.shields.io/github/downloads/Silverminer007/Shrines/total)](https://github.com/Silverminer007/Shrines/releases)
+[![Curseforge Project Name](https://cf.way2muchnoise.eu/title/418915.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
+[![Curseforge Downloads](https://cf.way2muchnoise.eu/full_418915_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
+[![Version on Curseforge](https://cf.way2muchnoise.eu/versions/418915.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
+[![GitHub Downloads](https://img.shields.io/github/downloads/Silverminer007/Shrines/total?label=github%20downloads)](https://github.com/Silverminer007/Shrines/releases)
 [![Discord](https://img.shields.io/discord/777129358769782814?label=discord)](https://discord.gg/8pUpWCEUe2)
 [![License](https://img.shields.io/github/license/Silverminer007/Shrines)](https://www.mozilla.org/en-US/MPL/2.0/)
 
