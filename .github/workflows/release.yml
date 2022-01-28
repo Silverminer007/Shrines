@@ -12,6 +12,18 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17.0.1'
+      - name: Echo JAVA_HOME
+        run: echo $JAVA_HOME
+      - name: Verify Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Execute build
+        run: ./gradlew --info --stacktrace build
       - uses: Kir-Antipov/mc-publish@v2.1 # https://github.com/marketplace/actions/publish-minecraft-mods
         with:
           curseforge-id: 418915
