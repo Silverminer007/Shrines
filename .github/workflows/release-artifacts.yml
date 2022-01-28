@@ -1,0 +1,36 @@
+name: release-artifacts
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Extract release tag
+        id: release_tag
+        run: echo ::set-env name=RELEASE_TAG::${GITHUB_REF#refs/tags/}
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2.1.0
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build artifacts
+        run: ./gradlew clean build
+
+      - name: Upload assets to GitHub, Modrinth and CurseForge
+        uses: Kir-Antipov/mc-publish@v2.1
+        with:
+          name: ""
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
