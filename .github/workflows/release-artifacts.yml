@@ -26,7 +26,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Build artifacts
-        run: ./gradlew clean build
+        run: ./gradlew clean build --stracktrace --info
 
       - name: Upload assets to GitHub, Modrinth and CurseForge
         uses: Kir-Antipov/mc-publish@v2.1
