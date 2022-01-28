@@ -4,6 +4,7 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/Silverminer007/Shrines/total?label=github%20downloads)](https://github.com/Silverminer007/Shrines/releases)
 [![Discord](https://img.shields.io/discord/777129358769782814?label=discord)](https://discord.gg/8pUpWCEUe2)
 [![License](https://img.shields.io/github/license/Silverminer007/Shrines)](https://www.mozilla.org/en-US/MPL/2.0/)
+[![Lines](https://img.shields.io/tokei/lines/github/Silverminer007/Shrines)](https://github.com/Silverminer007/Shrines)
 
 ## Shrines
 
