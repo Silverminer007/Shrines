@@ -20,11 +20,11 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v2.1.0
         with:
-          distribution: zulu
+          distribution: temurin
           java-version: 17
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: Build artifacts
         run: ./gradlew clean build
@@ -32,5 +32,10 @@ jobs:
       - name: Upload assets to GitHub, Modrinth and CurseForge
         uses: Kir-Antipov/mc-publish@v2.1
         with:
-          name: ""
+          curseforge-id: 418915
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          files: build/libs/*.jar
+          changelog-file: changelog-3.x.x.txt
+          changelog-type: text
+          loaders: forge
+          java: 17
