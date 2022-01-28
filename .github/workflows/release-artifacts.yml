@@ -14,12 +14,12 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '17.0.1'
       - name: Echo JAVA_HOME
         run: echo $JAVA_HOME
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Setup Gradle
+      - name: Run Gradle Build
         uses: gradle/gradle-build-action@v2
         with:
           arguments: --stacktrace --info clean build
