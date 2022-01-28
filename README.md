@@ -7,6 +7,7 @@
 [![License](https://img.shields.io/github/license/Silverminer007/Shrines)](https://www.mozilla.org/en-US/MPL/2.0/)
 [![Lines](https://img.shields.io/tokei/lines/github/Silverminer007/Shrines)](https://github.com/Silverminer007/Shrines)
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/F33t24Wi?label=modrinth%20downloads)](https://modrinth.com/mod/shrines)
+[![release-artifacts](https://github.com/Silverminer007/Shrines/actions/workflows/release-artifacts.yml/badge.svg)](https://github.com/Silverminer007/Shrines/actions/workflows/release-artifacts.yml)
 [![]()]()
 
 ## Shrines
