@@ -26,3 +26,13 @@ jobs:
           body_path: changelog-3.x.x.txt
           draft: false
           prerelease: false
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17.0.1'
+      - name: Echo JAVA_HOME
+        run: echo $JAVA_HOME
+      - name: Verify Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Upload Files to curseforge
+        run: ./gradlew --info --stracktrace curseforge
