@@ -5,6 +5,9 @@ on:
     types:
       - published
 
+env: 
+  CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
+  
 jobs:
   build:
     runs-on: ${{ matrix.os }}
