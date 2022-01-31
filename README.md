@@ -17,7 +17,7 @@ Modloader [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/). B
 structure generation is this:
 Full configurability of all structures, gui to add custom structures, structures novels and random variation of structures. If you want to learn more about these features or see a
 full feature set, please visit our
-[Wiki](https://github.com/Silverminer007/MinecraftModsUpdateChecker/blob/master/wiki/SelectLanguage.md). Sugestions and bug report goes
+[Wiki](https://silverminer007.github.io/ShrinesWiki/). Sugestions and bug report goes
 to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
 ### TODO
