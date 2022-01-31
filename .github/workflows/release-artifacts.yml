@@ -5,15 +5,16 @@ on:
     types:
       - published
 
-env: 
+env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
-  
+  MODRINTH: ${{ secrets.MODRINTH_TOKEN }}
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
         java: [ '17.0.1' ]
       fail-fast: false
     name: ${{ matrix.os }}
@@ -33,6 +34,8 @@ jobs:
       - name: Upload files to github
         uses: softprops/action-gh-release@v1
         with:
-         files: build/libs/*.jar
+          files: build/libs/*.jar
       - name: Upload files to curseforge
         run: ./gradlew --info --stacktrace curseforge
+      - name: Upload files to modrinth
+        run: ./gradlew --info --stacktrace publishModrinth
