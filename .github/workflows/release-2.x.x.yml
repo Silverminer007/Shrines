@@ -1,6 +1,12 @@
 name: release-2.x.x
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        description: 'The version to publish'
+        default: ''
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -8,22 +14,34 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-        java: [ '8' ]
-      fail-fast: false
-    name: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    name: 'Publish 2.0.0'
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
         with:
           ref: '1.16.5-2.0.0'
+      - name: Create GitHub Tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ github.event.inputs.version }}
+      - name: Use current time
+        env:
+          TIME: "${{ steps.current-time.outputs.time }}"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }} $TIME
+          draft: false
+          prerelease: true
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: ${{ matrix.java }}
+          java-version: '8'
       - name: Echo JAVA_HOME
         run: echo $JAVA_HOME
       - name: Verify Gradle Wrapper
@@ -34,6 +52,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: build/libs/*.jar
+          tag_name: ${{ github.event.inputs.version }}
       - name: Upload files to curseforge
         run: ./gradlew --info --stacktrace curseforge
       - name: Upload files to modrinth
