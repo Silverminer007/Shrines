@@ -1,11 +1,25 @@
 name: release-artifacts
 
 on:
-  release:
-    types:
-      - published
-    branches:
-      - 1.16.5-2.0.0
+  workflow_dispatch:
+    inputs:
+      java:
+        description: 'The Java version to use for this build'
+        required: true
+        default: '17.0.1'
+        type: choice
+        options:
+          - '17.0.1'
+          - '8'
+      branch:
+        description: 'The branch for which the new version shall be created'
+        required: true
+        default: '1.18-3.0.0'
+        type: choice
+        options:
+          - '1.18-3.0.0'
+          - '1.16.5-2.0.0'
+          - '1.16.5-1.8.1'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -17,12 +31,14 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        java: [ '8' ]
+        java: [ ${ { github.event.inputs.java } } ]
       fail-fast: false
     name: ${{ matrix.os }}
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
