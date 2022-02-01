@@ -1,0 +1,43 @@
+name: release-artifacts
+
+on:
+  release:
+    types:
+      - published
+    branches:
+      - 1.16.5-2.0.0
+
+env:
+  CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
+  MODRINTH: ${{ secrets.MODRINTH_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        java: [ '8' ]
+      fail-fast: false
+    name: ${{ matrix.os }}
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Echo JAVA_HOME
+        run: echo $JAVA_HOME
+      - name: Verify Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Execute build
+        run: ./gradlew --info --stacktrace build
+      - name: Upload files to github
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/libs/*.jar
+      - name: Upload files to curseforge
+        run: ./gradlew --info --stacktrace curseforge
+      - name: Upload files to modrinth
+        run: ./gradlew --info --stacktrace publishModrinth
