@@ -36,24 +36,6 @@ public class ShrinesMod {
     * If you're looking for example code on how to make a structure Mod see
     * TelepathicGrunt's Example Mod on how to do that:
     * https://github.com/TelepathicGrunt/StructureTutorialMod
-    * <p>
-    * TODO 2.0.1 Use processors to perform Color Structure Piece's work
-    * <p>
-    * TODO 3.0.0 Mc1.17 Update -> Move #isAir to state only version
-    * <p>
-    * <p>
-    * TODO 2.0.0 Test Caves & Cliffs Backport combat
-    * <p>
-    * TODO Fix screenshots for Novels Screen -> size
-    * <p>
-    * FIXME #22 https://github.com/Silverminer007/Shrines/issues/22
-    * <p>
-    * FIXME Add missing novels @pea_sh0ter
-    * <p>
-    * Releases: - 2.0.0 Bug fix update - 3.0.0 Mc1.17 Update - 3.0.1 Bugfixes of
-    * 3.0.0 and some new features
-    * <p>
-    * NOTE: Test command: /execute positioned ~10000 ~ ~ run locate
     */
    public ShrinesMod() {
       ModList.get().getModContainerById(ShrinesMod.MODID)

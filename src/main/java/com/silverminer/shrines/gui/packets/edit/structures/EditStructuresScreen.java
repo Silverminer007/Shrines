@@ -50,19 +50,27 @@ public class EditStructuresScreen extends EditStructurePacketScreen {
     @Override
     protected void delete() {
         if (this.minecraft != null && this.structuresList.getSelected() != null) {
-            this.minecraft.setScreen(new DirtConfirmScreen((confirmed) -> {
-                if (confirmed) {
-                    this.structuresList.getSelectedOpt().ifPresent(entry -> {
-                        this.packet.getStructures().remove(entry.getStructure());
-                        this.structuresList.refreshList(() -> this.searchBox.getValue());
-                    });
-                }
-                this.minecraft.setScreen(this);
-            }, new TranslationTextComponent("gui.shrines.removeQuestion",
-                    this.structuresList.getSelected().getStructure().getName()),
-                    new TranslationTextComponent("gui.shrines.removeWarning"),
-                    new TranslationTextComponent("gui.shrines.delete"),
-                    DialogTexts.GUI_CANCEL));
+            if(this.structuresList.getSelected().getStructure().getName().equals("___ Deleted Structure ___")) {
+                this.minecraft.setScreen(new DirtConfirmScreen((confirmed) -> {
+                    if (confirmed) {
+                        this.structuresList.getSelectedOpt().ifPresent(entry -> {
+                            this.packet.getStructures().remove(entry.getStructure());
+                            this.structuresList.refreshList(() -> this.searchBox.getValue());
+                        });
+                    }
+                    this.minecraft.setScreen(this);
+                }, new TranslationTextComponent("gui.shrines.removeQuestion",
+                      this.structuresList.getSelected().getStructure().getName()),
+                      new TranslationTextComponent("gui.shrines.removeWarning"),
+                      new TranslationTextComponent("gui.shrines.delete"),
+                      DialogTexts.GUI_CANCEL));
+            } else {
+                StructureData deletedStructure = new StructureData(DefaultStructureConfig.DELETED_STRUCTURE_CONFIG);
+                deletedStructure.setKey(this.structuresList.getSelected().getStructure().getKey());
+                this.packet.getStructures().remove(this.structuresList.getSelected().getStructure());
+                this.packet.getStructures().add(deletedStructure);
+                this.structuresList.refreshList(() -> this.searchBox.getValue());
+            }
         }
 
     }

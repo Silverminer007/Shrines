@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
 public class StructureLoadUtils {
    public static final int PACKET_VERSION = 2;
    protected static final Logger LOGGER = LogManager.getLogger(StructureLoadUtils.class);
+   private static final List<String> deletedStructures = ImmutableList.of("ballon", "small_tempel", "high_tempel");
    /**
     * This list is equals to the Structure Packet which the user can see, so Packets that were deleted aren't here anymore, but new packets are here.
     * This list is only on the server side, but synchronized between its threads
@@ -61,6 +62,7 @@ public class StructureLoadUtils {
     * configuration screen and is going to set the changes later
     */
    public static ArrayList<UUID> PLAYERS_IN_EDIT_QUEUE = Lists.newArrayList();
+   private static boolean upgradeFrom1_8_1 = false;
 
    public static File getImportCacheLocation() {
       return FileUtils.getFile(StructureLoadUtils.getShrinesSavesLocation(), "Cache", "Import");
@@ -93,6 +95,11 @@ public class StructureLoadUtils {
          ArrayList<StructuresPacket> structure_packets = Lists.newArrayList();
 
          File shrines_saves = StructureLoadUtils.getPacketsSaveLocation().getCanonicalFile();
+
+         if (!upgradeFrom1_8_1) {
+            upgradeFrom1_8_1 = new File(shrines_saves.getParentFile(), "structures.txt").exists() && !(new File(shrines_saves, "info.txt").exists());
+         }
+
          if (!shrines_saves.exists()) {
             if (!shrines_saves.mkdirs()) {
                LOGGER.error("Failed to Load shrines structure, because directory creation failed");
@@ -130,7 +137,15 @@ public class StructureLoadUtils {
          // Save Structure Packets for later use
          STRUCTURE_PACKETS = structure_packets;
          if (!has_included_structures) {
-            StructureLoadUtils.saveStructures(StructureLoadUtils.getIncludedStructures());
+            StructuresPacket includedStructures = StructureLoadUtils.getIncludedStructures();
+            if (upgradeFrom1_8_1) {
+               for (String deletedStructure : deletedStructures) {
+                  StructureData deletedStructureData = new StructureData(DefaultStructureConfig.DELETED_STRUCTURE_CONFIG);
+                  deletedStructureData.setKey(deletedStructure);
+                  includedStructures.getStructures().add(deletedStructureData);
+               }
+            }
+            StructureLoadUtils.saveStructures(includedStructures);
          }
       } catch (Throwable e) {
          e.printStackTrace();
@@ -340,6 +355,9 @@ public class StructureLoadUtils {
             }
          }
 
+         List<String> lines = new ArrayList<>();
+         lines.add("Structure Packets were saved by version: " + ShrinesMod.VERSION);
+         Files.write(shrines_saves.toPath().resolve("info.txt"), lines);
          ArrayList<File> usedPath = Lists.newArrayList();
          for (StructuresPacket packet : StructureLoadUtils.STRUCTURE_PACKETS) {
             usedPath.add(savePacket(shrines_saves, packet, usedPath));

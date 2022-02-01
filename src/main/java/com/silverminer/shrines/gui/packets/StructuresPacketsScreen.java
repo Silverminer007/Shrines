@@ -145,7 +145,10 @@ public class StructuresPacketsScreen extends Screen {
                            .sendToServer(new CTSEditedStructurePacketPacket(newPacket));
                   })))));
 
-      this.addButton(new Button((this.width / 4) * 3 + 79, 3, 40, 20, new TranslationTextComponent("gui.shrines.help"), (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Silverminer007/MinecraftModsUpdateChecker/blob/master/wiki/SelectLanguage.md")))));
+      this.addButton(new Button((this.width / 4) * 3 + 79, 3, 40, 20,
+            new TranslationTextComponent("gui.shrines.help"),
+            (button) -> this.handleComponentClicked(Style.EMPTY.withClickEvent(
+                  new ClickEvent(ClickEvent.Action.OPEN_URL, "https://silverminer007.github.io/ShrinesWiki/")))));
       this.addButton(new Button(this.width / 2 - 55, this.height - 22, 110, 20, new TranslationTextComponent("gui.shrines.import"), (button) -> this.importUpToDatePacket()));
       this.addButton(new Button(this.width / 2 - 55 - 4 - 110, this.height - 22, 110, 20, new TranslationTextComponent("gui.shrines.import.legacy"), (button) -> this.importLegacyPacket()));
       this.export = this.addButton(new Button(this.width / 2 + 80 + 9, this.height - 45, 80, 20, new TranslationTextComponent("gui.shrines.export"), (button) -> this.exportPacket()));

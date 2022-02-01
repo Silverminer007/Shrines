@@ -11,6 +11,8 @@ import com.google.common.collect.Lists;
 import com.silverminer.shrines.structures.load.DefaultedStructureData;
 import net.minecraft.world.biome.Biome.Category;
 
+import java.util.ArrayList;
+
 public class DefaultStructureConfig {
    public static final DefaultedStructureData CUSTOM = new DefaultedStructureData("", "", 0).setStartPool("").setDistance(50)
          .setSeperation(8);
@@ -83,4 +85,10 @@ public class DefaultStructureConfig {
 
    public static final DefaultedStructureData WATERSHRINE_CONFIG = new DefaultedStructureData("Water Shrine",
          "water_shrine", 643168754).setDistance(80).setSeperation(15).setNovel("");
+
+   public static final DefaultedStructureData DELETED_STRUCTURE_CONFIG = new DefaultedStructureData("___ Deleted Structure ___",
+         "deleted_structure",// Key will probably change. We use this config to allow smooth update from 1.8.1 and change it's key to the old ones to tell minecraft they're still
+         // there
+         0).setDistance(0).setSeperation(0).setGenerate(false).setTransformLand(false).setSpawnChance(0.0D)
+         .setUseRandomVarianting(false).setDimensionWhitelist(new ArrayList<>()).setBiomeCategoryWhitelist().setBiomeBlacklist();
 }

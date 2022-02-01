@@ -1,3 +1,10 @@
+2.0.0-rc2 --- 01.02.2022 14:42 UTC
+- Updated link to wiki one more time (https://silverminer007.github.io/ShrinesWiki/)
+- Introduced 'Deleted Structures' -> When you delete a structure in structure config GUI it isn't deleted entirely. It remains a '___ Deleted Structure ___' at the bottom of the
+list -> prevents log spam of 'Missing structure start: structure:key' -> You can still delete structures entirely, just delete the 'Deleted Structure'
+- When updating from 1.8.1, we add 3 'Deleted Structures' with the old structure keys to prevent log spam
+
+===========
 2.0.0-rc1 --- 15.01.2022 17:46 UTC
 - Updated link to shrines wiki
 - Fixed some spelling mistakes in german translations
