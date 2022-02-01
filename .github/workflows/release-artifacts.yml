@@ -4,6 +4,8 @@ on:
   release:
     types:
       - published
+    branches:
+      - '1.18-3.0.0'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
