@@ -25,9 +25,9 @@ jobs:
         uses: rickstaa/action-create-tag@v1
         with:
           tag: ${{ github.event.inputs.version }}
-      - name: Use current time
-        env:
-          TIME: "${{ steps.current-time.outputs.time }}"
+      - name: Get current time
+        uses: gerred/actions/current-time@master
+        id: current-time
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
@@ -35,7 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }} $TIME
+          release_name: Release ${{ github.event.inputs.version }} ${{ steps.current-time.outputs.time }}
           draft: false
           prerelease: true
       - name: Set up JDK
