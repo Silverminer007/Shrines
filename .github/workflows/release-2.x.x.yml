@@ -26,8 +26,10 @@ jobs:
         with:
           tag: ${{ github.event.inputs.version }}
       - name: Get current time
-        uses: gerred/actions/current-time@master
+        uses: srfrnk/current-time@master
         id: current-time
+        with:
+          format: DD.MM.YYYY HH:mm [UTC]
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
@@ -35,7 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }} (Published ${{ steps.current-time.outputs.time }})
+          release_name: Release ${{ github.event.inputs.version }} (Published ${{ steps.current-time.outputs.formattedTime }})
           draft: false
           prerelease: true
       - name: Set up JDK
@@ -43,6 +45,7 @@ jobs:
         with:
           java-version: '8'
           distribution: temurin
+          cache: 'gradle'
       - name: Echo JAVA_HOME
         run: echo $JAVA_HOME
       - name: Verify Gradle Wrapper
