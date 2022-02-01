@@ -1,4 +1,4 @@
-name: release-artifacts
+name: release-3.x.x
 
 on: workflow_dispatch
 
