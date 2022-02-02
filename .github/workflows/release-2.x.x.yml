@@ -3,7 +3,7 @@ name: release-2.x.x
 on:
   push:
     branches:
-      - 1.16.5-2.0.0
+      - '1.16.5-2.0.0'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
