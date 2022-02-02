@@ -1,9 +1,12 @@
 name: release-2.x.x
 
 on:
-  push:
-    branches:
-      - '1.16.5-2.0.0'
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        description: 'The version to publish'
+        default: ''
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -20,10 +23,11 @@ jobs:
           ref: '1.16.5-2.0.0'
       - name: Create Tag
         id: create_tag
-        uses: jaywcjlove/create-tag-action@main
+        uses: negz/create-tag@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          test: '[R|r]elease[d]\s+[v|V]\d(\.\d+){0,2}'
+          version: ${{ github.event.inputs.version }}
+          message: ${{ github.event.inputs.version }}
       - name: Get current time
         uses: srfrnk/current-time@master
         id: current-time
@@ -34,8 +38,8 @@ jobs:
         if: steps.create_tag.outputs.successful
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: release ${{ steps.create_tag.outputs.version }} --- ${{ steps.current-time.outputs.time }}
-          tag: ${{ steps.create_tag.outputs.version }}
+          name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.time }}
+          tag: ${{ github.event.inputs.version }}
           bodyFile: "changelog-2.x.x.txt"
       - name: Set up JDK
         uses: actions/setup-java@v2
@@ -53,7 +57,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: build/libs/*.jar
-          tag_name: ${{ steps.create_tag.outputs.version }}
+          tag_name: ${{ github.event.inputs.version }}
       - name: Upload files to curseforge
         run: ./gradlew --info --stacktrace curseforge
       - name: Upload files to modrinth
