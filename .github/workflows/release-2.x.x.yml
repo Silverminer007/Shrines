@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - 1.16.5-2.0.0
-    paths-ignore:
-      - '.github/**/*.yml'
-      - '.gitignore'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
