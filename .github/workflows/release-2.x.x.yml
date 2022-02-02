@@ -35,7 +35,6 @@ jobs:
           format: DD.MM.YYYY HH:mm [UTC]
       - name: Create Release
         uses: ncipollo/release-action@v1
-        if: steps.create_tag.outputs.successful
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.time }}
