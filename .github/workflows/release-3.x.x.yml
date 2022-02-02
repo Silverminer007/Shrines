@@ -37,7 +37,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.time }}
+          name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.formattedTime }}
           tag: ${{ github.event.inputs.version }}
           bodyFile: "changelog-3.x.x.txt"
       - name: Set up JDK
