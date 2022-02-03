@@ -1,3 +1,10 @@
+3.0.0-Beta11 --- 03.02.2022 17:30 UTC
+- Fixed error message when import of legacy packages failed because of an IOError while reading structures.txt
+- Fixed crash in case specified start pool doesn't exist
+- Changed legacy 1.8.1 load conditions: 'shrines-saves' must exist and either 'structures.txt' or 'shrines-server.toml' in config directory
+- Improved legacy 1.8.1 load: Load included structure's config too
+
+===========
 3.0.0-Beta10 --- 31.01.2022 20:40 UTC
 - We moved our wiki. Included new link in the mod
 
