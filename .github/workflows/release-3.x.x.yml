@@ -21,6 +21,18 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: '1.18-3.0.0'
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17.0.1'
+          distribution: temurin
+          cache: 'gradle'
+      - name: Echo JAVA_HOME
+        run: echo $JAVA_HOME
+      - name: Verify Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Execute build
+        run: ./gradlew --info --stacktrace build
       - name: Create Tag
         id: create_tag
         uses: negz/create-tag@v1
@@ -40,18 +52,6 @@ jobs:
           name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.formattedTime }}
           tag: ${{ github.event.inputs.version }}
           bodyFile: "changelog-3.x.x.txt"
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17.0.1'
-          distribution: temurin
-          cache: 'gradle'
-      - name: Echo JAVA_HOME
-        run: echo $JAVA_HOME
-      - name: Verify Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
-      - name: Execute build
-        run: ./gradlew --info --stacktrace build
       - name: Upload files to github
         uses: softprops/action-gh-release@v1
         with:
