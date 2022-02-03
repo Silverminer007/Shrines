@@ -41,7 +41,7 @@ jobs:
           tag: ${{ github.event.inputs.version }}
           bodyFile: "changelog-3.x.x.txt"
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
           java-version: '17.0.1'
           distribution: temurin
