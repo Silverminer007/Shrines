@@ -19,7 +19,7 @@ curseforge {
         def changelogFile = "## " + file.text
         changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
         changelogType = 'markdown'
-        releaseType = 'beta'
+        releaseType = 'release'
         addGameVersion '1.16.3'
         addGameVersion '1.16.4'
         addGameVersion '1.16.5'
@@ -37,7 +37,7 @@ task publishModrinth(type: TaskModrinthUpload) { // Make sure it runs after buil
         System.getenv("MODRINTH") // Only attempt to run this task if the MODRINTH variable is set, otherwise SKIP it
     }
 
-    versionType = 'beta'
+    versionType = 'release'
     token = System.getenv("MODRINTH") // An environment property called MODRINTH that is your token, set via Gradle CLI, GitHub Actions, Idea Run Configuration, or other
     projectId = 'F33t24Wi'
     versionNumber = "$project.version"
