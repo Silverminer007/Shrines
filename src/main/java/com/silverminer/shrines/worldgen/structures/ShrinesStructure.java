@@ -75,17 +75,23 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
          Pools.bootstrap();
 
          BlockPos position = new BlockPos(SectionPos.sectionToBlockCoord(context.chunkPos().x), 0, SectionPos.sectionToBlockCoord(context.chunkPos().z));
-         if (context.chunkGenerator().getNoiseBiome(position.getX(), position.getY(), position.getZ()).getBiomeCategory().equals(Biome.BiomeCategory.NETHER)) {
-            NoiseColumn blockReader = context.chunkGenerator().getBaseColumn(position.getX(), position.getZ(), context.heightAccessor());
-            int i = 0;
-            while (!blockReader.getBlock(i).isAir()) {
-               i++;
+         Optional<PieceGenerator<JigsawConfiguration>> pieceGenerator;
+         try {
+            if (context.chunkGenerator().getNoiseBiome(position.getX(), position.getY(), position.getZ()).getBiomeCategory().equals(Biome.BiomeCategory.NETHER)) {
+               NoiseColumn blockReader = context.chunkGenerator().getBaseColumn(position.getX(), position.getZ(), context.heightAccessor());
+               int i = 0;
+               while (!blockReader.getBlock(i).isAir()) {
+                  i++;
+               }
+               position = new BlockPos(position.getX(), i, position.getZ());
+               pieceGenerator = JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, position, false, false);
+            } else {
+               pieceGenerator = JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, position, false, true);
             }
-            position = new BlockPos(position.getX(), i, position.getZ());
-            return JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, position, false, false);
-         } else {
-            return JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, position, false, true);
+         } catch (NullPointerException e) {// Catch this when the supplied start pool isn't found. An error message is more friendly than a crash
+            pieceGenerator = Optional.empty();
          }
+         return pieceGenerator;
       }
    }
 
