@@ -56,7 +56,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.formattedTime }}
           tag: ${{ github.event.inputs.version }}
-          bodyFile: "changelog-2.x.x.txt"
+          bodyFile: "changelog-2.x.x.md"
       - name: Upload files to github
         uses: softprops/action-gh-release@v1
         with:
