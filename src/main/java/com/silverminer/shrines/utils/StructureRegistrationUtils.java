@@ -95,11 +95,16 @@ public class StructureRegistrationUtils {
 
    public static boolean verifyBiome(Biome biome, StructureRegistryHolder holder) {
       if (biome.getRegistryName() != null && !Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(biome.getRegistryName().toString())) {
-         return holder.getStructure().getConfig().getSpawnConfiguration().isGenerate() && StructureRegistrationUtils.checkBiome(
-               holder.getStructure().getConfig().getSpawnConfiguration().getBiome_blacklist(),
-               holder.getStructure().getConfig().getSpawnConfiguration().getBiome_category_whitelist(), biome.getRegistryName(), biome.getBiomeCategory());
+         SpawnConfiguration spawnConfiguration = holder.getStructure().getConfig().getSpawnConfiguration();
+         return spawnConfiguration.isGenerate() && StructureRegistrationUtils.checkStartPool(spawnConfiguration.getStart_pool()) &&
+               StructureRegistrationUtils.checkBiome(
+                     spawnConfiguration.getBiome_blacklist(), spawnConfiguration.getBiome_category_whitelist(), biome.getRegistryName(), biome.getBiomeCategory());
       }
       return false;
+   }
+
+   private static boolean checkStartPool(String startPool) {
+      return startPool != null && !startPool.isBlank();
    }
 
    public static boolean checkBiome(List<? extends String> blacklistedBiomes,
