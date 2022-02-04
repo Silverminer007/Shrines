@@ -12,12 +12,13 @@ import com.silverminer.shrines.init.StructureRegistryHolder;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.core.SectionPos;
 import net.minecraft.data.worldgen.Pools;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -38,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfiguration> {
    protected static final Logger LOGGER = LogManager.getLogger(ShrinesStructure.class);
@@ -74,7 +76,7 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
          );
          Pools.bootstrap();
 
-         BlockPos position = new BlockPos(SectionPos.sectionToBlockCoord(context.chunkPos().x), 0, SectionPos.sectionToBlockCoord(context.chunkPos().z));
+         BlockPos position = context.chunkPos().getMiddleBlockPosition(0);
          Optional<PieceGenerator<JigsawConfiguration>> pieceGenerator;
          try {
             if (context.chunkGenerator().getNoiseBiome(position.getX(), position.getY(), position.getZ()).getBiomeCategory().equals(Biome.BiomeCategory.NETHER)) {
@@ -107,7 +109,7 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
       if (!ShrinesStructure.checkForOtherStructures(structureConfig, context.chunkGenerator(), context.seed(), context.chunkPos(), structures)) {
          return false;
       }
-      if (context.chunkGenerator().getFirstFreeHeight(context.chunkPos().x, context.chunkPos().z, Heightmap.Types.WORLD_SURFACE_WG, context.heightAccessor()) < 60) {
+      if (getYPositionForFeature(context.chunkPos(), context.chunkGenerator(), context.heightAccessor(), structureConfig.getSpawnConfiguration().getSeed_modifier()) < 60) {
          return false;
       }
       return worldgenrandom.nextDouble() < structureConfig.getSpawnConfiguration().getSpawn_chance();
@@ -135,6 +137,30 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
       }
 
       return true;
+   }
+
+   private static int getYPositionForFeature(ChunkPos chunkPos, ChunkGenerator chunkGenerator, LevelHeightAccessor levelHeightAccessor, int seed) {
+      Random random = new Random(chunkPos.x + (long) chunkPos.z * seed);
+      Rotation rotation = Rotation.getRandom(random);
+      int checkRadius = 20;
+      int i = checkRadius;
+      int j = checkRadius;
+      if (rotation == Rotation.CLOCKWISE_90) {
+         i = -checkRadius;
+      } else if (rotation == Rotation.CLOCKWISE_180) {
+         i = -checkRadius;
+         j = -checkRadius;
+      } else if (rotation == Rotation.COUNTERCLOCKWISE_90) {
+         j = -checkRadius;
+      }
+
+      int k = chunkPos.getBlockX(7);
+      int l = chunkPos.getBlockZ(7);
+      int i1 = chunkGenerator.getFirstOccupiedHeight(k, l, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor);
+      int j1 = chunkGenerator.getFirstOccupiedHeight(k, l + j, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor);
+      int k1 = chunkGenerator.getFirstOccupiedHeight(k + i, l, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor);
+      int l1 = chunkGenerator.getFirstOccupiedHeight(k + i, l + j, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor);
+      return Math.min(Math.min(i1, j1), Math.min(k1, l1));
    }
 
    @NotNull
