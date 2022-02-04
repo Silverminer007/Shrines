@@ -67,4 +67,11 @@ public class NovelsRegistry {
          "going to have her baby soon, and so she is in a house nearby right now with an old lady. Hopefully I will be done with this house by next week.",
          "I can barely lift my hand to write now. The blizzard and the fever have sapped all the life out of me. I am going to try and find my wife tomorrow. She disappeared, " +
                "and the old lady said she went to meet me. I am not sure I trust this woman anymore. I- [blood and scribbles from here before]"));
+   public static final RegistryObject<StructureNovel> END_TEMPLE = NOVELS.register("end_temple", () -> new StructureNovel(
+         "Tʜɘ ƨtoɿɒϱɘ dυnʞɘɿ ʜɒƨ dɘɘn ʇiniƨʜɘb. Tʜɘ ƨqibɘɿƨ ʜɒvɘ dɘɘn movɘb to tʜɘiɿ nɘw ʜomɘ. Tʜɘ ƨtɿibɘɿƨ ɒɿɘ ɒ dit tɿiɔʞiɘɿ, ɒƨ tʜɘγ will nɘɘb ɒ ɔonƨtɒnt ʜɘɒt ƨoυɿɔɘ, " +
+               "ɒnb tʜɘ monʞ bib not tɘll υƨ iʇ ɔoɿυƨ ƨtɘmƨ will dυɿn…",
+         "Tʜɘ lɒvɒ ʜɒƨ dɘɘn ƨυɔɔɘƨƨʇυllγ tɿɒnƨqoɿtɘb ʇoɿ tʜɘ nɘtʜɘɿ to tʜɘ ƨtoɿɒϱɘ dυnʞɘɿ. Iʇ tʜɘ ⍑̷͆̈ꖎ̴̄͐|̵͂̈|̷͘͠ ̸̈́̓!̴̛̏¡̷̃̊∷̷̽͠ᒷ̶̒́╎̷̇́ᓭ̶̚͘ℸ̷̅́ ̸͆̌ ̶̇́ᓭ̵̽̍ ɘvɘɿ ʜɒƨ to dɒɔʞ " +
+               "oʇʇ, wɘ will dɘ ɒdlɘ to ƨɘnb tʜɘm ʜɘlq ʇɿom",
+         "        ",
+         "I ɒm bγinϱ. Anγonɘ wʜo ʇinbƨ tʜiƨ, qlɘɒƨɘ, lɘt tʜɘ monʞ ʞnow… Tʜɒ wɘ tɿib ʜɒɿb ɒnbɘ \uD801\uDC12loob/ϱoɿɘ? On qɒqɘɿ"));
 }
