@@ -16,7 +16,7 @@ curseforge {
         id = '418915'
         //changelog = file('changelog-3.x.x.md')
         def file = file('changelog-3.x.x.md')
-        def changelogFile = "## " + file.text
+        def changelogFile = file.text
         changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
         changelogType = 'text'
         releaseType = 'beta'
@@ -43,6 +43,6 @@ task publishModrinth(type: TaskModrinthUpload) { // Make sure it runs after buil
     versionName = "$project.archivesBaseName-$project.version"
     uploadFile = jar
     def file = file('changelog-3.x.x.md')
-    def changelogFile = "## " + file.text
+    def changelogFile = file.text
     changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
 }
