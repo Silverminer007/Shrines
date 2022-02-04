@@ -1,3 +1,72 @@
+# 2.0.0 --- 03.02.2022 20:49 UTC
+### Changes
+- Added Structures: Watchtower, Trader House, Shrine of Savanna
+- Improved structures: Bees, Harbour, Player House
+- Changed structure configuration
+- Changed custom structure configuration
+- Removed '/shrines-structures' command
+- Added Structure Novels
+- Added Structure Configuration GUI
+- Added new config option 'structure min. distance', 'banned_block' and 'banned_entities'
+- Reworked config UI
+- Added spanish and traditional chinese translations
+
+### Bees
+- Changes loot-table -> new items in chests
+- Entirely new building now
+
+### Harbour
+- Use 'jigsaw system' now -> Modularised and randomised structure placement. Comparable with Minecraft's villages
+- Spawns on oceans now
+- New loot-table -> new items in chests
+- New elements (e.g. new ways)
+
+### Player House
+- New loot-table -> new items in chests
+
+### New Structure config & custom structure config & Structure Config UI
+- Structures are bundled in packages
+- Shrine brings 'Included Structures' Package with default configuration of structures
+- Structure Configurations are saved per package in a structures.nbt file
+- Config UI allows editing these packages
+- Config UI can be opened in worlds with cheats enabled or on server by all players with op level 2 or higher
+- Config UI (aka 'Admin Mode') access is hidden in extended Novels UI (see below)
+- Structure Config now includes 'Templates' and 'Template Pools' (aka 'Pools'). Both are required for structures using the 'jigsaw system'
+- Removed structure config option 'Needs Ground' and 'Spawn Villager'
+- Added structure config options 'Transform Land'
+
+### Structure Novels & Structure Novels UI
+- Structure Novels belongs to a structure
+- Structure Novels can be changed and added via structure configuration
+- You'll find an excerpt of the novel every time you enter a structure
+- Press 'key.customStructuresScreen' (Defaults to k) to open the Novels UI
+- Press the arrow which is pointing down to extend bar on the Top to scale images and open 'Admin Mode' (aka 'Structure Config UI')
+
+### 'structure min. distance'
+- new Config Option
+- Additional spawn criteria for shrine's structures
+- Minimum distance to the next structure measured in chunks
+
+### 'banned_blocks' and 'banned_entities'
+- Structure placement post processor
+- Removes all blocks/entities in the list from the structures at placement
+-> Can for example remove all dragon heads from the harbour
+
+### Config UI vs Structure Config UI vs Structure Novels UI
+- Config UI is accessible through Mod-list's 'Config' button
+- Structure Config UI is accessible through Structure Novels UI
+- Structure Novels UI is accessible in world and opens on Keybind press (defaulted to k)
+- Config controls settings that apply to all structure or aren't related to structure themselves
+- Structure Config controls settings related to structure and their generation
+- Novels don't control anything and are only an additional gameplay addition
+
+### Credits
+- pea_sh0ter
+- S1fy
+- MEME Man77
+- Forscher09 & XENZE2011
+
+===========
 2.0.0-rc2 --- 01.02.2022 14:42 UTC
 - Updated link to wiki one more time (https://silverminer007.github.io/ShrinesWiki/)
 - Introduced 'Deleted Structures' -> When you delete a structure in structure config GUI it isn't deleted entirely. It remains a '___ Deleted Structure ___' at the bottom of the
