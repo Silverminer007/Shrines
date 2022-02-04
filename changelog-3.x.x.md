@@ -1,3 +1,12 @@
+## 3.0.0-Beta12 --- 04.02.2022 16:40 UTC
+
+- Added End Temple's novel
+- Fixed dimensions whitelist UI
+- Improved legacy 1.8.1 structure configuration import
+- require start pool to be set to allow generation
+
+===========
+
 ## 3.0.0-Beta11 --- 03.02.2022 17:30 UTC
 
 - Fixed error message when import of legacy packages failed because of an IOError while reading structures.txt
