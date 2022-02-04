@@ -7,8 +7,8 @@
 
 package com.silverminer.shrines.utils.network.stc;
 
-import com.silverminer.shrines.utils.network.IPacket;
 import com.silverminer.shrines.packages.PackageManagerProvider;
+import com.silverminer.shrines.utils.network.IPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -33,7 +33,7 @@ public class STCSyncAvailableDimensions implements IPacket {
       if (tag == null) {
          this.availableDimensions = new ArrayList<>();
       } else {
-         ListTag dimensions = tag.getList("dimensions", 10);// Type 8 is StringTag
+         ListTag dimensions = tag.getList("dimensions", 8);// Type 8 is StringTag
          this.availableDimensions = dimensions.stream().filter(dimension -> dimension instanceof StringTag).map(Tag::getAsString).collect(Collectors.toList());
       }
    }
