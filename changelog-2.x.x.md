@@ -67,59 +67,59 @@
 - Forscher09 & XENZE2011
 
 ===========
-2.0.0-rc2 --- 01.02.2022 14:42 UTC
+## 2.0.0-rc2 --- 01.02.2022 14:42 UTC
 - Updated link to wiki one more time (https://silverminer007.github.io/ShrinesWiki/)
 - Introduced 'Deleted Structures' -> When you delete a structure in structure config GUI it isn't deleted entirely. It remains a '___ Deleted Structure ___' at the bottom of the
 list -> prevents log spam of 'Missing structure start: structure:key' -> You can still delete structures entirely, just delete the 'Deleted Structure'
 - When updating from 1.8.1, we add 3 'Deleted Structures' with the old structure keys to prevent log spam
 
 ===========
-2.0.0-rc1 --- 15.01.2022 17:46 UTC
+## 2.0.0-rc1 --- 15.01.2022 17:46 UTC
 - Updated link to shrines wiki
 - Fixed some spelling mistakes in german translations
 
 ===========
-2.0.0-Beta11 --- 09.01.2022 15.28 UTC
+## 2.0.0-Beta11 --- 09.01.2022 15.28 UTC
 - Introduced Novels Part separator '|'
 - Added Novel of Shrine of Savanna and Nether Pyramid
 - Removed Config Option 'NEEDED_NOVELS', because parts are now have a fixed amount
 
 ===========
-2.0.0-Beta10 --- 08.01.2022 16.07 UTC
+## 2.0.0-Beta10 --- 08.01.2022 16.07 UTC
 - Fixed #30
 
 ===========
-2.0.0-Beta9 --- 26.12.2021 16:05 UTC
+## 2.0.0-Beta9 --- 26.12.2021 16:05 UTC
 - Rebuild 2.0.0-Beta8
 
 ===========
-2.0.0-Beta8 --- 10.12.2021 04:15 UTC
+## 2.0.0-Beta8 --- 10.12.2021 04:15 UTC
 - Fixed some english translations
 - Added traditional chinese translations
 
 ===========
-2.0.0-Beta7 --- 10.12.2021 09:59 UTC
+## 2.0.0-Beta7 --- 10.12.2021 09:59 UTC
 - Added loot table to Watchtower
 - Moved update checker and wiki to new repository
 
 ===========
-2.0.0-Beta6 --- 28.11.2021 01:22 UTC
+## 2.0.0-Beta6 --- 28.11.2021 01:22 UTC
 - Added missing structure icons of harbour and shrine of savanna
 - Changed guardian meetings icon
 
 ===========
-2.0.0-Beta5 --- 28.11.2021 01:13 UTC
+## 2.0.0-Beta5 --- 28.11.2021 01:13 UTC
 - Replaced huge structure icons with 256x256 pixel versions -> mod files size is now much smaller
 - Fixed default biome whitelist setting for shrine of savanna
 
 ===========
-2.0.0-Beta4 --- 24.11.2021 06:55 UTC
+## 2.0.0-Beta4 --- 24.11.2021 06:55 UTC
 - Added missing error splash title
 - Added legacy structures packet import which allows you to import structures that you have created with versions below
   2.0.0 as structures packet in the new system
 
 ===========
-2.0.0-Beta3 --- 20.11.2021 06:39 UTC
+## 2.0.0-Beta3 --- 20.11.2021 06:39 UTC
 - Created Translation keys (that required some internal structure config option name changes, which could cause issues)
 - Added English, german and Spanish Translation
 - Increased size of the Admin Mode Button in Novels View to have enough space for text strings
@@ -128,16 +128,16 @@ list -> prevents log spam of 'Missing structure start: structure:key' -> You can
 - Increased Packet version
 
 ===========
-2.0.0-Beta2 --- 10.11.2021 09:55 UTC
+## 2.0.0-Beta2 --- 10.11.2021 09:55 UTC
 - Fix Images Cache wasn't cleaned (It's only cleared before a new bunch of images is cached, because hooks of player
   left worlds are fired to late)
 
 ===========
-2.0.0-Beta1 --- 10.11.2021 09:11 UTC
+## 2.0.0-Beta1 --- 10.11.2021 09:11 UTC
 - Reworked General Settings Screen (Fixed banned entities, banned blocks and biome blacklist options)
 
 ===========
-2.0.0-SNAPSHOT-16 --- 10.11.2021 08:17 UTC
+## 2.0.0-SNAPSHOT-16 --- 10.11.2021 08:17 UTC
 - Boolean Buttons now always toggle when pressed
 - Fixed Dimensions being multiple times in activated dimensions
 - Activated Pools Tab in Structure Packet Configuration screen
@@ -145,25 +145,25 @@ list -> prevents log spam of 'Missing structure start: structure:key' -> You can
 - Added new Structure option to assign start pool (Requires new packets to appear correctly)
 
 ===========
-2.0.0-SNAPSHOT-15 --- 06.11.2021 02:57 UTC
+## 2.0.0-SNAPSHOT-15 --- 06.11.2021 02:57 UTC
 - Added Error Splash screens
 - Structure seed modifier shovel during packet import
 - Structure Novels screen now only shows registered structures
 
 ===========
-2.0.0-SNAPSHOT-14 --- 05.11.2021 06:23 UTC
+## 2.0.0-SNAPSHOT-14 --- 05.11.2021 06:23 UTC
 - Add Templates Tab to upload structure templates (You can add them from your local file system, rename and delete)
 - Fixed Structure Novels always appear empty
 - Introduced High Temple's Novel (Credits to pea_sh0ter)
 - Updated Mod description
 
 ===========
-2.0.0-SNAPSHOT-13 --- 05.11.2021 00:23 UTC
+## 2.0.0-SNAPSHOT-13 --- 05.11.2021 00:23 UTC
 - Fixed structure generation
 - Changed back button texture to Novels screen version
 
 ===========
-2.0.0-SNAPSHOT-12 --- 02.10.2021 10:18 UTC
+## 2.0.0-SNAPSHOT-12 --- 02.10.2021 10:18 UTC
 - Added GUI for Structures -> Included and custom
 - You're able to add/rename/delete/configure structure packets
 - You're able to add/delete/configure structures
@@ -171,7 +171,7 @@ list -> prevents log spam of 'Missing structure start: structure:key' -> You can
 - You're warned if a key is duplicated
 
 ===========
-2.0.0-SNAPSHOT-11 --- 01.10.2021 10:18 UTC
+## 2.0.0-SNAPSHOT-11 --- 01.10.2021 10:18 UTC
 - Fixed #19
 - Added Structure Novel
 - Added GUI to see Novels
@@ -179,13 +179,13 @@ list -> prevents log spam of 'Missing structure start: structure:key' -> You can
 - Added Queue for structure packet editing to prevent conflicts
 
 ===========
-2.0.0-SNAPSHOT-10 --- 28.08.2021 06:30 UTC
+## 2.0.0-SNAPSHOT-10 --- 28.08.2021 06:30 UTC
 - Fixed #18
 - Removed unused loot chance option
 - Added Blame to dev env.
 
 ===========
-2.0.0-SNAPSHOT-9 --- 14.08.2021 10:51 UTC
+## 2.0.0-SNAPSHOT-9 --- 14.08.2021 10:51 UTC
 - Added 'banned_blocks' option
 - Added 'banned_entities' option
 - Changed pieces of the harbour
@@ -193,7 +193,7 @@ list -> prevents log spam of 'Missing structure start: structure:key' -> You can
 - Added S1fy's 'Shrine of savanna'
 
 ===========
-2.0.0-SNAPSHOT-8 --- 27.07.2021 02:19 UTC
+## 2.0.0-SNAPSHOT-8 --- 27.07.2021 02:19 UTC
 - Removed 'Needs Ground' option
 - Removed 'Spawn Villagers' option
 - Removed shrines structures command
@@ -208,33 +208,33 @@ list -> prevents log spam of 'Missing structure start: structure:key' -> You can
 - Added loot table to the Trader House
 
 ===========
-2.0.0-SNAPSHOT-7 --- 24.07.2021 09:48 UTC
+## 2.0.0-SNAPSHOT-7 --- 24.07.2021 09:48 UTC
 - Added the new version of the Harbour (experimental and still in work)
 - Fixed compiler error because of Java 16. Should work now (Fixes #15)
 
 ===========
-2.0.0-SNAPSHOT-6 --- 23.07.2021 10:28 UTC
+## 2.0.0-SNAPSHOT-6 --- 23.07.2021 10:28 UTC
 - Updated to forge 36.2.0
 
 ===========
-2.0.0-SNAPSHOT-5 --- 02.07.2021 00:00 UTC
+## 2.0.0-SNAPSHOT-5 --- 02.07.2021 00:00 UTC
 - Replaced 'bees' structure with a newer version of S1fy
 
 ===========
-2.0.0-SNAPSHOT-4 --- 01.07.2021 00:00 UTC
+## 2.0.0-SNAPSHOT-4 --- 01.07.2021 00:00 UTC
 - Added 'MEME Man77's Trader House
 
 ===========
-2.0.0-SNAPSHOT-3 --- 29.06.2021 00:00 UTC
+## 2.0.0-SNAPSHOT-3 --- 29.06.2021 00:00 UTC
 - Added Translations to "Structure min. Settings" config option
 - Added new config option "Advanced Logging"(with translations) which allows to disable some (spamming) logs
 
 ===========
-2.0.0-SNAPSHOT-2 --- 28.06.2021 00:00 UTC
+## 2.0.0-SNAPSHOT-2 --- 28.06.2021 00:00 UTC
 - Added (configurable) min. distance that needs to be at least between two structure to allow generation
 
 ===========
-2.0.0-SNAPSHOT-1 --- 28.06.2021 00:00 UTC
+## 2.0.0-SNAPSHOT-1 --- 28.06.2021 00:00 UTC
 - Based on 1.8.1
 - Changed structure generation system to jigsaw
 - Changed Player House loot-tables
