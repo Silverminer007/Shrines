@@ -10,6 +10,9 @@ package com.silverminer.shrines.packages.datacontainer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SimpleVariationConfiguration {
    public static final Codec<SimpleVariationConfiguration> CODEC = RecordCodecBuilder.create(variationConfigurationInstance -> variationConfigurationInstance.group(
          Codec.BOOL.fieldOf("is_wool_enabled").forGetter(SimpleVariationConfiguration::isWoolEnabled),
@@ -116,5 +119,37 @@ public class SimpleVariationConfiguration {
 
    public void setBeesEnabled(boolean areBeesEnabled) {
       this.areBeesEnabled = areBeesEnabled;
+   }
+
+   public List<String> getDisabledMaterials(){
+      List<String> disabledMaterials = new ArrayList<>();
+      if(!this.isWoolEnabled()) {
+         disabledMaterials.add("wool");
+      }
+      if(!this.isTerracottaEnabled()) {
+         disabledMaterials.add("terracotta");
+      }
+      if(!this.isGlazedTerracottaEnabled()) {
+         disabledMaterials.add("glazed_terracotta");
+      }
+      if(!this.isConcreteEnabled()) {
+         disabledMaterials.add("concrete");
+      }
+      if(!this.isConcretePowderEnabled()) {
+         disabledMaterials.add("concrete_powder");
+      }
+      if(!this.arePlanksEnabled()) {
+         disabledMaterials.add("planks");
+      }
+      if(!this.areOresEnabled()) {
+         disabledMaterials.add("ores");
+      }
+      if(!this.areStonesEnabled()) {
+         disabledMaterials.add("stones");
+      }
+      if(!this.areBeesEnabled()) {
+         disabledMaterials.add("bees");
+      }
+      return  disabledMaterials;
    }
 }

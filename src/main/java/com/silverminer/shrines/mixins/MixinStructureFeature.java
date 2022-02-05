@@ -1,7 +1,7 @@
 package com.silverminer.shrines.mixins;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
+import com.silverminer.shrines.packages.datacontainer.NewVariationConfiguration;
 import com.silverminer.shrines.worldgen.structures.variation.RandomVariantsProcessor;
 import com.silverminer.shrines.worldgen.structures.variation.RandomVariationProcessable;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
+
 @Mixin(StructureFeature.class)
 public abstract class MixinStructureFeature extends ForgeRegistryEntry<StructureFeature<?>> implements RandomVariationProcessable {
    private RandomVariantsProcessor randomVariantsProcessor;
@@ -22,7 +24,7 @@ public abstract class MixinStructureFeature extends ForgeRegistryEntry<Structure
       if (postPlacementProcessor instanceof RandomVariantsProcessor randomVariantsProcessor) {
          this.randomVariantsProcessor = randomVariantsProcessor;
       } else {
-         this.randomVariantsProcessor = new RandomVariantsProcessor(VariationConfiguration.ALL_DISABLED);
+         this.randomVariantsProcessor = new RandomVariantsProcessor(new NewVariationConfiguration(false, new ArrayList<>(), new ArrayList<>()));
       }
    }
 

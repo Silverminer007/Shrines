@@ -9,6 +9,7 @@ package com.silverminer.shrines.packages.datacontainer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -24,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -34,18 +36,24 @@ public class StructureData implements Comparable<StructureData> {
                SpawnConfiguration.CODEC.fieldOf("spawn_configuration").forGetter(StructureData::getSpawnConfiguration),
                ResourceLocation.CODEC.optionalFieldOf(ConfigOptions.LATEST.iconPath(), null).forGetter(StructureData::getIconPath),
                ResourceLocation.CODEC.optionalFieldOf(ConfigOptions.LATEST.novel(), new ResourceLocation("")).forGetter(StructureData::getNovel),
-               VariationConfiguration.CODEC.optionalFieldOf("variation_configuration", VariationConfiguration.ALL_DISABLED).forGetter(StructureData::getVariationConfiguration))
+               Codec.either(VariationConfiguration.CODEC, NewVariationConfiguration.CODEC).optionalFieldOf("variation_configuration",
+                     Either.left(VariationConfiguration.ALL_DISABLED)).forGetter(structureData -> Either.right(structureData.variationConfiguration)))
          .apply(structureDataInstance, StructureData::new));
    protected static final Logger LOGGER = LogManager.getLogger(StructureData.class);
    private final SpawnConfiguration spawnConfiguration;
-   private final VariationConfiguration variationConfiguration;
+   private NewVariationConfiguration variationConfiguration;
    private String name;
    private ResourceLocation key;
    private ResourceLocation novel;
    private ResourceLocation iconPath;
 
    public StructureData(String name, ResourceLocation key, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath, @Nullable ResourceLocation novel) {
-      this(name, key, spawnConfiguration, iconPath, novel, VariationConfiguration.ALL_DISABLED);
+      this(name, key, spawnConfiguration, iconPath, novel, Either.right(new NewVariationConfiguration(false)));
+   }
+
+   public StructureData(String name, ResourceLocation key, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath, @Nullable ResourceLocation novel,
+                        NewVariationConfiguration variationConfiguration) {
+      this(name, key, spawnConfiguration, iconPath, novel, Either.right(variationConfiguration));
    }
 
    /**
@@ -55,13 +63,16 @@ public class StructureData implements Comparable<StructureData> {
     * @param iconPath           the path to the icon of this structure or null to use key's value
     * @param novel              the path to the structure's Novels or null to use key's value
     */
-   public StructureData(String name, ResourceLocation key, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath, @Nullable ResourceLocation novel, VariationConfiguration variationConfiguration) {
+   public StructureData(String name, ResourceLocation key, SpawnConfiguration spawnConfiguration, @Nullable ResourceLocation iconPath, @Nullable ResourceLocation novel,
+                        Either<VariationConfiguration, NewVariationConfiguration> variationConfiguration) {
       this.name = name;
       this.key = key;
       this.novel = Objects.requireNonNullElse(novel, key);
       this.iconPath = Objects.requireNonNullElse(iconPath, key);
       this.spawnConfiguration = spawnConfiguration;
-      this.variationConfiguration = variationConfiguration;
+      this.variationConfiguration =
+            variationConfiguration.right().orElse(variationConfiguration.left().map(VariationConfiguration::toNewConfiguration).orElse(
+                  new NewVariationConfiguration(false, new ArrayList<>(), new ArrayList<>())));
    }
 
    @Nonnull
@@ -92,8 +103,12 @@ public class StructureData implements Comparable<StructureData> {
       return optional.map(Pair::getFirst).orElse(null);
    }
 
-   public VariationConfiguration getVariationConfiguration() {
+   public NewVariationConfiguration getVariationConfiguration() {
       return variationConfiguration;
+   }
+
+   public void setVariationConfiguration(NewVariationConfiguration variationConfiguration) {
+      this.variationConfiguration = variationConfiguration;
    }
 
    public ResourceLocation getKey() {

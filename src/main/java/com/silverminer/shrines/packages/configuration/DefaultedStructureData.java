@@ -8,6 +8,7 @@ package com.silverminer.shrines.packages.configuration;
 
 import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.packages.datacontainer.NewVariationConfiguration;
 import com.silverminer.shrines.packages.datacontainer.SpawnConfiguration;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
 import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
@@ -223,6 +224,6 @@ public class DefaultedStructureData {
                   7),
             this.getKey(),
             this.getNovel(),
-            this.getUseRandomVarianting() ? VariationConfiguration.ALL_ENABLED : VariationConfiguration.ALL_DISABLED);
+            new NewVariationConfiguration(this.getUseRandomVarianting()));
    }
 }

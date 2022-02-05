@@ -7,6 +7,7 @@
 package com.silverminer.shrines.packages.io.legacy_181.configuration;
 
 import com.google.common.collect.Lists;
+import com.silverminer.shrines.packages.datacontainer.NewVariationConfiguration;
 import com.silverminer.shrines.packages.datacontainer.SpawnConfiguration;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
 import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
@@ -264,7 +265,7 @@ public class LegacyStructureData implements IStructureConfig {
    }
 
    public StructureData toUpToDateData() {
-      VariationConfiguration variationConfiguration = this.getUseRandomVarianting() ? VariationConfiguration.ALL_ENABLED : VariationConfiguration.ALL_DISABLED;
+      NewVariationConfiguration variationConfiguration = new NewVariationConfiguration(this.getUseRandomVarianting());
       SpawnConfiguration spawnConfiguration = new SpawnConfiguration(this.getNeedsGround(), this.getGenerate(), this.getSpawnChance(), this.getDistance(), this.getSeparation(),
             this.getSeed(), this.base_height_offset.getValue(), this.getBlacklist().stream().map(Objects::toString).collect(Collectors.toList()),
             this.getWhitelist().stream().map(Enum::toString).collect(Collectors.toList()), this.getDimensions().stream().map(Objects::toString).collect(Collectors.toList()), "",
