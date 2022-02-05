@@ -11,6 +11,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VariationConfiguration extends ForgeRegistryEntry<VariationConfiguration> {
    public static final Codec<VariationConfiguration> CODEC = RecordCodecBuilder.create(variationConfigurationInstance -> variationConfigurationInstance.group(
          Codec.BOOL.fieldOf("is_enabled").forGetter(VariationConfiguration::isEnabled),
@@ -51,5 +54,11 @@ public class VariationConfiguration extends ForgeRegistryEntry<VariationConfigur
 
    public void setNestedVariationConfiguration(NestedVariationConfiguration nestedVariationConfiguration) {
       this.nestedVariationConfiguration = nestedVariationConfiguration;
+   }
+
+   public NewVariationConfiguration toNewConfiguration() {
+      List<String> disabledMaterials = this.simpleVariationConfiguration.getDisabledMaterials();
+      List<String> disabledTypes = this.nestedVariationConfiguration.getDisabledTypes();
+      return new NewVariationConfiguration(this.isEnabled, disabledMaterials, disabledTypes);
    }
 }

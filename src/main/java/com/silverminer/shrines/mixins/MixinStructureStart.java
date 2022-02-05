@@ -1,6 +1,7 @@
 package com.silverminer.shrines.mixins;
 
 import com.silverminer.shrines.init.VariationConfigurationRegistry;
+import com.silverminer.shrines.packages.datacontainer.NewVariationConfiguration;
 import com.silverminer.shrines.packages.datacontainer.VariationConfiguration;
 import com.silverminer.shrines.worldgen.structures.variation.RandomVariantsProcessor;
 import com.silverminer.shrines.worldgen.structures.variation.RandomVariationProcessable;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 @Mixin(StructureStart.class)
@@ -37,9 +39,9 @@ public class MixinStructureStart {
                                        BoundingBox boundingBox, ChunkPos chunkPos, CallbackInfo ci) {
       if (!this.pieceContainer.pieces().isEmpty()) {
          RandomVariantsProcessor randomVariantsProcessor = ((RandomVariationProcessable) this.feature).getRandomVariationProcessor();
-         VariationConfiguration variationConfiguration =
+         NewVariationConfiguration variationConfiguration =
                VariationConfigurationRegistry.VARIATION_CONFIGURATION_CONFIGURATION_REGISTRY.get().getValue(new ResourceLocation(this.feature.getFeatureName()));
-         variationConfiguration = variationConfiguration == null ? VariationConfiguration.ALL_DISABLED : variationConfiguration;
+         variationConfiguration = variationConfiguration == null ? new NewVariationConfiguration(false, new ArrayList<>(), new ArrayList<>()) : variationConfiguration;
          randomVariantsProcessor.setVariationConfiguration(variationConfiguration);
          randomVariantsProcessor.afterPlace(worldGenLevel, structureFeatureManager, chunkGenerator, random, boundingBox, chunkPos, this.pieceContainer);
       }

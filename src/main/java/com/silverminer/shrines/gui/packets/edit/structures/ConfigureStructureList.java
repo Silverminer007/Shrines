@@ -85,7 +85,7 @@ public class ConfigureStructureList extends ObjectSelectionList<ConfigureStructu
             false, false, 1));
       this.addEntry(new CategoryEntry("spawn_configuration_options", spawnConfigurationOptions, 0));
 
-      VariationConfiguration variationConfiguration = this.structure.getVariationConfiguration();
+      VariationConfiguration variationConfiguration = null;// TODO this.structure.getVariationConfiguration(); -> New Config UI
       List<Entry> variationOptions = new ArrayList<>();
       variationOptions.add(new BooleanEntry("enable", variationConfiguration::isEnabled, variationConfiguration::setEnabled, 1));
 
