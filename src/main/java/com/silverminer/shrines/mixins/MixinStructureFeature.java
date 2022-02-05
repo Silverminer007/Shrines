@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-
 @Mixin(StructureFeature.class)
 public abstract class MixinStructureFeature extends ForgeRegistryEntry<StructureFeature<?>> implements RandomVariationProcessable {
    private RandomVariantsProcessor randomVariantsProcessor;
@@ -24,7 +22,7 @@ public abstract class MixinStructureFeature extends ForgeRegistryEntry<Structure
       if (postPlacementProcessor instanceof RandomVariantsProcessor randomVariantsProcessor) {
          this.randomVariantsProcessor = randomVariantsProcessor;
       } else {
-         this.randomVariantsProcessor = new RandomVariantsProcessor(new NewVariationConfiguration(false, new ArrayList<>(), new ArrayList<>()));
+         this.randomVariantsProcessor = new RandomVariantsProcessor(new NewVariationConfiguration(false));
       }
    }
 
