@@ -13,17 +13,14 @@ public class NewVariationMaterial extends ForgeRegistryEntry<NewVariationMateria
          RecordCodecBuilder.create(newVariationMaterialInstance ->
                newVariationMaterialInstance.group(
                            Codec.list(NewVariationMaterialElement.CODEC).fieldOf("types").forGetter(NewVariationMaterial::types),
-                           Codec.STRING.fieldOf("material_id").forGetter(NewVariationMaterial::materialID),
-                           Codec.BOOL.fieldOf("material_align").forGetter(NewVariationMaterial::alignMaterial))
+                           Codec.STRING.fieldOf("material_id").forGetter(NewVariationMaterial::materialID))
                      .apply(newVariationMaterialInstance, NewVariationMaterial::new));
    private final List<NewVariationMaterialElement> types;
    private final String materialID;
-   private final boolean materialAlign;
 
-   public NewVariationMaterial(List<NewVariationMaterialElement> types, String materialID, boolean materialAlign) {
+   public NewVariationMaterial(List<NewVariationMaterialElement> types, String materialID) {
       this.types = ImmutableList.copyOf(types);
       this.materialID = materialID;
-      this.materialAlign = materialAlign;
    }
 
    public NewVariationMaterialElement getElement(String typeID) {
@@ -40,9 +37,5 @@ public class NewVariationMaterial extends ForgeRegistryEntry<NewVariationMateria
 
    public String materialID() {
       return this.materialID;
-   }
-
-   public boolean alignMaterial() {
-      return this.materialAlign;
    }
 }

@@ -31,7 +31,6 @@ import java.util.Random;
 
 public class RandomVariantsProcessor implements PostPlacementProcessor {
    protected final HashMap<NewVariationMaterial, NewVariationMaterial> MATERIAL_REMAPS = new HashMap<>();
-   protected final HashMap<String, String> TYPE_REMAPS = new HashMap<>();
    private NewVariationConfiguration variationConfiguration;
 
    public RandomVariantsProcessor(NewVariationConfiguration variationConfiguration) {
@@ -41,7 +40,7 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
    @Override
    public void afterPlace(@NotNull WorldGenLevel worldGenLevel, @NotNull StructureFeatureManager structureFeatureManager, @NotNull ChunkGenerator chunkGenerator,
                           @NotNull Random random, @NotNull BoundingBox chunkBounds, @NotNull ChunkPos chunkPos, @NotNull PiecesContainer pieces) {
-      if (this.variationConfiguration.isEnabled() || true) {
+      if (this.variationConfiguration.isEnabled()) {
          BoundingBox structureBounds = pieces.calculateBoundingBox();
          createBlockRemaps(random);
          for (int x = chunkBounds.minX(); x <= chunkBounds.maxX(); x++) {
@@ -64,20 +63,10 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
    }
 
    private void createBlockRemaps(Random rand) {
-      if (this.MATERIAL_REMAPS.isEmpty() || this.TYPE_REMAPS.isEmpty()) {
-         this.TYPE_REMAPS.clear();
-         this.MATERIAL_REMAPS.clear();
+      if (this.MATERIAL_REMAPS.isEmpty()) {
          ListMultimap<String, NewVariationMaterial> materialChanges = LinkedListMultimap.create();
-         ListMultimap<String, String> typeChanges = LinkedListMultimap.create();
          for (NewVariationMaterial variationMaterial : VariationMaterialsRegistry.VARIATION_MATERIALS_REGISTRY.get().getValues()) {
-            if (variationMaterial.alignMaterial()) {
-               materialChanges.put(variationMaterial.materialID(), variationMaterial);
-            } else {
-               this.MATERIAL_REMAPS.put(variationMaterial, variationMaterial);
-               for (NewVariationMaterialElement element : variationMaterial.types()) {
-                  typeChanges.put(variationMaterial.materialID(), element.typeID());
-               }
-            }
+            materialChanges.put(variationMaterial.materialID(), variationMaterial);
          }
          for (String key : materialChanges.keySet()) {
             List<NewVariationMaterial> materials = materialChanges.get(key);
@@ -87,18 +76,6 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
                   NewVariationMaterial target = variations.get(rand.nextInt(variations.size()));
                   variations.remove(target);
                   this.MATERIAL_REMAPS.put(NewVariationMaterial, target);
-               } else {
-                  break;
-               }
-            }
-         }
-         for(String materialID : typeChanges.keySet()) {
-            List<String> variations = new ArrayList<>(typeChanges.get(materialID));
-            for (String newElement : typeChanges.get(materialID)) {
-               if (variations.size() > 0) {
-                  String target = variations.get(rand.nextInt(variations.size()));
-                  variations.remove(target);
-                  this.TYPE_REMAPS.putIfAbsent(newElement, target);
                } else {
                   break;
                }
@@ -117,7 +94,7 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
             NewVariationMaterialElement element = variation.getElement(oldBlock);
             if (element != null && this.variationConfiguration.isTypeEnabled(element.typeID())) {
                NewVariationMaterial remap = MATERIAL_REMAPS.getOrDefault(variation, variation);
-               NewVariationMaterialElement remapElement = remap.getElement(this.TYPE_REMAPS.getOrDefault(element.typeID(), element.typeID()));
+               NewVariationMaterialElement remapElement = remap.getElement(element.typeID());
                if (remapElement != null) {
                   Block newBlock = ForgeRegistries.BLOCKS.getValue(remapElement.blockID());
                   if (newBlock != null) {
@@ -135,7 +112,6 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
       // Also, user are able to reset the list their self by reloading the world.
       // Another option is to use mixins to reset this map, but I don't think the effort is worth
       this.MATERIAL_REMAPS.clear();
-      this.TYPE_REMAPS.clear();
    }
 
    public void setVariationConfiguration(NewVariationConfiguration variationConfiguration) {
