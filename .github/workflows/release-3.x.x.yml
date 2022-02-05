@@ -1,0 +1,68 @@
+name: release-3.x.x
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        description: 'The version to publish'
+        default: ''
+
+env:
+  CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
+  MODRINTH: ${{ secrets.MODRINTH_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: 'Publish 3.x.x'
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+        with:
+          ref: '1.18-3.0.0'
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17.0.1'
+          distribution: temurin
+          cache: 'gradle'
+      - name: Echo JAVA_HOME
+        run: echo $JAVA_HOME
+      - name: Verify Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Execute build
+        run: ./gradlew --info --stacktrace build
+      - name: Create Tag
+        id: create_tag
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git tag ${{ github.event.inputs.version }} -a -m ${{ github.event.inputs.version }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: '1.18-3.0.0'
+          tags: true
+      - name: Get current time
+        uses: srfrnk/current-time@master
+        id: current-time
+        with:
+          format: DD.MM.YYYY HH:mm [UTC]
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.formattedTime }}
+          tag: ${{ github.event.inputs.version }}
+          bodyFile: "changelog-3.x.x.md"
+      - name: Upload files to github
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/libs/*.jar
+          tag_name: ${{ github.event.inputs.version }}
+      - name: Upload files to curseforge
+        run: ./gradlew --info --stacktrace curseforge
+      - name: Upload files to modrinth
+        run: ./gradlew --info --stacktrace publishModrinth

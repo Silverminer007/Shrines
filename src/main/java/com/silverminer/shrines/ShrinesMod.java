@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 public class ShrinesMod {
    public static final String MODID = "shrines";
    public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
-   public static final String WIKI_LINK = "https://github.com/Silverminer007/MinecraftModsUpdateChecker/blob/master/wiki/SelectLanguage.md";
+   public static final String WIKI_LINK = "https://silverminer007.github.io/ShrinesWiki/";
    public static String VERSION = "N/A";
 
    /**
