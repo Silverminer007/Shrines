@@ -1,3 +1,10 @@
+## 3.0.0-Beta13 --- 06.02.2022 15:26 UTC
+
+- Improved structure generation in the end (check 4 edge points in radius of 20 blocks for spawn height)
+- Fixed watchtower destroys ground one level under it (structure void issue)
+
+===========
+
 ## 3.0.0-Beta12 --- 04.02.2022 16:40 UTC
 
 - Added End Temple's novel
