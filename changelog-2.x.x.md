@@ -1,3 +1,7 @@
+## 2.0.1 --- 06.02.2022 15:50 UTC
+- Fixed watchtower destroys ground one level under it (structure void issue)
+
+===========
 # 2.0.0 --- 03.02.2022 20:49 UTC
 ### Changes
 - Added Structures: Watchtower, Trader House, Shrine of Savanna
