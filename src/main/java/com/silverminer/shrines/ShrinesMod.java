@@ -22,23 +22,23 @@ import org.apache.logging.log4j.Logger;
  */
 @Mod(value = ShrinesMod.MODID)
 public class ShrinesMod {
-   public static final String MODID = "shrines";
-   public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
-   public static final String WIKI_LINK = "https://silverminer007.github.io/ShrinesWiki/";
-   public static String VERSION = "N/A";
+    public static final String MODID = "shrines";
+    public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
+    public static final String WIKI_LINK = "https://silverminer007.github.io/ShrinesWiki/";
+    public static String VERSION = "N/A";
 
-   /**
-    * If you're looking for example code on how to make a structure Mod see
-    * TelepathicGrunt's Example Mod on how to do that:
-    * https://github.com/TelepathicGrunt/StructureTutorialMod
-    */
-   public ShrinesMod() {
-      ModList.get().getModContainerById(ShrinesMod.MODID)
-            .ifPresent(container -> VERSION = container.getModInfo().getVersion().toString());
-      LOGGER.info("Shrines " + VERSION + " initialized");
-      Config.register(ModLoadingContext.get());
-      NovelsRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
-      VariationConfigurationRegistry.VARIATION_CONFIGURATION.register(FMLJavaModLoadingContext.get().getModEventBus());
-      VariationMaterialsRegistry.VARIATION_MATERIALS.register(FMLJavaModLoadingContext.get().getModEventBus());
-   }
+    /**
+     * If you're looking for example code on how to make a structure Mod see
+     * TelepathicGrunt's Example Mod on how to do that:
+     * https://github.com/TelepathicGrunt/StructureTutorialMod
+     */
+    public ShrinesMod() {
+        ModList.get().getModContainerById(ShrinesMod.MODID)
+                .ifPresent(container -> VERSION = container.getModInfo().getVersion().toString());
+        LOGGER.info("Shrines " + VERSION + " initialized");
+        Config.register(ModLoadingContext.get());
+        NovelsRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        VariationConfigurationRegistry.VARIATION_CONFIGURATION.register(FMLJavaModLoadingContext.get().getModEventBus());
+        VariationMaterialsRegistry.VARIATION_MATERIALS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
 }

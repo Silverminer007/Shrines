@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 package com.silverminer.shrines.worldgen.structures.variation;
 
 import com.google.common.collect.ImmutableList;
@@ -9,33 +16,33 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import java.util.List;
 
 public class NewVariationMaterial extends ForgeRegistryEntry<NewVariationMaterial> {
-   public static final Codec<NewVariationMaterial> CODEC =
-         RecordCodecBuilder.create(newVariationMaterialInstance ->
-               newVariationMaterialInstance.group(
-                           Codec.list(NewVariationMaterialElement.CODEC).fieldOf("types").forGetter(NewVariationMaterial::types),
-                           Codec.STRING.fieldOf("material_id").forGetter(NewVariationMaterial::materialID))
-                     .apply(newVariationMaterialInstance, NewVariationMaterial::new));
-   private final List<NewVariationMaterialElement> types;
-   private final String materialID;
+    public static final Codec<NewVariationMaterial> CODEC =
+            RecordCodecBuilder.create(newVariationMaterialInstance ->
+                    newVariationMaterialInstance.group(
+                                    Codec.list(NewVariationMaterialElement.CODEC).fieldOf("types").forGetter(NewVariationMaterial::types),
+                                    Codec.STRING.fieldOf("material_id").forGetter(NewVariationMaterial::materialID))
+                            .apply(newVariationMaterialInstance, NewVariationMaterial::new));
+    private final List<NewVariationMaterialElement> types;
+    private final String materialID;
 
-   public NewVariationMaterial(List<NewVariationMaterialElement> types, String materialID) {
-      this.types = ImmutableList.copyOf(types);
-      this.materialID = materialID;
-   }
+    public NewVariationMaterial(List<NewVariationMaterialElement> types, String materialID) {
+        this.types = ImmutableList.copyOf(types);
+        this.materialID = materialID;
+    }
 
-   public NewVariationMaterialElement getElement(String typeID) {
-      return this.types().stream().filter(type -> type.typeID().equals(typeID)).findFirst().orElse(null);
-   }
+    public NewVariationMaterialElement getElement(String typeID) {
+        return this.types().stream().filter(type -> type.typeID().equals(typeID)).findFirst().orElse(null);
+    }
 
-   public NewVariationMaterialElement getElement(Block block) {
-      return this.types().stream().filter(type -> type.blockID().equals(block.getRegistryName())).findFirst().orElse(null);
-   }
+    public NewVariationMaterialElement getElement(Block block) {
+        return this.types().stream().filter(type -> type.blockID().equals(block.getRegistryName())).findFirst().orElse(null);
+    }
 
-   public List<NewVariationMaterialElement> types() {
-      return this.types;
-   }
+    public List<NewVariationMaterialElement> types() {
+        return this.types;
+    }
 
-   public String materialID() {
-      return this.materialID;
-   }
+    public String materialID() {
+        return this.materialID;
+    }
 }
