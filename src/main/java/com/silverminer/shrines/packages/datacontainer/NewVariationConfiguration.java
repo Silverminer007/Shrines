@@ -24,9 +24,9 @@ public class NewVariationConfiguration extends ForgeRegistryEntry<NewVariationCo
                                     Codec.list(Codec.STRING).fieldOf("disabled_types").forGetter(NewVariationConfiguration::getDisabledTypes))
                             .apply(newVariationConfigurationInstance, NewVariationConfiguration::new));
 
-    private final boolean isEnabled;
-    private final List<String> disabledMaterials;
-    private final List<String> disabledTypes;
+    private boolean isEnabled;
+    private List<String> disabledMaterials;
+    private List<String> disabledTypes;
 
     public NewVariationConfiguration(boolean isEnabled) {
         this(isEnabled, new ArrayList<>(), new ArrayList<>());
@@ -42,6 +42,10 @@ public class NewVariationConfiguration extends ForgeRegistryEntry<NewVariationCo
         return this.isEnabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     public boolean isTypeEnabled(String typeID) {
         return !this.disabledTypes.contains(typeID);
     }
@@ -54,7 +58,15 @@ public class NewVariationConfiguration extends ForgeRegistryEntry<NewVariationCo
         return disabledMaterials;
     }
 
+    public void setDisabledMaterials(List<String> disabledMaterials) {
+        this.disabledMaterials = disabledMaterials;
+    }
+
     public List<String> getDisabledTypes() {
         return disabledTypes;
+    }
+
+    public void setDisabledTypes(List<String> disabledTypes) {
+        this.disabledTypes = disabledTypes;
     }
 }
