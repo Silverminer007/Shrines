@@ -17,63 +17,63 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ValidationStatusButton extends Button {
-   private boolean valid;
+    private boolean valid;
 
-   public ValidationStatusButton(int x, int y, IPressable clickHandler) {
-      super(x, y, 15, 15, new StringTextComponent(""), clickHandler);
+    public ValidationStatusButton(int x, int y, IPressable clickHandler) {
+        super(x, y, 15, 15, new StringTextComponent(""), clickHandler);
 
-      this.valid = true;
-   }
+        this.valid = true;
+    }
 
-   public void setValid() {
-      this.valid = true;
-   }
+    public void setValid() {
+        this.valid = true;
+    }
 
-   public void setInvalid() {
-      this.valid = false;
-   }
+    public void setInvalid() {
+        this.valid = false;
+    }
 
-   public boolean isValid() {
-      return this.valid;
-   }
+    public boolean isValid() {
+        return this.valid;
+    }
 
-   public void setValid(boolean isValid) {
-      this.valid = isValid;
-   }
+    public void setValid(boolean isValid) {
+        this.valid = isValid;
+    }
 
-   @SuppressWarnings("deprecation")
-   @Override
-   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-      Minecraft.getInstance().getTextureManager().bind(Button.WIDGETS_LOCATION);
-      GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
-      Icon icon = (this.valid) ? Icon.VALID : Icon.INVALID;
+    @SuppressWarnings("deprecation")
+    @Override
+    public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+        Minecraft.getInstance().getTextureManager().bind(Button.WIDGETS_LOCATION);
+        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        Icon icon = (this.valid) ? Icon.VALID : Icon.INVALID;
 
-      this.blit(ms, this.x, this.y, icon.getX(), icon.getY(), this.width, this.height);
-   }
+        this.blit(ms, this.x, this.y, icon.getX(), icon.getY(), this.width, this.height);
+    }
 
-   @Override
-   public boolean changeFocus(boolean forward) {
-      return false;
-   }
+    @Override
+    public boolean changeFocus(boolean forward) {
+        return false;
+    }
 
-   enum Icon {
-      VALID(208, 0),
-      INVALID(192, 0);
+    enum Icon {
+        VALID(208, 0),
+        INVALID(192, 0);
 
-      private final int x;
-      private final int y;
+        private final int x;
+        private final int y;
 
-      Icon(int x, int y) {
-         this.x = x;
-         this.y = y;
-      }
+        Icon(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
 
-      public int getX() {
-         return this.x;
-      }
+        public int getX() {
+            return this.x;
+        }
 
-      public int getY() {
-         return this.y;
-      }
-   }
+        public int getY() {
+            return this.y;
+        }
+    }
 }

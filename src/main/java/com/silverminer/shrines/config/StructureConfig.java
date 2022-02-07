@@ -16,10 +16,10 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class StructureConfig {
 
-   public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
-      for (AbstractStructure<?> structure : NewStructureInit.STRUCTURES.values().stream()
-            .filter(struct -> !(struct instanceof CustomStructure)).collect(Collectors.toList())) {
-         structure.buildConfig(SERVER_BUILDER);
-      }
-   }
+    public StructureConfig(final ForgeConfigSpec.Builder SERVER_BUILDER) {
+        for (AbstractStructure<?> structure : NewStructureInit.STRUCTURES.values().stream()
+                .filter(struct -> !(struct instanceof CustomStructure)).collect(Collectors.toList())) {
+            structure.buildConfig(SERVER_BUILDER);
+        }
+    }
 }

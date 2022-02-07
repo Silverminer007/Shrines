@@ -10,5 +10,5 @@ import java.io.File;
 
 public interface IProxy {
 
-   public File getBaseDir();
+    public File getBaseDir();
 }

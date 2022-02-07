@@ -25,32 +25,32 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 @Mod(value = ShrinesMod.MODID)
 public class ForgeShrines extends ShrinesMod {
 
-   public ForgeShrines() {
-      super();
-      ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
-            () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-   }
+    public ForgeShrines() {
+        super();
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
+                () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+    }
 
-   @Override
-   public void registerConfig() {
-      // Make sure structures are initialized before config will be loaded
-      NewStructureInit.initStructures();
-      // Config
-      Config.register(ModLoadingContext.get());
-      // Setup config UI
-      DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
-               () -> ClientUtils::getConfigGui);
-      });
-   }
+    @Override
+    public void registerConfig() {
+        // Make sure structures are initialized before config will be loaded
+        NewStructureInit.initStructures();
+        // Config
+        Config.register(ModLoadingContext.get());
+        // Setup config UI
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
+                    () -> ClientUtils::getConfigGui);
+        });
+    }
 
-   @Override
-   public void setProxy() {
-      this.proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ForgeServerProxy::new);
-   }
+    @Override
+    public void setProxy() {
+        this.proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ForgeServerProxy::new);
+    }
 
-   @Override
-   public void setFunctionProvider() {
-      this.functionProvider = new ForgeFunctionProvider();
-   }
+    @Override
+    public void setFunctionProvider() {
+        this.functionProvider = new ForgeFunctionProvider();
+    }
 }

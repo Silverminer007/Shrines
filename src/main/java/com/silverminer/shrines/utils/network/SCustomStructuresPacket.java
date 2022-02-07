@@ -22,27 +22,27 @@ import net.minecraft.network.PacketBuffer;
  * @author Silverminer
  */
 public class SCustomStructuresPacket implements IPacket {
-   protected static final Logger LOGGER = LogManager.getLogger(SCustomStructuresPacket.class);
+    protected static final Logger LOGGER = LogManager.getLogger(SCustomStructuresPacket.class);
 
-   public final ArrayList<CustomStructureData> datas;
+    public final ArrayList<CustomStructureData> datas;
 
-   public SCustomStructuresPacket(ArrayList<CustomStructureData> datas) {
-      this.datas = datas;
-   }
+    public SCustomStructuresPacket(ArrayList<CustomStructureData> datas) {
+        this.datas = datas;
+    }
 
-   public static void encode(SCustomStructuresPacket pkt, PacketBuffer buf) {
-      buf.writeInt(pkt.datas.size());
-      for (CustomStructureData csd : pkt.datas) {
-         buf.writeNbt(CustomStructureData.write(csd));
-      }
-   }
+    public static void encode(SCustomStructuresPacket pkt, PacketBuffer buf) {
+        buf.writeInt(pkt.datas.size());
+        for (CustomStructureData csd : pkt.datas) {
+            buf.writeNbt(CustomStructureData.write(csd));
+        }
+    }
 
-   public static SCustomStructuresPacket decode(PacketBuffer buf) {
-      ArrayList<CustomStructureData> datas = Lists.newArrayList();
-      int size = buf.readInt();
-      for (int i = 0; i < size; i++) {
-         datas.add(CustomStructureData.read(buf.readNbt()));
-      }
-      return new SCustomStructuresPacket(datas);
-   }
+    public static SCustomStructuresPacket decode(PacketBuffer buf) {
+        ArrayList<CustomStructureData> datas = Lists.newArrayList();
+        int size = buf.readInt();
+        for (int i = 0; i < size; i++) {
+            datas.add(CustomStructureData.read(buf.readNbt()));
+        }
+        return new SCustomStructuresPacket(datas);
+    }
 }

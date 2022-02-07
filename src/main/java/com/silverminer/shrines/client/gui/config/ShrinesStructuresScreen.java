@@ -30,136 +30,136 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class ShrinesStructuresScreen extends Screen {
-   private static final TranslationTextComponent TITLE = new TranslationTextComponent("gui.shrines.structures.title");
-   private static final TranslationTextComponent DISABLE = new TranslationTextComponent(
-         "gui.shrines.structures.disable");
-   private static final TranslationTextComponent ADD = new TranslationTextComponent("gui.shrines.structures.add");
-   private static final TranslationTextComponent CONFIG = new TranslationTextComponent(
-         "gui.shrines.structures.config");
-   private static final TranslationTextComponent REMOVE = new TranslationTextComponent(
-         "gui.shrines.structures.remove");
-   private static final TranslationTextComponent SETTINGS = new TranslationTextComponent(
-         "gui.shrines.structures.settings");
-   protected final Screen lastScreen;
-   public boolean builtInV = true;
-   public CheckboxButtonEx builtInB;
-   public boolean customsV = true;
-   protected TextFieldWidget searchBox;
-   private Button disableButton;
-   private Button configureButton;
-   private Button removeButton;
-   private StructuresList list;
+    private static final TranslationTextComponent TITLE = new TranslationTextComponent("gui.shrines.structures.title");
+    private static final TranslationTextComponent DISABLE = new TranslationTextComponent(
+            "gui.shrines.structures.disable");
+    private static final TranslationTextComponent ADD = new TranslationTextComponent("gui.shrines.structures.add");
+    private static final TranslationTextComponent CONFIG = new TranslationTextComponent(
+            "gui.shrines.structures.config");
+    private static final TranslationTextComponent REMOVE = new TranslationTextComponent(
+            "gui.shrines.structures.remove");
+    private static final TranslationTextComponent SETTINGS = new TranslationTextComponent(
+            "gui.shrines.structures.settings");
+    protected final Screen lastScreen;
+    public boolean builtInV = true;
+    public CheckboxButtonEx builtInB;
+    public boolean customsV = true;
+    protected TextFieldWidget searchBox;
+    private Button disableButton;
+    private Button configureButton;
+    private Button removeButton;
+    private StructuresList list;
 
-   public ShrinesStructuresScreen(Screen lastScreen) {
-      super(TITLE);
-      this.lastScreen = lastScreen;
-   }
+    public ShrinesStructuresScreen(Screen lastScreen) {
+        super(TITLE);
+        this.lastScreen = lastScreen;
+    }
 
-   public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {
-      return super.mouseScrolled(p_231043_1_, p_231043_3_, p_231043_5_);
-   }
+    public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {
+        return super.mouseScrolled(p_231043_1_, p_231043_3_, p_231043_5_);
+    }
 
-   public boolean charTyped(char p_231042_1_, int p_231042_2_) {
-      return this.searchBox.charTyped(p_231042_1_, p_231042_2_);
-   }
+    public boolean charTyped(char p_231042_1_, int p_231042_2_) {
+        return this.searchBox.charTyped(p_231042_1_, p_231042_2_);
+    }
 
-   public void render(MatrixStack p_230430_1_, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-      this.list.render(p_230430_1_, p_230430_2_, p_230430_3_, p_230430_4_);
-      this.searchBox.render(p_230430_1_, p_230430_2_, p_230430_3_, p_230430_4_);
-      drawCenteredString(p_230430_1_, this.font, this.title, this.width / 2, 8, 16777215);
-      super.render(p_230430_1_, p_230430_2_, p_230430_3_, p_230430_4_);
-   }
+    public void render(MatrixStack p_230430_1_, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
+        this.list.render(p_230430_1_, p_230430_2_, p_230430_3_, p_230430_4_);
+        this.searchBox.render(p_230430_1_, p_230430_2_, p_230430_3_, p_230430_4_);
+        drawCenteredString(p_230430_1_, this.font, this.title, this.width / 2, 8, 16777215);
+        super.render(p_230430_1_, p_230430_2_, p_230430_3_, p_230430_4_);
+    }
 
-   public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
-      return super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_) ? true
-            : this.searchBox.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_);
-   }
+    public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
+        return super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_) ? true
+                : this.searchBox.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_);
+    }
 
-   public void onClose() {
-      this.minecraft.setScreen(this.lastScreen);
-   }
+    public void onClose() {
+        this.minecraft.setScreen(this.lastScreen);
+    }
 
-   protected void init() {
-      this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-      this.searchBox = new TextFieldWidget(this.font, this.width / 2 - 100, 22, 200, 20, this.searchBox,
-            new TranslationTextComponent("selectWorld.search"));
-      this.searchBox.setResponder((search) -> {
-         this.list.refreshList(() -> {
-            return search;
-         });
-      });
-      this.builtInB = this.addButton(
-            new CheckboxButtonEx(10, 3, 10, 20, new TranslationTextComponent("gui.shrines.structures.builtin"),
-                  this.builtInV, this::onBuiltinButtonPressed));
-      boolean isNotMultiplayer = !(!this.minecraft.isLocalServer() || (this.minecraft.getSingleplayerServer() != null && this.minecraft.getSingleplayerServer().isPublished()));
-      this.builtInB.visible = isNotMultiplayer;
-      this.builtInV = isNotMultiplayer;
-      this.addButton(
-            new CheckboxButtonEx(10, isNotMultiplayer ? 25 : 13, 10, 20, new TranslationTextComponent("gui.shrines.structures.customs"),
-                  this.customsV, this::onCustomsButtonPressed));
-      this.list = new StructuresList(this, this.minecraft, this.width, this.height, 48, this.height - 64, 36, () -> {
-         return this.searchBox.getValue();
-      }, this.list);
-      this.children.add(this.searchBox);
-      this.children.add(this.list);
-      this.disableButton = this
-            .addButton(new Button(this.width / 2 - 154, this.height - 52, 150, 20, DISABLE, (button) -> {
-               this.list.getSelectedOpt().ifPresent(StructuresList.Entry::disable);
-               this.list.refreshList(() -> this.searchBox.getValue());
-               this.updateButtonStatus(false, false);
-            }));
-      this.addButton(new Button(this.width / 2 + 4, this.height - 52, 150, 20, ADD, (button) -> {
-         this.minecraft.setScreen(new ConfigStructureScreen(this, new CustomStructureData("", new Random()), true));
-      }));
-      this.configureButton = this
-            .addButton(new Button(this.width / 2 - 154, this.height - 28, 72, 20, CONFIG, (button) -> {
-               this.list.getSelectedOpt().ifPresent(StructuresList.Entry::configure);
-            }));
-      // Cancel Button
-      this.addButton(new Button(this.width / 2 - 76, this.height - 28, 152, 20, DialogTexts.GUI_CANCEL, (button) -> {
-         Utils.saveStructures();
-         this.minecraft.setScreen(this.lastScreen);
-      }));
-      this.removeButton = this
-            .addButton(new Button(this.width / 2 + 82, this.height - 28, 72, 20, REMOVE, (remove) -> {
-               this.list.getSelectedOpt().ifPresent(StructuresList.Entry::remove);
-            }));
-      // Settings Button
-      this.addButton(new Button(this.width - 80, 8, 72, 20, SETTINGS, (button) -> {
-         this.minecraft
-               .setScreen(new GeneralSettingsScreen(this, Lists.newArrayList(Config.SERVER_SETTINGS_CONFIG)));
-      }));
-      this.updateButtonStatus(false, false);
-   }
+    protected void init() {
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+        this.searchBox = new TextFieldWidget(this.font, this.width / 2 - 100, 22, 200, 20, this.searchBox,
+                new TranslationTextComponent("selectWorld.search"));
+        this.searchBox.setResponder((search) -> {
+            this.list.refreshList(() -> {
+                return search;
+            });
+        });
+        this.builtInB = this.addButton(
+                new CheckboxButtonEx(10, 3, 10, 20, new TranslationTextComponent("gui.shrines.structures.builtin"),
+                        this.builtInV, this::onBuiltinButtonPressed));
+        boolean isNotMultiplayer = !(!this.minecraft.isLocalServer() || (this.minecraft.getSingleplayerServer() != null && this.minecraft.getSingleplayerServer().isPublished()));
+        this.builtInB.visible = isNotMultiplayer;
+        this.builtInV = isNotMultiplayer;
+        this.addButton(
+                new CheckboxButtonEx(10, isNotMultiplayer ? 25 : 13, 10, 20, new TranslationTextComponent("gui.shrines.structures.customs"),
+                        this.customsV, this::onCustomsButtonPressed));
+        this.list = new StructuresList(this, this.minecraft, this.width, this.height, 48, this.height - 64, 36, () -> {
+            return this.searchBox.getValue();
+        }, this.list);
+        this.children.add(this.searchBox);
+        this.children.add(this.list);
+        this.disableButton = this
+                .addButton(new Button(this.width / 2 - 154, this.height - 52, 150, 20, DISABLE, (button) -> {
+                    this.list.getSelectedOpt().ifPresent(StructuresList.Entry::disable);
+                    this.list.refreshList(() -> this.searchBox.getValue());
+                    this.updateButtonStatus(false, false);
+                }));
+        this.addButton(new Button(this.width / 2 + 4, this.height - 52, 150, 20, ADD, (button) -> {
+            this.minecraft.setScreen(new ConfigStructureScreen(this, new CustomStructureData("", new Random()), true));
+        }));
+        this.configureButton = this
+                .addButton(new Button(this.width / 2 - 154, this.height - 28, 72, 20, CONFIG, (button) -> {
+                    this.list.getSelectedOpt().ifPresent(StructuresList.Entry::configure);
+                }));
+        // Cancel Button
+        this.addButton(new Button(this.width / 2 - 76, this.height - 28, 152, 20, DialogTexts.GUI_CANCEL, (button) -> {
+            Utils.saveStructures();
+            this.minecraft.setScreen(this.lastScreen);
+        }));
+        this.removeButton = this
+                .addButton(new Button(this.width / 2 + 82, this.height - 28, 72, 20, REMOVE, (remove) -> {
+                    this.list.getSelectedOpt().ifPresent(StructuresList.Entry::remove);
+                }));
+        // Settings Button
+        this.addButton(new Button(this.width - 80, 8, 72, 20, SETTINGS, (button) -> {
+            this.minecraft
+                    .setScreen(new GeneralSettingsScreen(this, Lists.newArrayList(Config.SERVER_SETTINGS_CONFIG)));
+        }));
+        this.updateButtonStatus(false, false);
+    }
 
-   public void tick() {
-      this.searchBox.tick();
-   }
+    public void tick() {
+        this.searchBox.tick();
+    }
 
-   public void removed() {
-      if (this.list != null) {
-         this.list.children().forEach(StructuresList.Entry::close);
-      }
+    public void removed() {
+        if (this.list != null) {
+            this.list.children().forEach(StructuresList.Entry::close);
+        }
 
-   }
+    }
 
-   private void onBuiltinButtonPressed(Boolean v) {
-      this.builtInV = v;
-      this.list.refreshList(() -> this.searchBox.getValue());
-   }
+    private void onBuiltinButtonPressed(Boolean v) {
+        this.builtInV = v;
+        this.list.refreshList(() -> this.searchBox.getValue());
+    }
 
-   private void onCustomsButtonPressed(Boolean v) {
-      this.customsV = v;
-      this.list.refreshList(() -> this.searchBox.getValue());
-   }
+    private void onCustomsButtonPressed(Boolean v) {
+        this.customsV = v;
+        this.list.refreshList(() -> this.searchBox.getValue());
+    }
 
-   public void updateButtonStatus(boolean flag, boolean removeable) {
-      this.disableButton.active = flag;
-      this.configureButton.active = flag;
-      if (removeable) {
-         this.removeButton.active = true;
-      } else {
-         this.removeButton.active = false;
-      }
-   }
+    public void updateButtonStatus(boolean flag, boolean removeable) {
+        this.disableButton.active = flag;
+        this.configureButton.active = flag;
+        if (removeable) {
+            this.removeButton.active = true;
+        } else {
+            this.removeButton.active = false;
+        }
+    }
 }

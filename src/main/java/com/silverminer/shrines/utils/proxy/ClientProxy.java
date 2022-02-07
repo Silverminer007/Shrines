@@ -12,9 +12,9 @@ import net.minecraft.client.Minecraft;
 
 public class ClientProxy implements IProxy {
 
-   @Override
-   public File getBaseDir() {
-      Minecraft mc = Minecraft.getInstance();
-      return mc.gameDirectory;
-   }
+    @Override
+    public File getBaseDir() {
+        Minecraft mc = Minecraft.getInstance();
+        return mc.gameDirectory;
+    }
 }

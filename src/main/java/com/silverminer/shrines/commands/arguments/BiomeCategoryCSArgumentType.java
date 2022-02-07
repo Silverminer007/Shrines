@@ -33,79 +33,79 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.Category;
 
 public class BiomeCategoryCSArgumentType implements ArgumentType<String> {
-   private final boolean newCat;
+    private final boolean newCat;
 
-   protected BiomeCategoryCSArgumentType(boolean newCat) {
-      this.newCat = newCat;
-   }
+    protected BiomeCategoryCSArgumentType(boolean newCat) {
+        this.newCat = newCat;
+    }
 
-   public static BiomeCategoryCSArgumentType category(boolean newCat) {
-      return new BiomeCategoryCSArgumentType(newCat);
-   }
+    public static BiomeCategoryCSArgumentType category(boolean newCat) {
+        return new BiomeCategoryCSArgumentType(newCat);
+    }
 
-   public static Biome.Category getCategory(final CommandContext<CommandSource> context, final String name)
-         throws CommandSyntaxException {
-      String str = context.getArgument(name, String.class);
-      String s = str.toUpperCase(Locale.ROOT);
-      Biome.Category c = Biome.Category.valueOf(s);
-      if (c != null) {
-         return c;
-      } else {
-         throw new SimpleCommandExceptionType(new TranslationTextComponent("commands.shrines.failure.category"))
-               .create();
-      }
-   }
+    public static Biome.Category getCategory(final CommandContext<CommandSource> context, final String name)
+            throws CommandSyntaxException {
+        String str = context.getArgument(name, String.class);
+        String s = str.toUpperCase(Locale.ROOT);
+        Biome.Category c = Biome.Category.valueOf(s);
+        if (c != null) {
+            return c;
+        } else {
+            throw new SimpleCommandExceptionType(new TranslationTextComponent("commands.shrines.failure.category"))
+                    .create();
+        }
+    }
 
-   @Override
-   public String parse(final StringReader reader) throws CommandSyntaxException {
-      int i = reader.getCursor();
+    public static List<String> getValidCategories(CommandContext<?> ctx, boolean newCat) {
+        List<Category> cats = Lists.newArrayList(Biome.Category.values());
+        CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class), false);
+        if (data != null)
+            cats.removeIf(cat -> newCat ? data.categories.getValue().contains(cat)
+                    : !data.categories.getValue().contains(cat));
+        return cats.stream().map(Biome.Category::getName).collect(Collectors.toList());
+    }
 
-      while (reader.canRead() && isAllowedChar(reader.peek())) {
-         reader.skip();
-      }
+    public static boolean isAllowedChar(char ch) {
+        return ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'z' || ch == '_' || ch == ':' || ch == '/' || ch == '.'
+                || ch == '-';
+    }
 
-      String s = reader.getString().substring(i, reader.getCursor());
-      return s;
-   }
+    @Override
+    public String parse(final StringReader reader) throws CommandSyntaxException {
+        int i = reader.getCursor();
 
-   public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
-      return cct.getSource() instanceof ISuggestionProvider
-            ? ISuggestionProvider.suggest(getValidCategories(cct, this.newCat), sb)
-            : Suggestions.empty();
-   }
+        while (reader.canRead() && isAllowedChar(reader.peek())) {
+            reader.skip();
+        }
 
-   public static List<String> getValidCategories(CommandContext<?> ctx, boolean newCat) {
-      List<Category> cats = Lists.newArrayList(Biome.Category.values());
-      CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class), false);
-      if (data != null)
-         cats.removeIf(cat -> newCat ? data.categories.getValue().contains(cat)
-               : !data.categories.getValue().contains(cat));
-      return cats.stream().map(Biome.Category::getName).collect(Collectors.toList());
-   }
+        String s = reader.getString().substring(i, reader.getCursor());
+        return s;
+    }
 
-   @Override
-   public Collection<String> getExamples() {
-      return Lists.newArrayList(Biome.Category.values()).stream().map(Biome.Category::getName)
-            .collect(Collectors.toList());
-   }
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
+        return cct.getSource() instanceof ISuggestionProvider
+                ? ISuggestionProvider.suggest(getValidCategories(cct, this.newCat), sb)
+                : Suggestions.empty();
+    }
 
-   public static boolean isAllowedChar(char ch) {
-      return ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'z' || ch == '_' || ch == ':' || ch == '/' || ch == '.'
-            || ch == '-';
-   }
+    @Override
+    public Collection<String> getExamples() {
+        return Lists.newArrayList(Biome.Category.values()).stream().map(Biome.Category::getName)
+                .collect(Collectors.toList());
+    }
 
-   public static class Serializer implements IArgumentSerializer<BiomeCategoryCSArgumentType> {
-      public void serializeToNetwork(BiomeCategoryCSArgumentType args, PacketBuffer pkt) {
-         pkt.writeBoolean(args.newCat);
-      }
+    public static class Serializer implements IArgumentSerializer<BiomeCategoryCSArgumentType> {
+        public void serializeToNetwork(BiomeCategoryCSArgumentType args, PacketBuffer pkt) {
+            pkt.writeBoolean(args.newCat);
+        }
 
-      public BiomeCategoryCSArgumentType deserializeFromNetwork(PacketBuffer pkt) {
-         return BiomeCategoryCSArgumentType.category(pkt.readBoolean());
-      }
+        public BiomeCategoryCSArgumentType deserializeFromNetwork(PacketBuffer pkt) {
+            return BiomeCategoryCSArgumentType.category(pkt.readBoolean());
+        }
 
-      @Override
-      public void serializeToJson(BiomeCategoryCSArgumentType args, JsonObject json) {
-         json.addProperty("newCat", args.newCat);
-      }
-   }
+        @Override
+        public void serializeToJson(BiomeCategoryCSArgumentType args, JsonObject json) {
+            json.addProperty("newCat", args.newCat);
+        }
+    }
 }

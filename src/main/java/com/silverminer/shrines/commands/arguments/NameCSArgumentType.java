@@ -29,79 +29,79 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class NameCSArgumentType implements ArgumentType<String> {
-   private final boolean newName;
+    private final boolean newName;
 
-   protected NameCSArgumentType(boolean newName) {
-      this.newName = newName;
-   }
+    protected NameCSArgumentType(boolean newName) {
+        this.newName = newName;
+    }
 
-   public static NameCSArgumentType oldName() {
-      return new NameCSArgumentType(false);
-   }
+    public static NameCSArgumentType oldName() {
+        return new NameCSArgumentType(false);
+    }
 
-   public static NameCSArgumentType newName() {
-      return new NameCSArgumentType(true);
-   }
+    public static NameCSArgumentType newName() {
+        return new NameCSArgumentType(true);
+    }
 
-   public static String getName(final CommandContext<CommandSource> context, final String name)
-         throws CommandSyntaxException {
-      String str = context.getArgument(name, String.class);
-      String s = str.toLowerCase(Locale.ROOT);
-      if (!s.equals(str))
-         context.getSource()
-               .sendFailure(new TranslationTextComponent("commands.shrines.failure.lower_case", "structure-name"));
-      return s;
-   }
+    public static String getName(final CommandContext<CommandSource> context, final String name)
+            throws CommandSyntaxException {
+        String str = context.getArgument(name, String.class);
+        String s = str.toLowerCase(Locale.ROOT);
+        if (!s.equals(str))
+            context.getSource()
+                    .sendFailure(new TranslationTextComponent("commands.shrines.failure.lower_case", "structure-name"));
+        return s;
+    }
 
-   @Override
-   public String parse(final StringReader reader) throws CommandSyntaxException {
-      int i = reader.getCursor();
+    public static boolean isAllowedChar(char ch) {
+        return ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'z' || ch == '_' || ch == ':' || ch == '/' || ch == '.'
+                || ch == '-';
+    }
 
-      while (reader.canRead() && isAllowedChar(reader.peek())) {
-         reader.skip();
-      }
-      String s = reader.getString().substring(i, reader.getCursor());
-      return s;
-   }
+    @Override
+    public String parse(final StringReader reader) throws CommandSyntaxException {
+        int i = reader.getCursor();
 
-   public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
-      if (!this.newName) {
-         return cct.getSource() instanceof ISuggestionProvider
-               ? ISuggestionProvider.suggest(Utils.getStructures(false).stream().map(CustomStructureData::getName),
-               sb)
-               : Suggestions.empty();
-      } else {
-         return Suggestions.empty();
-      }
-   }
+        while (reader.canRead() && isAllowedChar(reader.peek())) {
+            reader.skip();
+        }
+        String s = reader.getString().substring(i, reader.getCursor());
+        return s;
+    }
 
-   @Override
-   public Collection<String> getExamples() {
-      List<String> s = Lists.newArrayList();
-      Utils.getStructures(true).forEach(csd -> s.add(csd.name));
-      return s;
-   }
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
+        if (!this.newName) {
+            return cct.getSource() instanceof ISuggestionProvider
+                    ? ISuggestionProvider.suggest(Utils.getStructures(false).stream().map(CustomStructureData::getName),
+                    sb)
+                    : Suggestions.empty();
+        } else {
+            return Suggestions.empty();
+        }
+    }
 
-   public static boolean isAllowedChar(char ch) {
-      return ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'z' || ch == '_' || ch == ':' || ch == '/' || ch == '.'
-            || ch == '-';
-   }
+    @Override
+    public Collection<String> getExamples() {
+        List<String> s = Lists.newArrayList();
+        Utils.getStructures(true).forEach(csd -> s.add(csd.name));
+        return s;
+    }
 
-   public static class Serializer implements IArgumentSerializer<NameCSArgumentType> {
-      public void serializeToNetwork(NameCSArgumentType args, PacketBuffer buf) {
-         buf.writeBoolean(args.newName);
-      }
+    public static class Serializer implements IArgumentSerializer<NameCSArgumentType> {
+        public void serializeToNetwork(NameCSArgumentType args, PacketBuffer buf) {
+            buf.writeBoolean(args.newName);
+        }
 
-      public NameCSArgumentType deserializeFromNetwork(PacketBuffer buf) {
-         if (buf.readBoolean())
-            return NameCSArgumentType.newName();
-         else
-            return NameCSArgumentType.oldName();
-      }
+        public NameCSArgumentType deserializeFromNetwork(PacketBuffer buf) {
+            if (buf.readBoolean())
+                return NameCSArgumentType.newName();
+            else
+                return NameCSArgumentType.oldName();
+        }
 
-      @Override
-      public void serializeToJson(NameCSArgumentType args, JsonObject json) {
-         json.addProperty("newName", args.newName);
-      }
-   }
+        @Override
+        public void serializeToJson(NameCSArgumentType args, JsonObject json) {
+            json.addProperty("newName", args.newName);
+        }
+    }
 }

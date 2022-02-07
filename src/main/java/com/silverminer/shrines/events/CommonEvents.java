@@ -47,98 +47,98 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 public class CommonEvents {
-   protected static final Logger LOGGER = LogManager.getLogger(CommonEvents.class);
+    protected static final Logger LOGGER = LogManager.getLogger(CommonEvents.class);
 
-   @EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.MOD)
-   public static class ModEventBus {
-      @SubscribeEvent
-      public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
-         event.enqueueWork(() -> {
-            LOGGER.debug("Registering structure pieces and structures to dimensions");
-            Generator.setupWorldGen();
-            StructurePieceTypes.regsiter();
-            ArgumentTypes.register("biome_category", BiomeCategoryCSArgumentType.class,
-                  new BiomeCategoryCSArgumentType.Serializer());
-            ArgumentTypes.register("biome", BiomeCSArgumentType.class, new BiomeCSArgumentType.Serializer());
-            ArgumentTypes.register("name", NameCSArgumentType.class, new NameCSArgumentType.Serializer());
-            ArgumentTypes.register("option", OptionCSArgumentType.class, new OptionCSArgumentType.Serializer());
-         });
-      }
+    @EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.MOD)
+    public static class ModEventBus {
+        @SubscribeEvent
+        public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
+            event.enqueueWork(() -> {
+                LOGGER.debug("Registering structure pieces and structures to dimensions");
+                Generator.setupWorldGen();
+                StructurePieceTypes.regsiter();
+                ArgumentTypes.register("biome_category", BiomeCategoryCSArgumentType.class,
+                        new BiomeCategoryCSArgumentType.Serializer());
+                ArgumentTypes.register("biome", BiomeCSArgumentType.class, new BiomeCSArgumentType.Serializer());
+                ArgumentTypes.register("name", NameCSArgumentType.class, new NameCSArgumentType.Serializer());
+                ArgumentTypes.register("option", OptionCSArgumentType.class, new OptionCSArgumentType.Serializer());
+            });
+        }
 
-      @SubscribeEvent
-      public static void commonSetupEvent(FMLCommonSetupEvent event) {
-         ShrinesPacketHandler.register();
-      }
-   }
+        @SubscribeEvent
+        public static void commonSetupEvent(FMLCommonSetupEvent event) {
+            ShrinesPacketHandler.register();
+        }
+    }
 
-   @EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.FORGE)
-   public static class ForgeEventBus {
+    @EventBusSubscriber(modid = ShrinesMod.MODID, bus = Bus.FORGE)
+    public static class ForgeEventBus {
 
-      @SubscribeEvent(priority = EventPriority.HIGH)
-      public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
-         LOGGER.debug("Loading Biome and registering structures. Biome: {}", event.getName());
-         if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
-            for (AbstractStructure<NoFeatureConfig> struct : NewStructureInit.STRUCTURES.values()) {
-               if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
-                     struct.getConfig().getBlacklist(), event.getName(), event.getCategory()))
-                  event.getGeneration().addStructureStart(struct.configured(IFeatureConfig.NONE));
+        @SubscribeEvent(priority = EventPriority.HIGH)
+        public static void onBiomeLoadHigh(BiomeLoadingEvent event) {
+            LOGGER.debug("Loading Biome and registering structures. Biome: {}", event.getName());
+            if (!Config.SETTINGS.BLACKLISTED_BIOMES.get().contains(event.getName().toString())) {
+                for (AbstractStructure<NoFeatureConfig> struct : NewStructureInit.STRUCTURES.values()) {
+                    if (struct.getConfig().getGenerate() && checkBiome(struct.getConfig().getWhitelist(),
+                            struct.getConfig().getBlacklist(), event.getName(), event.getCategory()))
+                        event.getGeneration().addStructureStart(struct.configured(IFeatureConfig.NONE));
+                }
             }
-         }
-      }
+        }
 
-      private static boolean checkBiome(List<? extends Object> allowedBiomeCategories,
-                                        List<? extends String> blacklistedBiomes, ResourceLocation name, Biome.Category category) {
-         boolean flag = allowedBiomeCategories.contains(category.toString())
-               || allowedBiomeCategories.contains(category);
+        private static boolean checkBiome(List<? extends Object> allowedBiomeCategories,
+                                          List<? extends String> blacklistedBiomes, ResourceLocation name, Biome.Category category) {
+            boolean flag = allowedBiomeCategories.contains(category.toString())
+                    || allowedBiomeCategories.contains(category);
 
-         if (!blacklistedBiomes.isEmpty() && flag) {
-            flag = !blacklistedBiomes.contains(name.toString());
-         }
+            if (!blacklistedBiomes.isEmpty() && flag) {
+                flag = !blacklistedBiomes.contains(name.toString());
+            }
 
-         return flag;
-      }
+            return flag;
+        }
 
-      @SubscribeEvent
-      public static void onPlayerJoin(PlayerLoggedInEvent event) {
-         Utils.setSend(true);
-         Utils.onChanged(true);
-         LOGGER.info(Utils.getStructures(true).stream().map(st -> st.getName()).collect(Collectors.toList()));
-      }
+        @SubscribeEvent
+        public static void onPlayerJoin(PlayerLoggedInEvent event) {
+            Utils.setSend(true);
+            Utils.onChanged(true);
+            LOGGER.info(Utils.getStructures(true).stream().map(st -> st.getName()).collect(Collectors.toList()));
+        }
 
-      @SubscribeEvent
-      public static void registerCommands(RegisterCommandsEvent event) {
-         LOGGER.debug("Registering shrines commands");
-         ShrinesCommand.register(event.getDispatcher());
-      }
+        @SubscribeEvent
+        public static void registerCommands(RegisterCommandsEvent event) {
+            LOGGER.debug("Registering shrines commands");
+            ShrinesCommand.register(event.getDispatcher());
+        }
 
-      @SubscribeEvent
-      public static void onWorldSaved(WorldEvent.Save event) {
-         if (Utils.properties.autosave)
-            Utils.saveStructures();
-      }
+        @SubscribeEvent
+        public static void onWorldSaved(WorldEvent.Save event) {
+            if (Utils.properties.autosave)
+                Utils.saveStructures();
+        }
 
-      @SubscribeEvent
-      public static void onWorldStopped(WorldEvent.Unload event) {
-         IWorld iworld = event.getWorld();
+        @SubscribeEvent
+        public static void onWorldStopped(WorldEvent.Unload event) {
+            IWorld iworld = event.getWorld();
 
-         if (!(iworld instanceof World))
-            return;
-         if (!((World) iworld).isClientSide() && ((World) iworld).dimension() == World.OVERWORLD) {
-            Utils.getStructures(true).forEach(csd -> csd.PIECES_ON_FLY.clear());
-         }
-      }
+            if (!(iworld instanceof World))
+                return;
+            if (!((World) iworld).isClientSide() && ((World) iworld).dimension() == World.OVERWORLD) {
+                Utils.getStructures(true).forEach(csd -> csd.PIECES_ON_FLY.clear());
+            }
+        }
 
-      @SubscribeEvent
-      public static void onWorldLoad(WorldEvent.Load event) {
-         LOGGER.info("Loading bound data from file");
-         IWorld iworld = event.getWorld();
+        @SubscribeEvent
+        public static void onWorldLoad(WorldEvent.Load event) {
+            LOGGER.info("Loading bound data from file");
+            IWorld iworld = event.getWorld();
 
-         if (!(iworld instanceof World))
-            return;
-         World world = (World) iworld;
-         if (!world.isClientSide() && world.dimension() == World.OVERWORLD && world instanceof ServerWorld) {
-            Utils.boundDataSave = BoundSaveData.get((ServerWorld) world);
-         }
-      }
-   }
+            if (!(iworld instanceof World))
+                return;
+            World world = (World) iworld;
+            if (!world.isClientSide() && world.dimension() == World.OVERWORLD && world instanceof ServerWorld) {
+                Utils.boundDataSave = BoundSaveData.get((ServerWorld) world);
+            }
+        }
+    }
 }

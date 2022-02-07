@@ -18,14 +18,14 @@ import net.minecraftforge.registries.ForgeRegistries;
  */
 public class ForgeFunctionProvider implements IFunctionProvider {
 
-   @Override
-   public List<String> getBiomes() {
-      return ForgeRegistries.BIOMES.getKeys().stream().map(b -> b.toString()).collect(Collectors.toList());
-   }
+    @Override
+    public List<String> getBiomes() {
+        return ForgeRegistries.BIOMES.getKeys().stream().map(b -> b.toString()).collect(Collectors.toList());
+    }
 
-   @Override
-   public Block getBlockByID(String ID) {
-      return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ID));
-   }
+    @Override
+    public Block getBlockByID(String ID) {
+        return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ID));
+    }
 
 }

@@ -10,27 +10,27 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 public class OptionParsingResult {
-   private final boolean success;
-   private ITextComponent message;
+    private final boolean success;
+    private ITextComponent message;
 
-   public OptionParsingResult(boolean success, ITextComponent message) {
-      this.success = success;
-      this.message = message;
-   }
+    public OptionParsingResult(boolean success, ITextComponent message) {
+        this.success = success;
+        this.message = message;
+    }
 
-   public ITextComponent getMessage() {
-      if (this.message != null)
-         return message;
-      else
-         return new StringTextComponent("");
-   }
+    public ITextComponent getMessage() {
+        if (this.message != null)
+            return message;
+        else
+            return new StringTextComponent("");
+    }
 
-   public OptionParsingResult setMessage(ITextComponent message) {
-      this.message = message;
-      return this;
-   }
+    public OptionParsingResult setMessage(ITextComponent message) {
+        this.message = message;
+        return this;
+    }
 
-   public boolean isSuccess() {
-      return success;
-   }
+    public boolean isSuccess() {
+        return success;
+    }
 }

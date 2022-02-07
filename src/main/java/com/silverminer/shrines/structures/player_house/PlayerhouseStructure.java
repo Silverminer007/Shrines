@@ -24,38 +24,38 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class PlayerhouseStructure extends AbstractStructure<NoFeatureConfig> {
-   protected static final ConfigBuilder PLAYERHOUSE_CONFIG = new ConfigBuilder("Player House", 751963298, Type.LOOTABLE).setDistance(80).setSeparation(15);
+    protected static final ConfigBuilder PLAYERHOUSE_CONFIG = new ConfigBuilder("Player House", 751963298, Type.LOOTABLE).setDistance(80).setSeparation(15);
 
-   public PlayerhouseStructure(Codec<NoFeatureConfig> codec) {
-      super(codec, 3, "player_house", PLAYERHOUSE_CONFIG);
-   }
+    public PlayerhouseStructure(Codec<NoFeatureConfig> codec) {
+        super(codec, 3, "player_house", PLAYERHOUSE_CONFIG);
+    }
 
-   @Override
-   public GenerationStage.Decoration step() {
-      return GenerationStage.Decoration.SURFACE_STRUCTURES;
-   }
+    @Override
+    public GenerationStage.Decoration step() {
+        return GenerationStage.Decoration.SURFACE_STRUCTURES;
+    }
 
-   @Override
-   public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
-      return PlayerhouseStructure.Start::new;
-   }
+    @Override
+    public Structure.IStartFactory<NoFeatureConfig> getStartFactory() {
+        return PlayerhouseStructure.Start::new;
+    }
 
-   public static class Start extends AbstractStructureStart<NoFeatureConfig> {
+    public static class Start extends AbstractStructureStart<NoFeatureConfig> {
 
-      public Start(Structure<NoFeatureConfig> structure, int chunkX, int chunkZ, MutableBoundingBox boundingbox,
-                   int p_i225806_5_, long seed) {
-         super(structure, chunkX, chunkZ, boundingbox, p_i225806_5_, seed);
-      }
+        public Start(Structure<NoFeatureConfig> structure, int chunkX, int chunkZ, MutableBoundingBox boundingbox,
+                     int p_i225806_5_, long seed) {
+            super(structure, chunkX, chunkZ, boundingbox, p_i225806_5_, seed);
+        }
 
-      @Override
-      public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
-                                 TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
-         int i = chunkX * 16;
-         int j = chunkZ * 16;
-         BlockPos blockpos = new BlockPos(i, -1, j);
-         Rotation rotation = Rotation.getRandom(this.random);
-         PlayerhousePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
-         this.calculateBoundingBox();
-      }
-   }
+        @Override
+        public void generatePieces(DynamicRegistries registries, ChunkGenerator chunkGenerator,
+                                   TemplateManager templateManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
+            int i = chunkX * 16;
+            int j = chunkZ * 16;
+            BlockPos blockpos = new BlockPos(i, -1, j);
+            Rotation rotation = Rotation.getRandom(this.random);
+            PlayerhousePiece.generate(templateManager, blockpos, rotation, this.pieces, this.random, chunkGenerator);
+            this.calculateBoundingBox();
+        }
+    }
 }

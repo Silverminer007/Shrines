@@ -32,64 +32,64 @@ import net.minecraft.world.gen.feature.template.StructureProcessor;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class InfestedPrisonPiece {
-   private static final ArrayList<ResourceLocation> location = Lists
-         .newArrayList(new ResourceLocation("shrines:prison/infested_prison"));
+    private static final ArrayList<ResourceLocation> location = Lists
+            .newArrayList(new ResourceLocation("shrines:prison/infested_prison"));
 
-   public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-                               List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
-      int size = 32;
-      MutableBoundingBox mbb = MutableBoundingBox.createProper(-size, 0, -size, size, 0, size);
-      mbb.move(pos);
-      int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb,
-            random);
-      pieces.add(new InfestedPrisonPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
-            rotation, 0, true, height));
-   }
+    public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
+                                List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+        int size = 32;
+        MutableBoundingBox mbb = MutableBoundingBox.createProper(-size, 0, -size, size, 0, size);
+        mbb.move(pos);
+        int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb,
+                random);
+        pieces.add(new InfestedPrisonPiece.Piece(templateManager, location.get(random.nextInt(location.size())), pos,
+                rotation, 0, true, height));
+    }
 
-   public static class Piece extends ColorStructurePiece {
+    public static class Piece extends ColorStructurePiece {
 
-      public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-                   int componentTypeIn, boolean defaultValue, int height) {
-         super(StructurePieceTypes.INFESTED_PRISON, templateManager, location, pos, rotation, componentTypeIn,
-               defaultValue, height);
-      }
+        public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
+                     int componentTypeIn, boolean defaultValue, int height) {
+            super(StructurePieceTypes.INFESTED_PRISON, templateManager, location, pos, rotation, componentTypeIn,
+                    defaultValue, height);
+        }
 
-      public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
-         super(StructurePieceTypes.INFESTED_PRISON, templateManager, cNBT);
-      }
+        public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
+            super(StructurePieceTypes.INFESTED_PRISON, templateManager, cNBT);
+        }
 
-      @Override
-      public StructureProcessor getProcessor() {
-         return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
-      }
+        @Override
+        public StructureProcessor getProcessor() {
+            return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
+        }
 
-      @Override
-      protected boolean useRandomVarianting() {
-         return NewStructureInit.STRUCTURES.get("infested_prison").getConfig().getUseRandomVarianting();
-      }
+        @Override
+        protected boolean useRandomVarianting() {
+            return NewStructureInit.STRUCTURES.get("infested_prison").getConfig().getUseRandomVarianting();
+        }
 
-      public boolean overwriteTrapdoors() {
-         return false;
-      }
+        public boolean overwriteTrapdoors() {
+            return false;
+        }
 
-      public float getStoneChangeChance() {
-         return 0.0005F;
-      }
+        public float getStoneChangeChance() {
+            return 0.0005F;
+        }
 
-      @Override
-      protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
-                                      MutableBoundingBox sbb) {
-         boolean loot = NewStructureInit.STRUCTURES.get("infested_prison").getConfig().getLootChance() > rand.nextDouble();
-         if (function.equals("chest")) {
-            worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(2),
-                  loot ? ShrinesLootTables.INFECTED_PRISON : ShrinesLootTables.EMPTY);
-         }
-         if (function.equals("chest_cobweb")) {
-            worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
-            LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(2),
-                  loot ? ShrinesLootTables.INFECTED_PRISON : ShrinesLootTables.EMPTY);
-         }
-      }
-   }
+        @Override
+        protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
+                                        MutableBoundingBox sbb) {
+            boolean loot = NewStructureInit.STRUCTURES.get("infested_prison").getConfig().getLootChance() > rand.nextDouble();
+            if (function.equals("chest")) {
+                worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(2),
+                        loot ? ShrinesLootTables.INFECTED_PRISON : ShrinesLootTables.EMPTY);
+            }
+            if (function.equals("chest_cobweb")) {
+                worldIn.setBlock(pos, Blocks.COBWEB.defaultBlockState(), 3);
+                LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(2),
+                        loot ? ShrinesLootTables.INFECTED_PRISON : ShrinesLootTables.EMPTY);
+            }
+        }
+    }
 }

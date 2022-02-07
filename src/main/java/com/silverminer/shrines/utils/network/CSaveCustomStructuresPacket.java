@@ -18,28 +18,28 @@ import net.minecraft.util.ResourceLocation;
  * @author Silverminer
  */
 public class CSaveCustomStructuresPacket implements IPacket {
-   protected static final Logger LOGGER = LogManager.getLogger(CSaveCustomStructuresPacket.class);
+    protected static final Logger LOGGER = LogManager.getLogger(CSaveCustomStructuresPacket.class);
 
-   public final String structure;
-   public final String author;
-   public final boolean entities;
-   public final ResourceLocation dimension;
+    public final String structure;
+    public final String author;
+    public final boolean entities;
+    public final ResourceLocation dimension;
 
-   public CSaveCustomStructuresPacket(String structure, String author, boolean entities, ResourceLocation dimension) {
-      this.structure = structure;
-      this.author = author;
-      this.entities = entities;
-      this.dimension = dimension;
-   }
+    public CSaveCustomStructuresPacket(String structure, String author, boolean entities, ResourceLocation dimension) {
+        this.structure = structure;
+        this.author = author;
+        this.entities = entities;
+        this.dimension = dimension;
+    }
 
-   public static void encode(CSaveCustomStructuresPacket pkt, PacketBuffer buf) {
-      buf.writeUtf(pkt.structure);
-      buf.writeUtf(pkt.author);
-      buf.writeBoolean(pkt.entities);
-      buf.writeResourceLocation(pkt.dimension);
-   }
+    public static void encode(CSaveCustomStructuresPacket pkt, PacketBuffer buf) {
+        buf.writeUtf(pkt.structure);
+        buf.writeUtf(pkt.author);
+        buf.writeBoolean(pkt.entities);
+        buf.writeResourceLocation(pkt.dimension);
+    }
 
-   public static CSaveCustomStructuresPacket decode(PacketBuffer buf) {
-      return new CSaveCustomStructuresPacket(buf.readUtf(), buf.readUtf(), buf.readBoolean(), buf.readResourceLocation());
-   }
+    public static CSaveCustomStructuresPacket decode(PacketBuffer buf) {
+        return new CSaveCustomStructuresPacket(buf.readUtf(), buf.readUtf(), buf.readBoolean(), buf.readResourceLocation());
+    }
 }

@@ -16,27 +16,27 @@ import net.minecraft.util.text.ITextComponent;
  * @author Silverminer
  */
 public class NormalListScreen extends StructureListOptionScreen {
-   protected ConfigStructureScreen screen;
+    protected ConfigStructureScreen screen;
 
-   /**
-    * @param parent
-    * @param title
-    * @param possibleValues
-    * @param activeValues
-    * @param option
-    */
-   public NormalListScreen(ConfigStructureScreen parent, ITextComponent title, List<String> possibleValues,
-                           List<? extends String> activeValues, String option) {
-      super(parent, title, possibleValues, activeValues, option);
-      this.screen = parent;
-   }
+    /**
+     * @param parent
+     * @param title
+     * @param possibleValues
+     * @param activeValues
+     * @param option
+     */
+    public NormalListScreen(ConfigStructureScreen parent, ITextComponent title, List<String> possibleValues,
+                            List<? extends String> activeValues, String option) {
+        super(parent, title, possibleValues, activeValues, option);
+        this.screen = parent;
+    }
 
-   @Override
-   protected void save() {
-      IStructureConfig csd = this.screen.getConfig();
-      csd.fromString(this.option, this.activeValues.toString());
-      this.screen.setConfig(csd);
-      this.parent = screen;
-   }
+    @Override
+    protected void save() {
+        IStructureConfig csd = this.screen.getConfig();
+        csd.fromString(this.option, this.activeValues.toString());
+        this.screen.setConfig(csd);
+        this.parent = screen;
+    }
 
 }

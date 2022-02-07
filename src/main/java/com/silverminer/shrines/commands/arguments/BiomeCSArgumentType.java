@@ -23,43 +23,43 @@ import net.minecraft.command.arguments.ResourceLocationArgument;
 import net.minecraft.network.PacketBuffer;
 
 public class BiomeCSArgumentType extends ResourceLocationArgument {
-   private final boolean newBiome;
+    private final boolean newBiome;
 
-   protected BiomeCSArgumentType(boolean newBiome) {
-      this.newBiome = newBiome;
-   }
+    protected BiomeCSArgumentType(boolean newBiome) {
+        this.newBiome = newBiome;
+    }
 
-   public static BiomeCSArgumentType biome(boolean newBiome) {
-      return new BiomeCSArgumentType(newBiome);
-   }
+    public static BiomeCSArgumentType biome(boolean newBiome) {
+        return new BiomeCSArgumentType(newBiome);
+    }
 
-   public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
-      return cct.getSource() instanceof ISuggestionProvider
-            ? ISuggestionProvider.suggest(getValidBiomes(cct, this.newBiome), sb)
-            : Suggestions.empty();
-   }
+    public static List<String> getValidBiomes(CommandContext<?> ctx, boolean newBiome) {
+        List<String> biomes = ShrinesMod.getInstance().getFunctionProvider().getBiomes();
+        CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class), false);
+        if (data != null)
+            biomes.removeIf(biome -> newBiome ? data.blacklist.getValue().contains(biome)
+                    : !data.blacklist.getValue().contains(biome.toString()));
+        return biomes;
+    }
 
-   public static List<String> getValidBiomes(CommandContext<?> ctx, boolean newBiome) {
-      List<String> biomes = ShrinesMod.getInstance().getFunctionProvider().getBiomes();
-      CustomStructureData data = Utils.getData(ctx.getArgument("structure-name", String.class), false);
-      if (data != null)
-         biomes.removeIf(biome -> newBiome ? data.blacklist.getValue().contains(biome)
-               : !data.blacklist.getValue().contains(biome.toString()));
-      return biomes;
-   }
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> cct, SuggestionsBuilder sb) {
+        return cct.getSource() instanceof ISuggestionProvider
+                ? ISuggestionProvider.suggest(getValidBiomes(cct, this.newBiome), sb)
+                : Suggestions.empty();
+    }
 
-   public static class Serializer implements IArgumentSerializer<BiomeCSArgumentType> {
-      public void serializeToNetwork(BiomeCSArgumentType args, PacketBuffer pkt) {
-         pkt.writeBoolean(args.newBiome);
-      }
+    public static class Serializer implements IArgumentSerializer<BiomeCSArgumentType> {
+        public void serializeToNetwork(BiomeCSArgumentType args, PacketBuffer pkt) {
+            pkt.writeBoolean(args.newBiome);
+        }
 
-      public BiomeCSArgumentType deserializeFromNetwork(PacketBuffer pkt) {
-         return BiomeCSArgumentType.biome(pkt.readBoolean());
-      }
+        public BiomeCSArgumentType deserializeFromNetwork(PacketBuffer pkt) {
+            return BiomeCSArgumentType.biome(pkt.readBoolean());
+        }
 
-      @Override
-      public void serializeToJson(BiomeCSArgumentType args, JsonObject json) {
-         json.addProperty("newBiome", args.newBiome);
-      }
-   }
+        @Override
+        public void serializeToJson(BiomeCSArgumentType args, JsonObject json) {
+            json.addProperty("newBiome", args.newBiome);
+        }
+    }
 }

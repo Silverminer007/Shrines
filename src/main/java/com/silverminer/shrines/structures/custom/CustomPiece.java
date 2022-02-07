@@ -37,69 +37,69 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 
 public class CustomPiece {
-   protected static final Logger LOGGER = LogManager.getLogger(CustomPiece.class);
+    protected static final Logger LOGGER = LogManager.getLogger(CustomPiece.class);
 
-   public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-                               List<StructurePiece> pieces, Random random, boolean useRandomVarianting, List<PieceData> parts, String name,
-                               boolean ignore_air, int heightBase, ChunkGenerator chunkGenerator) {
-      for (PieceData pd : parts) {
-         String piece = pd.path;
-         BlockPos offset = new BlockPos(pd.offset.getX(), 0, pd.offset.getZ());
-         int height = heightBase + pd.offset.getY();
-         pieces.add(new CustomPiece.Piece(templateManager,
-               new ResourceLocation(ShrinesMod.MODID, name + "/" + piece), pos.offset(offset.rotate(rotation)),
-               rotation, 0, random, useRandomVarianting, ignore_air, height));
-      }
-   }
+    public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
+                                List<StructurePiece> pieces, Random random, boolean useRandomVarianting, List<PieceData> parts, String name,
+                                boolean ignore_air, int heightBase, ChunkGenerator chunkGenerator) {
+        for (PieceData pd : parts) {
+            String piece = pd.path;
+            BlockPos offset = new BlockPos(pd.offset.getX(), 0, pd.offset.getZ());
+            int height = heightBase + pd.offset.getY();
+            pieces.add(new CustomPiece.Piece(templateManager,
+                    new ResourceLocation(ShrinesMod.MODID, name + "/" + piece), pos.offset(offset.rotate(rotation)),
+                    rotation, 0, random, useRandomVarianting, ignore_air, height));
+        }
+    }
 
-   public static class Piece extends ColorStructurePiece {
-      public boolean useRandomVarianting = false;
-      public boolean ignore_air = true;
+    public static class Piece extends ColorStructurePiece {
+        public boolean useRandomVarianting = false;
+        public boolean ignore_air = true;
 
-      public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-                   int componentTypeIn, Random rand, boolean useRandomVarianting, boolean ignore_air, int height) {
-         super(StructurePieceTypes.CUSTOM, templateManager, location, pos, rotation, componentTypeIn, true, height);
-         this.useRandomVarianting = useRandomVarianting;
-         this.ignore_air = ignore_air;
-      }
+        public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
+                     int componentTypeIn, Random rand, boolean useRandomVarianting, boolean ignore_air, int height) {
+            super(StructurePieceTypes.CUSTOM, templateManager, location, pos, rotation, componentTypeIn, true, height);
+            this.useRandomVarianting = useRandomVarianting;
+            this.ignore_air = ignore_air;
+        }
 
-      public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
-         super(StructurePieceTypes.CUSTOM, templateManager, cNBT);
-         this.useRandomVarianting = cNBT.getBoolean("varianting");
-         this.ignore_air = cNBT.getBoolean("ignore_air");
-      }
+        public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
+            super(StructurePieceTypes.CUSTOM, templateManager, cNBT);
+            this.useRandomVarianting = cNBT.getBoolean("varianting");
+            this.ignore_air = cNBT.getBoolean("ignore_air");
+        }
 
-      @Override
-      public void setup(TemplateManager templateManager) {
-         MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
-         try {
-            Template template = new ModTemplateManager(Utils.getSaveLocation().getCanonicalFile().toPath(),
-                  server.getFixerUpper()).getOrCreate(this.location);
-            PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation)
-                  .setMirror(Mirror.NONE).addProcessor(this.getProcessor());
-            this.setup(template, this.templatePosition, placementsettings);
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      }
+        @Override
+        public void setup(TemplateManager templateManager) {
+            MinecraftServer server = LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
+            try {
+                Template template = new ModTemplateManager(Utils.getSaveLocation().getCanonicalFile().toPath(),
+                        server.getFixerUpper()).getOrCreate(this.location);
+                PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation)
+                        .setMirror(Mirror.NONE).addProcessor(this.getProcessor());
+                this.setup(template, this.templatePosition, placementsettings);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-      @Override
-      public StructureProcessor getProcessor() {
-         if (this.ignore_air)
-            return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
-         else
-            return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
-      }
+        @Override
+        public StructureProcessor getProcessor() {
+            if (this.ignore_air)
+                return BlockIgnoreStructureProcessor.STRUCTURE_AND_AIR;
+            else
+                return BlockIgnoreStructureProcessor.STRUCTURE_BLOCK;
+        }
 
-      protected void addAdditionalSaveData(CompoundNBT tagCompound) {
-         super.addAdditionalSaveData(tagCompound);
-         tagCompound.putBoolean("varianting", this.useRandomVarianting);
-         tagCompound.putBoolean("ignore_air", this.ignore_air);
-      }
+        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+            super.addAdditionalSaveData(tagCompound);
+            tagCompound.putBoolean("varianting", this.useRandomVarianting);
+            tagCompound.putBoolean("ignore_air", this.ignore_air);
+        }
 
-      @Override
-      protected boolean useRandomVarianting() {
-         return this.useRandomVarianting;
-      }
-   }
+        @Override
+        protected boolean useRandomVarianting() {
+            return this.useRandomVarianting;
+        }
+    }
 }

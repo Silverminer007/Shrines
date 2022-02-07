@@ -12,8 +12,8 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 public class ForgeServerProxy implements IProxy {
 
-   @Override
-   public File getBaseDir() {
-      return FMLPaths.GAMEDIR.get().toFile();
-   }
+    @Override
+    public File getBaseDir() {
+        return FMLPaths.GAMEDIR.get().toFile();
+    }
 }

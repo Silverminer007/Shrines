@@ -17,15 +17,15 @@ import net.minecraft.network.PacketBuffer;
  * @author Silverminer
  */
 public class SSaveCSDonePacket implements IPacket {
-   protected static final Logger LOGGER = LogManager.getLogger(SSaveCSDonePacket.class);
+    protected static final Logger LOGGER = LogManager.getLogger(SSaveCSDonePacket.class);
 
-   public SSaveCSDonePacket() {
-   }
+    public SSaveCSDonePacket() {
+    }
 
-   public static void encode(SSaveCSDonePacket pkt, PacketBuffer buf) {
-   }
+    public static void encode(SSaveCSDonePacket pkt, PacketBuffer buf) {
+    }
 
-   public static SSaveCSDonePacket decode(PacketBuffer buf) {
-      return new SSaveCSDonePacket();
-   }
+    public static SSaveCSDonePacket decode(PacketBuffer buf) {
+        return new SSaveCSDonePacket();
+    }
 }

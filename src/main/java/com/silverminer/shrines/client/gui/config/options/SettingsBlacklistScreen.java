@@ -19,22 +19,22 @@ import net.minecraft.util.text.ITextComponent;
  */
 public class SettingsBlacklistScreen extends StructureListOptionScreen {
 
-   /**
-    * @param parent
-    * @param title
-    * @param possibleValues
-    * @param activeValues
-    * @param option
-    */
-   public SettingsBlacklistScreen(Screen parent, ITextComponent title,
-                                  List<? extends String> activeValues) {
-      super(parent, title, CustomStructureData.getPossibleValuesForKey("blacklist"), activeValues, "blacklist");
-   }
+    /**
+     * @param parent
+     * @param title
+     * @param possibleValues
+     * @param activeValues
+     * @param option
+     */
+    public SettingsBlacklistScreen(Screen parent, ITextComponent title,
+                                   List<? extends String> activeValues) {
+        super(parent, title, CustomStructureData.getPossibleValuesForKey("blacklist"), activeValues, "blacklist");
+    }
 
-   @Override
-   protected void save() {
-      Config.SETTINGS.BLACKLISTED_BIOMES.set(activeValues);
-      Config.SETTINGS.BLACKLISTED_BIOMES.save();
-   }
+    @Override
+    protected void save() {
+        Config.SETTINGS.BLACKLISTED_BIOMES.set(activeValues);
+        Config.SETTINGS.BLACKLISTED_BIOMES.save();
+    }
 
 }

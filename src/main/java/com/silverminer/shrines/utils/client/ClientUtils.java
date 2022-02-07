@@ -16,12 +16,12 @@ import net.minecraft.client.settings.KeyBinding;
  * @author Silverminer
  */
 public class ClientUtils {
-   /**
-    * This holds screen open keybind. It's initialised in ClientEvents (FMLClientSetupEvent) and used in Key Pressed Event. Allows key rebinds
-    */
-   public static KeyBinding structuresScreen;
+    /**
+     * This holds screen open keybind. It's initialised in ClientEvents (FMLClientSetupEvent) and used in Key Pressed Event. Allows key rebinds
+     */
+    public static KeyBinding structuresScreen;
 
-   public static Screen getConfigGui(Minecraft mc, Screen parent) {
-      return new ShrinesStructuresScreen(parent);
-   }
+    public static Screen getConfigGui(Minecraft mc, Screen parent) {
+        return new ShrinesStructuresScreen(parent);
+    }
 }

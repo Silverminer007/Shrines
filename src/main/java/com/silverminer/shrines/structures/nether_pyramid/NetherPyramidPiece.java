@@ -28,60 +28,60 @@ import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 public class NetherPyramidPiece {
-   private static final ResourceLocation location = new ResourceLocation("shrines:nether_pyramid/nether_pyramid");
+    private static final ResourceLocation location = new ResourceLocation("shrines:nether_pyramid/nether_pyramid");
 
-   public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
-                               List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
-      int size = 48;
-      MutableBoundingBox mbb = MutableBoundingBox.createProper(-size, 0, -size, size, 0, size);
-      mbb.move(pos);
-      int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb,
-            random);
-      pieces.add(new NetherPyramidPiece.Piece(templateManager, location, pos.offset(0, -1, 0), rotation, 0, height));
-   }
+    public static void generate(TemplateManager templateManager, BlockPos pos, Rotation rotation,
+                                List<StructurePiece> pieces, Random random, ChunkGenerator chunkGenerator) {
+        int size = 48;
+        MutableBoundingBox mbb = MutableBoundingBox.createProper(-size, 0, -size, size, 0, size);
+        mbb.move(pos);
+        int height = StructureUtils.getHeight(chunkGenerator, new BlockPos(mbb.x0, mbb.y0, mbb.z0), mbb,
+                random);
+        pieces.add(new NetherPyramidPiece.Piece(templateManager, location, pos.offset(0, -1, 0), rotation, 0, height));
+    }
 
-   public static class Piece extends ColorStructurePiece {
-      public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
-                   int componentTypeIn, int height) {
-         super(StructurePieceTypes.NETHER_PYRAMID, templateManager, location, pos, rotation, componentTypeIn, false,
-               height);
-      }
+    public static class Piece extends ColorStructurePiece {
+        public Piece(TemplateManager templateManager, ResourceLocation location, BlockPos pos, Rotation rotation,
+                     int componentTypeIn, int height) {
+            super(StructurePieceTypes.NETHER_PYRAMID, templateManager, location, pos, rotation, componentTypeIn, false,
+                    height);
+        }
 
-      public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
-         super(StructurePieceTypes.NETHER_PYRAMID, templateManager, cNBT);
-      }
+        public Piece(TemplateManager templateManager, CompoundNBT cNBT) {
+            super(StructurePieceTypes.NETHER_PYRAMID, templateManager, cNBT);
+        }
 
-      @Override
-      protected boolean useRandomVarianting() {
-         return NewStructureInit.STRUCTURES.get("nether_pyramid").getConfig().getUseRandomVarianting();
-      }
+        @Override
+        protected boolean useRandomVarianting() {
+            return NewStructureInit.STRUCTURES.get("nether_pyramid").getConfig().getUseRandomVarianting();
+        }
 
-      public boolean overwriteSlabs() {
-         return true;
-      }
+        public boolean overwriteSlabs() {
+            return true;
+        }
 
-      public boolean overwriteStairs() {
-         return true;
-      }
+        public boolean overwriteStairs() {
+            return true;
+        }
 
-      public boolean overwriteStone() {
-         return true;
-      }
+        public boolean overwriteStone() {
+            return true;
+        }
 
-      public float getStoneChangeChance() {
-         return 0.15F;
-      }
+        public float getStoneChangeChance() {
+            return 0.15F;
+        }
 
-      @Override
-      protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
-                                      MutableBoundingBox sbb) {
-         boolean loot = NewStructureInit.STRUCTURES.get("nether_pyramid").getConfig().getLootChance() > rand.nextDouble();
-         if ("chest_left".equals(function) || "chest_right".equals(function) || "chest_d1".equals(function)
-               || "chest_d2".equals(function) || "chest_d3".equals(function) || "chest_d4".equals(function)) {
-            worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
-                  loot ? ShrinesLootTables.getRandomNetherLoot(rand) : ShrinesLootTables.EMPTY);
-         }
-      }
-   }
+        @Override
+        protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand,
+                                        MutableBoundingBox sbb) {
+            boolean loot = NewStructureInit.STRUCTURES.get("nether_pyramid").getConfig().getLootChance() > rand.nextDouble();
+            if ("chest_left".equals(function) || "chest_right".equals(function) || "chest_d1".equals(function)
+                    || "chest_d2".equals(function) || "chest_d3".equals(function) || "chest_d4".equals(function)) {
+                worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(),
+                        loot ? ShrinesLootTables.getRandomNetherLoot(rand) : ShrinesLootTables.EMPTY);
+            }
+        }
+    }
 }

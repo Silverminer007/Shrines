@@ -14,7 +14,7 @@ import net.minecraft.block.Block;
  * @author Silverminer
  */
 public interface IFunctionProvider {
-   List<String> getBiomes();
+    List<String> getBiomes();
 
-   Block getBlockByID(String ID);
+    Block getBlockByID(String ID);
 }
