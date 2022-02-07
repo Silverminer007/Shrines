@@ -38,6 +38,10 @@ public class NewVariationMaterial extends ForgeRegistryEntry<NewVariationMateria
         return this.types().stream().filter(type -> type.blockID().equals(block.getRegistryName())).findFirst().orElse(null);
     }
 
+    public NewVariationMaterial withMaterialID(String newMaterialID) {
+        return new NewVariationMaterial(types(), newMaterialID);
+    }
+
     public List<NewVariationMaterialElement> types() {
         return this.types;
     }
