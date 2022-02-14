@@ -1,3 +1,11 @@
+## 2.2.0-Beta1 --- 14.02.2022 18:50 UTC
+
+- Import old custom structures on startup too
+- Fix import of old custom structures (#38)
+- Use default structure config, if no config is present in old config for that structure
+
+===========
+
 ## 2.1.0 --- 13.02.2022 13:43 UTC
 
 - Import structure configurations from 1.8.1 or below to 2.1.0+

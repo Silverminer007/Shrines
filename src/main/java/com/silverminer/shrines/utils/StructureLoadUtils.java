@@ -141,6 +141,9 @@ public class StructureLoadUtils {
             if (!has_included_structures) {
                 StructuresPacket includedStructures = upgradeFrom1_8_1 ? loadLegacyIncludedStructures() : StructureLoadUtils.getIncludedStructures();
                 StructureLoadUtils.saveStructures(includedStructures);
+                if (upgradeFrom1_8_1) {
+                    LegacyPacketImportUtils.importLegacyPacketOnServer(shrines_saves.getParentFile().toPath(), "Silverm7ner");
+                }
             }
         } catch (Throwable e) {
             e.printStackTrace();
