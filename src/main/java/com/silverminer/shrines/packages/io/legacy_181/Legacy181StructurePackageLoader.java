@@ -130,7 +130,9 @@ public class Legacy181StructurePackageLoader implements StructurePackageLoader {
                 spawnConfiguration.setBiome_blacklist(configData.get(Arrays.asList("structures", key, "blacklist")));
                 spawnConfiguration.setBiome_category_whitelist(configData.get(Arrays.asList("structures", key, "categories")));
                 spawnConfiguration.setDimension_whitelist(configData.get(Arrays.asList("structures", key, "dimensions")));
-                spawnConfiguration.setStart_pool(structureData.getKey().toString() + "/start_pool");
+                if (spawnConfiguration.getStart_pool().isBlank()) {
+                    spawnConfiguration.setStart_pool(structureData.getKey().toString() + "/start_pool");
+                }
                 List<String> dimensionWhitelist = spawnConfiguration.getDimension_whitelist();
                 if (dimensionWhitelist.contains("end")) {
                     dimensionWhitelist.remove("end");
@@ -146,9 +148,9 @@ public class Legacy181StructurePackageLoader implements StructurePackageLoader {
                 variationConfiguration.setSimpleVariationConfiguration(randomVariation ? SimpleVariationConfiguration.ALL_ENABLED : SimpleVariationConfiguration.ALL_DISABLED);
                 variationConfiguration.setNestedVariationConfiguration(randomVariation ? NestedVariationConfiguration.ALL_ENABLED : NestedVariationConfiguration.ALL_DISABLED);
             } catch (NullPointerException e) {
-                if (!key.equals("ballon")
-                        && !key.equals("small_tempel")
-                        && !key.equals("high_tempel")) {
+                if (!key.equals("shrine_of_savanna")
+                        && !key.equals("watchtower")
+                        && !key.equals("trader_house")) {
                     LOGGER.error("Failed to import legacy structure config from shrines-server.toml for structure [{}]", structureData.getKey());
                 }
             }
@@ -162,7 +164,9 @@ public class Legacy181StructurePackageLoader implements StructurePackageLoader {
      */
     private StructureDataContainer getLegacyIncludedStructures() {
         StructureDataContainer structures = new StructureDataContainer();
-        structures.add(DefaultStructureConfig.ABANDONEDWITCHHOUSE_CONFIG.toStructureData());
+        StructureData witchHouseData = DefaultStructureConfig.ABANDONEDWITCHHOUSE_CONFIG.toStructureData();
+        witchHouseData.setKey(new ResourceLocation(ShrinesMod.MODID, "witch_house"));
+        structures.add(witchHouseData);
         StructureData balloonData = DefaultStructureConfig.BALLON_CONFIG.toStructureData();
         balloonData.setKey(new ResourceLocation(ShrinesMod.MODID, "ballon"));
         structures.add(balloonData);
