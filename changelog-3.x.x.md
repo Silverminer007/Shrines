@@ -1,3 +1,9 @@
+## 3.0.0-Beta17 --- 15.02.2022 18:20 UTC
+
+- Added some missing chinese translations
+
+===========
+
 ## 3.0.0-Beta16 --- 15.02.2022 15:55 UTC
 
 - Use old name of abandoned_witch_house too, when previously 1.8.1 was used
