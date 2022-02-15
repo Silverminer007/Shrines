@@ -160,5 +160,8 @@
   "options.shrines.random_variation_options.comment": "Drücke auf '+' um die Zugehörigen Optionen anzuzeigen und auf '-' um die wieder zu verbergen",
   "comment_general": "",
   "gui.shrines.removeQuestion": "Bist du sicher das du [%s] löschen willst?",
-  "gui.shrines.removeWarning": "Es wird für immer weg sein (Eine lange zeit)"
+  "gui.shrines.removeWarning": "Es wird für immer weg sein (Eine lange zeit)",
+  "key.showStructureNovels": "Bauwerk Geschichten Menü",
+  "key.customStructuresScreen": "Bauwerk Konfigurations Menü",
+  "key.categories.shrines": "Shrines Structures"
 }
