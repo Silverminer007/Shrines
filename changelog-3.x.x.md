@@ -1,3 +1,9 @@
+## 3.0.0-Beta16 --- 15.02.2022 15:55 UTC
+
+- Use old name of abandoned_witch_house too, when previously 1.8.1 was used
+
+===========
+
 ## 3.0.0-Beta15 --- 15.02.2022 15:24 UTC
 
 - Fixed issue with "" in spanish translations
