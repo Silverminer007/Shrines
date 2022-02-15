@@ -211,7 +211,9 @@ public class StructureLoadUtils {
      */
     private static List<StructureData> getLegacyIncludedStructures() {
         List<StructureData> structures = new ArrayList<>();
-        structures.add(new StructureData(DefaultStructureConfig.ABANDONEDWITCHHOUSE_CONFIG));
+        StructureData witchHouseData = new StructureData(DefaultStructureConfig.ABANDONEDWITCHHOUSE_CONFIG);
+        witchHouseData.setKey(new ResourceLocation(ShrinesMod.MODID, "witch_house").toString());
+        structures.add(witchHouseData);
         StructureData balloonData = new StructureData(DefaultStructureConfig.BALLON_CONFIG);
         balloonData.setKey(new ResourceLocation(ShrinesMod.MODID, "ballon").toString());
         structures.add(balloonData);

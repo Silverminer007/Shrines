@@ -1,6 +1,7 @@
-## 2.2.0 --- 14.02.2022 18:50 UTC
+## 2.2.0 --- 15.02.2022 15:35 UTC
 
 - Added Translations for control configuration options of shrines mod
+- Use old name of abandoned_witch_house too, when previously 1.8.1 was used
 
 ===========
 
