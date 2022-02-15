@@ -160,5 +160,8 @@
   "options.shrines.random_variation_options.comment": "Press '+' to show the associated options and '-' to hide them again.",
   "comment_general": "",
   "gui.shrines.removeQuestion": "你確定要刪除 [%s] 嗎？",
-  "gui.shrines.removeWarning": "它將永遠消失（很長一段時間）"
+  "gui.shrines.removeWarning": "它將永遠消失（很長一段時間）",
+  "key.showStructureNovels": "建筑故事菜单",
+  "key.customStructuresScreen": "建筑配置菜单",
+  "key.categories.shrines": "Shrines Structures"
 }

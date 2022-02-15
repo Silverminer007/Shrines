@@ -160,5 +160,8 @@
   "options.shrines.random_variation_options.comment": "Pulse '+' para mostrar las opciones asociadas y '-' para ocultarlas de nuevo.",
   "comment_general": "",
   "gui.shrines.removeQuestion": "¿Estás seguro de que quieres borrar [%s]?",
-  "gui.shrines.removeWarning": "Se irá para siempre (Mucho tiempo)"
+  "gui.shrines.removeWarning": "Se irá para siempre (Mucho tiempo)",
+  "key.showStructureNovels": "Menú de historias de edificios",
+  "key.customStructuresScreen": "Menú de configuración del edificio",
+  "key.categories.shrines": "Shrines Structures"
 }

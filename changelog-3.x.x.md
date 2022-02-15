@@ -1,3 +1,11 @@
+## 3.0.0-Beta15 --- 15.02.2022 15:24 UTC
+
+- Fixed issue with "" in spanish translations
+- Set start pool of upgraded structures from 1.8.1
+- Added Translations for control configuration options of shrines mod
+
+===========
+
 ## 3.0.0-Beta14 --- 13.02.2022 20:35 UTC
 
 - Fix warning 'Potentially Dangerous alternative prefix shrines for name trader_house, expected minecraft. This could be
