@@ -25,26 +25,28 @@ import java.util.ArrayList;
  */
 @EventBusSubscriber(modid = ShrinesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class StructureInit {
-   public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
-         .<StructureRegistryHolder>builder().addAll(initStructures()).build();
-   protected static final Logger LOGGER = LogManager.getLogger(StructureInit.class);
+    protected static final Logger LOGGER = LogManager.getLogger(StructureInit.class);
+    public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
+            .<StructureRegistryHolder>builder().addAll(initStructures()).build();
 
-   private static ArrayList<StructureRegistryHolder> initStructures() {
-      PackageManagerProvider.SERVER.bootstrapPackages();
-      ArrayList<StructureRegistryHolder> structures = new ArrayList<>();
-      for (StructuresPackageWrapper packet : PackageManagerProvider.SERVER.getInitialStructurePackages().getAsIterable()) {
-         for (StructureData structure : packet.getStructures().getAsIterable()) {
-            structures.add(new StructureRegistryHolder(structure.getKey(), structure));
-         }
-      }
-      return structures;
-   }
+    private static ArrayList<StructureRegistryHolder> initStructures() {
+        PackageManagerProvider.SERVER.bootstrapPackages();
+        ArrayList<StructureRegistryHolder> structures = new ArrayList<>();
+        for (StructuresPackageWrapper packet : PackageManagerProvider.SERVER.getInitialStructurePackages().getAsIterable()) {
+            for (StructureData structure : packet.getStructures().getAsIterable()) {
+                structures.add(new StructureRegistryHolder(structure.getKey(), structure));
+            }
+        }
+        LOGGER.info("Initialised {} structures of shrines Mod", structures.size());
+        return structures;
+    }
 
-   @SubscribeEvent
-   public static void registerStructures(RegistryEvent.Register<StructureFeature<?>> event) {
-      LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
-      for (StructureRegistryHolder holder : STRUCTURES) {
-         event.getRegistry().register(holder.getStructure());
-      }
-   }
+    @SubscribeEvent
+    public static void registerStructures(RegistryEvent.Register<StructureFeature<?>> event) {
+        LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
+        for (StructureRegistryHolder holder : STRUCTURES) {
+            holder.getStructure().setRegistryName(holder.getStructure().getConfig().getKey());
+            event.getRegistry().register(holder.getStructure());
+        }
+    }
 }

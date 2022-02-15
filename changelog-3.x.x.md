@@ -1,3 +1,17 @@
+## 3.0.0-Beta14 --- 13.02.2022 20:35 UTC
+
+- Fix warning 'Potentially Dangerous alternative prefix shrines for name trader_house, expected minecraft. This could be
+  a intended override, but in most cases indicates a broken mod.'
+
+===========
+
+## 3.0.0-Beta13 --- 06.02.2022 15:26 UTC
+
+- Improved structure generation in the end (check 4 edge points in radius of 20 blocks for spawn height)
+- Fixed watchtower destroys ground one level under it (structure void issue)
+
+===========
+
 ## 3.0.0-Beta12 --- 04.02.2022 16:40 UTC
 
 - Added End Temple's novel
@@ -11,7 +25,8 @@
 
 - Fixed error message when import of legacy packages failed because of an IOError while reading structures.txt
 - Fixed crash in case specified start pool doesn't exist
-- Changed legacy 1.8.1 load conditions: 'shrines-saves' must exist and either 'structures.txt' or 'shrines-server.toml' in config directory
+- Changed legacy 1.8.1 load conditions: 'shrines-saves' must exist and either 'structures.txt' or 'shrines-server.toml'
+  in config directory
 - Improved legacy 1.8.1 load: Load included structure's config too
 
 ===========
@@ -29,7 +44,8 @@
     - Small Temple
     - Mineral Temple
     - Water Shrine
-- Fixed crash when opening structure insights screen, but you've found the structure more often then there are parts of the novel
+- Fixed crash when opening structure insights screen, but you've found the structure more often then there are parts of
+  the novel
 
 ===========
 
