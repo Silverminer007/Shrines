@@ -130,6 +130,7 @@ public class Legacy181StructurePackageLoader implements StructurePackageLoader {
                 spawnConfiguration.setBiome_blacklist(configData.get(Arrays.asList("structures", key, "blacklist")));
                 spawnConfiguration.setBiome_category_whitelist(configData.get(Arrays.asList("structures", key, "categories")));
                 spawnConfiguration.setDimension_whitelist(configData.get(Arrays.asList("structures", key, "dimensions")));
+                spawnConfiguration.setStart_pool(structureData.getKey().toString() + "/start_pool");
                 List<String> dimensionWhitelist = spawnConfiguration.getDimension_whitelist();
                 if (dimensionWhitelist.contains("end")) {
                     dimensionWhitelist.remove("end");
