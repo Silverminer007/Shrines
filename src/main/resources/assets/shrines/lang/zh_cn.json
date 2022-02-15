@@ -96,5 +96,7 @@
   "options.shrines.biome_list": "生物群系選擇",
   "comment_general": "",
   "gui.shrines.removeQuestion": "你確定要刪除 [%s] 嗎？",
-  "gui.shrines.removeWarning": "它將永遠消失（很長一段時間）"
+  "gui.shrines.removeWarning": "它將永遠消失（很長一段時間）",
+  "key.customStructuresScreen": "结构新颖的用户界面",
+  "key.categories.shrines": "Shrines Structures"
 }

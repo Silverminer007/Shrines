@@ -1,3 +1,9 @@
+## 2.2.0 --- 14.02.2022 18:50 UTC
+
+- Added Translations for control configuration options of shrines mod
+
+===========
+
 ## 2.2.0-Beta1 --- 14.02.2022 18:50 UTC
 
 - Import old custom structures on startup too

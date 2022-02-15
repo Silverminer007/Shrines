@@ -96,5 +96,7 @@
   "options.shrines.biome_list": "Selección de biomas",
   "comment_general": "",
   "gui.shrines.removeQuestion": "¿Estás seguro de que quieres borrar [%s]?",
-  "gui.shrines.removeWarning": "Se irá para siempre (Mucho tiempo)"
+  "gui.shrines.removeWarning": "Se irá para siempre (Mucho tiempo)",
+  "key.customStructuresScreen": "Estructura de la interfaz de usuario novedosa",
+  "key.categories.shrines": "Shrines Structures"
 }

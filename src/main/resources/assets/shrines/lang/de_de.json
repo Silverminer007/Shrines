@@ -96,5 +96,7 @@
   "options.shrines.biome_list": "Biom Auswahl",
   "comment_general": "",
   "gui.shrines.removeQuestion": "Bist du sicher das du [%s] l\u00f6schen willst?",
-  "gui.shrines.removeWarning": "Es wird f\u00fcr immer weg sein (Eine lange zeit)"
+  "gui.shrines.removeWarning": "Es wird f\u00fcr immer weg sein (Eine lange zeit)",
+  "key.customStructuresScreen": "Bauwerk Geschichten Menü",
+  "key.categories.shrines": "Shrines Structures"
 }
