@@ -55,6 +55,12 @@ jobs:
         id: changelog
         with:
           path: ./changelog-3.x.x.md
+      - name: Split Changelog
+        id: split
+        uses: rishabhgupta/split-by@v1
+        with:
+          string: ${{ steps.changelog.outputs.content }}
+          split-by: "==========="
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
@@ -63,7 +69,7 @@ jobs:
           tag: ${{ github.event.inputs.version }}
           body: |
             ![GitHub release (by tag)](https://img.shields.io/github/downloads/Silverminer007/Shrines/${{ github.event.inputs.version }}/total)
-            ${{ steps.changelog.outputs.content }}
+            ${{ steps.split.outputs._0}}
       - name: Upload files to github
         uses: softprops/action-gh-release@v1
         with:
