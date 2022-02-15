@@ -17,6 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Publish 3.x.x'
     steps:
+      - name: Get current time
+        uses: srfrnk/current-time@master
+        id: current-time
+        with:
+          format: DD.MM.YYYY HH:mm [UTC]
       - name: Git checkout
         uses: actions/checkout@v2
         with:
@@ -45,18 +50,20 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: '1.18-3.0.0'
           tags: true
-      - name: Get current time
-        uses: srfrnk/current-time@master
-        id: current-time
+      - name: read changelog file
+        uses: juliangruber/read-file-action@v1
+        id: changelog
         with:
-          format: DD.MM.YYYY HH:mm [UTC]
+          path: ./changelog-3.x.x.md
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.formattedTime }}
           tag: ${{ github.event.inputs.version }}
-          bodyFile: "changelog-3.x.x.md"
+          body: |
+            ![GitHub release (by tag)](https://img.shields.io/github/downloads/Silverminer007/Shrines/${{ github.event.inputs.version }}/total)
+            ${{ steps.changelog.outputs.content }}
       - name: Upload files to github
         uses: softprops/action-gh-release@v1
         with:
