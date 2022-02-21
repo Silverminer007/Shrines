@@ -86,9 +86,16 @@ minecraft {
     }
 }
 
+repositories {
+    flatDir {
+        dir 'libs'
+    }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation name: "dynamicregistries-1.18.1-0.0.1"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

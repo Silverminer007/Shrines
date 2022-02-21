@@ -7,9 +7,7 @@
 package com.silverminer.shrines;
 
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.init.NovelsRegistry;
-import com.silverminer.shrines.init.VariationConfigurationRegistry;
-import com.silverminer.shrines.init.VariationMaterialsRegistry;
+import com.silverminer.shrines.init.DynamicRegistriesRegistry;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -37,8 +35,11 @@ public class ShrinesMod {
                 .ifPresent(container -> VERSION = container.getModInfo().getVersion().toString());
         LOGGER.info("Shrines " + VERSION + " initialized");
         Config.register(ModLoadingContext.get());
-        NovelsRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        VariationConfigurationRegistry.VARIATION_CONFIGURATION.register(FMLJavaModLoadingContext.get().getModEventBus());
-        VariationMaterialsRegistry.VARIATION_MATERIALS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //NovelsRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //VariationConfigurationRegistry.VARIATION_CONFIGURATION.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //VariationMaterialsRegistry.VARIATION_MATERIALS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        DynamicRegistriesRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        DynamicRegistriesRegistry.VARIATION_MATERIAL.register(FMLJavaModLoadingContext.get().getModEventBus());
+        DynamicRegistriesRegistry.VARIATION_CONFIGURATION.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 }
