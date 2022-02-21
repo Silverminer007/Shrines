@@ -10,8 +10,12 @@ package com.silverminer.shrines.worldgen.structures.variation;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.silverminer.shrines.ShrinesMod;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import silverminer.dynamicregistries.registry.RegistryAccessExtension;
 
 import java.util.List;
 
@@ -22,6 +26,7 @@ public class NewVariationMaterial extends ForgeRegistryEntry<NewVariationMateria
                                     Codec.list(NewVariationMaterialElement.CODEC).fieldOf("types").forGetter(NewVariationMaterial::types),
                                     Codec.STRING.fieldOf("material_id").forGetter(NewVariationMaterial::materialID))
                             .apply(newVariationMaterialInstance, NewVariationMaterial::new));
+    public static final ResourceKey<Registry<NewVariationMaterial>> REGISTRY = RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "worldgen/variation_material");
     private final List<NewVariationMaterialElement> types;
     private final String materialID;
 

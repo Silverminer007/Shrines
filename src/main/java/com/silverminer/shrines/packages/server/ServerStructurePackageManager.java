@@ -7,8 +7,6 @@
 
 package com.silverminer.shrines.packages.server;
 
-import com.silverminer.shrines.init.NovelsRegistry;
-import com.silverminer.shrines.init.VariationMaterialsRegistry;
 import com.silverminer.shrines.packages.container.NovelDataContainer;
 import com.silverminer.shrines.packages.container.StructurePackageContainer;
 import com.silverminer.shrines.packages.datacontainer.StructureNovel;
@@ -21,8 +19,10 @@ import com.silverminer.shrines.utils.network.stc.*;
 import com.silverminer.shrines.utils.queue.PlayerQueue;
 import com.silverminer.shrines.worldgen.structures.variation.NewVariationMaterial;
 import com.silverminer.shrines.worldgen.structures.variation.NewVariationMaterialElement;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
@@ -95,9 +95,11 @@ public class ServerStructurePackageManager {
     }
 
     public void syncAvailableMaterialsATypesToClient(UUID uuid) {
-        List<String> availableMaterials = VariationMaterialsRegistry.VARIATION_MATERIALS_REGISTRY.get().getValues().stream().map(NewVariationMaterial::materialID).distinct().toList();
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        WritableRegistry<NewVariationMaterial> registry = server.registryAccess().ownedRegistryOrThrow(NewVariationMaterial.REGISTRY);
+        List<String> availableMaterials = registry.stream().map(NewVariationMaterial::materialID).distinct().toList();
         List<String> availableTypes = new ArrayList<>();
-        for (NewVariationMaterial material : VariationMaterialsRegistry.VARIATION_MATERIALS_REGISTRY.get().getValues()) {
+        for (NewVariationMaterial material : registry) {
             for (NewVariationMaterialElement element : material.types()) {
                 if (!availableTypes.contains(element.typeID())) {
                     availableTypes.add(element.typeID());
@@ -108,8 +110,10 @@ public class ServerStructurePackageManager {
     }
 
     public void syncNovelsToClient(UUID uuid) {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        WritableRegistry<StructureNovel> registry = server.registryAccess().ownedRegistryOrThrow(StructureNovel.REGISTRY);
         Map<ResourceLocation, StructureNovel> novelsRegistryData = new HashMap<>();
-        for (Map.Entry<ResourceKey<StructureNovel>, StructureNovel> entry : NovelsRegistry.NOVELS_REGISTRY.get().getEntries()) {
+        for (Map.Entry<ResourceKey<StructureNovel>, StructureNovel> entry : registry.entrySet()) {
             novelsRegistryData.put(entry.getKey().location(), entry.getValue());
         }
         ShrinesPacketHandler.sendTo(new STCSyncNovels(this.getNovels(uuid), novelsRegistryData), uuid);

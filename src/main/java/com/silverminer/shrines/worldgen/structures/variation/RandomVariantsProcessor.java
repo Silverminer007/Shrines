@@ -10,7 +10,6 @@ package com.silverminer.shrines.worldgen.structures.variation;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.init.VariationMaterialsRegistry;
 import com.silverminer.shrines.packages.datacontainer.NewVariationConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -24,6 +23,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.PostPlacementProcessor;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
     private void createBlockRemaps(Random rand) {
         if (this.MATERIAL_REMAPS.isEmpty()) {
             ListMultimap<String, NewVariationMaterial> materialChanges = LinkedListMultimap.create();
-            for (NewVariationMaterial variationMaterial : VariationMaterialsRegistry.VARIATION_MATERIALS_REGISTRY.get().getValues()) {
+            for (NewVariationMaterial variationMaterial : ServerLifecycleHooks.getCurrentServer().registryAccess().ownedRegistryOrThrow(NewVariationMaterial.REGISTRY)) {
                 materialChanges.put(variationMaterial.materialID(), variationMaterial);
             }
             for (String key : materialChanges.keySet()) {
