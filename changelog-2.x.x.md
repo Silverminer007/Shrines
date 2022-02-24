@@ -1,3 +1,12 @@
+## 2.2.1 --- 24.02.2022 10:25 UTC
+
+- Fix [#39](https://github.com/Silverminer007/Shrines/issues/39)
+- Be aware of '\' in resource paths instead of '/'
+- Be aware of loading issues. Don't cause minecraft to crash
+- Give better error messages when resource path has invalid chars (e.g. non lower case letters)
+
+===========
+
 ## 2.2.0 --- 15.02.2022 15:35 UTC
 
 - Added Translations for control configuration options of shrines mod

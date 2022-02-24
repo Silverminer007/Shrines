@@ -28,6 +28,7 @@ import net.minecraft.resources.IPackNameDecorator;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.FileUtil;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ResourceLocationException;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
@@ -47,7 +48,6 @@ import java.util.stream.Collectors;
 public class StructureLoadUtils {
     public static final int PACKET_VERSION = 2;
     protected static final Logger LOGGER = LogManager.getLogger(StructureLoadUtils.class);
-    private static final List<String> deletedStructures = ImmutableList.of("ballon", "small_tempel", "high_tempel");
     /**
      * This list is equals to the Structure Packet which the user can see, so Packets that were deleted aren't here anymore, but new packets are here.
      * This list is only on the server side, but synchronized between its threads
@@ -145,7 +145,7 @@ public class StructureLoadUtils {
                     LegacyPacketImportUtils.importLegacyPacketOnServer(shrines_saves.getParentFile().toPath(), "Silverm7ner");
                 }
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -299,9 +299,13 @@ public class StructureLoadUtils {
                 Path relativeTemplate = data.relativize(templatePath).normalize();
                 if (relativeTemplate.getNameCount() > 2) {
                     String namespace = relativeTemplate.getName(0).toString();
-                    String locationPath = Paths.get(relativeTemplate.getName(0).toString(), relativeTemplate.getName(1).toString()).relativize(relativeTemplate).toString();
-                    ResourceLocation template = new ResourceLocation(namespace, locationPath.replace(".nbt", ""));
-                    templates.add(template);
+                    String locationPath = Paths.get(relativeTemplate.getName(0).toString(), relativeTemplate.getName(1).toString()).relativize(relativeTemplate).toString().replace("\\", "/");
+                    try {
+                        ResourceLocation template = new ResourceLocation(namespace, locationPath.replace(".nbt", ""));
+                        templates.add(template);
+                    } catch (ResourceLocationException e) {
+                        LOGGER.error("Invalid resource path for template", e);
+                    }
                 }
             });
         } catch (IOException e) {
@@ -333,10 +337,12 @@ public class StructureLoadUtils {
                                 StringBuilder poolString = new StringBuilder();
                                 Files.readAllLines(poolPath).forEach(poolString::append);
                                 TemplatePool pool = TemplatePool.fromString(poolString.toString());
-                                pool.setSaveName(new ResourceLocation(namespacePath.getFileName().toString(), poolsPath.relativize(poolPath).toString().replaceAll(".json", "")));
+                                pool.setSaveName(new ResourceLocation(namespacePath.getFileName().toString(), poolsPath.relativize(poolPath).toString().replace("\\", "/").replaceAll(".json", "")));
                                 templates.add(pool);
                             } catch (IOException e) {
                                 LOGGER.error("Failed to parse Template Pool", e);
+                            } catch (ResourceLocationException e) {
+                                LOGGER.error("Invalid resource path for template pool", e);
                             }
                         });
                     }

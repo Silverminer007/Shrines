@@ -38,6 +38,10 @@ public class NewStructureInit {
             .<StructureRegistryHolder>builder().addAll(initStructures()).build();
 
     private static ArrayList<StructureRegistryHolder> initStructures() {
+        if (StructureLoadUtils.STRUCTURE_PACKETS == null) {
+            LOGGER.error("Failed to load shrines structures packages. You should report this immediately to the author of shrines. Stopped further loading of shrines");
+            return new ArrayList<>();
+        }
         StructureLoadUtils.FINAL_STRUCTURES_PACKETS = ImmutableList.copyOf(StructureLoadUtils.STRUCTURE_PACKETS);
         ArrayList<StructureRegistryHolder> structures = Lists.newArrayList();
         LOGGER.info("Registering shrines structures");
