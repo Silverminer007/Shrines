@@ -1,0 +1,13 @@
+{
+  "types": [
+    {
+      "type_id": "normal",
+      "block_id": "minecraft:emerald_ore"
+    },
+    {
+      "type_id": "deepslate",
+      "block_id": "minecraft:deepslate_emerald_ore"
+    }
+  ],
+  "material_id": "ores"
+}

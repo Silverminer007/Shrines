@@ -17,17 +17,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import silverminer.dynamicregistries.registry.RegistryAccessExtension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class StructureNovel extends ForgeRegistryEntry<StructureNovel> {
-    public static final ResourceKey<Registry<StructureNovel>> REGISTRY = RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "structure_novels");
+    public static final ResourceKey<Registry<StructureNovel>> REGISTRY = ResourceKey.createRegistryKey(new ResourceLocation(ShrinesMod.MODID, "shrines/structure_novels"));//RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "structure_novels");
     public static final Codec<StructureNovel> CODEC = RecordCodecBuilder.create((structureNovelInstance ->
             structureNovelInstance.group(Codec.list(Codec.STRING).fieldOf("parts").forGetter(StructureNovel::getParts))
                     .apply(structureNovelInstance, StructureNovel::new)

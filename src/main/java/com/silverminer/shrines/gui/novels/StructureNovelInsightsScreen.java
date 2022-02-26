@@ -18,6 +18,7 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -47,9 +48,10 @@ public class StructureNovelInsightsScreen extends Screen {
     private boolean scrolling;
 
     public StructureNovelInsightsScreen(Screen lastScreen, StructureData structure, int unlockedParts) {
-        super(new TranslatableComponent("gui.shrines.novel.title", structure.getName()));
+        super(new TranslatableComponent("gui.shrines.novel.title", structure.getName()));// TODO Allow empty novels. We could show a warning that for this structure no novel is available
         this.lastScreen = lastScreen;
-        StructureNovel structureNovel = Objects.requireNonNull(RegistryAccess.builtin().registryOrThrow(StructureNovel.REGISTRY).get(structure.getNovel()));
+        Registry<StructureNovel> novelsRegistry = RegistryAccess.builtin().registryOrThrow(StructureNovel.REGISTRY);
+        StructureNovel structureNovel = Objects.requireNonNull(novelsRegistry.get(structure.getNovel()));
         if (unlockedParts < structureNovel.getParts().size()) {
             this.renderInfo = true;
         }

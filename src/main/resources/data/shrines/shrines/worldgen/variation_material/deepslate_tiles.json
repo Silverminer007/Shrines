@@ -1,0 +1,21 @@
+{
+  "types": [
+    {
+      "type_id": "stone",
+      "block_id": "minecraft:deepslate_tiles"
+    },
+    {
+      "type_id": "slab",
+      "block_id": "minecraft:deepslate_tile_slab"
+    },
+    {
+      "type_id": "stair",
+      "block_id": "minecraft:deepslate_tile_stairs"
+    },
+    {
+      "type_id": "wall",
+      "block_id": "minecraft:deepslate_tile_wall"
+    }
+  ],
+  "material_id": "stone"
+}
