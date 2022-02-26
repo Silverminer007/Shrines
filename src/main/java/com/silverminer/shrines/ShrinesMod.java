@@ -24,6 +24,7 @@ public class ShrinesMod {
     public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
     public static final String WIKI_LINK = "https://silverminer007.github.io/ShrinesWiki/";
     public static String VERSION = "N/A";
+    public static final boolean debug = false;
 
     /**
      * If you're looking for example code on how to make a structure Mod see

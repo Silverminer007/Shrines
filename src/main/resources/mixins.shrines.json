@@ -4,7 +4,6 @@
   "refmap": "mixins.shrines.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinRegistryAccess",
     "MixinStructureFeature",
     "MixinStructureFeatures",
     "MixinStructureStart"

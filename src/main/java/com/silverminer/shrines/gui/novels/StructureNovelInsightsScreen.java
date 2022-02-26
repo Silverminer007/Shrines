@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.silverminer.shrines.packages.PackageManagerProvider;
 import com.silverminer.shrines.packages.datacontainer.StructureData;
 import com.silverminer.shrines.packages.datacontainer.StructureNovel;
 import com.silverminer.shrines.utils.ClientUtils;
@@ -18,8 +19,6 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -32,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
@@ -48,19 +46,24 @@ public class StructureNovelInsightsScreen extends Screen {
     private boolean scrolling;
 
     public StructureNovelInsightsScreen(Screen lastScreen, StructureData structure, int unlockedParts) {
-        super(new TranslatableComponent("gui.shrines.novel.title", structure.getName()));// TODO Allow empty novels. We could show a warning that for this structure no novel is available
+        super(new TranslatableComponent("gui.shrines.novel.title", structure.getName()));
         this.lastScreen = lastScreen;
-        Registry<StructureNovel> novelsRegistry = RegistryAccess.builtin().registryOrThrow(StructureNovel.REGISTRY);
-        StructureNovel structureNovel = Objects.requireNonNull(novelsRegistry.get(structure.getNovel()));
-        if (unlockedParts < structureNovel.getParts().size()) {
-            this.renderInfo = true;
-        }
-        this.words = Lists.newArrayList();
-        for (int i = 0; i < unlockedParts && i < structureNovel.getParts().size(); i++) {
-            String part = structureNovel.getParts().get(i);
-            part = new TranslatableComponent(part).getString();// Enable translations of novels even if we don't ship them by default
-            String[] wordsInPart = part.replace("\n", " \n ").split(" ");
-            this.words.addAll(Arrays.asList(wordsInPart));
+        StructureNovel structureNovel = PackageManagerProvider.CLIENT.getNovelsRegistryData().get(structure.getNovel());
+        if(structureNovel != null){
+            if (unlockedParts < structureNovel.getParts().size()) {
+                this.renderInfo = true;
+            }
+            this.words = Lists.newArrayList();
+            for (int i = 0; i < unlockedParts && i < structureNovel.getParts().size(); i++) {
+                String part = structureNovel.getParts().get(i);
+                part = new TranslatableComponent(part).getString();// Enable translations of novels even if we don't ship them by default
+                String[] wordsInPart = part.replace("\n", " \n ").split(" ");
+                this.words.addAll(Arrays.asList(wordsInPart));
+            }
+        } else {
+            this.renderInfo = false;
+            String info = "We're sorry, but there is no Novel for this Structure yet :(";
+            this.words = Arrays.asList(info.split(" "));
         }
     }
 
