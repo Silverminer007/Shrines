@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[34.1,)"
+loaderVersion="[39,)"
 license="MPL-2.0"
 issueTrackerURL="https://github.com/Silverminer007/Shrines/issues"
 
@@ -17,3 +17,17 @@ Also allows users to easily add own structures to world generation (Press k)
 
 See https://www.curseforge.com/minecraft/mc-mods/shrines-structures for more Info
 '''
+
+[[dependencies.shrines]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18,1.19)"
+ordering = "NONE"
+side = "BOTH"
+
+#[[dependencies.shrines]]
+#modId = "dynamicregistries"
+#mandatory = true
+#versionRange = "[1.0.0,2.0.0)"
+#ordering = "NONE"
+#side = "BOTH"

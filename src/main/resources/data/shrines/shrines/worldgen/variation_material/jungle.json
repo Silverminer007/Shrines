@@ -1,0 +1,61 @@
+{
+  "types": [
+    {
+      "type_id": "plank",
+      "block_id": "minecraft:jungle_planks"
+    },
+    {
+      "type_id": "slab",
+      "block_id": "minecraft:jungle_slab"
+    },
+    {
+      "type_id": "button",
+      "block_id": "minecraft:jungle_button"
+    },
+    {
+      "type_id": "stairs",
+      "block_id": "minecraft:jungle_stairs"
+    },
+    {
+      "type_id": "fence",
+      "block_id": "minecraft:jungle_fence"
+    },
+    {
+      "type_id": "fence_gate",
+      "block_id": "minecraft:jungle_fence_gate"
+    },
+    {
+      "type_id": "log",
+      "block_id": "minecraft:jungle_log"
+    },
+    {
+      "type_id": "stripped_log",
+      "block_id": "minecraft:stripped_jungle_log"
+    },
+    {
+      "type_id": "trapdoor",
+      "block_id": "minecraft:jungle_trapdoor"
+    },
+    {
+      "type_id": "door",
+      "block_id": "minecraft:jungle_door"
+    },
+    {
+      "type_id": "standing_sign",
+      "block_id": "minecraft:jungle_sign"
+    },
+    {
+      "type_id": "wall_sign",
+      "block_id": "minecraft:jungle_wall_sign"
+    },
+    {
+      "type_id": "leaves",
+      "block_id": "minecraft:jungle_leaves"
+    },
+    {
+      "type_id": "wood",
+      "block_id": "minecraft:jungle_wood"
+    }
+  ],
+  "material_id": "wood"
+}

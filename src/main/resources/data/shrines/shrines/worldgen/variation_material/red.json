@@ -1,0 +1,61 @@
+{
+  "types": [
+    {
+      "type_id": "terracotta",
+      "block_id": "minecraft:red_terracotta"
+    },
+    {
+      "type_id": "glazed_terracotta",
+      "block_id": "minecraft:red_glazed_terracotta"
+    },
+    {
+      "type_id": "wool",
+      "block_id": "minecraft:red_wool"
+    },
+    {
+      "type_id": "concrete",
+      "block_id": "minecraft:red_concrete"
+    },
+    {
+      "type_id": "concrete_powder",
+      "block_id": "minecraft:red_concrete_powder"
+    },
+    {
+      "type_id": "glass",
+      "block_id": "minecraft:red_glass"
+    },
+    {
+      "type_id": "glass_pane",
+      "block_id": "minecraft:red_glass_pane"
+    },
+    {
+      "type_id": "banner",
+      "block_id": "minecraft:red_banner"
+    },
+    {
+      "type_id": "wall_banner",
+      "block_id": "minecraft:red_wall_banner"
+    },
+    {
+      "type_id": "candle",
+      "block_id": "minecraft:red_candle"
+    },
+    {
+      "type_id": "candle_cake",
+      "block_id": "minecraft:red_candle_cake"
+    },
+    {
+      "type_id": "bed",
+      "block_id": "minecraft:red_bed"
+    },
+    {
+      "type_id": "shulker_box",
+      "block_id": "minecraft:red_shulker_box"
+    },
+    {
+      "type_id": "carpet",
+      "block_id": "minecraft:red_carpet"
+    }
+  ],
+  "material_id": "color"
+}

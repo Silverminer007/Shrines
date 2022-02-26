@@ -1,0 +1,13 @@
+{
+  "types": [
+    {
+      "type_id": "normal",
+      "block_id": "minecraft:diamond_ore"
+    },
+    {
+      "type_id": "deepslate",
+      "block_id": "minecraft:deepslate_diamond_ore"
+    }
+  ],
+  "material_id": "ores"
+}

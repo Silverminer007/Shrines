@@ -13,14 +13,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.silverminer.shrines.ShrinesMod;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import silverminer.dynamicregistries.registry.RegistryAccessExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewVariationConfiguration extends ForgeRegistryEntry<NewVariationConfiguration> {
-    public static final ResourceKey<Registry<NewVariationConfiguration>> REGISTRY = RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "worldgen/variation_configuration");
+    public static final ResourceKey<Registry<NewVariationConfiguration>> REGISTRY = ResourceKey.createRegistryKey(new ResourceLocation(ShrinesMod.MODID, "shrines/worldgen/variation_configuration"));//RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "worldgen/variation_configuration");
     public static final Codec<NewVariationConfiguration> CODEC =
             RecordCodecBuilder.create(newVariationConfigurationInstance ->
                     newVariationConfigurationInstance.group(

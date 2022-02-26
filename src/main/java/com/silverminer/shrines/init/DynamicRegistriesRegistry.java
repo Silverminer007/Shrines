@@ -15,7 +15,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
-import silverminer.dynamicregistries.registry.RegistryAccessExtension;
+import com.silverminer.shrines.dynamicregistries.RegistryAccessExtension;
 
 @Mod.EventBusSubscriber(modid = ShrinesMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DynamicRegistriesRegistry {

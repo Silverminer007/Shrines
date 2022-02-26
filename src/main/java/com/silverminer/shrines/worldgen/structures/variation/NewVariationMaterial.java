@@ -10,12 +10,12 @@ package com.silverminer.shrines.worldgen.structures.variation;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.silverminer.shrines.dynamicregistries.RegistryAccessExtension;
 import com.silverminer.shrines.ShrinesMod;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import silverminer.dynamicregistries.registry.RegistryAccessExtension;
 
 import java.util.List;
 
