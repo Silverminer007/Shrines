@@ -23,9 +23,6 @@ curseforge {
         addGameVersion '1.18'
         addGameVersion '1.18.1'
         addGameVersion 'Forge'
-        mainArtifact(jar) {
-            requiredDependency 'dynamicregistries'
-        }
     }
     options {
         detectNewerJava = true // defaults to false
