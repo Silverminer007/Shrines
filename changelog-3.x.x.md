@@ -1,3 +1,11 @@
+## 3.0.0-Beta19 --- 27.02.2022 19:00 UTC
+
+- Added new config option 'active_random_variation' to globally disable random variation
+- Removed outdated translations for 'needed_novels'
+- Marked 'advanced_logging' config option as deprecated & removed it from the GUI
+
+===========
+
 ## 3.0.0-Beta18 --- 27.02.2022 14:45 UTC
 
 - Shrines now requires a dependency: [dynamicregistries](https://github.com/Silverminer007/DynamicRegistries)
