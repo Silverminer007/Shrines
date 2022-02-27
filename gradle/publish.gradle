@@ -23,6 +23,9 @@ curseforge {
         addGameVersion '1.18'
         addGameVersion '1.18.1'
         addGameVersion 'Forge'
+        mainArtifact(jar) {
+            requiredDependency 'dynamicregistries'
+        }
     }
     options {
         detectNewerJava = true // defaults to false
@@ -37,7 +40,8 @@ task publishModrinth(type: TaskModrinthUpload) { // Make sure it runs after buil
     }
 
     versionType = 'beta'
-    token = System.getenv("MODRINTH") // An environment property called MODRINTH that is your token, set via Gradle CLI, GitHub Actions, Idea Run Configuration, or other
+    token = System.getenv("MODRINTH")
+    // An environment property called MODRINTH that is your token, set via Gradle CLI, GitHub Actions, Idea Run Configuration, or other
     projectId = 'F33t24Wi'
     versionNumber = "$project.version"
     versionName = "$project.archivesBaseName-$project.version"
