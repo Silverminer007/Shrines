@@ -1,3 +1,17 @@
+## 3.0.0-Beta18 --- 27.02.2022 14:45 UTC
+
+- Shrines now requires a dependency: [dynamicregistries](https://github.com/Silverminer007/DynamicRegistries)
+- Introduce random variations to all structures (other mods and vanilla too)
+- Introduce data-pack based configurations for random variation
+- Introduce data-pack based definition of variation materials
+- Add way more variation materials
+- Add Novels and variation materials datagenerators
+- Change variation configuration of shrines structures (also custom structures)
+- Change novels registry to be data-pack based (allows addition/modification of novels)
+- This update introduced some breaking changes. Upgrades are possible but downgrades won't work
+
+===========
+
 ## 3.0.0-Beta17 --- 15.02.2022 18:20 UTC
 
 - Added some missing chinese translations
