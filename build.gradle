@@ -11,6 +11,7 @@ buildscript {
         // MixinGradle:
         classpath 'org.spongepowered:mixingradle:0.7.+'
         classpath 'org.parchmentmc:librarian:1.+'
+        classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.+"
     }
 }
 repositories {
@@ -25,6 +26,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'org.cadixdev.licenser'
 
 version = "${mc_version}-${mod_version}"
 group = 'com.silverminer.shrines'
@@ -38,6 +40,13 @@ println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getPro
 
 apply from: 'gradle/publish.gradle'
 
+license {
+    header = project.file('HEADER.txt')
+    properties {
+        name = 'Silverminer007'
+        year = 2022
+    }
+}
 
 minecraft {
     mappings channel: 'parchment', version: "${parchment_version}-${mc_version}"
