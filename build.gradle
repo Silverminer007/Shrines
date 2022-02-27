@@ -28,9 +28,11 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 version = "${mc_version}-${mod_version}"
 group = 'com.silverminer.shrines'
-archivesBaseName = 'Shrines'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java {
+    archivesBaseName = 'Shrines'
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
