@@ -142,11 +142,7 @@ public class Legacy181StructurePackageLoader implements StructurePackageLoader {
                     dimensionWhitelist.remove("nether");
                     dimensionWhitelist.add("the_nether");
                 }
-                boolean randomVariation = configData.get(Arrays.asList("structures", key, "use_random_varianting"));
-                VariationConfiguration variationConfiguration = structureData.getVariationConfiguration();
-                variationConfiguration.setEnabled(randomVariation);
-                variationConfiguration.setSimpleVariationConfiguration(randomVariation ? SimpleVariationConfiguration.ALL_ENABLED : SimpleVariationConfiguration.ALL_DISABLED);
-                variationConfiguration.setNestedVariationConfiguration(randomVariation ? NestedVariationConfiguration.ALL_ENABLED : NestedVariationConfiguration.ALL_DISABLED);
+                structureData.setVariationConfiguration(new NewVariationConfiguration(configData.<Boolean>get(Arrays.asList("structures", key, "use_random_varianting"))));
             } catch (NullPointerException e) {
                 if (!key.equals("shrine_of_savanna")
                         && !key.equals("watchtower")

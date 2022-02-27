@@ -125,7 +125,7 @@ public class Legacy200StructurePackageLoader implements StructurePackageLoader {
                         7),
                   null,
                   null,
-                  structureCompound.getCompound(ConfigOptions.LEGACY_2xx.useRandomVarianting()).getBoolean("Value") ? VariationConfiguration.ALL_ENABLED : VariationConfiguration.ALL_DISABLED
+                  new NewVariationConfiguration(structureCompound.getCompound(ConfigOptions.LEGACY_2xx.useRandomVarianting()).getBoolean("Value"))
             );
             structures.add(structureData);
          }

@@ -1,0 +1,61 @@
+{
+  "types": [
+    {
+      "type_id": "terracotta",
+      "block_id": "minecraft:pink_terracotta"
+    },
+    {
+      "type_id": "glazed_terracotta",
+      "block_id": "minecraft:pink_glazed_terracotta"
+    },
+    {
+      "type_id": "wool",
+      "block_id": "minecraft:pink_wool"
+    },
+    {
+      "type_id": "concrete",
+      "block_id": "minecraft:pink_concrete"
+    },
+    {
+      "type_id": "concrete_powder",
+      "block_id": "minecraft:pink_concrete_powder"
+    },
+    {
+      "type_id": "glass",
+      "block_id": "minecraft:pink_glass"
+    },
+    {
+      "type_id": "glass_pane",
+      "block_id": "minecraft:pink_glass_pane"
+    },
+    {
+      "type_id": "banner",
+      "block_id": "minecraft:pink_banner"
+    },
+    {
+      "type_id": "wall_banner",
+      "block_id": "minecraft:pink_wall_banner"
+    },
+    {
+      "type_id": "candle",
+      "block_id": "minecraft:pink_candle"
+    },
+    {
+      "type_id": "candle_cake",
+      "block_id": "minecraft:pink_candle_cake"
+    },
+    {
+      "type_id": "bed",
+      "block_id": "minecraft:pink_bed"
+    },
+    {
+      "type_id": "shulker_box",
+      "block_id": "minecraft:pink_shulker_box"
+    },
+    {
+      "type_id": "carpet",
+      "block_id": "minecraft:pink_carpet"
+    }
+  ],
+  "material_id": "color"
+}

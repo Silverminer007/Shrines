@@ -10,6 +10,9 @@ package com.silverminer.shrines.packages.datacontainer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NestedVariationConfiguration {
    public static final Codec<NestedVariationConfiguration> CODEC = RecordCodecBuilder.create(variationConfigurationInstance -> variationConfigurationInstance.group(
          Codec.BOOL.fieldOf("are_slabs_enabled").forGetter(NestedVariationConfiguration::isAreSlabsEnabled),
@@ -127,5 +130,40 @@ public class NestedVariationConfiguration {
 
    public void setWallSignEnabled(boolean wallSignEnabled) {
       isWallSignEnabled = wallSignEnabled;
+   }
+
+   public List<String> getDisabledTypes() {
+      List<String> disabledTypes = new ArrayList<>();
+      if(this.isAreSlabsEnabled()) {
+         disabledTypes.add("slab");
+      }
+      if(this.isButtonEnabled()) {
+         disabledTypes.add("button");
+      }
+      if(this.isFenceEnabled()) {
+         disabledTypes.add("fence");
+      }
+      if(this.isAreNormalLogsEnabled()) {
+         disabledTypes.add("log");
+      }
+      if(this.isAreStrippedLogsEnabled()) {
+         disabledTypes.add("stripped_log");
+      }
+      if(this.isAreTrapdoorsEnabled()) {
+         disabledTypes.add("trapdoor");
+      }
+      if(this.isAreDoorsEnabled()) {
+         disabledTypes.add("door");
+      }
+      if(this.isStairEnabled()) {
+         disabledTypes.add("stair");
+      }
+      if(this.isStandingSignEnabled()) {
+         disabledTypes.add("standing_sign");
+      }
+      if(this.isWallSignEnabled()) {
+         disabledTypes.add("wall_sign");
+      }
+      return disabledTypes;
    }
 }
