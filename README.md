@@ -23,10 +23,5 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
 ### TODO
 
-- [x] Fix warning 'Potentially Dangerous alternative prefix `shrines` for name `trader_house`, expected `minecraft`.
-  This could be a intended override, but in most cases indicates a broken mod.'
 - [ ] Fix Terraforged compactability warning 'Was unable to check if minecraft:overworld is using Terraforged's
   ChunkGenerator.'
-- [x] Make GitHub Actions build faster by caching gradle state
-- [x] Add Modrinth upload to update procedure
-- [x] 2.0.0: Allow smooth update from 1.8.1 before creating stable release
