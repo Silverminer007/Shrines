@@ -1,3 +1,11 @@
+## 3.0.0-Beta20 --- 01.03.2022 16:15 UTC
+
+- Changed injection point for RandomVariationProcessor
+- Do not double run RandomVariationProcessor for Shrines Structures
+- Increased required version of dynamic registries to 1.0.0
+
+===========
+
 ## 3.0.0-Beta19 --- 27.02.2022 19:00 UTC
 
 - Added new config option 'active_random_variation' to globally disable random variation
