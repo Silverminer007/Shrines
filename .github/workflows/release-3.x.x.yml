@@ -7,6 +7,10 @@ on:
         required: true
         description: 'The version to publish'
         default: ''
+      mc-version:
+        required: true
+        description: 'The mc version of this file'
+        default: '1.18.1'
       releaseType:
         required: true
         description: "alpha, beta or release"
@@ -74,11 +78,6 @@ jobs:
           body: |
             ![GitHub release (by tag)](https://img.shields.io/github/downloads/Silverminer007/Shrines/${{ github.event.inputs.version }}/total)
             ${{ steps.split.outputs._0}}
-      - name: Find correct JAR
-        id: findjar
-        run: |
-          output="$(find build/libs/ ! -name "*-dev.jar" ! -name "*-sources.jar" -type f -printf "%f\n")"
-          echo "::set-output name=jarname::$output"
       - name: Upload files to github
         uses: softprops/action-gh-release@v1
         with:
@@ -87,13 +86,13 @@ jobs:
       - name: Upload files to curseforge
         uses: itsmeow/curseforge-upload@v3
         with:
-          file_path: /build/libs/${{ steps.findjar.outputs.jarname }}
+          file_path: /build/libs/Shrines-${{ github.event.inputs.mc-version }}-${{ github.event.inputs.version }}.jar
           game_endpoint: "minecraft"
           project_id: "418915"
           token: ${{ secrets.CURSEFORGE_TOKEN }}
           changelog_type: "markdown"
           changelog: ${{ steps.split.outputs._0}}
-          releaseType: ${{ github.event.inputs.releaseType }}
+          release_type: ${{ github.event.inputs.releaseType }}
           game_versions: "Minecraft 1.18:1.18.1,Java 17,Forge"
           relations: "dynamicregistries:requiredDependency"
       - name: Upload files to modrinth
