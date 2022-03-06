@@ -1,5 +1,4 @@
 /*
- * Silverminer007
  * Copyright (c) 2022.
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,18 +17,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import silverminer.dynamicregistries.RegistryAccessExtension;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class StructureNovel extends ForgeRegistryEntry<StructureNovel> {
-    public static final ResourceKey<Registry<StructureNovel>> REGISTRY = RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "structure_novels");
+    public static final ResourceKey<Registry<StructureNovel>> REGISTRY = ResourceKey.createRegistryKey(ShrinesMod.location(ShrinesMod.MODID + "/structure_novels"));
+    //RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "structure_novels");
     public static final Codec<StructureNovel> CODEC = RecordCodecBuilder.create((structureNovelInstance ->
             structureNovelInstance.group(Codec.list(Codec.STRING).fieldOf("parts").forGetter(StructureNovel::getParts))
                     .apply(structureNovelInstance, StructureNovel::new)

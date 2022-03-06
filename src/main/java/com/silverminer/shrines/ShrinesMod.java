@@ -1,5 +1,4 @@
 /*
- * Silverminer007
  * Copyright (c) 2022.
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +8,8 @@
 package com.silverminer.shrines;
 
 import com.silverminer.shrines.config.Config;
-import com.silverminer.shrines.init.DynamicRegistriesRegistry;
+import com.silverminer.shrines.init.StructureInit;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -25,6 +25,7 @@ public class ShrinesMod {
     public static final String MODID = "shrines";
     public static final Logger LOGGER = LogManager.getLogger(ShrinesMod.class);
     public static final String WIKI_LINK = "https://silverminer007.github.io/ShrinesWiki/";
+    @Deprecated//Use debug log level instead
     public static final boolean debug = false;
     public static String VERSION = "N/A";
 
@@ -38,8 +39,13 @@ public class ShrinesMod {
                 .ifPresent(container -> VERSION = container.getModInfo().getVersion().toString());
         LOGGER.info("Shrines " + VERSION + " initialized");
         Config.register(ModLoadingContext.get());
-        DynamicRegistriesRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        DynamicRegistriesRegistry.VARIATION_MATERIAL.register(FMLJavaModLoadingContext.get().getModEventBus());
-        DynamicRegistriesRegistry.VARIATION_CONFIGURATION.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //DynamicRegistriesRegistry.NOVELS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //DynamicRegistriesRegistry.VARIATION_MATERIAL.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //DynamicRegistriesRegistry.VARIATION_CONFIGURATION.register(FMLJavaModLoadingContext.get().getModEventBus());
+        StructureInit.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+
+    public static ResourceLocation location(String path) {
+        return new ResourceLocation(ShrinesMod.MODID, path);
     }
 }

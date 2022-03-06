@@ -1,5 +1,4 @@
 /*
- * Silverminer007
  * Copyright (c) 2022.
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,15 +13,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.silverminer.shrines.ShrinesMod;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import silverminer.dynamicregistries.RegistryAccessExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewVariationConfiguration extends ForgeRegistryEntry<NewVariationConfiguration> {
-    public static final ResourceKey<Registry<NewVariationConfiguration>> REGISTRY = RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "worldgen/variation_configuration");
+public class NewVariationConfiguration extends ForgeRegistryEntry<NewVariationConfiguration> {// TODO Rename and remove 'New'
+    public static final ResourceKey<Registry<NewVariationConfiguration>> REGISTRY = ResourceKey.createRegistryKey(ShrinesMod.location(ShrinesMod.MODID + "/worldgen/variation_configuration"));
+    //RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "worldgen/variation_configuration");
     public static final Codec<NewVariationConfiguration> CODEC =
             RecordCodecBuilder.create(newVariationConfigurationInstance ->
                     newVariationConfigurationInstance.group(

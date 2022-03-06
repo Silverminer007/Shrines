@@ -1,4 +1,4 @@
-name: release-3.x.x
+name: release-4.x.x
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: 'Publish 3.x.x'
+    name: 'Publish 4.x.x'
     steps:
       - name: Get current time
         uses: srfrnk/current-time@master
@@ -29,7 +29,7 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v2
         with:
-          ref: '1.18-3.0.0'
+          ref: '1.18.2+-4.x.x'
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
@@ -52,7 +52,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: '1.18-3.0.0'
+          branch: '1.18.2+-4.x.x'
           tags: true
       - name: read changelog file
         uses: juliangruber/read-file-action@v1
@@ -94,7 +94,7 @@ jobs:
           changelog_type: "markdown"
           changelog: ${{ steps.split.outputs._0}}
           releaseType: ${{ github.event.inputs.releaseType }}
-          game_versions: "Minecraft 1.18:1.18.1,Java 17,Forge"
+          game_versions: "Minecraft 1.18.2,Java 17,Forge"
           relations: "dynamicregistries:requiredDependency"
       - name: Upload files to modrinth
         run: ./gradlew --info --stacktrace publishModrinth
