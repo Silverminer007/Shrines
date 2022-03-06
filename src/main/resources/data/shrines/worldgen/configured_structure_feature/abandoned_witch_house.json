@@ -1,0 +1,10 @@
+{
+  "config": {
+    "start_pool": "shrines:abandoned_witch_house/start_pool",
+    "size": 7,
+    "spawn_chance": 0.6
+  },
+  "biomes": "#shrines:has_structure/abandoned_witch_house",
+  "spawn_overrides": {},
+  "type": "shrines:shrines_normal"
+}

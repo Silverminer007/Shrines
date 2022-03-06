@@ -1,5 +1,4 @@
 /*
- * Silverminer007
  * Copyright (c) 2022.
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +15,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-import silverminer.dynamicregistries.RegistryAccessExtension;
 
 import java.util.List;
 
@@ -27,7 +25,8 @@ public class NewVariationMaterial extends ForgeRegistryEntry<NewVariationMateria
                                     Codec.list(NewVariationMaterialElement.CODEC).fieldOf("types").forGetter(NewVariationMaterial::types),
                                     Codec.STRING.fieldOf("material_id").forGetter(NewVariationMaterial::materialID))
                             .apply(newVariationMaterialInstance, NewVariationMaterial::new));
-    public static final ResourceKey<Registry<NewVariationMaterial>> REGISTRY = RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "worldgen/variation_material");
+    public static final ResourceKey<Registry<NewVariationMaterial>> REGISTRY = ResourceKey.createRegistryKey(ShrinesMod.location(ShrinesMod.MODID + "/worldgen/variation_material"));
+    //RegistryAccessExtension.createRegistryKey(ShrinesMod.MODID, "worldgen/variation_material");
     private final List<NewVariationMaterialElement> types;
     private final String materialID;
 

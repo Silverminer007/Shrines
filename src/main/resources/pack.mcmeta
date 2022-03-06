@@ -1,7 +1,7 @@
 {
-    "pack": {
-        "description": "Here are the resource for shrines mod provided",
-        "pack_format": 6,
-        "_comment": "Overriding this will case all structure to disappear or to change"
-    }
+  "pack": {
+    "description": "Here are the resource for shrines mod provided",
+    "pack_format": 9,
+    "_comment": "Overriding this will case all structure to disappear or to change"
+  }
 }

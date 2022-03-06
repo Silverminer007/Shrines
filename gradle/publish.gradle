@@ -14,18 +14,17 @@ curseforge {
     project {
         apiKey = System.getenv('CURSEFORGE')
         id = '418915'
-        //changelog = file('changelog-3.x.x.md')
-        def file = file('changelog-3.x.x.md')
+        //changelog = file('changelog.md')
+        def file = file('changelog.md')
         def changelogFile = file.text
         changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
-        changelogType = 'text'
+        changelogType = 'markdown'
         if (System.getenv("SHRINES_RELEASE_TYPE") != null) {
             releaseType = System.getenv("SHRINES_RELEASE_TYPE")
         } else {
             releaseType = 'beta'
         }
-        addGameVersion '1.18'
-        addGameVersion '1.18.1'
+        addGameVersion '1.18.2'
         addGameVersion 'Forge'
     }
     options {
@@ -51,7 +50,7 @@ task publishModrinth(type: TaskModrinthUpload) { // Make sure it runs after buil
     versionNumber = "$project.version"
     versionName = "$project.archivesBaseName-$project.version"
     uploadFile = jar
-    def file = file('changelog-3.x.x.md')
+    def file = file('changelog.md')
     def changelogFile = file.text
     changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
 }

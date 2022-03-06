@@ -1,5 +1,4 @@
 /*
- * Silverminer007
  * Copyright (c) 2022.
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +19,7 @@ import com.silverminer.shrines.utils.network.stc.*;
 import com.silverminer.shrines.utils.queue.PlayerQueue;
 import com.silverminer.shrines.worldgen.structures.variation.NewVariationMaterial;
 import com.silverminer.shrines.worldgen.structures.variation.NewVariationMaterialElement;
-import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -97,7 +96,7 @@ public class ServerStructurePackageManager {
 
     public void syncAvailableMaterialsATypesToClient(UUID uuid) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        WritableRegistry<NewVariationMaterial> registry = server.registryAccess().ownedRegistryOrThrow(NewVariationMaterial.REGISTRY);
+        Registry<NewVariationMaterial> registry = server.registryAccess().ownedRegistryOrThrow(NewVariationMaterial.REGISTRY);
         List<String> availableMaterials = registry.stream().map(NewVariationMaterial::materialID).distinct().toList();
         List<String> availableTypes = new ArrayList<>();
         for (NewVariationMaterial material : registry) {
@@ -112,7 +111,7 @@ public class ServerStructurePackageManager {
 
     public void syncNovelsToClient(UUID uuid) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        WritableRegistry<StructureNovel> registry = server.registryAccess().ownedRegistryOrThrow(StructureNovel.REGISTRY);
+        Registry<StructureNovel> registry = server.registryAccess().ownedRegistryOrThrow(StructureNovel.REGISTRY);
         Map<ResourceLocation, StructureNovel> novelsRegistryData = new HashMap<>();
         for (Map.Entry<ResourceKey<StructureNovel>, StructureNovel> entry : registry.entrySet()) {
             novelsRegistryData.put(entry.getKey().location(), entry.getValue());

@@ -1,5 +1,4 @@
 /*
- * Silverminer007
  * Copyright (c) 2022.
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,47 +7,21 @@
 
 package com.silverminer.shrines.init;
 
-import com.google.common.collect.ImmutableList;
+import com.mojang.logging.LogUtils;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.packages.PackageManagerProvider;
-import com.silverminer.shrines.packages.datacontainer.StructureData;
-import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
+import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+import org.slf4j.Logger;
 
 /**
  * @author Silverminer
  */
-@EventBusSubscriber(modid = ShrinesMod.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class StructureInit {
-    protected static final Logger LOGGER = LogManager.getLogger(StructureInit.class);
-    public static final ImmutableList<StructureRegistryHolder> STRUCTURES = ImmutableList
-            .<StructureRegistryHolder>builder().addAll(initStructures()).build();
-
-    private static ArrayList<StructureRegistryHolder> initStructures() {
-        PackageManagerProvider.SERVER.bootstrapPackages();
-        ArrayList<StructureRegistryHolder> structures = new ArrayList<>();
-        for (StructuresPackageWrapper packet : PackageManagerProvider.SERVER.getInitialStructurePackages().getAsIterable()) {
-            for (StructureData structure : packet.getStructures().getAsIterable()) {
-                structures.add(new StructureRegistryHolder(structure.getKey(), structure));
-            }
-        }
-        LOGGER.info("Initialised {} structures of shrines Mod", structures.size());
-        return structures;
-    }
-
-    @SubscribeEvent
-    public static void registerStructures(RegistryEvent.Register<StructureFeature<?>> event) {
-        LOGGER.info("Registering {} structures of shrines Mod", STRUCTURES.size());
-        for (StructureRegistryHolder holder : STRUCTURES) {
-            holder.getStructure().setRegistryName(holder.getStructure().getConfig().getKey());
-            event.getRegistry().register(holder.getStructure());
-        }
-    }
+    public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, ShrinesMod.MODID);
+    @SuppressWarnings("unused")
+    public static final RegistryObject<ShrinesStructure> SHRINES_NORMAL = STRUCTURES.register("shrines_normal", ShrinesStructure::new);
+    protected static final Logger LOGGER = LogUtils.getLogger();
 }
