@@ -22,3 +22,4 @@ If you're searching for some examples what this mod does, just scroll down and t
 ![water_shrine](https://user-images.githubusercontent.com/66484505/149190803-899117bc-6995-4c7a-97ea-1a2dff9e5f4b.png)
 ![Random_variation_11012022](https://user-images.githubusercontent.com/66484505/149190833-041115ab-fc04-4402-a68c-75c0b9665ba1.png)
 ![flooded_temple](https://user-images.githubusercontent.com/66484505/149190937-69655a7c-08c5-4f8e-beb2-72650c821fca.png)
+![modern_villa](https://media.forgecdn.net/attachments/440/187/modern-villa.png)
