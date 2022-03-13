@@ -53,6 +53,11 @@ public class DefaultStructureConfig {
     public static final DefaultedStructureData MINERALTEMPLE_CONFIG = new DefaultedStructureData("Mineral Temple",
             "mineral_temple", 576143753).setDistance(50).setSeperation(10).setUseRandomVarianting(false);
 
+    public static final DefaultedStructureData MODERN_VILLA_CONFIG = new DefaultedStructureData("Modern Villa",
+          "modern_villa", 688286800).setDistance(55).setSeperation(30).setUseRandomVarianting(false)
+          .removeFromBiomeCategoryWhitelist(Biome.BiomeCategory.JUNGLE, Biome.BiomeCategory.SWAMP,
+                Biome.BiomeCategory.MUSHROOM, Biome.BiomeCategory.DESERT, Biome.BiomeCategory.MESA);
+
     public static final DefaultedStructureData NETHERPYRAMID_CONFIG = new DefaultedStructureData("Nether Pyramid",
             "nether_pyramid", 7428394).setDistance(150).setSeperation(50)
             .addDimensionToWhitelist("minecraft:the_nether").addToBiomeCategoryWhitelist(Biome.BiomeCategory.NETHER);

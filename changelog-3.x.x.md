@@ -1,3 +1,11 @@
+## 3.0.0-Beta21 --- 13.03.2022 14:10 UTC0
+
+- Added new default structure 'Modern Villa' (if you want to generate this structure in 
+your existing installation, please delete the shrines-data directory in your installation directory)
+- Removed log spam when using random variation
+
+===========
+
 ## 3.0.0-Beta20 --- 01.03.2022 16:15 UTC
 
 - Changed injection point for RandomVariationProcessor

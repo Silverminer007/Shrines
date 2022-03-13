@@ -59,9 +59,6 @@ public class RandomVariantsProcessor implements PostPlacementProcessor {
                         }
                         BlockState newBlockState = this.calculateNewBlock(blockStateAtPos);
                         worldGenLevel.setBlock(position, newBlockState, 11);
-                        if (newBlockState.getBlock().equals(Blocks.SOUL_LANTERN) || newBlockState.getBlock().equals(Blocks.LANTERN)) {
-                            ShrinesMod.LOGGER.info("Placing [{}] at position [{}]", newBlockState.getBlock(), position);
-                        }
                     }
                 }
             }

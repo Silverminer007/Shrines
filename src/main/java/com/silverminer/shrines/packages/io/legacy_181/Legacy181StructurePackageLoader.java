@@ -178,6 +178,7 @@ public class Legacy181StructurePackageLoader implements StructurePackageLoader {
         structures.add(DefaultStructureConfig.INFESTEDPRISON_CONFIG.toStructureData());
         structures.add(DefaultStructureConfig.JUNGLETOWER_CONFIG.toStructureData());
         structures.add(DefaultStructureConfig.MINERALTEMPLE_CONFIG.toStructureData());
+        structures.add(DefaultStructureConfig.MODERN_VILLA_CONFIG.toStructureData());
         structures.add(DefaultStructureConfig.NETHERPYRAMID_CONFIG.toStructureData());
         structures.add(DefaultStructureConfig.NETHERSHRINE_CONFIG.toStructureData());
         structures.add(DefaultStructureConfig.ORIENTALSANCTUARY_CONFIG.toStructureData());

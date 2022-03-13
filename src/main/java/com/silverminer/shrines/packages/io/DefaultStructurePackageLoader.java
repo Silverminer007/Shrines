@@ -40,7 +40,7 @@ public class DefaultStructurePackageLoader implements StructurePackageLoader {
    }
 
    @Override
-   public StructurePackageContainer earlyLoadPackages() throws PackageIOException {
+   public StructurePackageContainer earlyLoadPackages() {
       return this.loadPackages();
    }
 
@@ -57,6 +57,7 @@ public class DefaultStructurePackageLoader implements StructurePackageLoader {
       structures.add(DefaultStructureConfig.INFESTEDPRISON_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.JUNGLETOWER_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.MINERALTEMPLE_CONFIG.toStructureData());
+      structures.add(DefaultStructureConfig.MODERN_VILLA_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.NETHERPYRAMID_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.NETHERSHRINE_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.ORIENTALSANCTUARY_CONFIG.toStructureData());
