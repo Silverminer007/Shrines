@@ -16,6 +16,10 @@ public class DefaultStructureConfig {
     public static final DefaultedStructureData CUSTOM = new DefaultedStructureData("Custom Structure", "custom", 0).setStartPool("").setDistance(50)
             .setSeperation(8);
 
+    public static final DefaultedStructureData ABANDONED_VILLA_CONFIG = new DefaultedStructureData("Abandoned Villa",
+          "abandoned_villa", 579823894).setDistance(55).setSeperation(30).setSpawnChance(0.3).setUseRandomVarianting(false)
+          .setBiomeCategoryWhitelist(Biome.BiomeCategory.JUNGLE, Biome.BiomeCategory.SWAMP);
+
     public static final DefaultedStructureData ABANDONEDWITCHHOUSE_CONFIG = new DefaultedStructureData(
             "Abandoned Witch House", "abandoned_witch_house", 1721882513)
             .setBiomeCategoryWhitelist(Biome.BiomeCategory.SWAMP, Biome.BiomeCategory.FOREST)
@@ -66,6 +70,10 @@ public class DefaultStructureConfig {
             "nether_shrine", 653267).setDistance(80).setSeperation(15).addDimensionToWhitelist("minecraft:the_nether")
             .addToBiomeCategoryWhitelist(Biome.BiomeCategory.NETHER);
 
+    public static final DefaultedStructureData OASIS_SHRINE_CONFIG = new DefaultedStructureData(
+          "Oasis Shrine", "oasis_shrine", 2056047070).setDistance(40).setSeperation(32)
+          .setUseRandomVarianting(false).setBiomeCategoryWhitelist(Biome.BiomeCategory.DESERT, Biome.BiomeCategory.MESA);
+
     public static final DefaultedStructureData ORIENTALSANCTUARY_CONFIG = new DefaultedStructureData(
             "Oriental Sanctuary", "oriental_sanctuary", 143665).setDistance(50).setSeperation(14);
 
@@ -89,4 +97,8 @@ public class DefaultStructureConfig {
 
     public static final DefaultedStructureData WATERSHRINE_CONFIG = new DefaultedStructureData("Water Shrine",
             "water_shrine", 643168754).setDistance(80).setSeperation(15);
+
+    public static final DefaultedStructureData WORLD_TREE_MANOR_CONFIG = new DefaultedStructureData("World Tree Manor",
+          "world_tree_manor", 14944438).setDistance(55).setSeperation(45).setUseRandomVarianting(false)
+          .setBiomeCategoryWhitelist(Biome.BiomeCategory.FOREST, Biome.BiomeCategory.SWAMP, Biome.BiomeCategory.TAIGA);
 }

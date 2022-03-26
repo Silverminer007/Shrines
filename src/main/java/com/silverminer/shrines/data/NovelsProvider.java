@@ -99,6 +99,25 @@ public record NovelsProvider(DataGenerator generator) implements DataProvider {
                             "oʇʇ, wɘ will dɘ ɒdlɘ to ƨɘnb tʜɘm ʜɘlq ʇɿom",
                     "        ",
                     "I ɒm bγinϱ. Anγonɘ wʜo ʇinbƨ tʜiƨ, qlɘɒƨɘ, lɘt tʜɘ monʞ ʞnow… Tʜɒ wɘ tɿib ʜɒɿb ɒnbɘ \uD801\uDC12loob/ϱoɿɘ? On qɒqɘɿ"));
+            builder.put(new ResourceLocation("shrines:modern_villa"), new StructureNovel(
+                  "We have made the villa! I am so glad that it is done and we won’t have to live in that cave anymore. Jamie’s birthday is right around the corner, so I can’t wait to show him what has happened. It is the best birthday present I could get him, see as w",
+                  "E have been stuck here for so long, and now we can start living a normal life again. We have running water and even heat coming from a spring deep underground! I am so excited! \n" +
+                        "\n" +
+                        "\n" +
+                        "\n" +
+                        "He loves it! I can’t believe that we have made a whole villa with him getting resources and me building. He said this was his best birthday ever, except for the skeletons that spawned in the closet, but I hope it is the best. Now to fix the food problem. Perhaps I can tra",
+                  "De with those tall black monsters. I have yet to see their eyes, and Jamie said that they are nice. As long as they don’t blow up like the “Creepers” that Jamie fears so much, we should be fine. If it goes bad, I always have my bow and arrows."
+            ));
+            builder.put(new ResourceLocation("shrines:guardian_meeting"), new StructureNovel(
+                  "Our leaders have fallen. To think this whole war is of no purpose, that all the lifes lost" +
+                        " were for nothing... It hurts my very soul. Even if we were to continue, there is no way for " +
+                        "us to keep the men that remain. We hav",
+                  "e made amends with the others and are now preparing to make monuments of some kind to remember their" +
+                        " greatness, power, duel and to remind all who see it that d",
+                  "viding will only result in loss and heartache. Hopefully our dependents will be able to find this book" +
+                        " and remember that all villagers should stand together. Perhaps we can even make some sort of " +
+                        "gaureion- and monster, no, a savior who will keep us all safe."
+            ));
             return builder.build();
         });
     }

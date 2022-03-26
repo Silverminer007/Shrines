@@ -1,0 +1,15 @@
+{
+	"name": "shrines:world_tree_manor/start_pool",
+	"fallback": "minecraft:empty",
+	"elements": [
+		{
+			"weight": 1,
+			"element": {
+				"location": "shrines:world_tree_manor/world_tree_manor",
+				"processors": "shrines:default_processors",
+				"projection": "rigid",
+				"element_type": "minecraft:single_pool_element"
+			}
+		}
+	]
+}

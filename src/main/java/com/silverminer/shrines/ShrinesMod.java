@@ -32,6 +32,7 @@ public class ShrinesMod {
      * If you're looking for example code on how to make a structure Mod see
      * TelepathicGrunt's Example Mod on how to do that:
      * https://github.com/TelepathicGrunt/StructureTutorialMod
+     * TODO Add new version of world tree manor (waits of lady jessa to add the lootable chests)
      */
     public ShrinesMod() {
         ModList.get().getModContainerById(ShrinesMod.MODID)

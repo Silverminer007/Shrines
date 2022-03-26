@@ -114,7 +114,7 @@ dependencies {
     implementation fg.deobf("maven.modrinth:dynamicregistries:1.18.1-1.0.0")
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+//sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 mixin {
     // Refmaps for each SourceSet

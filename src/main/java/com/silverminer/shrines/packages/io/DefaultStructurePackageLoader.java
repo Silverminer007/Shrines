@@ -47,6 +47,7 @@ public class DefaultStructurePackageLoader implements StructurePackageLoader {
    private StructureDataContainer getIncludedStructures() {
       StructureDataContainer structures = new StructureDataContainer();
       structures.add(DefaultStructureConfig.ABANDONEDWITCHHOUSE_CONFIG.toStructureData());
+      structures.add(DefaultStructureConfig.ABANDONED_VILLA_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.BALLON_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.BEES_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.ENDTEMPLE_CONFIG.toStructureData());
@@ -60,6 +61,7 @@ public class DefaultStructurePackageLoader implements StructurePackageLoader {
       structures.add(DefaultStructureConfig.MODERN_VILLA_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.NETHERPYRAMID_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.NETHERSHRINE_CONFIG.toStructureData());
+      structures.add(DefaultStructureConfig.OASIS_SHRINE_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.ORIENTALSANCTUARY_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.PLAYERHOUSE_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.SHRINEOFSAVANNA_CONFIG.toStructureData());
@@ -67,6 +69,7 @@ public class DefaultStructurePackageLoader implements StructurePackageLoader {
       structures.add(DefaultStructureConfig.TRADER_HOUSE_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.WATCHTOWER_CONFIG.toStructureData());
       structures.add(DefaultStructureConfig.WATERSHRINE_CONFIG.toStructureData());
+      structures.add(DefaultStructureConfig.WORLD_TREE_MANOR_CONFIG.toStructureData());
       return structures;
    }
 

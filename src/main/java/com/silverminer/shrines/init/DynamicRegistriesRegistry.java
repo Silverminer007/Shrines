@@ -30,9 +30,9 @@ public class DynamicRegistriesRegistry {
     @SubscribeEvent
     public static void registerRegistryAccessExtension(RegistryEvent.Register<RegistryAccessExtension<?>> event) {
         event.getRegistry().registerAll(
-                new RegistryAccessExtension<>(StructureNovel.REGISTRY, StructureNovel.CODEC, StructureNovel.CODEC),
+                new RegistryAccessExtension<>(StructureNovel.REGISTRY, StructureNovel.CODEC),
                 new RegistryAccessExtension<>(NewVariationConfiguration.REGISTRY, NewVariationConfiguration.CODEC),
-                new RegistryAccessExtension<>(NewVariationMaterial.REGISTRY, NewVariationMaterial.CODEC, NewVariationMaterial.CODEC)
+                new RegistryAccessExtension<>(NewVariationMaterial.REGISTRY, NewVariationMaterial.CODEC)
         );
     }
 }

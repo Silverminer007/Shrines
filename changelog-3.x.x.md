@@ -1,4 +1,16 @@
-## 3.0.0-Beta21 --- 13.03.2022 14:10 UTC0
+## 3.0.0-Beta22 --- 06.03.2022 15:50 UTC
+
+- Added new default structures. Again a bih thank you to LadyJessa for building these amazing structures
+  - Abandoned Villa (This is an abandoned version of the modern villa. Me aware. Zombies are around)
+  - Oasis Shrine
+  - World Tree Manor (Have you ever hear of Yggdrasil?)
+- Added Structure Novel for Guardian Meeting. One more thank you to pea_sh0ter for writing these stories
+- Fixed crash in case the game is saving while a structure is generating
+- Updated some structure icons
+
+===========
+
+## 3.0.0-Beta21 --- 13.03.2022 14:10 UTC
 
 - Added new default structure 'Modern Villa' (if you want to generate this structure in 
 your existing installation, please delete the shrines-data directory in your installation directory)

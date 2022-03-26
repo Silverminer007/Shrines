@@ -1,11 +1,11 @@
 {
-  "name": "shrines:modern_villa/start_pool",
+  "name": "shrines:abandoned_villa/start_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "shrines:modern_villa/modern_villa",
+        "location": "shrines:abandoned_villa/abandoned_villa",
         "processors": "shrines:default_processors",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"
