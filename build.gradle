@@ -7,20 +7,21 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
-        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-        // MixinGradle:
-        classpath 'org.spongepowered:mixingradle:0.7.+'
         classpath 'org.parchmentmc:librarian:1.+'
         classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.+"
     }
 }
 
+plugins {
+    id "com.modrinth.minotaur" version "2.+"
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'eclipse'
+    id 'maven-publish'
+    id "org.cadixdev.licenser" version "0.6.1"
+}
+
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.cadixdev.licenser'
 
 version = "${mc_version}-${mod_version}"
 group = 'com.silverminer.shrines'
@@ -32,8 +33,6 @@ java {
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-apply from: 'gradle/publish.gradle'
-
 license {
     header = project.file('HEADER.txt')
     properties {
@@ -43,9 +42,8 @@ license {
 }
 
 minecraft {
-    //mappings channel: 'parchment', version: "1.18.1-${parchment_version}-${mc_version}"
-    mappings channel: 'official', version: "${mc_version}"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    mappings channel: 'parchment', version: "${parchment_version}-${mc_version}"
+    //mappings channel: 'official', version: "${mc_version}"
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -92,38 +90,51 @@ minecraft {
     }
 }
 
-repositories {
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
+modrinth {
+    if (System.getenv("SHRINES_RELEASE_TYPE") != null) {
+        versionType = System.getenv("SHRINES_RELEASE_TYPE")
+    } else {
+        versionType = 'beta'
+    }
+    token = System.getenv("MODRINTH")
+    // An environment property called MODRINTH that is your token, set via Gradle CLI, GitHub Actions, Idea Run Configuration, or other
+    projectId = 'F33t24Wi'
+    versionNumber = "$project.version"
+    versionName = "$project.archivesBaseName-$project.version"
+    uploadFile = jar
+    def file = file('changelog.md')
+    def changelogFile = file.text
+    changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
+    gameVersions = ["1.18.2"]
+}
+
+curseforge {
+    project {
+        apiKey = System.getenv('CURSEFORGE')
+        id = '418915'
+        //changelog = file('changelog.md')
+        def file = file('changelog.md')
+        def changelogFile = file.text
+        changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
+        changelogType = 'markdown'
+        if (System.getenv("SHRINES_RELEASE_TYPE") != null) {
+            releaseType = System.getenv("SHRINES_RELEASE_TYPE")
+        } else {
+            releaseType = 'beta'
         }
+        addGameVersion '1.18.2'
+        addGameVersion 'Forge'
+    }
+    options {
+        detectNewerJava = true // defaults to false
     }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    //implementation fg.deobf("maven.modrinth:dynamicregistries:1.18.1-1.0.0")
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-mixin {
-    // Refmaps for each SourceSet
-    add sourceSets.main, 'mixins.shrines.refmap.json'
-
-    // Configs to add to runs and jars
-    config 'mixins.shrines.json'
-
-    // Specify options for dev run configs
-    debug.verbose = true
-    debug.export = true
-    dumpTargetOnFailure = true
-
-    // Options for the Annotation Processor
-}
+//sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {

@@ -9,38 +9,36 @@ package com.silverminer.shrines.worldgen.structures;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.silverminer.shrines.worldgen.structures.placement_types.PlacementCalculator;
+import com.silverminer.shrines.worldgen.structures.spawn_criteria.SpawnCriteria;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 
+import java.util.List;
+
 public class ShrinesConfiguration extends JigsawConfiguration {
-    public static final Codec<ShrinesConfiguration> CODEC = RecordCodecBuilder.create((shrinesConfigurationInstance) ->
-            shrinesConfigurationInstance.group(
-                            StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(ShrinesConfiguration::startPool),
-                            Codec.intRange(0, 7).fieldOf("size").forGetter(ShrinesConfiguration::maxDepth),
-                            Codec.doubleRange(Double.MIN_VALUE, 1.0).fieldOf("spawn_chance").forGetter(ShrinesConfiguration::getSpawnChance),
-                            Codec.BOOL.fieldOf("generate").forGetter(ShrinesConfiguration::isGenerate))
-                    .apply(shrinesConfigurationInstance, ShrinesConfiguration::new));
-    private final double spawnChance;
-    private final boolean generate;
+   public static final Codec<ShrinesConfiguration> CODEC = RecordCodecBuilder.create((shrinesConfigurationInstance) ->
+         shrinesConfigurationInstance.group(
+                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(ShrinesConfiguration::startPool),
+                     Codec.intRange(0, 7).fieldOf("size").forGetter(ShrinesConfiguration::maxDepth),
+                     Codec.list(SpawnCriteria.CODEC).fieldOf("spawn_criteria").forGetter(ShrinesConfiguration::getSpawnCriteria),
+                     PlacementCalculator.CODEC.fieldOf("placement_calculator").forGetter(ShrinesConfiguration::getPlacementCalculator))
+               .apply(shrinesConfigurationInstance, ShrinesConfiguration::new));
+   private final List<SpawnCriteria> spawnCriteriaList;
+   private final PlacementCalculator placementCalculator;
 
-    public ShrinesConfiguration(Holder<StructureTemplatePool> startPool, int size, double spawnChance, boolean generate) {
-        super(startPool, size);
-        this.spawnChance = spawnChance;
-        this.generate = generate;
-    }
+   public ShrinesConfiguration(Holder<StructureTemplatePool> startPool, int size, List<SpawnCriteria> spawnCriteriaList, PlacementCalculator placementCalculator) {
+      super(startPool, size);
+      this.spawnCriteriaList = spawnCriteriaList;
+      this.placementCalculator = placementCalculator;
+   }
 
-    public ShrinesConfiguration(Holder<StructureTemplatePool> startPool) {
-        super(startPool, 7);
-        this.spawnChance = 0.6;
-        this.generate = true;
-    }
+   public List<SpawnCriteria> getSpawnCriteria() {
+      return this.spawnCriteriaList;
+   }
 
-    public double getSpawnChance() {
-        return spawnChance;
-    }
-
-    public boolean isGenerate() {
-        return generate;
-    }
+   public PlacementCalculator getPlacementCalculator() {
+      return placementCalculator;
+   }
 }
