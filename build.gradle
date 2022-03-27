@@ -14,11 +14,9 @@ buildscript {
         classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.+"
     }
 }
-repositories {
-    maven {
-        // Blame
-        url "https://nexus.resourcefulbees.com/repository/maven-public/"
-    }
+plugins {
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -37,8 +35,6 @@ java {
 }
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-
-apply from: 'gradle/publish.gradle'
 
 license {
     header = project.file('HEADER.txt')
@@ -96,6 +92,50 @@ minecraft {
             }
         }
     }
+}
+
+curseforge {
+    project {
+        apiKey = System.getenv('CURSEFORGE')
+        id = '418915'
+        //changelog = file('changelog-3.x.x.md')
+        def file = file('changelog-3.x.x.md')
+        def changelogFile = file.text
+        changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
+        changelogType = 'text'
+        if (System.getenv("SHRINES_RELEASE_TYPE") != null) {
+            releaseType = System.getenv("SHRINES_RELEASE_TYPE")
+        } else {
+            releaseType = 'beta'
+        }
+        addGameVersion '1.18'
+        addGameVersion '1.18.1'
+        addGameVersion 'Forge'
+    }
+    options {
+        detectNewerJava = true // defaults to false
+    }
+}
+
+import com.modrinth.minotaur.dependencies.ModDependency
+modrinth {
+    if (System.getenv("SHRINES_RELEASE_TYPE") != null) {
+        versionType = System.getenv("SHRINES_RELEASE_TYPE")
+    } else {
+        versionType = 'beta'
+    }
+    token = System.getenv("MODRINTH")
+    // An environment property called MODRINTH that is your token, set via Gradle CLI, GitHub Actions, Idea Run Configuration, or other
+    projectId = 'F33t24Wi'
+    versionNumber = "$project.version"
+    versionName = "$project.archivesBaseName-$project.version"
+    uploadFile = jar
+    def file = file('changelog-3.x.x.md')
+    def changelogFile = file.text
+    changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
+    dependencies = [
+            new ModDependency('oz6iM7ld', 'required') // required dep to dynamicregistries
+    ]
 }
 
 repositories {

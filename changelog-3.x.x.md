@@ -1,9 +1,9 @@
 ## 3.0.0-Beta22 --- 06.03.2022 15:50 UTC
 
-- Added new default structures. Again a bih thank you to LadyJessa for building these amazing structures
-  - Abandoned Villa (This is an abandoned version of the modern villa. Me aware. Zombies are around)
+- Added new default structures. Again a big thank you to LadyJessa for building these amazing structures
+  - Abandoned Villa (This is an abandoned version of the modern villa. Be aware. Zombies are around)
   - Oasis Shrine
-  - World Tree Manor (Have you ever hear of Yggdrasil?)
+  - World Tree Manor (Have you ever heard of Yggdrasil?)
 - Added Structure Novel for Guardian Meeting. One more thank you to pea_sh0ter for writing these stories
 - Fixed crash in case the game is saving while a structure is generating
 - Updated some structure icons
