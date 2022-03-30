@@ -88,7 +88,7 @@ jobs:
           token: ${{ secrets.CURSEFORGE_TOKEN }}
           changelog_type: "markdown"
           changelog: ${{ steps.split.outputs._0}}
-          releaseType: ${{ github.event.inputs.releaseType }}
+          release_type: ${{ github.event.inputs.releaseType }}
           game_versions: "Minecraft 1.18.2,Java 17,Forge"
           relations: "dynamicregistries:requiredDependency"
       - name: Upload files to modrinth
