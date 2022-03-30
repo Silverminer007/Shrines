@@ -33,11 +33,6 @@ public class ShrinesMod {
     * If you're looking for example code on how to make a structure Mod see
     * TelepathicGrunt's Example Mod on how to do that:
     * https://github.com/TelepathicGrunt/StructureTutorialMod
-    * <p>
-    * TODO Remove dragon heads from all shrines structures
-    * TODO Re-add structure novels
-    * TODO Re-add random variation
-    * TODO Convert old structure packages to data-packs on first load
     */
    public ShrinesMod() {
       ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (a, b) -> true));

@@ -23,10 +23,11 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
 ### TODO
 
-- [x] Fix warning 'Potentially Dangerous alternative prefix `shrines` for name `trader_house`, expected `minecraft`.
-  This could be a intended override, but in most cases indicates a broken mod.'
-- [ ] Fix Terraforged compactability warning 'Was unable to check if minecraft:overworld is using Terraforged's
-  ChunkGenerator.'
-- [x] Make GitHub Actions build faster by caching gradle state
-- [x] Add Modrinth upload to update procedure
-- [x] 2.0.0: Allow smooth update from 1.8.1 before creating stable release
+- [ ] Remove dragon heads from all shrines structures
+- [ ] Re-add structure novels
+- [ ] Re-add random variation
+- [ ] Convert old structure packages to data-packs on first load
+- [ ] Change placement settings of oriental sanctuary
+- [ ] Modify small player house
+- [ ] Put small temple and high temple in one structure set
+- [ ] Put abandoned villa and modern villa in one structure set
