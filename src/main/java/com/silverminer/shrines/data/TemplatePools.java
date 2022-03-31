@@ -21,6 +21,7 @@ import java.util.Arrays;
 public class TemplatePools {
    public static final StructureTemplatePool ABANDONED_VILLA = makeStartPool("abandoned_villa");
    public static final StructureTemplatePool ABANDONED_WITCH_HOUSE = makeStartPool("abandoned_witch_house");
+   public static final StructureTemplatePool AZALEA_PAVILION = makeStartPool("azalea_pavilion");
    public static final StructureTemplatePool BALLOON = makeStartPool("balloon", "balloon_1", "balloon_2", "balloon_3", "balloon_4",
          "balloon_5", "balloon_6", "balloon_7", "balloon2_1", "balloon2_2", "balloon2_3", "balloon2_4");
    public static final StructureTemplatePool BEES = makeStartPool("bees");
@@ -42,8 +43,8 @@ public class TemplatePools {
    public static final StructureTemplatePool NETHER_SHRINE = makeStartPool("nether_shrine");
    public static final StructureTemplatePool MODERN_VILLA = makeStartPool("modern_villa");
    public static final StructureTemplatePool ORIENTAL_SANCTUARY = makeStartPool("oriental_sanctuary");
-   public static final StructureTemplatePool PLAYER_HOUSE = makeStartPool("player_house");
-   public static final StructureTemplatePool PLAYER_HOUSE_TABLE = makePool("player_house", "table", "table");
+   public static final StructureTemplatePool SMALL_PLAYER_HOUSE = makeStartPool("small_player_house", "small_player_house");
+   public static final StructureTemplatePool TALL_PLAYER_HOUSE = makeStartPool("tall_player_house", "tall_player_house_1", "tall_player_house_2", "tall_player_house_3");
    public static final StructureTemplatePool INFESTED_PRISON = makeStartPool("infested_prison");
    public static final StructureTemplatePool SHRINE_OF_SAVANNA = makeStartPool("shrine_of_savanna");
    public static final StructureTemplatePool SMALL_TEMPLE = makeStartPool("small_temple");
