@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#shrines:is_savanna",
+    "minecraft:birch_forest"
+  ]
+}

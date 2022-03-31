@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#shrines:is_swamp",
+    "#minecraft:is_jungle",
+    "#shrines:is_mushroom",
+    "#shrines:is_desert",
+    "#shrines:is_mesa"
+  ]
+}

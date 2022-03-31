@@ -32,6 +32,7 @@ import java.util.List;
 public class ConfiguredStructureFeatures {
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> ABANDONED_VILLA = makeConfigured("abandoned_villa", ShrinesBiomeTagsProvider.ABANDONED_VILLA, true, new RandomChanceSpawnCriteria(0.3), new HeightSpawnCriteria(64, Integer.MAX_VALUE, 32));
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> ABANDONED_WITCH_HOUSE = makeConfigured("abandoned_witch_house", ShrinesBiomeTagsProvider.ABANDONED_WITCH_HOUSE, true);
+   public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> AZALEA_PAVILION = makeConfigured("azalea_pavilion", ShrinesBiomeTagsProvider.AZALEA_PAVILION, true);
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> BALLOON = makeConfigured("balloon", ShrinesBiomeTagsProvider.BALLOON, false);
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> BEES = makeConfigured("bees", ShrinesBiomeTagsProvider.BEES, true);
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> END_TEMPLE = makeConfigured("end_temple", ShrinesBiomeTagsProvider.END_TEMPLE, false);
@@ -48,7 +49,8 @@ public class ConfiguredStructureFeatures {
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> NETHER_SHRINE_NETHER = makeConfigured("nether_shrine", ShrinesBiomeTagsProvider.NETHER_SHRINE_NETHER, true, "nether_shrine_nether");
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> OASIS_SHRINE = makeConfigured("oasis_shrine", ShrinesBiomeTagsProvider.OASIS_SHRINE, true);
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> ORIENTAL_SANCTUARY = makeConfigured("oriental_sanctuary", ShrinesBiomeTagsProvider.ORIENTAL_SANCTUARY, true);
-   public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> PLAYER_HOUSE = makeConfigured("player_house", ShrinesBiomeTagsProvider.PLAYER_HOUSE, true);
+   public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> SMALL_PLAYER_HOUSE = makeConfigured("small_player_house", ShrinesBiomeTagsProvider.PLAYER_HOUSE, true);
+   public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> TALL_PLAYER_HOUSE = makeConfigured("tall_player_house", ShrinesBiomeTagsProvider.PLAYER_HOUSE, true);
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> INFESTED_PRISON = makeConfigured("infested_prison", ShrinesBiomeTagsProvider.INFESTED_PRISON, true);
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> SHRINE_OF_SAVANNA = makeConfigured("shrine_of_savanna", ShrinesBiomeTagsProvider.SHRINE_OF_SAVANNA, true);
    public static final ConfiguredStructureFeature<ShrinesConfiguration, ?> SMALL_TEMPLE = makeConfigured("small_temple", ShrinesBiomeTagsProvider.SMALL_TEMPLE, true);

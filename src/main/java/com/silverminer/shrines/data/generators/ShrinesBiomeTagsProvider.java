@@ -33,6 +33,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
    public static final TagKey<Biome> IS_NETHER = createMinecraft("is_nether");
    public static final TagKey<Biome> ABANDONED_VILLA = createShrines("abandoned_villa");
    public static final TagKey<Biome> ABANDONED_WITCH_HOUSE = createShrines("abandoned_witch_house");
+   public static final TagKey<Biome> AZALEA_PAVILION = createShrines("azalea_pavilion");
    public static final TagKey<Biome> BALLOON = createShrines("balloon");
    public static final TagKey<Biome> BEES = createShrines("bees");
    public static final TagKey<Biome> END_TEMPLE = createShrines("end_temple");
@@ -83,6 +84,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
       this.tag(IS_NETHER).add(Biomes.NETHER_WASTES, Biomes.WARPED_FOREST, Biomes.CRIMSON_FOREST, Biomes.SOUL_SAND_VALLEY, Biomes.BASALT_DELTAS);
       this.tag(ABANDONED_VILLA).addTag(IS_SWAMP).addTag(BiomeTags.IS_JUNGLE);
       this.tag(ABANDONED_WITCH_HOUSE).addTag(IS_SWAMP).addTag(BiomeTags.IS_FOREST);
+      this.tag(AZALEA_PAVILION).addTag(IS_SAVANNA).add(Biomes.BIRCH_FOREST);
       this.tag(BALLOON).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
             .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
       this.tag(BEES).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)

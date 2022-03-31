@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "#shrines:is_plains",
+    "#minecraft:is_forest",
+    "#minecraft:is_taiga",
+    "#shrines:is_savanna",
+    "#minecraft:is_jungle",
+    "#shrines:is_mesa",
+    "#shrines:is_icy",
+    "#shrines:is_desert",
+    "#shrines:is_swamp",
+    "#shrines:is_mushroom"
+  ]
+}

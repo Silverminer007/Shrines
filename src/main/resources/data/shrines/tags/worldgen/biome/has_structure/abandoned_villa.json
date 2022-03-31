@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#shrines:is_swamp",
+    "#minecraft:is_jungle",
+    "#shrines:is_swamp",
+    "#minecraft:is_taiga",
+    "#minecraft:is_forest"
+  ]
+}
