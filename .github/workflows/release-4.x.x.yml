@@ -82,7 +82,7 @@ jobs:
       - name: Upload files to curseforge
         uses: itsmeow/curseforge-upload@v3
         with:
-          file_path: /build/libs/Shrines-1.18.2-${{ github.event.inputs.version }}.jar
+          file_path: build/libs/Shrines-1.18.2-${{ github.event.inputs.version }}.jar
           game_endpoint: "minecraft"
           project_id: "418915"
           token: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -90,7 +90,6 @@ jobs:
           changelog: ${{ steps.split.outputs._0}}
           release_type: ${{ github.event.inputs.releaseType }}
           game_versions: "Minecraft 1.18.2,Java 17,Forge"
-          relations: "dynamicregistries:requiredDependency"
       - name: Upload files to modrinth
         run: ./gradlew --info --stacktrace publishModrinth
         env:
