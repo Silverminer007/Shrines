@@ -79,6 +79,10 @@ jobs:
         with:
           files: build/libs/*.jar
           tag_name: ${{ github.event.inputs.version }}
+      - name: Upload files to modrinth
+        run: ./gradlew --info --stacktrace publishModrinth
+        env:
+          SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
       - name: Upload files to curseforge
         uses: itsmeow/curseforge-upload@v3
         with:
@@ -90,7 +94,3 @@ jobs:
           changelog: ${{ steps.split.outputs._0}}
           release_type: ${{ github.event.inputs.releaseType }}
           game_versions: "Minecraft 1.18.2,Java 17,Forge"
-      - name: Upload files to modrinth
-        run: ./gradlew --info --stacktrace publishModrinth
-        env:
-          SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
