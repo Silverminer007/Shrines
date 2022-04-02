@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.silverminer.shrines.data.generators;
+package com.silverminer.shrines.generators;
 
 import com.silverminer.shrines.ShrinesMod;
 import net.minecraft.core.Registry;
@@ -42,6 +42,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
    public static final TagKey<Biome> HARBOUR = createShrines("harbour");
    public static final TagKey<Biome> HIGH_TEMPLE = createShrines("high_temple");
    public static final TagKey<Biome> JUNGLE_TOWER = createShrines("jungle_tower");
+   public static final TagKey<Biome> LUXURY_VILLA = createShrines("luxury_villa");
    public static final TagKey<Biome> MINERAL_TEMPLE = createShrines("mineral_temple");
    public static final TagKey<Biome> MODERN_VILLA = createShrines("modern_villa");
    public static final TagKey<Biome> NETHER_PYRAMID_OVERWORLD = createShrines("nether_pyramid_overworld");
@@ -59,6 +60,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
    public static final TagKey<Biome> WATER_SHRINE = createShrines("water_shrine");
    public static final TagKey<Biome> WORLD_TREE_MANOR = createShrines("world_tree_manor");
 
+   @SuppressWarnings("depreciation")
    protected ShrinesBiomeTagsProvider(DataGenerator dataGenerator, @Nullable ExistingFileHelper existingFileHelper) {
       super(dataGenerator, BuiltinRegistries.BIOME, ShrinesMod.MODID, existingFileHelper);
    }
@@ -94,11 +96,11 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
             .addTag(IS_ICY).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
       this.tag(GUARDIANS_MEETING).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
             .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
-      this.tag(HARBOUR).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
-            .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
+      this.tag(HARBOUR).addTag(BiomeTags.IS_OCEAN).addTag(BiomeTags.IS_DEEP_OCEAN);
       this.tag(HIGH_TEMPLE).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
             .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
       this.tag(JUNGLE_TOWER).addTag(BiomeTags.IS_JUNGLE);
+      this.tag(LUXURY_VILLA).addTag(IS_PLAINS).addTag(IS_SAVANNA).addTag(IS_ICY);
       this.tag(MINERAL_TEMPLE).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
             .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
       this.tag(MODERN_VILLA).addTag(IS_SWAMP).addTag(BiomeTags.IS_JUNGLE).addTag(IS_MUSHROOM).addTag(IS_DESERT).addTag(IS_MESA);
@@ -124,7 +126,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
             .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
       this.tag(WATER_SHRINE).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
             .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
-      this.tag(ABANDONED_VILLA).addTag(IS_SWAMP).addTag(BiomeTags.IS_TAIGA).addTag(BiomeTags.IS_FOREST);
+      this.tag(WORLD_TREE_MANOR).addTag(IS_SWAMP).addTag(BiomeTags.IS_TAIGA).addTag(BiomeTags.IS_FOREST);
    }
 
    @Override

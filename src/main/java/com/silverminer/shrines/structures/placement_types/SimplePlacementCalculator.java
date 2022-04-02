@@ -6,10 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.silverminer.shrines.worldgen.structures.placement_types;
+package com.silverminer.shrines.structures.placement_types;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.silverminer.shrines.registries.PlacementCalculatorTypeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -22,33 +21,21 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureMana
 
 import java.util.function.Predicate;
 
-public class FixedPlacementCalculator extends PlacementCalculator {
-   public static final Codec<FixedPlacementCalculator> CODEC = RecordCodecBuilder.create(fixedPlacementCalculatorInstance ->
-         fixedPlacementCalculatorInstance.group(
-               Codec.INT.fieldOf("placement_height").forGetter(FixedPlacementCalculator::getHeight)
-         ).apply(fixedPlacementCalculatorInstance, FixedPlacementCalculator::new));
-   private final int height;
-
-   public FixedPlacementCalculator(int height) {
-      this.height = height;
-   }
+public class SimplePlacementCalculator extends PlacementCalculator {
+   public static final Codec<SimplePlacementCalculator> CODEC = Codec.unit(SimplePlacementCalculator::new);
 
    @Override
    public PlacementCalculatorType getType() {
-      return PlacementCalculatorTypeRegistry.FIXED.get();
+      return PlacementCalculatorTypeRegistry.SIMPLE.get();
    }
 
    @Override
    public int calculate(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, LevelHeightAccessor heightAccessor, Predicate<Holder<Biome>> validBiome, StructureManager structureManager, RegistryAccess registryAccess) {
-      return this.height;
+      return 0;
    }
 
    @Override
    public boolean isRelativeToWorldHeight() {
-      return false;
-   }
-
-   protected int getHeight() {
-      return height;
+      return true;
    }
 }

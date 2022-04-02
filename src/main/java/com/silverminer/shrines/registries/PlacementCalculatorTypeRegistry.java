@@ -9,10 +9,10 @@
 package com.silverminer.shrines.registries;
 
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.worldgen.structures.placement_types.FirstFreePlacementCalculator;
-import com.silverminer.shrines.worldgen.structures.placement_types.FixedPlacementCalculator;
-import com.silverminer.shrines.worldgen.structures.placement_types.PlacementCalculatorType;
-import com.silverminer.shrines.worldgen.structures.placement_types.SimplePlacementCalculator;
+import com.silverminer.shrines.structures.placement_types.FirstFreePlacementCalculator;
+import com.silverminer.shrines.structures.placement_types.FixedPlacementCalculator;
+import com.silverminer.shrines.structures.placement_types.PlacementCalculatorType;
+import com.silverminer.shrines.structures.placement_types.SimplePlacementCalculator;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;

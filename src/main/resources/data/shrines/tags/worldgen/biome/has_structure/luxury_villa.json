@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#shrines:is_plains",
+    "#shrines:is_savanna",
+    "#shrines:is_icy"
+  ]
+}

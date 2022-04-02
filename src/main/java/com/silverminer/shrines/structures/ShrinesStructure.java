@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.silverminer.shrines.worldgen.structures;
+package com.silverminer.shrines.structures;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.worldgen.Pools;

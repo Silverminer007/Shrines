@@ -9,9 +9,7 @@
 package com.silverminer.shrines;
 
 import com.mojang.logging.LogUtils;
-import com.silverminer.shrines.registries.PlacementCalculatorTypeRegistry;
-import com.silverminer.shrines.registries.SpawnCriteriaTypeRegistry;
-import com.silverminer.shrines.registries.StructureInit;
+import com.silverminer.shrines.registries.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModList;
@@ -46,6 +44,9 @@ public class ShrinesMod {
       StructureInit.STRUCTURES.register(modBus);
       SpawnCriteriaTypeRegistry.SPAWN_CRITERIA_TYPE_REGISTRY.register(modBus);
       PlacementCalculatorTypeRegistry.PLACEMENT_CALCULATOR_TYPE_DEFERRED_REGISTER.register(modBus);
+      ConfiguredStructureFeatureRegistry.REGISTRY.register(modBus);
+      TemplatePoolRegistry.REGISTRY.register(modBus);
+      StructureSetRegistry.REGISTRY.register(modBus);
    }
 
    public static ResourceLocation location(String path) {
