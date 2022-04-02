@@ -10,7 +10,7 @@ package com.silverminer.shrines.registries;
 
 import com.mojang.logging.LogUtils;
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.worldgen.structures.ShrinesStructure;
+import com.silverminer.shrines.structures.ShrinesStructure;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.registries.DeferredRegister;

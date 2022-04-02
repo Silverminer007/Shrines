@@ -9,7 +9,7 @@
 package com.silverminer.shrines.registries;
 
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.worldgen.structures.spawn_criteria.*;
+import com.silverminer.shrines.structures.spawn_criteria.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;

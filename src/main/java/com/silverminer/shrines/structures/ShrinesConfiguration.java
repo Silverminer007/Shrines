@@ -6,12 +6,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.silverminer.shrines.worldgen.structures;
+package com.silverminer.shrines.structures;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.silverminer.shrines.worldgen.structures.placement_types.PlacementCalculator;
-import com.silverminer.shrines.worldgen.structures.spawn_criteria.SpawnCriteria;
+import com.silverminer.shrines.structures.placement_types.PlacementCalculator;
+import com.silverminer.shrines.structures.spawn_criteria.SpawnCriteria;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;

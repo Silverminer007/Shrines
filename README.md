@@ -34,10 +34,10 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 - [ ] Fix structure void issue with e.g. balloon and small player house
 - [ ] Fix ground below azalea pavilion
 - [ ] remove references to shrines:harbour/villager pool in harbour
-- [ ] fix harbour generation (only spawn in water)
+- [x] fix harbour generation (only spawn in water)
 - [ ] Clean bees generation biomes
 - [ ] Fix structure generation distance (re-implement old structure min distance)
-- [ ] Fix nether shrine template pool (add all templates)
-- [ ] Rename oriental sanctuary's template name
-- [ ] rename watch_tower's template from watchtower to watch_tower
-- [ ] Add biome tag for world tree manor
+- [x] Fix nether shrine template pool (add all templates)
+- [x] Rename oriental sanctuary's template
+- [x] rename watch_tower's template from watchtower to watch_tower
+- [x] Add biome tag for world tree manor

@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.silverminer.shrines.worldgen.structures.spawn_criteria;
+package com.silverminer.shrines.structures.spawn_criteria;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -44,15 +44,18 @@ public class GroundLevelDeltaSpawnCriteria extends SpawnCriteria {
 
    @Override
    public boolean test(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, LevelHeightAccessor heightAccessor, Predicate<Holder<Biome>> validBiome, StructureManager structureManager, RegistryAccess registryAccess) {
-      return false;
-   }
-
-   private int getLowestY(ChunkPos chunkPos, ChunkGenerator chunkGenerator, LevelHeightAccessor heightAccessor) {
-      int i = chunkPos.getMinBlockX();
-      int j = chunkPos.getMinBlockZ();
-      int[] aint = this.getCornerHeights(i - (this.getCheckSize() / 2), i + (this.getCheckSize() / 2),
-            j - (this.getCheckSize() / 2), j + (this.getCheckSize() / 2), chunkGenerator, heightAccessor);
-      return Math.min(Math.min(aint[0], aint[1]), Math.min(aint[2], aint[3]));
+      int[] corners = this.getCornerHeights(chunkPos.getMinBlockX() - (this.getCheckSize() / 2),
+      chunkPos.getMinBlockZ() - (this.getCheckSize() / 2),
+      chunkPos.getMinBlockX() + (this.getCheckSize() / 2),
+            chunkPos.getMinBlockZ() + (this.getCheckSize() / 2),
+      chunkGenerator, heightAccessor);
+      int sum = 0;
+      for(int i : corners) {
+         sum += i;
+      }
+      double average = sum / (double)corners.length;
+      double delta = average - Math.min(Math.min(corners[0], corners[1]), Math.min(corners[2], corners[3]));
+      return delta < this.getDelta();
    }
 
    private int[] getCornerHeights(int x0, int z0, int x1, int z1, ChunkGenerator chunkGenerator, LevelHeightAccessor heightAccessor) {

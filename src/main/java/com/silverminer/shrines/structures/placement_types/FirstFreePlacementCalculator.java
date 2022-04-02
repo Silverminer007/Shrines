@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.silverminer.shrines.worldgen.structures.placement_types;
+package com.silverminer.shrines.structures.placement_types;
 
 import com.mojang.serialization.Codec;
 import com.silverminer.shrines.registries.PlacementCalculatorTypeRegistry;
