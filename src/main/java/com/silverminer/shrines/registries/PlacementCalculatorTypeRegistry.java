@@ -9,10 +9,7 @@
 package com.silverminer.shrines.registries;
 
 import com.silverminer.shrines.ShrinesMod;
-import com.silverminer.shrines.structures.placement_types.FirstFreePlacementCalculator;
-import com.silverminer.shrines.structures.placement_types.FixedPlacementCalculator;
-import com.silverminer.shrines.structures.placement_types.PlacementCalculatorType;
-import com.silverminer.shrines.structures.placement_types.SimplePlacementCalculator;
+import com.silverminer.shrines.structures.placement_types.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -38,4 +35,8 @@ public class PlacementCalculatorTypeRegistry {
    public static final RegistryObject<PlacementCalculatorType> FIXED =
          PLACEMENT_CALCULATOR_TYPE_DEFERRED_REGISTER.register("fixed",
                () -> new PlacementCalculatorType(FixedPlacementCalculator.CODEC));
+
+   public static final RegistryObject<PlacementCalculatorType> RELATIVE =
+         PLACEMENT_CALCULATOR_TYPE_DEFERRED_REGISTER.register("relative",
+               () -> new PlacementCalculatorType(RelativePlacementCalculator.CODEC));
 }

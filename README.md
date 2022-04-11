@@ -32,7 +32,7 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 - [x] Put small temple and high temple in one structure set
 - [x] Put abandoned villa and modern villa in one structure set
 - [ ] Fix structure void issue with e.g. balloon and small player house
-- [ ] Fix ground below azalea pavilion
+- [x] Fix ground below azalea pavilion
 - [ ] remove references to shrines:harbour/villager pool in harbour
 - [x] fix harbour generation (only spawn in water)
 - [ ] Clean bees generation biomes
