@@ -60,6 +60,10 @@ public class TemplatePoolRegistry {
    public static final RegistryObject<StructureTemplatePool> WATER_SHRINE = makeStartPool("water_shrine");
    public static final RegistryObject<StructureTemplatePool> WORLD_TREE_MANOR = makeStartPool("world_tree_manor");
 
+   private static RegistryObject<StructureTemplatePool> makeStartPool(String structureName) {
+      return makePool(structureName, "start_pool", structureName);
+   }
+
    private static RegistryObject<StructureTemplatePool> makeStartPool(String structureName, String... templates) {
       return makePool(structureName, "start_pool", templates);
    }

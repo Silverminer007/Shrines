@@ -11,6 +11,7 @@ package com.silverminer.shrines.registries;
 import com.silverminer.shrines.ShrinesMod;
 import com.silverminer.shrines.generators.ShrinesBiomeTagsProvider;
 import com.silverminer.shrines.structures.ShrinesConfiguration;
+import com.silverminer.shrines.structures.placement_types.PlacementCalculator;
 import com.silverminer.shrines.structures.placement_types.SimplePlacementCalculator;
 import com.silverminer.shrines.structures.spawn_criteria.GroundLevelDeltaSpawnCriteria;
 import com.silverminer.shrines.structures.spawn_criteria.HeightSpawnCriteria;
@@ -133,10 +134,21 @@ public class ConfiguredStructureFeatureRegistry {
             new GroundLevelDeltaSpawnCriteria(2.0D, 32)));
    }
 
+   private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise, PlacementCalculator placementCalculator) {
+      return makeConfigured(pool, biomes, adaptNoise, List.of(
+            new HeightSpawnCriteria(64, Integer.MAX_VALUE, 32),
+            new RandomChanceSpawnCriteria(0.6),
+            new GroundLevelDeltaSpawnCriteria(2.0D, 32)), placementCalculator);
+   }
+
    private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise, List<SpawnCriteria> spawnCriteria) {
+     return  makeConfigured(pool, biomes, adaptNoise, spawnCriteria, new SimplePlacementCalculator());
+   }
+
+   private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise, List<SpawnCriteria> spawnCriteria, PlacementCalculator placementCalculator) {
       ResourceKey<StructureTemplatePool> startPoolKey = ResourceKey.create(Registry.TEMPLATE_POOL_REGISTRY, pool);
       Holder.Reference<StructureTemplatePool> holder = Holder.Reference.createStandAlone(BuiltinRegistries.TEMPLATE_POOL, startPoolKey);
       return StructureInit.SURFACE.get().configured(new ShrinesConfiguration(holder, 7, spawnCriteria,
-            new SimplePlacementCalculator()), biomes, adaptNoise);
+            placementCalculator), biomes, adaptNoise);
    }
 }

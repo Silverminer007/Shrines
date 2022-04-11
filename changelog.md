@@ -1,3 +1,14 @@
+### 4.0.0-alpha4
+
+**It's not possible to update old worlds and installations to this version**
+**This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
+
+- fixed issue with ground below azalea pavilion
+- add new placement calculator type 'shrines:relative'
+
+**Feedback is appreciated**
+
+===========
 ### 4.0.0-alpha3
 
 **It's not possible to update old worlds and installations to this version**
