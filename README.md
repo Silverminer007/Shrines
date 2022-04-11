@@ -35,7 +35,7 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 - [x] Fix ground below azalea pavilion
 - [ ] remove references to shrines:harbour/villager pool in harbour
 - [x] fix harbour generation (only spawn in water)
-- [ ] Clean bees generation biomes
+- [x] Clean bees generation biomes
 - [ ] Fix structure generation distance (re-implement old structure min distance)
 - [x] Fix nether shrine template pool (add all templates)
 - [x] Rename oriental sanctuary's template

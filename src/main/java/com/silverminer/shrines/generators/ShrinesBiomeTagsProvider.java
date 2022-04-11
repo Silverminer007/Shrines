@@ -89,8 +89,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
       this.tag(AZALEA_PAVILION).addTag(IS_SAVANNA).add(Biomes.BIRCH_FOREST);
       this.tag(BALLOON).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
             .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
-      this.tag(BEES).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
-            .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
+      this.tag(BEES).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA);
       this.tag(END_TEMPLE).addTag(IS_THEEND);
       this.tag(FLOODED_TEMPLE).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
             .addTag(IS_ICY).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
