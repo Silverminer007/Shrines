@@ -80,7 +80,7 @@ jobs:
           files: build/libs/*.jar
           tag_name: ${{ github.event.inputs.version }}
       - name: Upload files to modrinth
-        run: ./gradlew --info --stacktrace publishModrinth
+        run: ./gradlew --info --stacktrace modrinth
         env:
           SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
       - name: Upload files to curseforge
