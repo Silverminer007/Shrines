@@ -1,3 +1,13 @@
+### 4.0.0-alpha6
+
+**It's not possible to update old worlds and installations to this version**
+**This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
+
+- removed a few biomes from bees' biome generation whitelist
+
+**Feedback is appreciated**
+
+===========
 ### 4.0.0-alpha5
 
 **It's not possible to update old worlds and installations to this version**
