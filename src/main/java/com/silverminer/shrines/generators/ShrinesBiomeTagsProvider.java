@@ -8,7 +8,7 @@
 
 package com.silverminer.shrines.generators;
 
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
+   public static final TagKey<Biome> EMPTY = createShrines("empty");
    public static final TagKey<Biome> IS_PLAINS = createMinecraft("is_plains");
    public static final TagKey<Biome> IS_MESA = createMinecraft("is_mesa");
    public static final TagKey<Biome> IS_SAVANNA = createMinecraft("is_savanna");
@@ -62,15 +63,15 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
 
    @SuppressWarnings("depreciation")
    protected ShrinesBiomeTagsProvider(DataGenerator dataGenerator, @Nullable ExistingFileHelper existingFileHelper) {
-      super(dataGenerator, BuiltinRegistries.BIOME, ShrinesMod.MODID, existingFileHelper);
+      super(dataGenerator, BuiltinRegistries.BIOME, Shrines.MODID, existingFileHelper);
    }
 
    private static TagKey<Biome> createShrines(String name) {
-      return TagKey.create(Registry.BIOME_REGISTRY, ShrinesMod.location("has_structure/" + name));
+      return TagKey.create(Registry.BIOME_REGISTRY, Shrines.location("has_structure/" + name));
    }
 
    private static TagKey<Biome> createMinecraft(String name) {
-      return TagKey.create(Registry.BIOME_REGISTRY, ShrinesMod.location(name));
+      return TagKey.create(Registry.BIOME_REGISTRY, Shrines.location(name));
    }
 
    @Override

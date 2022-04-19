@@ -9,6 +9,7 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
         classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.+"
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 
@@ -22,6 +23,7 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: 'org.spongepowered.mixin'
 
 version = "${mc_version}-${mod_version}"
 group = 'com.silverminer.shrines'
@@ -130,8 +132,27 @@ curseforge {
     }
 }
 
+repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    runtimeOnly fg.deobf("curse.maven:huge-structure-blocks-474114:3656200")
+}
+
+mixin {
+    // MixinGradle Settings
+    add sourceSets.main, 'mixins.shrines.refmap.json'
+    config 'mixins.shrines.json'
+    debug.verbose = true
+    debug.export = true
 }
 
 //sourceSets.main.resources { srcDir 'src/generated/resources' }

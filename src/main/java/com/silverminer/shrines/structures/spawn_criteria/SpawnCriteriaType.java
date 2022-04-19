@@ -9,14 +9,14 @@
 package com.silverminer.shrines.structures.spawn_criteria;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class SpawnCriteriaType extends ForgeRegistryEntry<SpawnCriteriaType> {
    public static final ResourceKey<Registry<SpawnCriteriaType>> REGISTRY =
-         ResourceKey.createRegistryKey(ShrinesMod.location("spawn_criteria_type"));
+         ResourceKey.createRegistryKey(Shrines.location("spawn_criteria_type"));
    private final Codec<? extends SpawnCriteria> codec;
 
    public SpawnCriteriaType(Codec<? extends SpawnCriteria> codec) {

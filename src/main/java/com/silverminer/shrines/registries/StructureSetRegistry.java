@@ -9,7 +9,7 @@
 package com.silverminer.shrines.registries;
 
 import com.mojang.datafixers.util.Pair;
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StructureSetRegistry {
-   public static final DeferredRegister<StructureSet> REGISTRY = DeferredRegister.create(Registry.STRUCTURE_SET_REGISTRY, ShrinesMod.MODID);
+   public static final DeferredRegister<StructureSet> REGISTRY = DeferredRegister.create(Registry.STRUCTURE_SET_REGISTRY, Shrines.MODID);
 
    public static final RegistryObject<StructureSet> ABANDONED_WITCH_HOUSE = create("abandoned_witch_house", 60, 23, 1721882513);
    public static final RegistryObject<StructureSet> BALLOON = create("balloon", 50, 8, 143665);
@@ -65,7 +65,7 @@ public class StructureSetRegistry {
            new StructureSet.StructureSelectionEntry(Holder.Reference.createStandAlone(
                  BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE,
                  ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY,
-                       ShrinesMod.location(configuredStructureFeature.getFirst()))), configuredStructureFeature.getSecond())).toList(),
+                       Shrines.location(configuredStructureFeature.getFirst()))), configuredStructureFeature.getSecond())).toList(),
            new RandomSpreadStructurePlacement(spacing, separation, RandomSpreadType.LINEAR, seed)));
    }
 }

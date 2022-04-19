@@ -1,0 +1,24 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:soul_torch",
+      "second": "shrines:torch"
+    },
+    {
+      "first": "minecraft:soul_wall_torch",
+      "second": "shrines:wall_torch"
+    },
+    {
+      "first": "minecraft:soul_fire",
+      "second": "shrines:fire"
+    },
+    {
+      "first": "minecraft:soul_lantern",
+      "second": "shrines:lantern"
+    },
+    {
+      "first": "minecraft:soul_campfire",
+      "second": "shrines:campfire"
+    }
+  ]
+}

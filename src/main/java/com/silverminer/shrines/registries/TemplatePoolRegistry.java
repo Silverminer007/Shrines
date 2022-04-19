@@ -9,7 +9,7 @@
 package com.silverminer.shrines.registries;
 
 import com.mojang.datafixers.util.Pair;
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.ProcessorLists;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +21,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.Arrays;
 
 public class TemplatePoolRegistry {
-   public static final DeferredRegister<StructureTemplatePool> REGISTRY = DeferredRegister.create(Registry.TEMPLATE_POOL_REGISTRY, ShrinesMod.MODID);
+   public static final DeferredRegister<StructureTemplatePool> REGISTRY = DeferredRegister.create(Registry.TEMPLATE_POOL_REGISTRY, Shrines.MODID);
 
    public static final RegistryObject<StructureTemplatePool> ABANDONED_VILLA = makeStartPool("abandoned_villa");
    public static final RegistryObject<StructureTemplatePool> ABANDONED_WITCH_HOUSE = makeStartPool("abandoned_witch_house");
@@ -31,8 +31,8 @@ public class TemplatePoolRegistry {
    public static final RegistryObject<StructureTemplatePool> BEES = makeStartPool("bees");
    public static final RegistryObject<StructureTemplatePool> END_TEMPLE = makeStartPool("end_temple");
    public static final RegistryObject<StructureTemplatePool> FLOODED_TEMPLE = makeStartPool("flooded_temple");
-   public static final RegistryObject<StructureTemplatePool> GUARDIANS_MEETING = makeStartPool("guardians_meeting");
-   public static final RegistryObject<StructureTemplatePool> HARBOUR = makeStartPool("start");
+   public static final RegistryObject<StructureTemplatePool> GUARDIANS_MEETING = makeStartPool("guardian_meeting");
+   public static final RegistryObject<StructureTemplatePool> HARBOUR = makeStartPool("harbour", "start");
    public static final RegistryObject<StructureTemplatePool> HARBOUR_BUILDINGS = makePool("harbour", "buildings", "buildings/crane/crane_1",
          "buildings/crane/crane_2", "buildings/houses/house_1", "buildings/warehouses/warehouse_big",
          "buildings/warehouses/warehouse_small_1", "buildings/warehouses/warehouse_small_2");
@@ -69,11 +69,11 @@ public class TemplatePoolRegistry {
    }
 
    private static RegistryObject<StructureTemplatePool> makePool(String structureName, String poolName, String... templates) {
-      ResourceLocation id = ShrinesMod.location(structureName + "/" + poolName);
+      ResourceLocation id = Shrines.location(structureName + "/" + poolName);
       return REGISTRY.register(id.getPath(), () -> new StructureTemplatePool(id, new ResourceLocation("empty"),
             Arrays.stream(templates).map(template ->
                         Pair.of((StructurePoolElement) StructurePoolElement.single(
-                              ShrinesMod.location(structureName + "/" + template).toString(),
+                              Shrines.location(structureName + "/" + template).toString(),
                               ProcessorLists.EMPTY).apply(StructureTemplatePool.Projection.RIGID), 1))
                   .toList()
       ));

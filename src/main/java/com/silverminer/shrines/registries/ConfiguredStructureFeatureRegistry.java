@@ -8,7 +8,7 @@
 
 package com.silverminer.shrines.registries;
 
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.generators.ShrinesBiomeTagsProvider;
 import com.silverminer.shrines.structures.ShrinesConfiguration;
 import com.silverminer.shrines.structures.placement_types.PlacementCalculator;
@@ -22,6 +22,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
@@ -32,7 +33,10 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.List;
 
 public class ConfiguredStructureFeatureRegistry {
-   public static final DeferredRegister<ConfiguredStructureFeature<?, ?>> REGISTRY = DeferredRegister.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, ShrinesMod.MODID);
+   public static final DeferredRegister<ConfiguredStructureFeature<?, ?>> REGISTRY = DeferredRegister.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, Shrines.MODID);
+
+   public static final RegistryObject<ConfiguredStructureFeature<?, ?>> DELETED_STRUCTURE = REGISTRY.register("deleted_structure", () ->
+         makeConfigured(new ResourceLocation("empty"), ShrinesBiomeTagsProvider.EMPTY, false, List.of()));
 
    public static final RegistryObject<ConfiguredStructureFeature<?, ?>> ABANDONED_VILLA = REGISTRY.register("abandoned_villa", () ->
          makeConfigured(TemplatePoolRegistry.ABANDONED_VILLA.getId(), ShrinesBiomeTagsProvider.ABANDONED_VILLA, true, List.of(
@@ -142,7 +146,7 @@ public class ConfiguredStructureFeatureRegistry {
    }
 
    private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise, List<SpawnCriteria> spawnCriteria) {
-     return  makeConfigured(pool, biomes, adaptNoise, spawnCriteria, new SimplePlacementCalculator());
+      return makeConfigured(pool, biomes, adaptNoise, spawnCriteria, new SimplePlacementCalculator());
    }
 
    private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise, List<SpawnCriteria> spawnCriteria, PlacementCalculator placementCalculator) {

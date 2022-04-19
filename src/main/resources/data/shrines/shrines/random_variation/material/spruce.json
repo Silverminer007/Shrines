@@ -1,0 +1,60 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:spruce_planks",
+      "second": "shrines:plank"
+    },
+    {
+      "first": "minecraft:spruce_slab",
+      "second": "shrines:slab"
+    },
+    {
+      "first": "minecraft:spruce_button",
+      "second": "shrines:button"
+    },
+    {
+      "first": "minecraft:spruce_stairs",
+      "second": "shrines:stairs"
+    },
+    {
+      "first": "minecraft:spruce_fence",
+      "second": "shrines:fence"
+    },
+    {
+      "first": "minecraft:spruce_fence_gate",
+      "second": "shrines:fence_gate"
+    },
+    {
+      "first": "minecraft:spruce_log",
+      "second": "shrines:log"
+    },
+    {
+      "first": "minecraft:stripped_spruce_log",
+      "second": "shrines:stripped_log"
+    },
+    {
+      "first": "minecraft:spruce_trapdoor",
+      "second": "shrines:trapdoor"
+    },
+    {
+      "first": "minecraft:spruce_door",
+      "second": "shrines:door"
+    },
+    {
+      "first": "minecraft:spruce_sign",
+      "second": "shrines:standing_sign"
+    },
+    {
+      "first": "minecraft:spruce_wall_sign",
+      "second": "shrines:wall_sign"
+    },
+    {
+      "first": "minecraft:spruce_leaves",
+      "second": "shrines:leaves"
+    },
+    {
+      "first": "minecraft:spruce_wood",
+      "second": "shrines:wood"
+    }
+  ]
+}

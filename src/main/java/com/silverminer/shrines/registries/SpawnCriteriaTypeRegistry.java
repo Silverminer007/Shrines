@@ -8,7 +8,7 @@
 
 package com.silverminer.shrines.registries;
 
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.spawn_criteria.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class SpawnCriteriaTypeRegistry {
    public static final DeferredRegister<SpawnCriteriaType> SPAWN_CRITERIA_TYPE_REGISTRY =
-         DeferredRegister.create(SpawnCriteriaType.REGISTRY, ShrinesMod.MODID);
+         DeferredRegister.create(SpawnCriteriaType.REGISTRY, Shrines.MODID);
 
    public static final Supplier<IForgeRegistry<SpawnCriteriaType>> REGISTRY_SUPPLIER =
          SPAWN_CRITERIA_TYPE_REGISTRY.makeRegistry(SpawnCriteriaType.class, RegistryBuilder::new);
