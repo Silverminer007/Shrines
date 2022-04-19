@@ -10,6 +10,9 @@
 [![release-2.x.x](https://github.com/Silverminer007/Shrines/actions/workflows/release-2.x.x.yml/badge.svg)](https://github.com/Silverminer007/Shrines/actions/workflows/release-2.x.x.yml)
 [![release-3.x.x](https://github.com/Silverminer007/Shrines/actions/workflows/release-3.x.x.yml/badge.svg)](https://github.com/Silverminer007/Shrines/actions/workflows/release-3.x.x.yml)
 [![release-4.x.x](https://github.com/Silverminer007/Shrines/actions/workflows/release-4.x.x.yml/badge.svg)](https://github.com/Silverminer007/Shrines/actions/workflows/release-4.x.x.yml)
+![1.18.2](https://img.shields.io/badge/1.18.2-fully%20supported-0xff0000)
+![1.18.1](https://img.shields.io/badge/1.18.1-bugfixes%20only-orange)
+![1.16.5](https://img.shields.io/badge/1.16.5-bugfixes%20only-orange)
 [![]()]()
 
 ## Shrines
@@ -25,7 +28,7 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
 - [x] Remove dragon heads from all shrines structures
 - [ ] Re-add structure novels
-- [ ] Re-add random variation
+- [x] Re-add random variation
 - [ ] Convert old structure packages to data-packs on first load
 - [x] Change placement settings of oriental sanctuary
 - [x] Modify small player house
