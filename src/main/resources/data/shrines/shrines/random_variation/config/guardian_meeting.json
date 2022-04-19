@@ -1,0 +1,46 @@
+{
+  "remaps": [
+    [
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:dark_oak"
+      }
+    ],
+    [
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:birch"
+      }
+    ],
+    [
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:crimson"
+      }
+    ],
+    [
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:oak"
+      }
+    ],
+    [
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:acacia"
+      }
+    ],
+    [
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:warped"
+      }
+    ],
+    [
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:jungle"
+      }
+    ]
+  ]
+}

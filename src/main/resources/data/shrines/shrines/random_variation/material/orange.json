@@ -1,0 +1,60 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:orange_terracotta",
+      "second": "shrines:terracotta"
+    },
+    {
+      "first": "minecraft:orange_glazed_terracotta",
+      "second": "shrines:glazed_terracotta"
+    },
+    {
+      "first": "minecraft:orange_wool",
+      "second": "shrines:wool"
+    },
+    {
+      "first": "minecraft:orange_concrete",
+      "second": "shrines:concrete"
+    },
+    {
+      "first": "minecraft:orange_concrete_powder",
+      "second": "shrines:concrete_powder"
+    },
+    {
+      "first": "minecraft:air",
+      "second": "shrines:glass"
+    },
+    {
+      "first": "minecraft:air",
+      "second": "shrines:glass_pane"
+    },
+    {
+      "first": "minecraft:orange_banner",
+      "second": "shrines:banner"
+    },
+    {
+      "first": "minecraft:orange_wall_banner",
+      "second": "shrines:wall_banner"
+    },
+    {
+      "first": "minecraft:orange_candle",
+      "second": "shrines:candle"
+    },
+    {
+      "first": "minecraft:orange_candle_cake",
+      "second": "shrines:candle_cake"
+    },
+    {
+      "first": "minecraft:orange_bed",
+      "second": "shrines:bed"
+    },
+    {
+      "first": "minecraft:orange_shulker_box",
+      "second": "shrines:shulker_box"
+    },
+    {
+      "first": "minecraft:orange_carpet",
+      "second": "shrines:carpet"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:diamond_ore",
+      "second": "shrines:normal"
+    },
+    {
+      "first": "minecraft:deepslate_diamond_ore",
+      "second": "shrines:deepslate"
+    }
+  ]
+}

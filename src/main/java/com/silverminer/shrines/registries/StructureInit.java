@@ -8,7 +8,7 @@
 
 package com.silverminer.shrines.registries;
 
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.ShrinesStructure;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
@@ -20,7 +20,7 @@ import net.minecraftforge.registries.RegistryObject;
  * @author Silverminer
  */
 public class StructureInit {
-   public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, ShrinesMod.MODID);
+   public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Shrines.MODID);
    public static final RegistryObject<ShrinesStructure> SURFACE = STRUCTURES.register("surface", () -> new ShrinesStructure(GenerationStep.Decoration.SURFACE_STRUCTURES));
    @SuppressWarnings("unused")
    public static final RegistryObject<ShrinesStructure> UNDERGROUND = STRUCTURES.register("underground", () -> new ShrinesStructure(GenerationStep.Decoration.UNDERGROUND_STRUCTURES));

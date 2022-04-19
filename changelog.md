@@ -1,9 +1,22 @@
 ### 4.0.0-alpha6
 
-**It's not possible to update old worlds and installations to this version**
+**See https://silverminer007.github.io/ShrinesWiki/wiki/en_us/users/updateTo4.x.x.html for update instructions**
+
 **This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
 
+- requires Forge 40.1.0 or above
 - removed a few biomes from bees' biome generation whitelist
+- re-implement random variation. Auto convert old random variation material files to new versions
+  - Add random variation configs to define pools of possible rempas (e.g. all oak becomes spruce sometimes)
+    - Add configs for abandoned_villa, abandoned_witch_house, azalea_pavilion, bees, flooded_temple and guardian_meeting (more are in work)
+    - These are configurable through datapacks
+  - Add 53 default random variation materials
+- Allow updates from old worlds. Custom structures most either be added back manually or added to the removed structures list in shrines' new config
+- Fix Harbour spawn doesn't work, due to an empty start pool
+- Added `/variate` command. It runs random variation over either an already existing part of the world or over a new generated structure from template/pool
+  - This feature is still in development/wip. Please consider this while using
+- Added Game Test for dynamic registries (more test are planned)
+- Log exceptions when a command fails with an unexpected exception
 
 **Feedback is appreciated**
 

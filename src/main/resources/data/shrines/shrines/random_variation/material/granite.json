@@ -1,0 +1,20 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:granite",
+      "second": "shrines:stone"
+    },
+    {
+      "first": "minecraft:granite_slab",
+      "second": "shrines:slab"
+    },
+    {
+      "first": "minecraft:granite_stairs",
+      "second": "shrines:stair"
+    },
+    {
+      "first": "minecraft:granite_wall",
+      "second": "shrines:wall"
+    }
+  ]
+}

@@ -8,7 +8,7 @@
 
 package com.silverminer.shrines.registries;
 
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.structures.placement_types.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class PlacementCalculatorTypeRegistry {
    public static final DeferredRegister<PlacementCalculatorType> PLACEMENT_CALCULATOR_TYPE_DEFERRED_REGISTER =
-         DeferredRegister.create(PlacementCalculatorType.REGISTRY, ShrinesMod.MODID);
+         DeferredRegister.create(PlacementCalculatorType.REGISTRY, Shrines.MODID);
 
    public static final Supplier<IForgeRegistry<PlacementCalculatorType>> REGISTRY_SUPPLIER =
          PLACEMENT_CALCULATOR_TYPE_DEFERRED_REGISTER.makeRegistry(PlacementCalculatorType.class, RegistryBuilder::new);

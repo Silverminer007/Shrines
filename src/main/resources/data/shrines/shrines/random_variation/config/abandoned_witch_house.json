@@ -1,0 +1,67 @@
+{
+  "remaps": [
+    [],
+    [
+      {
+        "first": "shrines:oak",
+        "second": "shrines:jungle"
+      },
+      {
+        "first": "shrines:dark_oak",
+        "second": "shrines:acacia"
+      },
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:dark_oak"
+      },
+      {
+        "first": "shrines:polished_andesite",
+        "second": "shrines:cobbled_deepslate"
+      },
+      {
+        "first": "shrines:cobblestone",
+        "second": "shrines:nether_bricks"
+      }
+    ],
+    [
+      {
+        "first": "shrines:oak",
+        "second": "shrines:birch"
+      },
+      {
+        "first": "shrines:dark_oak",
+        "second": "shrines:spruce"
+      },
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:dark_oak"
+      },
+      {
+        "first": "shrines:polished_andesite",
+        "second": "shrines:cobbled_deepslate"
+      },
+      {
+        "first": "shrines:cobblestone",
+        "second": "shrines:polished_blackstone_bricks"
+      }
+    ],
+    [
+      {
+        "first": "shrines:oak",
+        "second": "shrines:dark_oak"
+      },
+      {
+        "first": "shrines:dark_oak",
+        "second": "shrines:spruce"
+      },
+      {
+        "first": "shrines:spruce",
+        "second": "shrines:oak"
+      },
+      {
+        "first": "shrines:polished_andesite",
+        "second": "shrines:polished_blackstone_bricks"
+      }
+    ]
+  ]
+}

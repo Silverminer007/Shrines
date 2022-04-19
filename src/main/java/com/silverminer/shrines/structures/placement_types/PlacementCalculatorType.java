@@ -9,14 +9,14 @@
 package com.silverminer.shrines.structures.placement_types;
 
 import com.mojang.serialization.Codec;
-import com.silverminer.shrines.ShrinesMod;
+import com.silverminer.shrines.Shrines;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class PlacementCalculatorType extends ForgeRegistryEntry<PlacementCalculatorType> {
    public static final ResourceKey<Registry<PlacementCalculatorType>> REGISTRY =
-         ResourceKey.createRegistryKey(ShrinesMod.location("placement_calculator_type"));
+         ResourceKey.createRegistryKey(Shrines.location("placement_calculator_type"));
    private final Codec<? extends PlacementCalculator> codec;
 
    public PlacementCalculatorType(Codec<? extends PlacementCalculator> codec) {

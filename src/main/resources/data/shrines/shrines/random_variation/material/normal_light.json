@@ -1,0 +1,24 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:torch",
+      "second": "shrines:torch"
+    },
+    {
+      "first": "minecraft:wall_torch",
+      "second": "shrines:wall_torch"
+    },
+    {
+      "first": "minecraft:fire",
+      "second": "shrines:fire"
+    },
+    {
+      "first": "minecraft:lantern",
+      "second": "shrines:lantern"
+    },
+    {
+      "first": "minecraft:campfire",
+      "second": "shrines:campfire"
+    }
+  ]
+}

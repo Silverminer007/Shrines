@@ -1,0 +1,12 @@
+{
+  "remaps": [
+    [
+      {
+        "first": "shrines:deepslate_tiles",
+        "second": "shrines:polished_blackstone_bricks"
+      }
+    ],
+    [
+    ]
+  ]
+}

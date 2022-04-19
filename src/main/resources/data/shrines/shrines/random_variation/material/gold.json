@@ -1,0 +1,12 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:gold_ore",
+      "second": "shrines:normal"
+    },
+    {
+      "first": "minecraft:deepslate_gold_ore",
+      "second": "shrines:deepslate"
+    }
+  ]
+}
