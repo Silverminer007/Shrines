@@ -1,12 +1,11 @@
 [![Curseforge Project Name](https://cf.way2muchnoise.eu/title/418915.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
-[![Curseforge Downloads](https://cf.way2muchnoise.eu/full_418915_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
 [![Version on Curseforge](https://cf.way2muchnoise.eu/versions/418915.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
-[![Latest Release](https://img.shields.io/github/v/release/Silverminer007/Shrines?include_prereleases)](https://github.com/Silverminer007/Shrines/releases)
+[![Curseforge Downloads](https://cf.way2muchnoise.eu/full_418915_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/F33t24Wi?label=modrinth%20downloads)](https://modrinth.com/mod/shrines)
 [![GitHub Downloads](https://img.shields.io/github/downloads/Silverminer007/Shrines/total?label=github%20downloads)](https://github.com/Silverminer007/Shrines/releases)
+[![Latest Release](https://img.shields.io/github/v/release/Silverminer007/Shrines?include_prereleases)](https://github.com/Silverminer007/Shrines/releases)
 [![Discord](https://img.shields.io/discord/777129358769782814?label=discord)](https://discord.gg/8pUpWCEUe2)
 [![License](https://img.shields.io/github/license/Silverminer007/Shrines)](https://www.mozilla.org/en-US/MPL/2.0/)
-[![Lines](https://img.shields.io/tokei/lines/github/Silverminer007/Shrines)](https://github.com/Silverminer007/Shrines)
-[![Modrinth Downloads](https://img.shields.io/modrinth/dt/F33t24Wi?label=modrinth%20downloads)](https://modrinth.com/mod/shrines)
 [![release-2.x.x](https://github.com/Silverminer007/Shrines/actions/workflows/release-2.x.x.yml/badge.svg)](https://github.com/Silverminer007/Shrines/actions/workflows/release-2.x.x.yml)
 [![release-3.x.x](https://github.com/Silverminer007/Shrines/actions/workflows/release-3.x.x.yml/badge.svg)](https://github.com/Silverminer007/Shrines/actions/workflows/release-3.x.x.yml)
 [![release-4.x.x](https://github.com/Silverminer007/Shrines/actions/workflows/release-4.x.x.yml/badge.svg)](https://github.com/Silverminer007/Shrines/actions/workflows/release-4.x.x.yml)
@@ -29,6 +28,7 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 - [x] Remove dragon heads from all shrines structures
 - [ ] Re-add structure novels
 - [x] Re-add random variation
+- [ ] Add Tag support for random variation materials and config
 - [ ] Convert old structure packages to data-packs on first load
 - [x] Change placement settings of oriental sanctuary
 - [x] Modify small player house
