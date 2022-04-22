@@ -39,6 +39,7 @@ public class StructureSetRegistry {
    public static final RegistryObject<StructureSet> NETHER_PYRAMID = create("nether_pyramid", 150, 50, 7428394, "nether_pyramid_overworld", "nether_pyramid_nether");
    public static final RegistryObject<StructureSet> NETHER_SHRINE = create("nether_shrine", 80, 15, 653267, "nether_shrine_overworld", "nether_shrine_nether");
    public static final RegistryObject<StructureSet> OASIS_SHRINE = create("oasis_shrine", 40, 32, 2056047070);
+   public static final RegistryObject<StructureSet> ORIENTAL_HUT = create("oriental_hut", 32, 14, 42384446);
    public static final RegistryObject<StructureSet> ORIENTAL_SANCTUARY = create("oriental_sanctuary", 50, 21, 143665);
    public static final RegistryObject<StructureSet> PLAYER_HOUSE = create("player_house", 80, 27, 751963298, "small_player_house", "tall_player_house");
    public static final RegistryObject<StructureSet> INFESTED_PRISON = create("infested_prison", 60, 22, 567483014);

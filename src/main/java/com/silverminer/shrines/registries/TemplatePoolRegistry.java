@@ -49,6 +49,7 @@ public class TemplatePoolRegistry {
          "nether_shrine_001", "nether_shrine_002", "nether_shrine_003", "nether_shrine_004", "nether_shrine_005", "nether_shrine_006", "nether_shrine_007",
          "nether_shrine_008", "nether_shrine_009", "nether_shrine_011", "nether_shrine_sandstone");
    public static final RegistryObject<StructureTemplatePool> MODERN_VILLA = makeStartPool("modern_villa");
+   public static final RegistryObject<StructureTemplatePool> ORIENTAL_HUT = makeStartPool("oriental_hut");
    public static final RegistryObject<StructureTemplatePool> ORIENTAL_SANCTUARY = makeStartPool("oriental_sanctuary");
    public static final RegistryObject<StructureTemplatePool> SMALL_PLAYER_HOUSE = makeStartPool("small_player_house");
    public static final RegistryObject<StructureTemplatePool> INFESTED_PRISON = makeStartPool("infested_prison");

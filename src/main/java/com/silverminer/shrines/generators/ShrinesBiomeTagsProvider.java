@@ -51,6 +51,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
    public static final TagKey<Biome> NETHER_PYRAMID_NETHER = createShrines("nether_pyramid_nether");
    public static final TagKey<Biome> NETHER_SHRINE_NETHER = createShrines("nether_shrine_nether");
    public static final TagKey<Biome> OASIS_SHRINE = createShrines("oasis_shrine");
+   public static final TagKey<Biome> ORIENTAL_HUT = createShrines("oriental_hut");
    public static final TagKey<Biome> ORIENTAL_SANCTUARY = createShrines("oriental_sanctuary");
    public static final TagKey<Biome> PLAYER_HOUSE = createShrines("player_house");
    public static final TagKey<Biome> INFESTED_PRISON = createShrines("infested_prison");
@@ -76,6 +77,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
 
    @Override
    protected void addTags() {
+      this.tag(EMPTY);
       this.tag(IS_PLAINS).add(Biomes.PLAINS, Biomes.SUNFLOWER_PLAINS);
       this.tag(IS_MESA).add(Biomes.BADLANDS, Biomes.ERODED_BADLANDS, Biomes.WOODED_BADLANDS);
       this.tag(IS_SAVANNA).add(Biomes.SAVANNA, Biomes.SAVANNA_PLATEAU, Biomes.WINDSWEPT_SAVANNA);
@@ -111,6 +113,7 @@ public class ShrinesBiomeTagsProvider extends TagsProvider<Biome> {
       this.tag(NETHER_PYRAMID_NETHER).addTag(IS_NETHER);
       this.tag(NETHER_SHRINE_NETHER).addTag(IS_NETHER);
       this.tag(OASIS_SHRINE).addTag(IS_DESERT).addTag(IS_MESA);
+      this.tag(ORIENTAL_HUT).addTag(IS_PLAINS).addTag(IS_SAVANNA).addTag(IS_ICY).addTag(BiomeTags.IS_MOUNTAIN);
       this.tag(ORIENTAL_SANCTUARY).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)
             .addTag(IS_MESA).addTag(IS_ICY).addTag(IS_DESERT).addTag(IS_SWAMP).addTag(IS_MUSHROOM);
       this.tag(PLAYER_HOUSE).addTag(IS_PLAINS).addTag(BiomeTags.IS_FOREST).addTag(BiomeTags.IS_TAIGA).addTag(IS_SAVANNA).addTag(BiomeTags.IS_JUNGLE)

@@ -101,6 +101,9 @@ public class ConfiguredStructureFeatureRegistry {
    public static final RegistryObject<ConfiguredStructureFeature<?, ?>> OASIS_SHRINE = REGISTRY.register("oasis_shrine", () ->
          makeConfigured(TemplatePoolRegistry.OASIS_SHRINE.getId(), ShrinesBiomeTagsProvider.OASIS_SHRINE, true));
 
+   public static final RegistryObject<ConfiguredStructureFeature<?, ?>> ORIENTAL_HUT = REGISTRY.register("oriental_hut", () ->
+         makeConfigured(TemplatePoolRegistry.ORIENTAL_HUT.getId(), ShrinesBiomeTagsProvider.ORIENTAL_HUT, true));
+
    public static final RegistryObject<ConfiguredStructureFeature<?, ?>> ORIENTAL_SANCTUARY = REGISTRY.register("oriental_sanctuary", () ->
          makeConfigured(TemplatePoolRegistry.ORIENTAL_SANCTUARY.getId(), ShrinesBiomeTagsProvider.ORIENTAL_SANCTUARY, true));
 

@@ -1,3 +1,15 @@
+### 4.0.0-alpha7
+
+**See https://silverminer007.github.io/ShrinesWiki/wiki/en_us/users/updateTo4.x.x.html for update instructions**
+
+**This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
+
+- Add oriental Hut (Credits to lady_jessa (aka LadyJessa) for building)
+- Add missing "empty" biome tag
+
+**Feedback is appreciated**
+
+===========
 ### 4.0.0-alpha6
 
 **See https://silverminer007.github.io/ShrinesWiki/wiki/en_us/users/updateTo4.x.x.html for update instructions**
