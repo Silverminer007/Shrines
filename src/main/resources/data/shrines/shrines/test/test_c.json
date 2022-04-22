@@ -1,0 +1,10 @@
+{
+  "number": 0,
+  "string": "",
+  "block": "minecraft:coal_ore",
+  "pool": "minecraft:empty",
+  "test_list": [
+    "datapackreg:test_a",
+    "datapackreg:test_b"
+  ]
+}
