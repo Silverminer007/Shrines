@@ -1,0 +1,222 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "min": 4,
+        "max": 6,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 3,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:emerald"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 4,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:iron_ingot"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 4,
+                "max": 7,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:glass_bottle"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 3,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:iron_nugget"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 9,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 4,
+                "max": 7,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:gold_nugget"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 5,
+                "max": 8,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:coal"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 7,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:sugar_cane"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 7,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:bread"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 11,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 7,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:smooth_stone"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 11,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 5,
+                "max": 9,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:farmland"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:grass_block"
+        },
+        {
+          "type": "minecraft:tag",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 3,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:saplings",
+          "expand": true
+        },
+        {
+          "type": "minecraft:tag",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 3,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
+          "name": "minecraft:logs",
+          "expand": true
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 30,
+              "treasure": true
+            }
+          ],
+          "name": "minecraft:book"
+        }
+      ]
+    }
+  ]
+}

@@ -41,6 +41,8 @@ jobs:
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Execute build
+        run: ./gradlew --info --stacktrace runGameTestServer
+      - name: Execute build
         run: ./gradlew --info --stacktrace build
       - name: Create Tag
         id: create_tag
