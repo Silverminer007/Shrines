@@ -95,4 +95,4 @@ jobs:
           changelog_type: "markdown"
           changelog: ${{ steps.split.outputs._0}}
           release_type: ${{ github.event.inputs.releaseType }}
-          game_versions: "Minecraft 1.18.2,Java 17,Forge"
+          game_versions: "Minecraft 1.18:1.18.2,java:Java 17,java:Java 18,Forge"
