@@ -10,7 +10,7 @@ on:
       releaseType:
         required: true
         description: "alpha, beta or release"
-        default: 'beta'
+        default: 'alpha'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -40,7 +40,7 @@ jobs:
         run: echo $JAVA_HOME
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Execute build
+      - name: Run Tests
         run: ./gradlew --info --stacktrace runGameTestServer
       - name: Execute build
         run: ./gradlew --info --stacktrace build
