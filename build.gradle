@@ -113,6 +113,8 @@ minecraft {
 
             property 'forge.enableGameTest', 'true'
 
+            forceExit false
+
             mods {
                 shrines {
                     source sourceSets.main
