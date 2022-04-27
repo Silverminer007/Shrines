@@ -1,3 +1,9 @@
+## 3.0.0-Beta23 --- 27.04.2022 19:00 UTC
+
+- Fix a few custom structure (UI) related issues
+
+===========
+
 ## 3.0.0-Beta22 --- 06.03.2022 15:50 UTC
 
 - Added new default structures. Again a big thank you to LadyJessa for building these amazing structures

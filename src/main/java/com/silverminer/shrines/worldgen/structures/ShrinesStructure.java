@@ -94,6 +94,7 @@ public class ShrinesStructure extends NoiseAffectingStructureFeature<JigsawConfi
                     pieceGenerator = JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, position, false, true);
                 }
             } catch (NullPointerException e) {// Catch this when the supplied start pool isn't found. An error message is more friendly than a crash
+                LOGGER.error("Something went wrong with your template pool. The configured pool for [{}] with id [{}] doesn't exist", structureConfig.getKey(), structureConfig.getSpawnConfiguration().getStart_pool());
                 pieceGenerator = Optional.empty();
             }
             return pieceGenerator;

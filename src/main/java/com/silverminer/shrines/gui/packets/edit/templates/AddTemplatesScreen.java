@@ -27,10 +27,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
@@ -62,7 +64,12 @@ public class AddTemplatesScreen extends Screen {
          }
          return nbt.getInt("DataVersion") <= 0 || !s.endsWith(".nbt");
       } catch (Throwable t) {
-         return true;
+         try {
+            CompoundTag nbt = NbtIo.readCompressed(new File(s));
+            return nbt.getInt("DataVersion") <= 0 || !s.endsWith(".nbt");
+         } catch (Throwable t2) {
+            return true;
+         }
       }
    }
 
@@ -86,7 +93,10 @@ public class AddTemplatesScreen extends Screen {
          }
          TextComponent invalidFiles = new TextComponent(sb.toString());
          Component head = new TranslatableComponent("gui.shrines.templates.add.left_out", invalidFiles);
-         this.renderTooltip(ms, head, x, y);
+         int i = 0;
+         for (String line : head.getString().split("\n")) {
+            this.renderTooltip(ms, new TextComponent(line), x, y + i++ * 9);
+         }
       }));
       this.infoButton.visible = this.invalidFiles.size() > 0;
       this.addTemplatesList = new AddTemplatesList(this.minecraft, this.width, this.height, 26, this.height, 36, this.packet, this, this.files);
@@ -95,15 +105,27 @@ public class AddTemplatesScreen extends Screen {
 
    public void save() {
       if (this.minecraft != null && this.minecraft.player != null) {
+         if (this.addTemplatesList.children().isEmpty()) {
+            PackageManagerProvider.CLIENT.onError(new CalculationError("Failed to add new templates", "None of the selected templates has a valid name"));
+            return;
+         }
          this.addTemplatesList.children().forEach((entry) -> {
             try {
-               CompoundTag templateData = NbtIo.read(new File(entry.getPath()));
+               CompoundTag templateData;
+               try {
+                  templateData = NbtIo.readCompressed(new File(entry.getPath()));
+               } catch (EOFException eofException) {
+                  templateData = NbtIo.read(new File(entry.getPath()));
+               }
+               if (templateData == null) {
+                  PackageManagerProvider.CLIENT.onError(new CalculationError("Failed to add new template", "An unknown issue occurred while trying to add new template. Please report this issue"));
+               }
                this.packet.getTemplates().add(new FilledStructureTemplate(entry.getLocation(), templateData));
             } catch (IOException e) {
                PackageManagerProvider.CLIENT.onError(new CalculationError("Failed to add new template", "Failed to read file from [%s]. Caused by: %s", entry.getPath(), e.getClass().getName() + ": " + e.getMessage()));
             }
          });
-         this.minecraft.setScreen(new ProgressScreen(true));
+         this.onClose();
       }
    }
 

@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.config.DefaultStructureConfig;
 import com.silverminer.shrines.gui.misc.DirtConfirmScreen;
 import com.silverminer.shrines.gui.packets.edit.EditStructurePacketScreen;
+import com.silverminer.shrines.packages.datacontainer.StructureData;
 import com.silverminer.shrines.packages.datacontainer.StructuresPackageWrapper;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -41,9 +42,10 @@ public class EditStructuresScreen extends EditStructurePacketScreen {
 
     @Override
     protected void add() {
-        this.packet.getStructures().add(DefaultStructureConfig.CUSTOM.toStructureData());
+        StructureData structureData = DefaultStructureConfig.CUSTOM.toStructureData();
+        this.packet.getStructures().add(structureData);
         this.structuresList.refreshList(() -> this.searchBox.getValue());
-        this.structuresList.setSelected(this.structuresList.children().get(0));
+        this.structuresList.setSelected(this.structuresList.children().stream().filter(entry -> entry.getStructure().equals(structureData)).toList().get(0));
         this.structuresList.getSelectedOpt().ifPresent(EditStructuresList.Entry::configure);
     }
 

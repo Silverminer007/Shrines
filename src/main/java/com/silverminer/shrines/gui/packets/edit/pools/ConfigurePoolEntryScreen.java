@@ -32,7 +32,7 @@ public class ConfigurePoolEntryScreen extends Screen {
 	}
 
 	public void onClose() {
-		if(this.minecraft != null){
+		if(this.minecraft == null){
 			return;
 		}
 		this.list.getSelectedOpt().ifPresent(ConfigurePoolEntryList.Entry::save);

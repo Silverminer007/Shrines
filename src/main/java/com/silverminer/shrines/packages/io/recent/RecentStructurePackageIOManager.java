@@ -483,6 +483,9 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
          // Get all templates with stored files and save them
          for (FilledStructureTemplate newTemplate : templates.getElementsAsList().stream().filter(template -> template instanceof FilledStructureTemplate).map(template -> (FilledStructureTemplate) template).toList()) {
             Path newTemplatePath = this.getDirectoryStructureAccessor().getTemplatePath(newTemplate.getTemplateLocation(), packagePath, true);
+            if(!Files.exists(newTemplatePath.getParent())){
+               Files.createDirectories(newTemplatePath.getParent());
+            }
             NbtIo.writeCompressed(newTemplate.getTemplateData(), newTemplatePath.toFile());
             // We have saved the templates data and don't need it anymore, so we replace the template with one without data
             templates.remove(newTemplate.getTemplateID());
@@ -497,14 +500,14 @@ public class RecentStructurePackageIOManager implements StructurePackageLoader, 
 
    protected void saveStructurePackageMeta(@NotNull Path packagePath) throws PackageIOException {
       // Create the data pack metadata for minecraft data packs that loads our templates and template pools on runtime
-      Path metadataPath = packagePath.resolve("pack.meta");
+      Path metadataPath = packagePath.resolve("pack.mcmeta");
       JsonObject metadataObject = new JsonObject();
       JsonObject metadataPackObject = new JsonObject();
-      metadataPackObject.add("pack_format", new JsonPrimitive(8));// Version 8 since 21w37
+      metadataObject.add("pack_format", new JsonPrimitive(8));// Version 8 since 21w37
       metadataObject.add("description", new JsonPrimitive(""));
-      metadataObject.add("pack", metadataPackObject);
+      metadataPackObject.add("pack", metadataObject);
       try {
-         Files.writeString(metadataPath, metadataObject.toString());
+         Files.writeString(metadataPath, metadataPackObject.toString());
       } catch (IOException e) {
          throw new PackageIOException(new CalculationError("Unable to create metadata file for structure package", "Might fail to load templates and template pools on runtime. Caused by: %s", e));
       }
