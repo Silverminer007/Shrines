@@ -74,11 +74,6 @@ jobs:
           body: |
             ![GitHub release (by tag)](https://img.shields.io/github/downloads/Silverminer007/Shrines/v${{ github.event.inputs.version }}/total)
             ${{ steps.split.outputs._0}}
-      - name: Upload files to github
-        uses: softprops/action-gh-release@v1
-        with:
-          files: build/libs/*.jar
-          tag_name: v${{ github.event.inputs.version }}
       - name: Upload files to curseforge
         uses: itsmeow/curseforge-upload@v3
         with:
@@ -92,6 +87,11 @@ jobs:
           game_versions: "Minecraft 1.18:1.18.1,Java 17,Forge"
           relations: "dynamicregistries:requiredDependency"
       - name: Upload files to modrinth
-        run: ./gradlew --info --stacktrace publishModrinth
+        run: ./gradlew --info --stacktrace modrinth
         env:
           SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
+      - name: Upload files to github
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/libs/*.jar
+          tag_name: v${{ github.event.inputs.version }}
