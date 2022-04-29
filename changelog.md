@@ -1,3 +1,14 @@
+### 4.0.0-alpha8
+
+**See https://silverminer007.github.io/ShrinesWiki/wiki/en_us/users/updateTo4.x.x.html for update instructions**
+
+**This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
+
+- Add "disabled structures" config option. See this article for instructions: https://silverminer007.github.io/ShrinesWiki/wiki/en_us/users/disableStructure.html
+
+**Feedback is appreciated**
+
+===========
 ### 4.0.0-alpha7
 
 **See https://silverminer007.github.io/ShrinesWiki/wiki/en_us/users/updateTo4.x.x.html for update instructions**
