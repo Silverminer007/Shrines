@@ -18,10 +18,16 @@ import com.silverminer.shrines.registries.RandomVariationMaterialRegistry;
 import com.silverminer.shrines.registries.*;
 import com.silverminer.shrines.registry.Utils;
 import com.silverminer.shrines.update.Updater;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.datafix.fixes.StructuresBecomeConfiguredFix;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -124,7 +130,7 @@ public class Shrines {
       for (String structure : ShrinesConfig.removedStructures.get()) {
          try {
             event.register(structure, StructuresBecomeConfiguredFix.Conversion.trivial(ConfiguredStructureFeatureRegistry.DELETED_STRUCTURE.getId().toString()));
-         } catch(NullPointerException | IllegalArgumentException e) {
+         } catch (NullPointerException | IllegalArgumentException e) {
             throw new RuntimeException("You've miss-configured shrines removed structures: " + e);
          }
       }
@@ -133,5 +139,28 @@ public class Shrines {
    @NotNull
    public static ResourceLocation location(@NotNull String path) {
       return new ResourceLocation(Shrines.MODID, path);
+   }
+
+   public static boolean checkStructure(RegistryAccess registryAccess, ConfiguredStructureFeature<?, ?> configuredStructureFeature) {
+      Registry<ConfiguredStructureFeature<?, ?>> registry = registryAccess.registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
+      ResourceLocation id = registry.getKey(configuredStructureFeature);
+      if (id != null) {
+         ResourceKey<ConfiguredStructureFeature<?, ?>> resourceKey = ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, id);
+         Holder<ConfiguredStructureFeature<?, ?>> holder = Holder.Reference.createStandAlone(registry, resourceKey);
+         for (String structure : ShrinesConfig.disabledStructures.get()) {
+            if (structure.startsWith("#")) {
+               TagKey<ConfiguredStructureFeature<?, ?>> tagKey = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation(structure.substring(1)));
+               if (registry.getTag(tagKey).map(tag -> tag.contains(holder)).orElse(false)) {
+                  return false;
+               }
+            } else {
+               if (id.toString().equals(structure)) {
+                  return false;
+               }
+            }
+         }
+
+      }
+      return true;
    }
 }

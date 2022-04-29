@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MixinCommands",
+    "MixinConfiguredStructureFeature",
+    "MixinStructureCheck",
     "MixinStructureStart"
   ],
   "client": [],

@@ -24,8 +24,10 @@ public class ShrinesConfig {
    }
 
    public static ForgeConfigSpec.ConfigValue<List<String>> removedStructures;
+   public static ForgeConfigSpec.ConfigValue<List<String>> disabledStructures;
 
    private static void setupConfig(ForgeConfigSpec.@NotNull Builder builder) {
       removedStructures = builder.define("removed_structures", new ArrayList<>());
+      disabledStructures = builder.define("disabled_structures", new ArrayList<>());
    }
 }
