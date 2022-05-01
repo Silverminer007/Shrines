@@ -1,3 +1,9 @@
+## 3.0.0-Beta24 --- 01.05.2022 13:30 UTC
+
+- Add search field in spawn biome selection screen
+
+===========
+
 ## 3.0.0-Beta23 --- 27.04.2022 19:00 UTC
 
 - Fix a few custom structure (UI) related issues

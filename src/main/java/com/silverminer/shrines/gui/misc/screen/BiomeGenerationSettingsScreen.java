@@ -10,6 +10,7 @@ package com.silverminer.shrines.gui.misc.screen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import com.google.common.collect.Lists;
@@ -23,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class BiomeGenerationSettingsScreen extends Screen {
@@ -48,29 +50,24 @@ public class BiomeGenerationSettingsScreen extends Screen {
 	public void onClose() {
 		this.biomeSetter.accept(selectedBiomes);
 		this.biomeCategorySetter.accept(selectedBiomeCategories);
-		this.minecraft.setScreen(this.lastScreen);
+		Objects.requireNonNull(this.minecraft).setScreen(this.lastScreen);
 	}
 
 	protected void init() {
-		this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20, ClientUtils.BACK_BUTTON_TEXTURE, 256, 256, (button) -> {
-			this.onClose();
-		}, TextComponent.EMPTY));
+		this.addRenderableWidget(new ImageButton(2, 2, 91, 20, 0, 0, 20,
+				ClientUtils.BACK_BUTTON_TEXTURE, 256, 256,
+				(button) -> this.onClose(), TextComponent.EMPTY));
 		this.searchBox = new EditBox(this.font, (this.width / 4) * 3, 3, 100, 20, this.searchBox,
 				new TextComponent(""));
-		this.searchBox.setResponder((string) -> {
-			this.list.refreshList(() -> {
-				return string;
-			});
-		});
+		this.searchBox.setResponder((string) -> this.list.refreshList(() -> string));
 		this.list = new BiomeGenerationSettingsList(this, minecraft, this.width, this.height, 26, this.height, 26,
 				() -> this.searchBox.getValue());
-		this.addWidget(this.searchBox);
+		this.addRenderableWidget(this.searchBox);
 		this.addWidget(this.list);
 	}
 
 	@Override
-	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		this.searchBox.render(ms, mouseX, mouseY, partialTicks);
+	public void render(@NotNull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		this.list.render(ms, mouseX, mouseY, partialTicks);
 		drawCenteredString(ms, this.font, this.title, this.width / 2, 8, 16777215);
 		super.render(ms, mouseX, mouseY, partialTicks);

@@ -59,14 +59,19 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
       String s = search.get().toLowerCase(Locale.ROOT);
 
       for (Biome.BiomeCategory opt : possibleCategories) {
-         if (opt.getName().toLowerCase(Locale.ROOT).contains(s)) {
-            boolean selected = selectedCategories.contains(opt.toString());
-            this.addEntry(new BiomeGenerationSettingsList.CategoryEntry(opt, selected));
-            if (selected) {
-               for (Biome opt1 : possibleBiomes.stream().filter(biome -> biome.getBiomeCategory().equals(opt)).toList()) {
-                  boolean selected1 = !selectedBiomes.contains(opt1.toString());
-                  this.addEntry(new BiomeGenerationSettingsList.BiomeEntry(opt1, selected1));
-               }
+         boolean searchMatchesCategory = opt.getName().toLowerCase(Locale.ROOT).contains(s);
+         boolean categorySelected = selectedCategories.contains(opt.toString());
+         List<Biome> biomesInCategory = possibleBiomes.stream().filter(biome ->
+               biome.getBiomeCategory().equals(opt) &&
+                     (searchMatchesCategory || Optional.ofNullable(biome.getRegistryName()).map(Object::toString).map(biomeString ->
+                           biomeString.toLowerCase(Locale.ROOT).contains(s)).orElse(false))).toList();
+         if (!biomesInCategory.isEmpty()) {
+            this.addEntry(new BiomeGenerationSettingsList.CategoryEntry(opt, categorySelected, s));
+         }
+         if (s.isEmpty() ? categorySelected : searchMatchesCategory || !biomesInCategory.isEmpty()) {
+            for (Biome opt1 : biomesInCategory) {
+               boolean selected1 = !selectedBiomes.contains(opt1.toString());
+               this.addEntry(new BiomeGenerationSettingsList.BiomeEntry(opt1, selected1));
             }
          }
       }
@@ -159,9 +164,11 @@ public class BiomeGenerationSettingsList extends ObjectSelectionList<BiomeGenera
 
    @OnlyIn(Dist.CLIENT)
    public class CategoryEntry extends Entry {
+      private final String search;
 
-      public CategoryEntry(Biome.BiomeCategory option, boolean active) {
+      public CategoryEntry(Biome.BiomeCategory option, boolean active, String search) {
          super(option.toString(), active);
+         this.search = search;
       }
 
       @Override
