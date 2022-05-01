@@ -25,21 +25,21 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
 ### TODO
 
-- [x] Remove dragon heads from all shrines structures
+- [ ] Fix structure generation distance (re-implement old structure min distance)
 - [ ] Re-add structure novels
-- [x] Re-add random variation
 - [ ] Add Tag support for random variation materials and config
-- [ ] Convert old structure packages to data-packs on first load
+- [ ] Fix structure void issue with e.g. balloon and small player house
+- [ ] remove references to shrines:harbour/villager pool in harbour
+- [x] Remove dragon heads from all shrines structures
+- [x] Re-add random variation
+- [x] Convert old structure packages to data-packs on first load
 - [x] Change placement settings of oriental sanctuary
 - [x] Modify small player house
 - [x] Put small temple and high temple in one structure set
 - [x] Put abandoned villa and modern villa in one structure set
-- [ ] Fix structure void issue with e.g. balloon and small player house
 - [x] Fix ground below azalea pavilion
-- [ ] remove references to shrines:harbour/villager pool in harbour
 - [x] fix harbour generation (only spawn in water)
 - [x] Clean bees generation biomes
-- [ ] Fix structure generation distance (re-implement old structure min distance)
 - [x] Fix nether shrine template pool (add all templates)
 - [x] Rename oriental sanctuary's template
 - [x] rename watch_tower's template from watchtower to watch_tower
