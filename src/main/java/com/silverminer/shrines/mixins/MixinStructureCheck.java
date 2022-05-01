@@ -28,7 +28,7 @@ public class MixinStructureCheck {
 
    @Inject(method = "canCreateStructure", at = @At("HEAD"), cancellable = true)
    private void shrines_canGenerateStructure(ChunkPos chunkPos, ConfiguredStructureFeature<?, ?> configuredStructureFeature, CallbackInfoReturnable<Boolean> cir) {
-      if (!Shrines.checkStructure(registryAccess, configuredStructureFeature)) {
+      if (Shrines.invalidateStructure(registryAccess, configuredStructureFeature)) {
          cir.setReturnValue(false);
       }
    }

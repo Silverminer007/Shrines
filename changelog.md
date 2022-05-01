@@ -1,3 +1,15 @@
+### 4.0.0-alpha9
+
+**This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
+
+- Automatically update old custom structures to the new structure system
+- Update old structure configs for shrines default structures to the new system
+- For information see here: https://silverminer007.github.io/ShrinesWiki/wiki/en_us/users/structureUpdater1.18.2.html
+
+**Feedback is appreciated**
+
+===========
+
 ### 4.0.0-alpha8
 
 **See https://silverminer007.github.io/ShrinesWiki/wiki/en_us/users/updateTo4.x.x.html for update instructions**
