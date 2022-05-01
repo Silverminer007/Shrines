@@ -37,6 +37,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.loading.FileUtils;
@@ -45,10 +46,9 @@ import net.minecraftforge.registries.NewRegistryEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Locale;
 
 /**
  * @author Silverminer
@@ -70,7 +70,6 @@ public class Shrines {
       this.registerEvents();
       this.registerRegistries();
       this.registerConfig();
-      this.runUpdater();
    }
 
    private void registerExtensionPoint() {
@@ -92,8 +91,13 @@ public class Shrines {
       Path minecraftDir = FMLPaths.GAMEDIR.get();
       Path oldPackDir = minecraftDir.resolve("shrines-data").resolve("3.x.x").resolve("Packets");
       Path newPackDir = minecraftDir.resolve("datapacks");
-      if (Files.isDirectory(oldPackDir) && !Files.exists(newPackDir)) {
-         Updater.updateAll(oldPackDir, newPackDir);
+      if (ShrinesConfig.runStructureUpdater.get() && Files.exists(oldPackDir)) {
+         try {
+            Updater.updateAll(oldPackDir, newPackDir);
+            ShrinesConfig.runStructureUpdater.set(false);
+         } catch (Exception e) {
+            LOGGER.error("Failed to update old structures", e);
+         }
       }
    }
 
@@ -107,6 +111,7 @@ public class Shrines {
          PackSource source = PackSource.decorating("pack.source.shrines");
          event.addRepositorySource(new FolderRepositorySource(FMLPaths.GAMEDIR.get().resolve("datapacks").toFile(), source));
       });
+      modBus.addListener((FMLLoadCompleteEvent event) -> event.enqueueWork(this::runUpdater));
       MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> VariationCommand.register(event.getDispatcher()));
       MinecraftForge.EVENT_BUS.addListener(Shrines::registerStructureConversions);
    }
@@ -127,6 +132,7 @@ public class Shrines {
       event.register("shrines:ballon", StructuresBecomeConfiguredFix.Conversion.trivial("shrines:balloon"));
       event.register("shrines:high_tempel", StructuresBecomeConfiguredFix.Conversion.trivial("shrines:high_temple"));
       event.register("shrines:small_tempel", StructuresBecomeConfiguredFix.Conversion.trivial("shrines:small_temple"));
+      event.register("shrines:player_house", StructuresBecomeConfiguredFix.Conversion.trivial("shrines:tall_player_house"));
       for (String structure : ShrinesConfig.removedStructures.get()) {
          try {
             event.register(structure, StructuresBecomeConfiguredFix.Conversion.trivial(ConfiguredStructureFeatureRegistry.DELETED_STRUCTURE.getId().toString()));
@@ -141,7 +147,7 @@ public class Shrines {
       return new ResourceLocation(Shrines.MODID, path);
    }
 
-   public static boolean checkStructure(RegistryAccess registryAccess, ConfiguredStructureFeature<?, ?> configuredStructureFeature) {
+   public static boolean invalidateStructure(@NotNull RegistryAccess registryAccess, ConfiguredStructureFeature<?, ?> configuredStructureFeature) {
       Registry<ConfiguredStructureFeature<?, ?>> registry = registryAccess.registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
       ResourceLocation id = registry.getKey(configuredStructureFeature);
       if (id != null) {
@@ -151,16 +157,16 @@ public class Shrines {
             if (structure.startsWith("#")) {
                TagKey<ConfiguredStructureFeature<?, ?>> tagKey = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation(structure.substring(1)));
                if (registry.getTag(tagKey).map(tag -> tag.contains(holder)).orElse(false)) {
-                  return false;
+                  return true;
                }
             } else {
                if (id.toString().equals(structure)) {
-                  return false;
+                  return true;
                }
             }
          }
 
       }
-      return true;
+      return false;
    }
 }

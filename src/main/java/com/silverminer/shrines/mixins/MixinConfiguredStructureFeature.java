@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 public class MixinConfiguredStructureFeature {
    @Inject(method = "generate", at = @At("HEAD"), cancellable = true)
    private void shrines_generate(RegistryAccess registryAccess, ChunkGenerator p_204709_, BiomeSource p_204710_, StructureManager p_204711_, long p_204712_, ChunkPos p_204713_, int p_204714_, LevelHeightAccessor p_204715_, Predicate<Holder<Biome>> p_204716_, CallbackInfoReturnable<StructureStart> cir) {
-      if (!Shrines.checkStructure(registryAccess, (ConfiguredStructureFeature<?, ?>) (Object) this)) {
+      if (Shrines.invalidateStructure(registryAccess, (ConfiguredStructureFeature<?, ?>) (Object) this)) {
          cir.setReturnValue(StructureStart.INVALID_START);
       }
    }

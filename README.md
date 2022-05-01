@@ -44,3 +44,8 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 - [x] Rename oriental sanctuary's template
 - [x] rename watch_tower's template from watchtower to watch_tower
 - [x] Add biome tag for world tree manor
+- [x] disable structures
+
+### Requested features
+- better documentation and wiki
+- tutorials about shrines features
