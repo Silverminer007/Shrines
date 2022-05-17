@@ -82,6 +82,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             args '--mod', 'shrines', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            forceExit false
 
             mods {
                 shrines {

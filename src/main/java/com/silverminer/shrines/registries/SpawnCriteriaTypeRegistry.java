@@ -43,4 +43,8 @@ public class SpawnCriteriaTypeRegistry {
    public static final RegistryObject<SpawnCriteriaType> GROUND_LEVEL_DELTA =
          SPAWN_CRITERIA_TYPE_REGISTRY.register("ground_level_delta",
                () -> new SpawnCriteriaType(GroundLevelDeltaSpawnCriteria.CODEC));
+
+   public static final RegistryObject<SpawnCriteriaType> MIN_STRUCTURE_DISTANCE =
+         SPAWN_CRITERIA_TYPE_REGISTRY.register("min_structure_distance",
+               () -> new SpawnCriteriaType(MinStructureDistanceSpawnCriteria.CODEC));
 }

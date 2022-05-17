@@ -13,10 +13,7 @@ import com.silverminer.shrines.generators.ShrinesBiomeTagsProvider;
 import com.silverminer.shrines.structures.ShrinesConfiguration;
 import com.silverminer.shrines.structures.placement_types.PlacementCalculator;
 import com.silverminer.shrines.structures.placement_types.SimplePlacementCalculator;
-import com.silverminer.shrines.structures.spawn_criteria.GroundLevelDeltaSpawnCriteria;
-import com.silverminer.shrines.structures.spawn_criteria.HeightSpawnCriteria;
-import com.silverminer.shrines.structures.spawn_criteria.RandomChanceSpawnCriteria;
-import com.silverminer.shrines.structures.spawn_criteria.SpawnCriteria;
+import com.silverminer.shrines.structures.spawn_criteria.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
@@ -134,18 +131,20 @@ public class ConfiguredStructureFeatureRegistry {
    public static final RegistryObject<ConfiguredStructureFeature<?, ?>> WORLD_TREE_MANOR = REGISTRY.register("world_tree_manor", () ->
          makeConfigured(TemplatePoolRegistry.WORLD_TREE_MANOR.getId(), ShrinesBiomeTagsProvider.WORLD_TREE_MANOR, true));
 
-   private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise) {
-      return makeConfigured(pool, biomes, adaptNoise, List.of(
+   private static List<SpawnCriteria> getDefaultSpawnCriteria() {
+      return List.of(
             new HeightSpawnCriteria(64, Integer.MAX_VALUE, 32),
             new RandomChanceSpawnCriteria(0.6),
-            new GroundLevelDeltaSpawnCriteria(2.0D, 32)));
+            new GroundLevelDeltaSpawnCriteria(2.0D, 32),
+            new MinStructureDistanceSpawnCriteria(10));
+   }
+
+   private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise) {
+      return makeConfigured(pool, biomes, adaptNoise, getDefaultSpawnCriteria());
    }
 
    private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise, PlacementCalculator placementCalculator) {
-      return makeConfigured(pool, biomes, adaptNoise, List.of(
-            new HeightSpawnCriteria(64, Integer.MAX_VALUE, 32),
-            new RandomChanceSpawnCriteria(0.6),
-            new GroundLevelDeltaSpawnCriteria(2.0D, 32)), placementCalculator);
+      return makeConfigured(pool, biomes, adaptNoise, getDefaultSpawnCriteria(), placementCalculator);
    }
 
    private static ConfiguredStructureFeature<ShrinesConfiguration, ?> makeConfigured(ResourceLocation pool, TagKey<Biome> biomes, boolean adaptNoise, List<SpawnCriteria> spawnCriteria) {

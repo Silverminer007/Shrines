@@ -364,7 +364,6 @@ public class SDUpdate {
                Codec.BOOL.fieldOf("are_stones_enabled").forGetter(SimpleVariationConfiguration::areStonesEnabled),
                Codec.BOOL.fieldOf("are_bees_enabled").forGetter(SimpleVariationConfiguration::areBeesEnabled)
          ).apply(variationConfigurationInstance, SimpleVariationConfiguration::new));
-         public static final SimpleVariationConfiguration ALL_ENABLED = new SimpleVariationConfiguration(true, true, true, true, true, true, true, true, true);
          public static final SimpleVariationConfiguration ALL_DISABLED = new SimpleVariationConfiguration(false, false, false, false, false, false, false, false, false);
 
          public @NotNull Pair<List<String>, List<String>> getDisabledMaterials() {
@@ -419,7 +418,6 @@ public class SDUpdate {
                Codec.BOOL.fieldOf("is_standing_sign_enabled").forGetter(NestedVariationConfiguration::isStandingSignEnabled),
                Codec.BOOL.fieldOf("is_wall_sign_enabled").forGetter(NestedVariationConfiguration::isWallSignEnabled)
          ).apply(variationConfigurationInstance, NestedVariationConfiguration::new));
-         public static final NestedVariationConfiguration ALL_ENABLED = new NestedVariationConfiguration(true, true, true, true, true, true, true, true, true, true);
          public static final NestedVariationConfiguration ALL_DISABLED = new NestedVariationConfiguration(false, false, false, false, false, false, false, false, false, false);
 
          public @NotNull List<String> getDisabledTypes() {
