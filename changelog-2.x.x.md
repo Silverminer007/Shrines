@@ -1,3 +1,9 @@
+## 2.2.2 --- 22.05.2022 14:30 UTC
+
+- Fix structures spawn in disabled biomes
+
+===========
+
 ## 2.2.1 --- 24.02.2022 10:25 UTC
 
 - Fix [#39](https://github.com/Silverminer007/Shrines/issues/39)
