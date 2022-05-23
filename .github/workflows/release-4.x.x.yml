@@ -15,6 +15,7 @@ on:
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
   MODRINTH: ${{ secrets.MODRINTH_TOKEN }}
+  shrines_mod_version: ${{ github.event.inputs.version }}
 
 jobs:
   build:
@@ -44,8 +45,6 @@ jobs:
         run: ./gradlew --info --stacktrace runGameTestServer
       - name: Execute build
         run: ./gradlew --info --stacktrace build
-        env:
-          shrines_mod_version: ${{ github.event.inputs.version }}
       - name: Create Tag
         id: create_tag
         run: |
