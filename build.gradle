@@ -25,7 +25,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${mc_version}-${System.getProperty('shrines.mod_version')}"
+version = "${mc_version}-${System.getenv('shrines_mod_version')}"
 group = 'com.silverminer.shrines'
 
 java {
