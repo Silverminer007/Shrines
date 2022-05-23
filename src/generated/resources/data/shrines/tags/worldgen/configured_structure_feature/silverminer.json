@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "shrines:azalea_pavilion",
+    "shrines:balloon",
+    "shrines:harbour",
+    "shrines:nether_pyramid_nether",
+    "shrines:nether_pyramid_overworld",
+    "shrines:nether_shrine_nether",
+    "shrines:nether_shrine_overworld",
+    "shrines:small_player_house",
+    "shrines:tall_player_house"
+  ]
+}

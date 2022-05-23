@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class ModRegistrar<T> {// TODO Tags
+public class ModRegistrar<T> {// TODO Tags -> Wait for Forge#8630 to complete
    private final String modid;
    private final ResourceKey<? extends Registry<T>> registryKey;
    private final Map<ResourceKey<T>, Supplier<T>> defaultValues = new HashMap<>();
