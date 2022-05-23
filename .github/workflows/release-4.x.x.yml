@@ -45,7 +45,7 @@ jobs:
       - name: Execute build
         run: ./gradlew --info --stacktrace build
         env:
-          shrines.mod_version: ${{ github.event.inputs.version }}
+          shrines_mod_version: ${{ github.event.inputs.version }}
       - name: Create Tag
         id: create_tag
         run: |
