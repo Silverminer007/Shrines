@@ -25,7 +25,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${mc_version}-${mod_version}"
+version = "${mc_version}-${System.getProperty('shrines.mod_version')}"
 group = 'com.silverminer.shrines'
 
 java {
@@ -188,7 +188,7 @@ mixin {
     debug.export = true
 }
 
-//sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {

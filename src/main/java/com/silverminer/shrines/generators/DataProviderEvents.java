@@ -19,6 +19,6 @@ public class DataProviderEvents {
    @SubscribeEvent
    public static void onGatherDataEvent(GatherDataEvent event) {
       event.getGenerator().addProvider(new ShrinesBiomeTagsProvider(event.getGenerator(), event.getExistingFileHelper()));
-      event.getGenerator().addProvider(new WorldgenRegistryDumpReport(event.getGenerator()));
+      event.getGenerator().addProvider(new StructureTagProvider(event.getGenerator(), event.getExistingFileHelper()));
    }
 }

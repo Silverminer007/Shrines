@@ -12,7 +12,7 @@
 ![1.18.2](https://img.shields.io/badge/1.18.2-fully%20supported-0xff0000)
 ![1.18.1](https://img.shields.io/badge/1.18.1-bugfixes%20only-orange)
 ![1.16.5](https://img.shields.io/badge/1.16.5-bugfixes%20only-orange)
-[![]()]()
+[![](https://img.buymeacoffee.com/api/?url=aHR0cHM6Ly9jZG4uYnV5bWVhY29mZmVlLmNvbS91cGxvYWRzL3Byb2ZpbGVfcGljdHVyZXMvMjAyMi8wNS9uY20zTDNpNENLNHN2bUNrLnBuZ0AzMDB3XzBlLndlYnA=&creator=Silver+Miner&design_code=1&design_color=%23ff813f&slug=silverminer)](https://www.buymeacoffee.com/silverminer)
 
 ## Shrines
 
@@ -23,13 +23,12 @@ version of the mod. If you want to learn more about these features or see a full
 [Wiki](https://silverminer007.github.io/ShrinesWiki/). Suggestions and bug report goes
 to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
-### TODO
+### TODO 1.18.2
 
-- [ ] Fix structure generation distance (re-implement old structure min distance)
-- [ ] Re-add structure novels
+- [x] Fix structure generation distance (re-implement old structure min distance)
 - [ ] Add Tag support for random variation materials and config
-- [ ] Fix structure void issue with e.g. balloon and small player house
-- [ ] remove references to shrines:harbour/villager pool in harbour
+- [x] Fix structure void issue with e.g. balloon and small player house
+- [x] remove references to shrines:harbour/villager pool in harbour
 - [x] Remove dragon heads from all shrines structures
 - [x] Re-add random variation
 - [x] Convert old structure packages to data-packs on first load
@@ -49,3 +48,18 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 ### Requested features
 - better documentation and wiki
 - tutorials about shrines features
+- Command to locate structures in specified biomes
+- Load a structure with all possible variations
+
+# Future plans
+
+## 1.19
+
+A 1.19 port is planned as soon as Forge releases their first version. 1.19 will be fully supported and 1.18.2 is going to be "bugfixes only".
+
+The Structure Novel rework is planned for this version
+
+### 1.19 TODO
+
+- [ ] Re-add structure novels
+

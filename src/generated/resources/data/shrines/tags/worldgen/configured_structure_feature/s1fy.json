@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "shrines:azalea_pavilion",
+    "shrines:bees",
+    "shrines:guardian_meeting",
+    "shrines:harbour",
+    "shrines:high_temple",
+    "shrines:shrine_of_savanna",
+    "shrines:small_temple",
+    "shrines:water_shrine"
+  ]
+}

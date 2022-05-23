@@ -19,7 +19,7 @@ import net.minecraftforge.registries.RegistryObject;
 /**
  * @author Silverminer
  */
-public class StructureInit {
+public class StructureRegistry {
    public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Shrines.MODID);
    public static final RegistryObject<ShrinesStructure> SURFACE = STRUCTURES.register("surface", () -> new ShrinesStructure(GenerationStep.Decoration.SURFACE_STRUCTURES));
    @SuppressWarnings("unused")

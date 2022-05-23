@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 public class MinStructureDistanceSpawnCriteria extends SpawnCriteria {
    public static final Codec<MinStructureDistanceSpawnCriteria> CODEC = RecordCodecBuilder.create(minStructureDistanceSpawnCriteriaInstance ->
          minStructureDistanceSpawnCriteriaInstance.group(
-               Codec.intRange(-1, 100).fieldOf("range").forGetter(MinStructureDistanceSpawnCriteria::getRange)
+               Codec.intRange(-1, 10).fieldOf("range").forGetter(MinStructureDistanceSpawnCriteria::getRange)
          ).apply(minStructureDistanceSpawnCriteriaInstance, MinStructureDistanceSpawnCriteria::new));
    private final int range;
 
@@ -39,7 +39,7 @@ public class MinStructureDistanceSpawnCriteria extends SpawnCriteria {
          return true;
       return registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY).entrySet().stream().filter((structureSet) ->
                   chunkGenerator.hasFeatureChunkInRange(structureSet.getKey(), seed, chunkPos.x, chunkPos.z, range))
-            .count() <= 1;
+            .count() <= range;
    }
 
    protected int getRange() {

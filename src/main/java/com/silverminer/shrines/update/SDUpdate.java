@@ -20,7 +20,7 @@ import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.config.ShrinesConfig;
 import com.silverminer.shrines.generators.ShrinesBiomeTagsProvider;
 import com.silverminer.shrines.random_variation.RandomVariationConfig;
-import com.silverminer.shrines.registries.StructureInit;
+import com.silverminer.shrines.registries.StructureRegistry;
 import com.silverminer.shrines.registry.ModRegistryAccess;
 import com.silverminer.shrines.structures.ShrinesConfiguration;
 import com.silverminer.shrines.structures.placement_types.RelativePlacementCalculator;
@@ -77,7 +77,7 @@ public class SDUpdate {
          TagKey<Biome> biomeTagKey = TagKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(namespaceName, "has_structure/" + structureData.getKey().getPath()));
          Holder<StructureTemplatePool> startPoolHolder = Holder.Reference.createStandAlone(BuiltinRegistries.TEMPLATE_POOL,
                ResourceKey.create(Registry.TEMPLATE_POOL_REGISTRY, new ResourceLocation(spawnConfiguration.start_pool)));
-         ConfiguredStructureFeature<?, ?> configuredStructureFeature = StructureInit.SURFACE.get().configured(
+         ConfiguredStructureFeature<?, ?> configuredStructureFeature = StructureRegistry.SURFACE.get().configured(
                new ShrinesConfiguration(startPoolHolder, spawnConfiguration.jigsawMaxDepth(), List.of(
                      new HeightSpawnCriteria(64, Integer.MAX_VALUE, 32),
                      new RandomChanceSpawnCriteria(spawnConfiguration.spawn_chance()),

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "shrines:abandoned_villa",
+    "shrines:modern_villa",
+    "shrines:oasis_shrine",
+    "shrines:oriental_hut",
+    "shrines:world_tree_manor"
+  ]
+}

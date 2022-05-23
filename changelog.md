@@ -1,3 +1,19 @@
+### 4.0.0-alpha10
+
+**This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
+
+- Add Structure Min Distance spawn criteria. Value -1 redirects to global structure_min_distance config option (Fix [#41](https://github.com/Silverminer007/Shrines/issues/41))
+- Fix Structure void issues with balloon and small player house
+- Add a few missing balloon variants
+- Introduce '#shrines:any' structure tag to locate any structure of shrines
+  - Introduce '#shrines:house', '#shrines:temple', '#shrines:shrine', '#shrines:aurelj', '#shrines:chptr1', '#shrines:forscher09', '#shrines:lady_jessa', '#shrines:meme_man_77', '#shrines:s1fy', '#shrines:sam_hit_apple', '#shrines:silverminer', '#shrines:tikofan'
+- Remove references to 'shrines:harbour/villagers' pool
+- Add more 'ware' variants to the harbour
+
+**Feedback is appreciated**
+
+===========
+
 ### 4.0.0-alpha9
 
 **This is an alpha release; breaking changes can happen at any time. Don't use this file in production**

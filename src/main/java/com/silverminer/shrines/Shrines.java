@@ -46,7 +46,6 @@ import net.minecraftforge.registries.NewRegistryEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -118,7 +117,7 @@ public class Shrines {
 
    private void registerRegistries() {
       var modBus = FMLJavaModLoadingContext.get().getModEventBus();
-      StructureInit.STRUCTURES.register(modBus);
+      StructureRegistry.STRUCTURES.register(modBus);
       SpawnCriteriaTypeRegistry.SPAWN_CRITERIA_TYPE_REGISTRY.register(modBus);
       PlacementCalculatorTypeRegistry.PLACEMENT_CALCULATOR_TYPE_DEFERRED_REGISTER.register(modBus);
       ConfiguredStructureFeatureRegistry.REGISTRY.register(modBus);

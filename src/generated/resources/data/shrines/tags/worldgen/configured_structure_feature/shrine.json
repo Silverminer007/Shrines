@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "shrines:nether_shrine_nether",
+    "shrines:nether_shrine_overworld",
+    "shrines:oasis_shrine",
+    "shrines:oriental_sanctuary",
+    "shrines:shrine_of_savanna",
+    "shrines:water_shrine"
+  ]
+}
