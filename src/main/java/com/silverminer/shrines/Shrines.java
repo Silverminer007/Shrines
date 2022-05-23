@@ -9,6 +9,7 @@
 package com.silverminer.shrines;
 
 import com.mojang.logging.LogUtils;
+import com.silverminer.shrines.commands.LocateInBiomeCommand;
 import com.silverminer.shrines.commands.VariationCommand;
 import com.silverminer.shrines.config.ShrinesConfig;
 import com.silverminer.shrines.random_variation.RandomVariationConfig;
@@ -111,7 +112,10 @@ public class Shrines {
          event.addRepositorySource(new FolderRepositorySource(FMLPaths.GAMEDIR.get().resolve("datapacks").toFile(), source));
       });
       modBus.addListener((FMLLoadCompleteEvent event) -> event.enqueueWork(this::runUpdater));
-      MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> VariationCommand.register(event.getDispatcher()));
+      MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> {
+         VariationCommand.register(event.getDispatcher());
+         LocateInBiomeCommand.register(event.getDispatcher());
+      });
       MinecraftForge.EVENT_BUS.addListener(Shrines::registerStructureConversions);
    }
 
