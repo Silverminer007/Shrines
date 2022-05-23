@@ -25,6 +25,7 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
 ### TODO 1.18.2
 
+- [x] Command to locate structures in specified biomes
 - [x] Fix structure generation distance (re-implement old structure min distance)
 - [ ] Add Tag support for random variation materials and config
 - [x] Fix structure void issue with e.g. balloon and small player house
@@ -48,7 +49,6 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 ### Requested features
 - better documentation and wiki
 - tutorials about shrines features
-- Command to locate structures in specified biomes
 - Load a structure with all possible variations
 
 # Future plans

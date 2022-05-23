@@ -1,3 +1,15 @@
+### 4.0.0-alpha11
+
+**This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
+
+- Add 'locateshrines' command
+  - Use literal 'inbiome' to locate a structure in a specified biome
+  - Use literal 'new' to locate a not yet generated structure
+
+**Feedback is appreciated**
+
+===========
+
 ### 4.0.0-alpha10
 
 **This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
