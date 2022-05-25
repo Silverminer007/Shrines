@@ -1,3 +1,29 @@
+# 3.0.0 --- 25.05.2022 16:30 UTC
+
+- rework back-end representation of custom structures
+  - saved in .minecraft/shrines-data
+  - save structure configs in single, user-readable json files
+- make structure config UI more intuitive
+- Add new structures build by Lady Jessa (aka lady_jessa):
+  - Abandoned Villa
+  - Oasis Shrine
+  - World Tree Manor
+  - Modern Villa
+- update structure icons
+- add more structure novels written by pea_sh0ter:
+  - Guardian Meeting
+  - End Temple
+  - Player House
+  - Small Temple
+  - Mineral Temple
+  - Water Shrine
+  - Nether Pyramid
+  - Shrine of Savanna
+- Fix Server-Client communication issues
+- Shrines now requires a dependency: [dynamicregistries](https://github.com/Silverminer007/DynamicRegistries)
+
+===========
+
 ## 3.0.0-Beta24 --- 01.05.2022 13:30 UTC
 
 - Add search field in spawn biome selection screen
