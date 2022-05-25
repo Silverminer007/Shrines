@@ -133,5 +133,4 @@ jobs:
           project_id: "418915"
           token: ${{ secrets.CURSEFORGE_TOKEN }}
           release_type: ${{ github.event.inputs.releaseType }}
-          game_versions: "Minecraft 1.18:1.18.2,java:Java 17,java:Java 18,Forge"
           parent_file_id: ${{ steps.curseforge.outputs.id }}
