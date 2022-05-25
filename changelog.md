@@ -1,3 +1,12 @@
+## 4.0.0-beta1
+
+- Bump Shrines for 1.18.2 to Beta stage
+- Upload Default Configurations to GitHub releases
+
+**Changes are non-breaking in most cases. Please report issues [here](https://github.com/Silverminer007/Shrines/issues)**
+
+===========
+
 ### 4.0.0-alpha11
 
 **This is an alpha release; breaking changes can happen at any time. Don't use this file in production**
