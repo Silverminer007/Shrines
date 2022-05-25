@@ -82,6 +82,7 @@ jobs:
         env:
           SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
       - name: Upload files to curseforge
+        id: curseforge
         uses: itsmeow/curseforge-upload@v3
         with:
           file_path: build/libs/Shrines-1.18.2-${{ github.event.inputs.version }}.jar
@@ -124,3 +125,13 @@ jobs:
         with:
           files: Shrines-Default-Config-1.18.2-${{ github.event.inputs.version }}.zip
           tag_name: ${{ github.event.inputs.version }}
+      - name: Upload files to curseforge
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          file_path: Shrines-Default-Config-1.18.2-${{ github.event.inputs.version }}.zip
+          game_endpoint: "minecraft"
+          project_id: "418915"
+          token: ${{ secrets.CURSEFORGE_TOKEN }}
+          release_type: ${{ github.event.inputs.releaseType }}
+          game_versions: "Minecraft 1.18:1.18.2,java:Java 17,java:Java 18,Forge"
+          parent_file_id: ${{ steps.curseforge.outputs.id }}
