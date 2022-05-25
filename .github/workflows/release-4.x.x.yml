@@ -10,7 +10,7 @@ on:
       releaseType:
         required: true
         description: "alpha, beta or release"
-        default: 'alpha'
+        default: 'beta'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -92,8 +92,33 @@ jobs:
           changelog: ${{ steps.split.outputs._0}}
           release_type: ${{ github.event.inputs.releaseType }}
           game_versions: "Minecraft 1.18:1.18.2,java:Java 17,java:Java 18,Forge"
-      - name: Upload files to github
+      - name: Upload files to GitHub
         uses: softprops/action-gh-release@v1
         with:
           files: build/libs/*.jar
+          tag_name: ${{ github.event.inputs.version }}
+      - name: Create default configuration pack
+        run: |
+          rm -r ./Shrines-Default-Config # make sure no files persisted over multiple runs
+          mkdir ./Shrines-Default-Config
+          mkdir ./Shrines-Default-Config/data
+          mkdir ./Shrines-Default-Config/data/shrines
+          ./gradlew --info --stacktrace runWorldGenData
+          cp -r src/generated/reports/reports/worldgen/shrines/worldgen ./Shrines-Default-Config/data/shrines/worldgen
+          ./gradlew --info --stacktrace runGenerateData
+          cp -r src/generated/resources/data/shrines/tags ./Shrines-Default-Config/data/shrines/tags
+          touch ./Shrines-Default-Config/pack.mcmeta
+          echo "{
+            \"pack\": {
+              \"description\": \"Default Worldgen Configuration for Shrines Structures\",
+              \"pack_format\": 9,
+              \"_comment\": \"Modify the contained files to configure Shrines Structures Structures'\"
+            }
+          }" > ./Shrines-Default-Config/pack.mcmeta
+          cd Shrines-Default-Config || exit
+          zip -r ../Shrines-Default-Config-1.18.2-${{ github.event.inputs.version }}.zip data pack.mcmeta
+      - name: Upload default config pack to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Shrines-Default-Config-1.18.2-${{ github.event.inputs.version }}.zip
           tag_name: ${{ github.event.inputs.version }}

@@ -10,7 +10,7 @@ on:
       releaseType:
         required: true
         description: "alpha, beta or release"
-        default: 'beta'
+        default: 'release'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}

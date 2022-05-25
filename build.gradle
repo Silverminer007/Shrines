@@ -81,7 +81,37 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            args '--mod', 'shrines', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            forceExit false
+            args '--existing', file('src/main/resources/')
+
+            mods {
+                shrines {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        generateData {
+            workingDirectory project.file('run')
+            parent data
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'shrines', '--all', '--output', file('src/generated/resources/')
+            forceExit false
+
+            mods {
+                shrines {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        worldGenData {
+            workingDirectory project.file('run')
+            parent data
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'minecraft, shrines', '--reports', '--output', file('src/generated/reports/'), '--flat'
             forceExit false
 
             mods {

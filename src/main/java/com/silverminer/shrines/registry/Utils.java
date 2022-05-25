@@ -17,6 +17,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.Lifecycle;
 import com.silverminer.shrines.Shrines;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.data.BuiltinRegistries;
@@ -26,6 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -125,9 +127,9 @@ public class Utils {
                               .resultOrPartial(LOGGER::error)
                               .map(Pair::getFirst).orElse(null)
                   )).filter(pair -> pair.getSecond() != null).forEach(pair -> event.register(this.registry.registryKey(),
-                        ResourceKey.create(this.registry.registryKey(), pair.getFirst()),
-                        pair::getSecond));
-         } catch(Exception e) {
+                  ResourceKey.create(this.registry.registryKey(), pair.getFirst()),
+                  pair::getSecond));
+         } catch (Exception e) {
             LOGGER.error("Failed to decode and register Data Pack Registry Elements for unknown reason", e);
          }
       }
