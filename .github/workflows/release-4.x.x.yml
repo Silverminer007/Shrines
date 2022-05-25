@@ -99,7 +99,9 @@ jobs:
           tag_name: ${{ github.event.inputs.version }}
       - name: Create default configuration pack
         run: |
-          rm -r ./Shrines-Default-Config # make sure no files persisted over multiple runs
+          if [[ -d ./Shrines-Default-Config ]]; then
+            rm -r ./Shrines-Default-Config # make sure no files persisted over multiple runs
+          fi
           mkdir ./Shrines-Default-Config
           mkdir ./Shrines-Default-Config/data
           mkdir ./Shrines-Default-Config/data/shrines
