@@ -1,9 +1,0 @@
-{
-  "types": [
-    {
-      "type_id": "bee_nest",
-      "block_id": "minecraft:bee_nest"
-    }
-  ],
-  "material_id": "bees"
-}
