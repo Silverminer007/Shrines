@@ -1,249 +1,51 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
-        classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.+"
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
-}
-
 plugins {
-    id "com.modrinth.minotaur" version "2.+"
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'eclipse'
-    id 'maven-publish'
-    id "org.cadixdev.licenser" version "0.6.1"
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "0.11.0-SNAPSHOT" apply false
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
-
-version = "${mc_version}-${System.getenv('shrines_mod_version')}"
-group = 'com.silverminer.shrines'
-
-java {
-    archivesBaseName = 'Shrines'
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+architectury {
+    minecraft = rootProject.minecraft_version
 }
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+subprojects {
+    apply plugin: "dev.architectury.loom"
 
-license {
-    header = project.file('HEADER.txt')
-    properties {
-        name = 'Silverminer007'
-        year = 2022
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        // The following line declares the mojmap mappings, you may use other mappings as well
+        mappings loom.officialMojangMappings()
+        // The following line declares the yarn mappings you may select this one as well.
+        // mappings "net.fabricmc:yarn:1.18.2+build.3:v2"
     }
 }
 
-minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}-${mc_version}"
-    //mappings channel: 'official', version: "${mc_version}"
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-
-            mods {
-                shrines {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            mods {
-                shrines {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            forceExit false
-            args '--existing', file('src/main/resources/')
-
-            mods {
-                shrines {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        generateData {
-            workingDirectory project.file('run')
-            parent data
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'shrines', '--all', '--output', file('src/generated/resources/')
-            forceExit false
-
-            mods {
-                shrines {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        worldGenData {
-            workingDirectory project.file('run')
-            parent data
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'minecraft, shrines', '--reports', '--output', file('src/generated/reports/'), '--flat'
-            forceExit false
-
-            mods {
-                shrines {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
-        gameTestServer {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'shrines'
-
-            property 'forge.enableGameTest', 'true'
-
-            forceExit false
-
-            mods {
-                shrines {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-modrinth {
-    if (System.getenv("SHRINES_RELEASE_TYPE") != null) {
-        versionType = System.getenv("SHRINES_RELEASE_TYPE")
-    } else {
-        versionType = 'beta'
-    }
-    token = System.getenv("MODRINTH")
-    // An environment property called MODRINTH that is your token, set via Gradle CLI, GitHub Actions, Idea Run Configuration, or other
-    projectId = 'F33t24Wi'
-    versionNumber = "$project.version"
-    versionName = "$project.archivesBaseName-$project.version"
-    uploadFile = jar
-    def file = file('changelog.md')
-    def changelogFile = file.text
-    changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
-    gameVersions = ["1.18.2"]
-}
-
-curseforge {
-    project {
-        apiKey = System.getenv('CURSEFORGE')
-        id = '418915'
-        //changelog = file('changelog.md')
-        def file = file('changelog.md')
-        def changelogFile = file.text
-        changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
-        changelogType = 'markdown'
-        if (System.getenv("SHRINES_RELEASE_TYPE") != null) {
-            releaseType = System.getenv("SHRINES_RELEASE_TYPE")
-        } else {
-            releaseType = 'beta'
-        }
-        addGameVersion '1.18.2'
-        addGameVersion 'Forge'
-    }
-    options {
-        detectNewerJava = true // defaults to false
-    }
-}
-
-repositories {
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-}
-
-dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    runtimeOnly fg.deobf("curse.maven:huge-structure-blocks-474114:3656200")
-}
-
-mixin {
-    // MixinGradle Settings
-    add sourceSets.main, 'mixins.shrines.refmap.json'
-    config 'mixins.shrines.json'
-    debug.verbose = true
-    debug.export = true
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-// Example for how to get properties into the manifest for reading by the runtime..
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "shrines",
-                "Specification-Vendor"    : "Silverm7ner",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "Silverm7ner",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-jar.finalizedBy('reobfJar')
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
     repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = 17
+    }
+
+    java {
+        withSourcesJar()
     }
 }
