@@ -1,0 +1,61 @@
+{
+  "types": [
+    {
+      "type_id": "terracotta",
+      "block_id": "minecraft:lime_terracotta"
+    },
+    {
+      "type_id": "glazed_terracotta",
+      "block_id": "minecraft:lime_glazed_terracotta"
+    },
+    {
+      "type_id": "wool",
+      "block_id": "minecraft:lime_wool"
+    },
+    {
+      "type_id": "concrete",
+      "block_id": "minecraft:lime_concrete"
+    },
+    {
+      "type_id": "concrete_powder",
+      "block_id": "minecraft:lime_concrete_powder"
+    },
+    {
+      "type_id": "glass",
+      "block_id": "minecraft:lime_glass"
+    },
+    {
+      "type_id": "glass_pane",
+      "block_id": "minecraft:lime_glass_pane"
+    },
+    {
+      "type_id": "banner",
+      "block_id": "minecraft:lime_banner"
+    },
+    {
+      "type_id": "wall_banner",
+      "block_id": "minecraft:lime_wall_banner"
+    },
+    {
+      "type_id": "candle",
+      "block_id": "minecraft:lime_candle"
+    },
+    {
+      "type_id": "candle_cake",
+      "block_id": "minecraft:lime_candle_cake"
+    },
+    {
+      "type_id": "bed",
+      "block_id": "minecraft:lime_bed"
+    },
+    {
+      "type_id": "shulker_box",
+      "block_id": "minecraft:lime_shulker_box"
+    },
+    {
+      "type_id": "carpet",
+      "block_id": "minecraft:lime_carpet"
+    }
+  ],
+  "material_id": "color"
+}

@@ -1,0 +1,25 @@
+{
+  "types": [
+    {
+      "type_id": "torch",
+      "block_id": "minecraft:soul_torch"
+    },
+    {
+      "type_id": "wall_torch",
+      "block_id": "minecraft:soul_wall_torch"
+    },
+    {
+      "type_id": "fire",
+      "block_id": "minecraft:soul_fire"
+    },
+    {
+      "type_id": "lantern",
+      "block_id": "minecraft:soul_lantern"
+    },
+    {
+      "type_id": "campfire",
+      "block_id": "minecraft:soul_campfire"
+    }
+  ],
+  "material_id": "light"
+}

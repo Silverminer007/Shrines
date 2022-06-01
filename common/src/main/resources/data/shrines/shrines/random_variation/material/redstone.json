@@ -1,0 +1,12 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:redstone_ore",
+      "second": "shrines:normal"
+    },
+    {
+      "first": "minecraft:deepslate_redstone_ore",
+      "second": "shrines:deepslate"
+    }
+  ]
+}

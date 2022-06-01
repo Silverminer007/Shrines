@@ -1,0 +1,20 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:nether_bricks",
+      "second": "shrines:stone"
+    },
+    {
+      "first": "minecraft:nether_brick_slab",
+      "second": "shrines:slab"
+    },
+    {
+      "first": "minecraft:nether_brick_stairs",
+      "second": "shrines:stair"
+    },
+    {
+      "first": "minecraft:nether_brick_wall",
+      "second": "shrines:wall"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "com.ygdevs.shrines_arch.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+  ],
+  "mixins": [
+    "MixinChunkGenerator",
+    "MixinCommands",
+    "MixinConfiguredStructureFeature",
+    "MixinStructureCheck",
+    "MixinStructureStart"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

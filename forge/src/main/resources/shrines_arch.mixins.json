@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.ygdevs.shrines_arch.forge.mixins",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

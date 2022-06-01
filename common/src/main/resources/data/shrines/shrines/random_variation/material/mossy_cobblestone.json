@@ -1,0 +1,20 @@
+{
+  "elements": [
+    {
+      "first": "minecraft:mossy_cobblestone",
+      "second": "shrines:stone"
+    },
+    {
+      "first": "minecraft:mossy_cobblestone_slab",
+      "second": "shrines:slab"
+    },
+    {
+      "first": "minecraft:mossy_cobblestone_stairs",
+      "second": "shrines:stair"
+    },
+    {
+      "first": "minecraft:mossy_cobblestone_wall",
+      "second": "shrines:wall"
+    }
+  ]
+}

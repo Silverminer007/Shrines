@@ -1,0 +1,73 @@
+{
+  "remaps": [
+    [],
+    [
+      {
+        "first": "shrines:oak",
+        "second": "shrines:dark_oak"
+      },
+      {
+        "first": "shrines:stone_bricks",
+        "second": "shrines:polished_blackstone_bricks"
+      },
+      {
+        "first": "shrines:mossy_stone_bricks",
+        "second": "shrines:polished_blackstone_bricks"
+      },
+      {
+        "first": "shrines:mossy_cobblestone",
+        "second": "shrines:polished_blackstone_bricks"
+      }
+    ],
+    [
+      {
+        "first": "shrines:oak",
+        "second": "shrines:birch"
+      },
+      {
+        "first": "shrines:stone_bricks",
+        "second": "shrines:polished_blackstone_bricks"
+      },
+      {
+        "first": "shrines:mossy_cobblestone",
+        "second": "shrines:polished_blackstone_bricks"
+      },
+      {
+        "first": "shrines:mossy_stone_bricks",
+        "second": "shrines:polished_blackstone_bricks"
+      }
+    ],
+    [
+      {
+        "first": "shrines:oak",
+        "second": "shrines:dark_oak"
+      },
+      {
+        "first": "shrines:stone_bricks",
+        "second": "shrines:polished_deepslate"
+      },
+      {
+        "first": "shrines:mossy_cobblestone",
+        "second": "shrines:polished_deepslate"
+      },
+      {
+        "first": "shrines:mossy_stone_bricks",
+        "second": "shrines:polished_deepslate"
+      }
+    ],
+    [
+      {
+        "first": "shrines:oak",
+        "second": "shrines:dark_oak"
+      },
+      {
+        "first": "shrines:stone_bricks",
+        "second": "shrines:polished_deepslate"
+      },
+      {
+        "first": "shrines:mossy_stone_bricks",
+        "second": "shrines:polished_deepslate"
+      }
+    ]
+  ]
+}
