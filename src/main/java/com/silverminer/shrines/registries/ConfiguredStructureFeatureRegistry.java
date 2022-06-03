@@ -84,6 +84,9 @@ public class ConfiguredStructureFeatureRegistry {
    public static final RegistryObject<ConfiguredStructureFeature<?, ?>> LUXURY_VILLA = REGISTRY.register("luxury_villa",
          new Builder().setTemplatePool(TemplatePoolRegistry.LUXURY_VILLA).setBiomes(ShrinesBiomeTagsProvider.LUXURY_VILLA).build());
 
+   public static final RegistryObject<ConfiguredStructureFeature<?, ?>> MAYAN_TEMPLE = REGISTRY.register("mayan_temple",
+         new Builder().setTemplatePool(TemplatePoolRegistry.MAYAN_TEMPLE).setBiomes(ShrinesBiomeTagsProvider.MAYAN_TEMPLE).build());
+
    public static final RegistryObject<ConfiguredStructureFeature<?, ?>> MINERAL_TEMPLE = REGISTRY.register("mineral_temple",
          new Builder().setTemplatePool(TemplatePoolRegistry.MINERAL_TEMPLE).setBiomes(ShrinesBiomeTagsProvider.MINERAL_TEMPLE).build());
 

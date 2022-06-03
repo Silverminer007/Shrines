@@ -1,3 +1,11 @@
+## 4.0.0-beta2
+
+- Added Mayan Temple ('mayan_temple')
+
+**Changes are non-breaking in most cases. Please report issues [here](https://github.com/Silverminer007/Shrines/issues)**
+
+===========
+
 ## 4.0.0-beta1
 
 - Bump Shrines for 1.18.2 to Beta stage

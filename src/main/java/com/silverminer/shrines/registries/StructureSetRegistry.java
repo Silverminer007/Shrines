@@ -33,7 +33,7 @@ public class StructureSetRegistry {
    public static final RegistryObject<StructureSet> END_TEMPLE = create("end_temple", 60, 11, 32 ^ 478392);
    public static final RegistryObject<StructureSet> GUARDIAN_MEETING = create("guardian_meeting", 70, 17, 1498473232);
    public static final RegistryObject<StructureSet> HARBOUR = create("harbour", 50, 8, 651398043);
-   public static final RegistryObject<StructureSet> TEMPLES = create("temples", 56, 32, 536987987, List.of(Pair.of("small_temple", 3), Pair.of("high_temple", 3), Pair.of("flooded_temple", 4), Pair.of("mineral_temple", 4)));
+   public static final RegistryObject<StructureSet> TEMPLES = create("temples", 56, 25, 536987987, List.of(Pair.of("small_temple", 3), Pair.of("high_temple", 3), Pair.of("flooded_temple", 4), Pair.of("mineral_temple", 4), Pair.of("mayan_temple", 3)));
    public static final RegistryObject<StructureSet> JUNGLE_TOWER = create("jungle_tower", 60, 11, 987531843);
    public static final RegistryObject<StructureSet> MODERN_VILLA = create("modern_villa", 55, 30, 688286800, List.of(Pair.of("modern_villa", 5), Pair.of("abandoned_villa", 3), Pair.of("luxury_villa", 4)));
    public static final RegistryObject<StructureSet> NETHER_PYRAMID = create("nether_pyramid", 150, 50, 7428394, "nether_pyramid_overworld", "nether_pyramid_nether");

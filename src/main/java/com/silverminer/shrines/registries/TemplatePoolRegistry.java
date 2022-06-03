@@ -75,6 +75,7 @@ public class TemplatePoolRegistry {
    public static final RegistryObject<StructureTemplatePool> HIGH_TEMPLE = new PoolBuilder().setDirectory("high_temple").addSingleTemplate(d("high_temple")).buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> JUNGLE_TOWER = new PoolBuilder().setDirectory("jungle_tower").addSingleTemplate(d("jungle_tower")).buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> LUXURY_VILLA = new PoolBuilder().setDirectory("luxury_villa").addSingleTemplate(d("luxury_villa")).buildAndRegister();
+   public static final RegistryObject<StructureTemplatePool> MAYAN_TEMPLE = new PoolBuilder().setDirectory("mayan_temple").addSingleTemplate("mayan_temple/mayan_temple").buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> MINERAL_TEMPLE = new PoolBuilder().setDirectory("mineral_temple").addSingleTemplate(d("mineral_temple")).buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> OASIS_SHRINE = new PoolBuilder().setDirectory("oasis_shrine").addSingleTemplate(d("oasis_shrine")).buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> NETHER_PYRAMID = new PoolBuilder().setDirectory("nether_pyramid").addSingleTemplate(d("nether_pyramid")).buildAndRegister();
