@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:is_jungle",
+    "#shrines:is_desert",
+    "#shrines:is_savanna",
+    "#shrines:is_mesa",
+    "minecraft:stony_peaks"
+  ]
+}

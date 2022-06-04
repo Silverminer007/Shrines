@@ -10,6 +10,7 @@ package com.silverminer.shrines.mixins;
 
 import com.silverminer.shrines.random_variation.RandomVariationConfig;
 import com.silverminer.shrines.registries.RandomVariationConfigRegistry;
+import com.silverminer.shrines.structures.PrideMonthProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +33,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Random;
 
@@ -53,19 +56,24 @@ public class MixinStructureStart {
          return;
       }
 
+      BoundingBox box = this.pieceContainer.calculateBoundingBox();
       MinecraftServer server = worldGenLevel.getServer();
-      if(server == null) {
+      if (server == null) {
          return;
       }
       RegistryAccess registryAccess = server.registryAccess();
+
+      if (LocalDate.now().get(ChronoField.MONTH_OF_YEAR) == 6) {
+         PrideMonthProcessor.process(worldGenLevel, boundingBox, box, this.pieceContainer::isInsidePiece);
+      }
+
       Registry<ConfiguredStructureFeature<?, ?>> configuredStructureFeatureRegistry = registryAccess.registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
       ResourceLocation featureKey = configuredStructureFeatureRegistry.getKey(this.feature);
       RandomVariationConfig randomVariationConfig = RandomVariationConfigRegistry.REGISTRY.get(featureKey);
-      if(randomVariationConfig == null || randomVariationConfig.remaps().isEmpty()) {
+      if (randomVariationConfig == null || randomVariationConfig.remaps().isEmpty()) {
          return;
       }
 
-      BoundingBox box = this.pieceContainer.calculateBoundingBox();
       WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
       worldgenrandom.setLargeFeatureSeed(worldGenLevel.getSeed(), box.minX(), box.minZ());
 

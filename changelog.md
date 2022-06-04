@@ -1,3 +1,12 @@
+## 4.0.0-beta3
+
+- It's pride month!
+- Fix mayan temple spawn
+
+**Changes are non-breaking in most cases. Please report issues [here](https://github.com/Silverminer007/Shrines/issues)**
+
+===========
+
 ## 4.0.0-beta2
 
 - Added Mayan Temple ('mayan_temple')
