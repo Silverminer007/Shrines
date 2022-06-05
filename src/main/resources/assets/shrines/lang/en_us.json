@@ -94,6 +94,8 @@
   "options.shrines.novel": "Novel",
   "options.shrines.novel.comment": "The Novel of this building can be viewed in the premenu of this admin mode once this building has been found (the exact behavior can be edited in the general settings). This is an additional gameplay incentive to find this building more than once to unlock the full story.",
   "options.shrines.biome_list": "biome selection",
+  "options.shrines.heightmap_type": "Heightmap Type",
+  "gui.shrines.configure_element": "Configure %s",
   "comment_general": "",
   "gui.shrines.removeQuestion": "Are you sure you want to delete [%s]?",
   "gui.shrines.removeWarning": "It will be gone forever (A long time)",

@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.silverminer.shrines.ShrinesMod;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.Heightmap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +39,7 @@ public class DefaultedStructureData {
    protected ArrayList<String> dimension_whitelist = Lists.newArrayList("minecraft:overworld");
    protected String start_pool;
    protected String novel = "";
+   protected Heightmap.Type heightmapType = Heightmap.Type.WORLD_SURFACE_WG;
 
    public DefaultedStructureData(String name, String key, int seed_modifier) {
       this.name = name;
@@ -117,8 +119,7 @@ public class DefaultedStructureData {
 
    public DefaultedStructureData setBiomeBlacklist(String... blacklist) {
       this.biome_blacklist.clear();
-      for (String s : blacklist)
-         this.biome_blacklist.add(s);
+      this.biome_blacklist.addAll(Arrays.asList(blacklist));
       return this;
    }
 
@@ -128,9 +129,7 @@ public class DefaultedStructureData {
 
    public DefaultedStructureData setBiomeCategoryWhitelist(Biome.Category... whitelist) {
       this.biome_category_whitelist.clear();
-      for (Biome.Category s : whitelist) {
-         this.biome_category_whitelist.add(s);
-      }
+      this.biome_category_whitelist.addAll(Arrays.asList(whitelist));
       return this;
    }
 
@@ -201,5 +200,14 @@ public class DefaultedStructureData {
 
    public String getKey() {
       return key;
+   }
+
+   public Heightmap.Type getHeightmapType() {
+      return this.heightmapType;
+   }
+
+   public DefaultedStructureData setHeightmapType(Heightmap.Type heightmapType) {
+      this.heightmapType = heightmapType;
+      return this;
    }
 }

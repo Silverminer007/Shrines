@@ -94,6 +94,8 @@
   "options.shrines.novel": "小說",
   "options.shrines.novel.comment": "一旦找到這座建築，就可以在這個管理模式的前置菜單中查看這座建築的小說（可以在一般設置中編輯確切的行為）。這是一個額外的遊戲獎勵，可以找到這棟建築不止一次解鎖完整的故事。",
   "options.shrines.biome_list": "生物群系選擇",
+  "options.shrines.heightmap_type": "高度图类型",
+  "gui.shrines.configure_element": "配置%s",
   "comment_general": "",
   "gui.shrines.removeQuestion": "你確定要刪除 [%s] 嗎？",
   "gui.shrines.removeWarning": "它將永遠消失（很長一段時間）",

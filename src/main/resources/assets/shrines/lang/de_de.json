@@ -94,6 +94,8 @@
   "options.shrines.novel": "Geschichte",
   "options.shrines.novel.comment": "Die Geschichte dieses Bauwerks kann im Vormen\u00fc dieses Administrator Modus eingesehen werden, sobald dieses Bauwerk einmal gefunden wurde (das genaue Verhalten l\u00e4sst sich in den allgemeinen Einstellungen bearbeiten). Dies ist ein zus\u00e4tzlicher spielerischer Anreiz, mehr als einmal dieses Bauwerk zu finden um die vollst\u00e4ndige Geschichte frei zu schalten",
   "options.shrines.biome_list": "Biom Auswahl",
+  "options.shrines.heightmap_type": "Höhenlevel Art",
+  "gui.shrines.configure_element": "Optionen für %s",
   "comment_general": "",
   "gui.shrines.removeQuestion": "Bist du sicher das du [%s] l\u00f6schen willst?",
   "gui.shrines.removeWarning": "Es wird f\u00fcr immer weg sein (Eine lange zeit)",

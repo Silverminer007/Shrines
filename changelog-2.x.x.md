@@ -1,3 +1,12 @@
+## 2.3.0 --- 05.06.2022 12:20 UTC
+
+- Add Heightmap Type Structure Config Option
+    - Defines the heightmap base, where height offset is relative to
+    - Allows Ocean floor structures
+- Make use of the height offset config option
+
+===========
+
 ## 2.2.2 --- 22.05.2022 14:30 UTC
 
 - Fix structures spawn in disabled biomes

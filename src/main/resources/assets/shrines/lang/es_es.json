@@ -94,6 +94,8 @@
   "options.shrines.novel": "Historia",
   "options.shrines.novel.comment": "La historia de esta estructura se puede ver en el premenú de este modo de administrador una vez que se ha encontrado este edificio (el comportamiento exacto se puede editar en los ajustes generales). Esto es un incentivo adicional para encontrar el edificio más de una vez para desbloquear la historia completa.",
   "options.shrines.biome_list": "Selección de biomas",
+  "options.shrines.heightmap_type": "Tipo de mapa de altura",
+  "gui.shrines.configure_element": "Configurar %s",
   "comment_general": "",
   "gui.shrines.removeQuestion": "¿Estás seguro de que quieres borrar [%s]?",
   "gui.shrines.removeWarning": "Se irá para siempre (Mucho tiempo)",

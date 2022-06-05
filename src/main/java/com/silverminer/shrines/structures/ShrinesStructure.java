@@ -128,7 +128,7 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
             this.structureConfig.getBiomeCategoryWhitelist().stream().noneMatch(cat ->
                   cat.equals(biome.getBiomeCategory().toString())) ||
             this.structureConfig.getBiomeCategoryWhitelist().stream().anyMatch(biomeString ->
-                  biome.getRegistryName() == null || biomeString.equals(biome.getRegistryName().toString()))) {/* */
+                  biome.getRegistryName() == null || biomeString.equals(biome.getRegistryName().toString()))) {
          return false;
       }
       return rand.nextDouble() < this.getConfig().getSpawn_chance();
@@ -207,9 +207,13 @@ public class ShrinesStructure extends Structure<NoFeatureConfig> {
             JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
                   blockpos, this.pieces, this.random, false, false);
          } else {
-            blockpos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
+            int x = chunkX * 16;
+            int z = chunkZ * 16;
+            int y = chunkGenerator.getFirstFreeHeight(x, z, this.feature.structureConfig.getHeightmapType())
+                  + this.feature.structureConfig.getHeight_offset();
+            blockpos = new BlockPos(x, y, z);
             JigsawManager.addPieces(registries, config, AbstractVillagePiece::new, chunkGenerator, templateManager,
-                  blockpos, this.pieces, this.random, false, true);
+                  blockpos, this.pieces, this.random, false, false);
          }
 
          Vector3i structureCenter = this.pieces.get(0).getBoundingBox().getCenter();
