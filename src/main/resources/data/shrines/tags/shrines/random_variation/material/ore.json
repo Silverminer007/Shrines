@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "shrines:coal",
+    "shrines:diamond",
+    "shrines:emerald",
+    "shrines:gold",
+    "shrines:iron",
+    "shrines:redstone"
+  ]
+}

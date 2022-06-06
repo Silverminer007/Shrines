@@ -20,14 +20,27 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistryEntry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record RandomVariationMaterial(List<Pair<Block, ResourceLocation>> elements) {
+public class RandomVariationMaterial extends ForgeRegistryEntry<RandomVariationMaterial> {
    public static final ResourceKey<? extends Registry<RandomVariationMaterial>> REGISTRY = ResourceKey.createRegistryKey(Shrines.location("random_variation/material"));
    public static final Codec<RandomVariationMaterial> DIRECT_CODEC = RecordCodecBuilder.create(randomVariationMaterialInstance ->
          randomVariationMaterialInstance.group(
                Codec.list(Codecs.pairCodec(ForgeRegistries.BLOCKS.getCodec(), ResourceLocation.CODEC)).fieldOf("elements").forGetter(RandomVariationMaterial::elements)
          ).apply(randomVariationMaterialInstance, RandomVariationMaterial::new));
    public static final Codec<Holder<RandomVariationMaterial>> CODEC = RegistryFileCodec.create(REGISTRY, DIRECT_CODEC);
+
+   private final List<Pair<Block, ResourceLocation>> elements;
+
+   public RandomVariationMaterial(List<Pair<Block, ResourceLocation>> elements) {
+      this.elements = elements;
+   }
+
+   public List<Pair<Block, ResourceLocation>> elements() {
+      return this.elements;
+   }
 }

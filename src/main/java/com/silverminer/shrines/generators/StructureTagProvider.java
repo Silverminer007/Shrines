@@ -60,6 +60,7 @@ public class StructureTagProvider extends TagsProvider<ConfiguredStructureFeatur
             .add(HIGH_TEMPLE.getKey())
             .add(JUNGLE_TOWER.getKey())
             .add(LUXURY_VILLA.getKey())
+            .add(MAYAN_TEMPLE.getKey())
             .add(MINERAL_TEMPLE.getKey())
             .add(MODERN_VILLA.getKey())
             .add(NETHER_PYRAMID_NETHER.getKey())
@@ -94,6 +95,7 @@ public class StructureTagProvider extends TagsProvider<ConfiguredStructureFeatur
             .add(END_TEMPLE.getKey())
             .add(FLOODED_TEMPLE.getKey())
             .add(HIGH_TEMPLE.getKey())
+            .add(MAYAN_TEMPLE.getKey())
             .add(MINERAL_TEMPLE.getKey())
             .add(SMALL_TEMPLE.getKey());
       this.tag(SHRINE)
@@ -142,6 +144,7 @@ public class StructureTagProvider extends TagsProvider<ConfiguredStructureFeatur
             .add(AZALEA_PAVILION.getKey())
             .add(BALLOON.getKey())
             .add(HARBOUR.getKey())
+            .add(MAYAN_TEMPLE.getKey())
             .add(NETHER_PYRAMID_NETHER.getKey())
             .add(NETHER_PYRAMID_OVERWORLD.getKey())
             .add(NETHER_SHRINE_NETHER.getKey())

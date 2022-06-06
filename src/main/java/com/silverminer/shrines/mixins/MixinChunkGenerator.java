@@ -55,6 +55,7 @@ public abstract class MixinChunkGenerator implements LocateInBiomeChunkGenerator
    @Nullable
    protected abstract BlockPos getNearestGeneratedStructure(BlockPos p_204383_, ConcentricRingsStructurePlacement p_204384_);
 
+   @SuppressWarnings("unchecked")
    @Override
    public Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> findNearestMapFeature(ServerLevel pLevel, HolderSet<ConfiguredStructureFeature<?, ?>> pStructureSet, BlockPos pPos, int pSearchRadius, boolean pSkipKnownStructures, Predicate<Holder<Biome>> biomeHolderPredicate) {
       Set<Holder<Biome>> set = pStructureSet.stream().flatMap((p_211699_) -> p_211699_.value().biomes().stream()).collect(Collectors.toSet());
@@ -72,9 +73,7 @@ public abstract class MixinChunkGenerator implements LocateInBiomeChunkGenerator
             for (Holder<ConfiguredStructureFeature<?, ?>> holder : pStructureSet) {
                if (set1.stream().anyMatch(holder.value().biomes()::contains)) {
                   for (StructurePlacement structureplacement : this.getPlacementsForFeature(holder)) {
-                     map.computeIfAbsent(structureplacement, (p_211663_) -> {
-                        return new ObjectArraySet();
-                     }).add(holder);
+                     map.computeIfAbsent(structureplacement, (p_211663_) -> new ObjectArraySet()).add(holder);
                   }
                }
             }

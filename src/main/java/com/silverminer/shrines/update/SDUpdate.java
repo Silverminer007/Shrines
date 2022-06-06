@@ -21,7 +21,6 @@ import com.silverminer.shrines.config.ShrinesConfig;
 import com.silverminer.shrines.generators.ShrinesBiomeTagsProvider;
 import com.silverminer.shrines.random_variation.RandomVariationConfig;
 import com.silverminer.shrines.registries.StructureRegistry;
-import com.silverminer.shrines.registry.ModRegistryAccess;
 import com.silverminer.shrines.structures.ShrinesConfiguration;
 import com.silverminer.shrines.structures.placement_types.RelativePlacementCalculator;
 import com.silverminer.shrines.structures.spawn_criteria.GroundLevelDeltaSpawnCriteria;
@@ -60,7 +59,7 @@ public class SDUpdate {
 
    public static void updateStructureData(@NotNull Path oldNameSpacePath, @NotNull Path newNameSpacePath, String namespaceName) throws IOException {
       List<String> disabledStructures = new ArrayList<>(ShrinesConfig.disabledStructures.get());
-      RegistryAccess registryAccess = new ModRegistryAccess();
+      RegistryAccess registryAccess = RegistryAccess.BUILTIN.get();// TODO This only includes builtin (Code registered) elements. If we want to include also datapack loaded elements, we have to move the updater back to world load, what makes it even more complicated, because we have to reload twice ...
       Path structureDataPath = oldNameSpacePath.resolve("shrines_structures");
       Files.walk(structureDataPath, Integer.MAX_VALUE).map(structureDataItemPath -> {
          if (Files.isRegularFile(structureDataItemPath)) {

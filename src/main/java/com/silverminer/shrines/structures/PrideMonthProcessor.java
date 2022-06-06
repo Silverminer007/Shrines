@@ -23,7 +23,6 @@ public class PrideMonthProcessor {
    public static void process(@NotNull WorldGenLevel worldGenLevel, @NotNull BoundingBox chunkBounds,
                               @NotNull BoundingBox structureBounds, Predicate<BlockPos> isInside) {
       Block[] colorsInRainbow = new Block[]{Blocks.PURPLE_WOOL, Blocks.BLUE_WOOL, Blocks.GREEN_WOOL, Blocks.YELLOW_WOOL, Blocks.ORANGE_WOOL, Blocks.RED_WOOL};
-      // Iterate over the positions first to prevent double overrides of one BlockPos
       for (int x = chunkBounds.minX(); x <= chunkBounds.maxX(); x++) {
          for (int y = chunkBounds.minY(); y <= chunkBounds.maxY(); y++) {
             for (int z = chunkBounds.minZ(); z <= chunkBounds.maxZ(); z++) {

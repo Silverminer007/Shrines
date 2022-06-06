@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "shrines:black",
+    "shrines:blue",
+    "shrines:brown",
+    "shrines:cyan",
+    "shrines:gray",
+    "shrines:green",
+    "shrines:light_blue",
+    "shrines:light_gray",
+    "shrines:lime",
+    "shrines:magenta",
+    "shrines:orange",
+    "shrines:pink",
+    "shrines:purple",
+    "shrines:red",
+    "shrines:white",
+    "shrines:yellow"
+  ]
+}

@@ -8,9 +8,17 @@
 
 package com.silverminer.shrines.registries;
 
+import com.silverminer.shrines.Shrines;
 import com.silverminer.shrines.random_variation.RandomVariationConfig;
-import com.silverminer.shrines.registry.ModRegistrar;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryBuilder;
+
+import java.util.function.Supplier;
 
 public class RandomVariationConfigRegistry {
-   public static final ModRegistrar<RandomVariationConfig> REGISTRY = ModRegistrar.create("minecraft", RandomVariationConfig.REGISTRY);
+   public static final DeferredRegister<RandomVariationConfig> REGISTRY = DeferredRegister.create(RandomVariationConfig.REGISTRY, Shrines.MODID);
+   public static final Supplier<IForgeRegistry<RandomVariationConfig>> FORGE_REGISTRY_SUPPLIER =
+         REGISTRY.makeRegistry(RandomVariationConfig.class,
+               () -> new RegistryBuilder<RandomVariationConfig>().dataPackRegistry(RandomVariationConfig.DIRECT_CODEC));
 }

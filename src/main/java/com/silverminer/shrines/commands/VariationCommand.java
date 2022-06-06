@@ -16,7 +16,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.silverminer.shrines.random_variation.RandomVariationConfig;
-import com.silverminer.shrines.registry.Utils;
 import com.silverminer.shrines.structures.ShrinesJigsawPlacement;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.Util;
@@ -141,14 +140,14 @@ public class VariationCommand {
    @SuppressWarnings("unchecked")
    private static RandomVariationConfig getVariationConfig(CommandContext<CommandSourceStack> commandContext, String literal) throws CommandSyntaxException {
       ResourceKey<RandomVariationConfig> resourcekey = getRegistryType(commandContext, literal, (ResourceKey<Registry<RandomVariationConfig>>) RandomVariationConfig.REGISTRY, ERROR_INVALID_CONFIG);
-      return getRegistry(RandomVariationConfig.REGISTRY).getOptional(resourcekey).orElseThrow(() ->
+      return commandContext.getSource().getLevel().getServer().registryAccess().registryOrThrow(RandomVariationConfig.REGISTRY).getOptional(resourcekey).orElseThrow(() ->
             ERROR_INVALID_CONFIG.create(resourcekey.location())
       );
    }
 
    private static StructureTemplatePool getTemnplatePool(CommandContext<CommandSourceStack> commandContext, String literal) throws CommandSyntaxException {
       ResourceKey<StructureTemplatePool> resourcekey = getRegistryType(commandContext, literal, Registry.TEMPLATE_POOL_REGISTRY, ERROR_INVALID_TEMPLATE);
-      return getRegistry(Registry.TEMPLATE_POOL_REGISTRY).getOptional(resourcekey).orElseThrow(() ->
+      return commandContext.getSource().getLevel().getServer().registryAccess().registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).getOptional(resourcekey).orElseThrow(() ->
             ERROR_INVALID_TEMPLATE.create(resourcekey.location())
       );
    }
@@ -159,9 +158,5 @@ public class VariationCommand {
       return optional.orElseThrow(() ->
             exceptionType.create(resourcekey)
       );
-   }
-
-   private static <T> Registry<T> getRegistry(ResourceKey<? extends Registry<T>> key) {
-      return Utils.getRegistry(key.location());
    }
 }

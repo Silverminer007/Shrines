@@ -1,4 +1,10 @@
 {
   "remaps": [
+    [
+      {
+        "first": "#shrines:wood",
+        "second": "#shrines:wood"
+      }
+    ]
   ]
 }

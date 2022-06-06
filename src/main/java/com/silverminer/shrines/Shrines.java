@@ -12,12 +12,7 @@ import com.mojang.logging.LogUtils;
 import com.silverminer.shrines.commands.LocateInBiomeCommand;
 import com.silverminer.shrines.commands.VariationCommand;
 import com.silverminer.shrines.config.ShrinesConfig;
-import com.silverminer.shrines.random_variation.RandomVariationConfig;
-import com.silverminer.shrines.random_variation.RandomVariationMaterial;
-import com.silverminer.shrines.registries.RandomVariationConfigRegistry;
-import com.silverminer.shrines.registries.RandomVariationMaterialRegistry;
 import com.silverminer.shrines.registries.*;
-import com.silverminer.shrines.registry.Utils;
 import com.silverminer.shrines.update.Updater;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -43,7 +38,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.loading.FileUtils;
 import net.minecraftforge.network.NetworkConstants;
-import net.minecraftforge.registries.NewRegistryEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -103,10 +97,6 @@ public class Shrines {
 
    private void registerEvents() {
       var modBus = FMLJavaModLoadingContext.get().getModEventBus();
-      modBus.addListener((NewRegistryEvent event) -> {
-         Utils.createRegistry(RandomVariationMaterial.REGISTRY, RandomVariationMaterial.DIRECT_CODEC);
-         Utils.createRegistry(RandomVariationConfig.REGISTRY, RandomVariationConfig.DIRECT_CODEC);
-      });
       modBus.addListener((AddPackFindersEvent event) -> {
          PackSource source = PackSource.decorating("pack.source.shrines");
          event.addRepositorySource(new FolderRepositorySource(FMLPaths.GAMEDIR.get().resolve("datapacks").toFile(), source));
@@ -127,8 +117,8 @@ public class Shrines {
       ConfiguredStructureFeatureRegistry.REGISTRY.register(modBus);
       TemplatePoolRegistry.REGISTRY.register(modBus);
       StructureSetRegistry.REGISTRY.register(modBus);
-      RandomVariationMaterialRegistry.REGISTRY.register();
-      RandomVariationConfigRegistry.REGISTRY.register();
+      RandomVariationMaterialRegistry.REGISTRY.register(modBus);
+      RandomVariationConfigRegistry.REGISTRY.register(modBus);
    }
 
    private static void registerStructureConversions(@NotNull RegisterStructureConversionsEvent event) {

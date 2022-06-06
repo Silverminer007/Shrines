@@ -69,7 +69,7 @@ public class MixinStructureStart {
 
       Registry<ConfiguredStructureFeature<?, ?>> configuredStructureFeatureRegistry = registryAccess.registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
       ResourceLocation featureKey = configuredStructureFeatureRegistry.getKey(this.feature);
-      RandomVariationConfig randomVariationConfig = RandomVariationConfigRegistry.REGISTRY.get(featureKey);
+      RandomVariationConfig randomVariationConfig = registryAccess.registryOrThrow(RandomVariationConfig.REGISTRY).get(featureKey);
       if (randomVariationConfig == null || randomVariationConfig.remaps().isEmpty()) {
          return;
       }

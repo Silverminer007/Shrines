@@ -1,4 +1,10 @@
 {
   "remaps": [
+    [
+      {
+        "first": "#shrines:colour",
+        "second": "#shrines:colour"
+      }
+    ]
   ]
 }

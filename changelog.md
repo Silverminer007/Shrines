@@ -1,3 +1,18 @@
+## 4.0.0-beta4
+
+**If no major issues arise, this is going to be the last beta version before stable release**
+
+- Add Mayan Temple to appropriate tags
+- Add Tag Support for Random Variation Config/Material
+- Add Random Variation Material Tags `#shrines:any`, `#shrines:wood`, `#shrines:colour`, `#shrines:stone`, `#shrines:bees`, `#shrines:ore` and `#shrines:light`
+- Add Random Variation Configs for all Shrines Structures
+- Include also not data-generated resources in Default Config ZIP
+- Shrines requires Forge 40.1.35 or above
+
+**Changes are non-breaking in most cases. Please report issues [here](https://github.com/Silverminer007/Shrines/issues)**
+
+===========
+
 ## 4.0.0-beta3
 
 - It's pride month!
