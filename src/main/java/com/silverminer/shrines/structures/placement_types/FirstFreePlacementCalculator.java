@@ -23,7 +23,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureMana
 
 import java.util.function.Predicate;
 
-public class FirstFreePlacementCalculator extends PlacementCalculator {
+public class FirstFreePlacementCalculator extends PlacementCalculator {// TODO 1.19 Add option for Heightmap Type
    public static final Codec<SimplePlacementCalculator> CODEC = Codec.unit(SimplePlacementCalculator::new);
 
    @Override

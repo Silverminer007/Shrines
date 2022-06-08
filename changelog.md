@@ -1,3 +1,48 @@
+# 4.0.0
+
+**User facing changes**
+- Add new structures:
+  - `mayan_temple`
+  - `oriental_hut`
+  - `luxury_villa`
+  - `azalea_pavilion`
+- Add commands:
+  - `locateshrines`
+  - `variate`
+- removed structure Config GUI
+- Added more `ware` templates to the harbour
+- remove structure novels
+- remove structure Config GUI
+- split player house in `small_player_house` and `tall_player_house`
+
+**technical changes**
+- structures are now fully data-driven
+  - Add two new structure types `shrines:surface` and `shrines:underground`
+  - This types can be configured with these options:
+    - `start_pool`
+    - `size` (max jigsaw depth)
+    - `spawn_criteria` (basic requirements for a structure to consider a place valid). Possible values:
+      - `close_to_structure`, further options: `structure_set`, `min_chunk_distance`
+      - `not_close_to_structure`, further options: `structure_set`, `min_chunk_distance`
+      - `random_chance`, further options: `spawn_chance`
+      - `height`, further options: `min_height`, `max_height`, `check_size`
+      - `ground_level_delta`, further options: `delta`, `check_size`
+      - `min_structure_distance`, further options: `range`
+    - `placement_calculator` (the y level of the structure). Possible values:
+      - `simple`
+      - `fixed`, further options: `height`
+      - `first_free`
+      - `relative`, further options: `offset`
+- Structure Config (the toml file) has other options now. See comments in file for more info
+  - `removed_structures`
+  - `disabled_structures`
+  - `run_structure_updater`
+  - `min_structure_distance`
+
+**See [changelog](https://github.com/Silverminer007/Shrines/blob/1.18.2%2B-4.x.x/changelog.md) for more details**
+
+===========
+
 ## 4.0.0-beta4
 
 **If no major issues arise, this is going to be the last beta version before stable release**

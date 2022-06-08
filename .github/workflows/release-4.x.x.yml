@@ -10,12 +10,13 @@ on:
       releaseType:
         required: true
         description: "alpha, beta or release"
-        default: 'beta'
+        default: 'release'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
   MODRINTH: ${{ secrets.MODRINTH_TOKEN }}
   shrines_mod_version: ${{ github.event.inputs.version }}
+  SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
 
 jobs:
   build:
@@ -79,8 +80,6 @@ jobs:
             ${{ steps.split.outputs._0}}
       - name: Upload files to modrinth
         run: ./gradlew --info --stacktrace modrinth
-        env:
-          SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
       - name: Upload files to curseforge
         id: curseforge
         uses: itsmeow/curseforge-upload@v3

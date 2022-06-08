@@ -27,7 +27,7 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
 - [x] Command to locate structures in specified biomes
 - [x] Fix structure generation distance (re-implement old structure min distance)
-- [ ] Add Tag support for random variation materials and config
+- [x] Add Tag support for random variation materials and config
 - [x] Fix structure void issue with e.g. balloon and small player house
 - [x] remove references to shrines:harbour/villager pool in harbour
 - [x] Remove dragon heads from all shrines structures

@@ -22,7 +22,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureMana
 
 import java.util.function.Predicate;
 
-public class RelativePlacementCalculator extends PlacementCalculator {
+public class RelativePlacementCalculator extends PlacementCalculator {// TODO 1.19 Add option for Heightmap Type
    public static final Codec<RelativePlacementCalculator> CODEC = RecordCodecBuilder.create(relativePlacementCalculatorInstance ->
          relativePlacementCalculatorInstance.group(
                Codec.INT.fieldOf("offset").forGetter(RelativePlacementCalculator::getOffset)
