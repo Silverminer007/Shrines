@@ -1,4 +1,4 @@
-name: release
+name: release-5.x.x
 
 on:
   workflow_dispatch:
@@ -29,7 +29,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: 'Publish'
+    name: 'Publish 5.x.x'
     steps:
       - name: Get current time
         uses: srfrnk/current-time@master
@@ -99,7 +99,7 @@ jobs:
           changelog_type: "markdown"
           changelog: ${{ steps.split.outputs._0}}
           release_type: ${{ github.event.inputs.releaseType }}
-          game_versions: "Minecraft ${{ github.event.inputs.minecraftVersion }},java:Java 17,java:Java 18,Forge"
+          game_versions: "Minecraft 1.19,java:Java 17,java:Java 18,Forge"
       - name: Upload files to GitHub
         uses: softprops/action-gh-release@v1
         with:
