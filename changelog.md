@@ -1,3 +1,8 @@
+### 5.0.0-alpha2
+
+- fix Shrines Default Configuration Pack
+
+===========
 ### 5.0.0-alpha1
 
 - port to Mc1.19 based on Shrines 4.0.0
