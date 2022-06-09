@@ -114,7 +114,7 @@ jobs:
           mkdir ./Shrines-Default-Config/data
           mkdir ./Shrines-Default-Config/data/shrines
           ./gradlew --info --stacktrace runWorldGenData
-          cp -r src/generated/reports/reports/worldgen/shrines/worldgen ./Shrines-Default-Config/data/shrines/worldgen
+          cp -r src/generated/reports/reports/shrines/worldgen ./Shrines-Default-Config/data/shrines/worldgen
           ./gradlew --info --stacktrace runGenerateData
           mkdir ./Shrines-Default-Config/data/shrines/tags
           cp -r src/generated/resources/data/shrines/tags/worldgen ./Shrines-Default-Config/data/shrines/tags/worldgen
@@ -127,7 +127,7 @@ jobs:
           echo "{
             \"pack\": {
               \"description\": \"Default Worldgen Configuration for Shrines Structures\",
-              \"pack_format\": 9,
+              \"pack_format\": 10,
               \"_comment\": \"Modify the contained files to configure Shrines Structures Structures'\"
             }
           }" > ./Shrines-Default-Config/pack.mcmeta
