@@ -19,6 +19,5 @@ import java.util.function.Supplier;
 public class RandomVariationConfigRegistry {
    public static final DeferredRegister<RandomVariationConfig> REGISTRY = DeferredRegister.create(RandomVariationConfig.REGISTRY, Shrines.MODID);
    public static final Supplier<IForgeRegistry<RandomVariationConfig>> FORGE_REGISTRY_SUPPLIER =
-         REGISTRY.makeRegistry(RandomVariationConfig.class,
-               () -> new RegistryBuilder<RandomVariationConfig>().dataPackRegistry(RandomVariationConfig.DIRECT_CODEC));
+         REGISTRY.makeRegistry(() -> new RegistryBuilder<RandomVariationConfig>().dataPackRegistry(RandomVariationConfig.DIRECT_CODEC));
 }

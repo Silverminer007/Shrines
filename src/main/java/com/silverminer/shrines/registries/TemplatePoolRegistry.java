@@ -46,7 +46,7 @@ public class TemplatePoolRegistry {
          .addLegacyTemplate("balloon/balloon2_4")
          .buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> BEES = new PoolBuilder().setDirectory("bees").addSingleTemplate(d("bees")).buildAndRegister();
-   public static final RegistryObject<StructureTemplatePool> END_TEMPLE = new PoolBuilder().setDirectory("end_temple").addSingleTemplate(d("end_temple")).buildAndRegister();
+   public static final RegistryObject<StructureTemplatePool> END_TEMPLE = new PoolBuilder().setDirectory("end_temple").addLegacyTemplate(d("end_temple")).buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> FLOODED_TEMPLE = new PoolBuilder().setDirectory("flooded_temple").addSingleTemplate(d("flooded_temple")).buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> GUARDIANS_MEETING = new PoolBuilder().setDirectory("guardian_meeting").addSingleTemplate(d("guardian_meeting")).buildAndRegister();
    public static final RegistryObject<StructureTemplatePool> HARBOUR = new PoolBuilder().setDirectory("harbour").addSingleTemplate("harbour/start").buildAndRegister();

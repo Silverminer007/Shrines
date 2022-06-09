@@ -14,10 +14,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.function.Predicate;
 
 public interface LocateInBiomeChunkGenerator {
-   Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> findNearestMapFeature(ServerLevel pLevel, HolderSet<ConfiguredStructureFeature<?, ?>> pStructureSet, BlockPos pPos, int pSearchRadius, boolean pSkipKnownStructures, Predicate<Holder<Biome>> biomeHolderPredicate);
+   Pair<BlockPos, Holder<Structure>> findNearestMapStructure(ServerLevel serverLevel, HolderSet<Structure> structureHolderSet, BlockPos blockPos, int xamDistance, boolean includeExisting, Predicate<Holder<Biome>> biomeValidator);
 }

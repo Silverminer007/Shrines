@@ -4,6 +4,10 @@
       {
         "first": "#shrines:colour",
         "second": "#shrines:colour"
+      },
+      {
+        "first": "#shrines:wood",
+        "second": "#shrines:wood"
       }
     ]
   ]

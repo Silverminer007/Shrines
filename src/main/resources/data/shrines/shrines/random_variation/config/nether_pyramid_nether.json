@@ -2,8 +2,12 @@
   "remaps": [
     [
       {
-        "first": "#shrines:any",
-        "second": "#shrines:any"
+        "first": "shrines:polished_blackstone_bricks",
+        "second": "#shrines:stone"
+      },
+      {
+        "first": "#shrines:light",
+        "second": "#shrines:light"
       }
     ]
   ]

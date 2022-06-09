@@ -14,35 +14,35 @@ import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.silverminer.shrines.registries.ConfiguredStructureFeatureRegistry.*;
+import static com.silverminer.shrines.registries.StructureRegistry.*;
 
-public class StructureTagProvider extends TagsProvider<ConfiguredStructureFeature<?, ?>> {
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> ANY = create("any");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> HOUSE = create("house");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> TEMPLE = create("temple");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> SHRINE = create("shrine");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> VILLA = create("villa");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> LADY_JESSA = create("lady_jessa");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> SAM_HIT_APPLE = create("sam_hit_apple");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> CHPTR1 = create("chptr1");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> S1FY = create("s1fy");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> FORSCHER09 = create("forscher09");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> TIKOFAN = create("tikofan");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> AURELJ = create("aurelj");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> MEME_MAN_77 = create("meme_man_77");
-   private static final TagKey<ConfiguredStructureFeature<?, ?>> SILVERMINER = create("silverminer");
+public class StructureTagProvider extends TagsProvider<Structure> {
+   private static final TagKey<Structure> ANY = create("any");
+   private static final TagKey<Structure> HOUSE = create("house");
+   private static final TagKey<Structure> TEMPLE = create("temple");
+   private static final TagKey<Structure> SHRINE = create("shrine");
+   private static final TagKey<Structure> VILLA = create("villa");
+   private static final TagKey<Structure> LADY_JESSA = create("lady_jessa");
+   private static final TagKey<Structure> SAM_HIT_APPLE = create("sam_hit_apple");
+   private static final TagKey<Structure> CHPTR1 = create("chptr1");
+   private static final TagKey<Structure> S1FY = create("s1fy");
+   private static final TagKey<Structure> FORSCHER09 = create("forscher09");
+   private static final TagKey<Structure> TIKOFAN = create("tikofan");
+   private static final TagKey<Structure> AURELJ = create("aurelj");
+   private static final TagKey<Structure> MEME_MAN_77 = create("meme_man_77");
+   private static final TagKey<Structure> SILVERMINER = create("silverminer");
 
    protected StructureTagProvider(DataGenerator pGenerator, @Nullable ExistingFileHelper existingFileHelper) {
-      super(pGenerator, BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, Shrines.MODID, existingFileHelper);
+      super(pGenerator, BuiltinRegistries.STRUCTURES, Shrines.MODID, existingFileHelper);
    }
 
-   private static TagKey<ConfiguredStructureFeature<?, ?>> create(String path) {
-      return TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, Shrines.location(path));
+   private static TagKey<Structure> create(String path) {
+      return TagKey.create(Registry.STRUCTURE_REGISTRY, Shrines.location(path));
    }
 
    @Override

@@ -23,36 +23,6 @@ version of the mod. If you want to learn more about these features or see a full
 [Wiki](https://silverminer007.github.io/ShrinesWiki/). Suggestions and bug report goes
 to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or discord.
 
-### TODO 1.18.2
-
-- [x] Command to locate structures in specified biomes
-- [x] Fix structure generation distance (re-implement old structure min distance)
-- [x] Add Tag support for random variation materials and config
-- [x] Fix structure void issue with e.g. balloon and small player house
-- [x] remove references to shrines:harbour/villager pool in harbour
-- [x] Remove dragon heads from all shrines structures
-- [x] Re-add random variation
-- [x] Convert old structure packages to data-packs on first load
-- [x] Change placement settings of oriental sanctuary
-- [x] Modify small player house
-- [x] Put small temple and high temple in one structure set
-- [x] Put abandoned villa and modern villa in one structure set
-- [x] Fix ground below azalea pavilion
-- [x] fix harbour generation (only spawn in water)
-- [x] Clean bees generation biomes
-- [x] Fix nether shrine template pool (add all templates)
-- [x] Rename oriental sanctuary's template
-- [x] rename watch_tower's template from watchtower to watch_tower
-- [x] Add biome tag for world tree manor
-- [x] disable structures
-
-### Requested features
-- better documentation and wiki
-- tutorials about shrines features
-- Load a structure with all possible variations
-
-# Future plans
-
 ## 1.19
 
 A 1.19 port is planned as soon as Forge releases their first version. 1.19 will be fully supported and 1.18.2 is going to be "bugfixes only".
@@ -62,4 +32,13 @@ The Structure Novel rework is planned for this version
 ### 1.19 TODO
 
 - [ ] Re-add structure novels
+- [ ] Use Data-Gen for loot_tables
+- [ ] Use Data-Gen for random_variation/config
+- [ ] Use Data-Gen for random_variation/material
+- [ ] Use Data-Gen for random_variation/material tags
+- [ ] Improve Ground level delta check
+- [ ] Fix warning: Hanging entity at invalid position: BlockPos{x=338, y=-3, z=36}
 
+### Requested features
+- better documentation and wiki
+- tutorials about how to add custom structures

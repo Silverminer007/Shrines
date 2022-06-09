@@ -18,9 +18,11 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.function.Predicate;
 
@@ -38,13 +40,13 @@ public class CloseToStructureSpawnCriteria extends SpawnCriteria {
       this.maxChunkDistance = maxChunkDistance;
    }
 
-   private static boolean hasFeatureChunkInRange(StructureSet structureSet, int chunkX, int chunkZ, int range, ChunkGenerator chunkGenerator) {
+   private static boolean hasFeatureChunkInRange(StructureSet structureSet, int chunkX, int chunkZ, int range, ChunkGenerator chunkGenerator, RandomState randomState) {
       if (structureSet != null) {
          StructurePlacement structureplacement = structureSet.placement();
 
          for (int i = chunkX - range; i <= chunkX + range; ++i) {
             for (int j = chunkZ - range; j <= chunkZ + range; ++j) {
-               if (structureplacement.isFeatureChunk(chunkGenerator, range, i, j)) {
+               if (structureplacement.isStructureChunk(chunkGenerator, randomState, range, i, j)) {
                   return true;
                }
             }
@@ -60,8 +62,8 @@ public class CloseToStructureSpawnCriteria extends SpawnCriteria {
    }
 
    @Override
-   public boolean test(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, LevelHeightAccessor heightAccessor, Predicate<Holder<Biome>> validBiome, StructureManager structureManager, RegistryAccess registryAccess) {
-      return hasFeatureChunkInRange(this.getStructureSetHolder().value(), chunkPos.x, chunkPos.z, this.getMaxChunkDistance(), chunkGenerator);
+   public boolean test(Structure.GenerationContext generationContext) {
+      return hasFeatureChunkInRange(this.getStructureSetHolder().value(), generationContext.chunkPos().x, generationContext.chunkPos().z, this.getMaxChunkDistance(), generationContext.chunkGenerator(), generationContext.randomState());
    }
 
    protected Holder<StructureSet> getStructureSetHolder() {

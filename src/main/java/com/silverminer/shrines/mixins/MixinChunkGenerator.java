@@ -19,14 +19,14 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
@@ -44,125 +44,136 @@ import java.util.stream.Collectors;
 
 @Mixin(ChunkGenerator.class)
 public abstract class MixinChunkGenerator implements LocateInBiomeChunkGenerator {
-   @Shadow
-   @Final
-   protected BiomeSource runtimeBiomeSource;
 
    @Shadow
-   protected abstract List<StructurePlacement> getPlacementsForFeature(Holder<ConfiguredStructureFeature<?, ?>> p_208091_);
+   protected abstract List<StructurePlacement> getPlacementsForStructure(Holder<Structure> p_223139_, RandomState p_223140_);
 
    @Shadow
    @Nullable
-   protected abstract BlockPos getNearestGeneratedStructure(BlockPos p_204383_, ConcentricRingsStructurePlacement p_204384_);
+   public abstract List<ChunkPos> getRingPositionsFor(ConcentricRingsStructurePlacement p_223120_, RandomState p_223121_);
 
    @SuppressWarnings("unchecked")
-   @Override
-   public Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> findNearestMapFeature(ServerLevel pLevel, HolderSet<ConfiguredStructureFeature<?, ?>> pStructureSet, BlockPos pPos, int pSearchRadius, boolean pSkipKnownStructures, Predicate<Holder<Biome>> biomeHolderPredicate) {
-      Set<Holder<Biome>> set = pStructureSet.stream().flatMap((p_211699_) -> p_211699_.value().biomes().stream()).collect(Collectors.toSet());
-      if (set.isEmpty()) {
+   @Nullable
+   public Pair<BlockPos, Holder<Structure>> findNearestMapStructure(ServerLevel serverLevel, HolderSet<Structure> structureHolderSet,
+                                                                    BlockPos blockPos, int maxDistance, boolean includeExisting,
+                                                                    Predicate<Holder<Biome>> biomeValidator) {
+      Map<StructurePlacement, Set<Holder<Structure>>> map = new Object2ObjectArrayMap<>();
+
+      for (Holder<Structure> holder : structureHolderSet) {
+         for (StructurePlacement structureplacement : this.getPlacementsForStructure(holder, serverLevel.getChunkSource().randomState())) {
+            map.computeIfAbsent(structureplacement, (p_223127_) -> new ObjectArraySet()).add(holder);
+         }
+      }
+
+      if (map.isEmpty()) {
          return null;
       } else {
-         Set<Holder<Biome>> set1 = this.runtimeBiomeSource.possibleBiomes();
-         if (Collections.disjoint(set1, set) || set.stream().noneMatch(biomeHolderPredicate)) {
-            return null;
-         } else {
-            Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> pair = null;
-            double d0 = Double.MAX_VALUE;
-            Map<StructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> map = new Object2ObjectArrayMap<>();
+         Pair<BlockPos, Holder<Structure>> pair2 = null;
+         double d2 = Double.MAX_VALUE;
+         StructureManager structuremanager = serverLevel.structureManager();
+         List<Map.Entry<StructurePlacement, Set<Holder<Structure>>>> list = new ArrayList<>(map.size());
 
-            for (Holder<ConfiguredStructureFeature<?, ?>> holder : pStructureSet) {
-               if (set1.stream().anyMatch(holder.value().biomes()::contains)) {
-                  for (StructurePlacement structureplacement : this.getPlacementsForFeature(holder)) {
-                     map.computeIfAbsent(structureplacement, (p_211663_) -> new ObjectArraySet()).add(holder);
-                  }
+         for (Map.Entry<StructurePlacement, Set<Holder<Structure>>> entry : map.entrySet()) {
+            StructurePlacement structureplacement1 = entry.getKey();
+            if (structureplacement1 instanceof ConcentricRingsStructurePlacement concentricringsstructureplacement) {
+               Pair<BlockPos, Holder<Structure>> pair = this.getNearestGeneratedStructure(entry.getValue(), serverLevel, structuremanager, blockPos, includeExisting, concentricringsstructureplacement, biomeValidator);
+               BlockPos blockpos = pair.getFirst();
+               double d0 = blockPos.distSqr(blockpos);
+               if (d0 < d2) {
+                  d2 = d0;
+                  pair2 = pair;
                }
+            } else if (structureplacement1 instanceof RandomSpreadStructurePlacement) {
+               list.add(entry);
             }
-
-            List<Map.Entry<StructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>>> list = new ArrayList<>(map.size());
-
-            for (Map.Entry<StructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> entry : map.entrySet()) {
-               StructurePlacement structureplacement1 = entry.getKey();
-               if (structureplacement1 instanceof ConcentricRingsStructurePlacement concentricringsstructureplacement) {
-                  BlockPos blockpos = this.getNearestGeneratedStructure(pPos, concentricringsstructureplacement);
-                  if (blockpos != null) {
-                     double d1 = pPos.distSqr(blockpos);
-                     if (d1 < d0 && biomeHolderPredicate.test(pLevel.getBiome(blockpos))) {
-                        d0 = d1;
-                        pair = Pair.of(blockpos, entry.getValue().iterator().next());
-                     }
-                  }
-               } else if (structureplacement1 instanceof RandomSpreadStructurePlacement) {
-                  list.add(entry);
-               }
-            }
-
-            if (!list.isEmpty()) {
-               int i = SectionPos.blockToSectionCoord(pPos.getX());
-               int j = SectionPos.blockToSectionCoord(pPos.getZ());
-
-               for (int k = 0; k <= pSearchRadius; ++k) {
-                  boolean flag = false;
-
-                  for (Map.Entry<StructurePlacement, Set<Holder<ConfiguredStructureFeature<?, ?>>>> entry1 : list) {
-                     RandomSpreadStructurePlacement randomspreadstructureplacement = (RandomSpreadStructurePlacement) entry1.getKey();
-                     Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> pair1 = getNearestGeneratedStructure(entry1.getValue(), pLevel, pLevel.structureFeatureManager(), i, j, k, pSkipKnownStructures, pLevel.getSeed(), randomspreadstructureplacement, biomeHolderPredicate);
-                     if (pair1 != null) {
-                        flag = true;
-                        double d2 = pPos.distSqr(pair1.getFirst());
-                        if (d2 < d0) {
-                           d0 = d2;
-                           pair = pair1;
-                        }
-                     }
-                  }
-
-                  if (flag) {
-                     return pair;
-                  }
-               }
-            }
-
-            return pair;
          }
+
+         if (!list.isEmpty()) {
+            int i = SectionPos.blockToSectionCoord(blockPos.getX());
+            int j = SectionPos.blockToSectionCoord(blockPos.getZ());
+
+            for (int k = 0; k <= maxDistance; ++k) {
+               boolean flag = false;
+
+               for (Map.Entry<StructurePlacement, Set<Holder<Structure>>> entry1 : list) {
+                  RandomSpreadStructurePlacement randomspreadstructureplacement = (RandomSpreadStructurePlacement) entry1.getKey();
+                  Pair<BlockPos, Holder<Structure>> pair1 = getNearestGeneratedStructure(entry1.getValue(), serverLevel, structuremanager, i, j, k, includeExisting, serverLevel.getSeed(), randomspreadstructureplacement, biomeValidator);
+                  if (pair1 != null) {
+                     flag = true;
+                     double d1 = blockPos.distSqr(pair1.getFirst());
+                     if (d1 < d2) {
+                        d2 = d1;
+                        pair2 = pair1;
+                     }
+                  }
+               }
+
+               if (flag) {
+                  return pair2;
+               }
+            }
+         }
+
+         return pair2;
       }
    }
 
    @Nullable
-   private static Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> getNearestGeneratedStructure(Set<Holder<ConfiguredStructureFeature<?, ?>>> p_208060_, LevelReader levelReader, StructureFeatureManager p_208062_, int p_208063_, int p_208064_, int p_208065_, boolean p_208066_, long p_208067_, @NotNull RandomSpreadStructurePlacement p_208068_, Predicate<Holder<Biome>> biomeHolderPredicate) {
-      int i = p_208068_.spacing();
+   private Pair<BlockPos, Holder<Structure>> getNearestGeneratedStructure(Set<Holder<Structure>> holderSet,
+                                                                          ServerLevel serverLevel, StructureManager structureManager,
+                                                                          BlockPos blockPos, boolean p_223186_,
+                                                                          ConcentricRingsStructurePlacement p_223187_,
+                                                                          Predicate<Holder<Biome>> biomeValidator) {
+      List<ChunkPos> list = this.getRingPositionsFor(p_223187_, serverLevel.getChunkSource().randomState());
+      if (list == null) {
+         throw new IllegalStateException("Somehow tried to find structures for a placement that doesn't exist");
+      } else {
+         Pair<BlockPos, Holder<Structure>> pair = null;
+         double d0 = Double.MAX_VALUE;
+         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
-      for (int j = -p_208065_; j <= p_208065_; ++j) {
-         boolean flag = j == -p_208065_ || j == p_208065_;
-
-         for (int k = -p_208065_; k <= p_208065_; ++k) {
-            boolean flag1 = k == -p_208065_ || k == p_208065_;
-            if (flag || flag1) {
-               int l = p_208063_ + i * j;
-               int i1 = p_208064_ + i * k;
-               ChunkPos chunkpos = p_208068_.getPotentialFeatureChunk(p_208067_, l, i1);
-               if (biomeHolderPredicate.test(levelReader.getBiome(chunkpos.getMiddleBlockPosition(0)))) {
-
-                  for (Holder<ConfiguredStructureFeature<?, ?>> holder : p_208060_) {
-                     StructureCheckResult structurecheckresult = p_208062_.checkStructurePresence(chunkpos, holder.value(), p_208066_);
-                     if (structurecheckresult != StructureCheckResult.START_NOT_PRESENT) {
-                        if (!p_208066_ && structurecheckresult == StructureCheckResult.START_PRESENT) {
-                           return Pair.of(StructureFeature.getLocatePos(p_208068_, chunkpos), holder);
-                        }
-
-                        ChunkAccess chunkaccess = levelReader.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
-                        StructureStart structurestart = p_208062_.getStartForFeature(SectionPos.bottomOf(chunkaccess), holder.value(), chunkaccess);
-                        if (structurestart != null && structurestart.isValid()) {
-                           if (p_208066_ && structurestart.canBeReferenced()) {
-                              p_208062_.addReference(structurestart);
-                              return Pair.of(StructureFeature.getLocatePos(p_208068_, structurestart.getChunkPos()), holder);
-                           }
-
-                           if (!p_208066_) {
-                              return Pair.of(StructureFeature.getLocatePos(p_208068_, structurestart.getChunkPos()), holder);
-                           }
-                        }
-                     }
+         for (ChunkPos chunkpos : list) {
+            if (biomeValidator.test(serverLevel.getBiome(chunkpos.getMiddleBlockPosition(0)))) {
+               blockpos$mutableblockpos.set(SectionPos.sectionToBlockCoord(chunkpos.x, 8), 32, SectionPos.sectionToBlockCoord(chunkpos.z, 8));
+               double d1 = blockpos$mutableblockpos.distSqr(blockPos);
+               boolean flag = pair == null || d1 < d0;
+               if (flag) {
+                  Pair<BlockPos, Holder<Structure>> pair1 = ChunkGenerator.getStructureGeneratingAt(holderSet, serverLevel, structureManager, p_223186_, p_223187_, chunkpos);
+                  if (pair1 != null) {
+                     pair = pair1;
+                     d0 = d1;
                   }
+               }
+            }
+         }
+
+         return pair;
+      }
+   }
+
+   @Nullable
+   private static Pair<BlockPos, Holder<Structure>> getNearestGeneratedStructure(Set<Holder<Structure>> structures, LevelReader levelReader,
+                                                                                 StructureManager structureManager, int x, int y,
+                                                                                 int z, boolean includeExisting, long seed,
+                                                                                 RandomSpreadStructurePlacement randomSpreadStructurePlacement,
+                                                                                 Predicate<Holder<Biome>> biomeValidator) {
+      int i = randomSpreadStructurePlacement.spacing();
+
+      for(int j = -z; j <= z; ++j) {
+         boolean flag = j == -z || j == z;
+
+         for(int k = -z; k <= z; ++k) {
+            boolean flag1 = k == -z || k == z;
+            if (flag || flag1) {
+               int l = x + i * j;
+               int i1 = y + i * k;
+               ChunkPos chunkpos = randomSpreadStructurePlacement.getPotentialStructureChunk(seed, l, i1);
+               if (!biomeValidator.test(levelReader.getBiome(chunkpos.getMiddleBlockPosition(0)))) {
+                  continue;
+               }
+               Pair<BlockPos, Holder<Structure>> pair = ChunkGenerator.getStructureGeneratingAt(structures, levelReader, structureManager, includeExisting, randomSpreadStructurePlacement, chunkpos);
+               if (pair != null) {
+                  return pair;
                }
             }
          }

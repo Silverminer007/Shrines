@@ -22,7 +22,7 @@ public class SpawnCriteriaTypeRegistry {
          DeferredRegister.create(SpawnCriteriaType.REGISTRY, Shrines.MODID);
 
    public static final Supplier<IForgeRegistry<SpawnCriteriaType>> REGISTRY_SUPPLIER =
-         SPAWN_CRITERIA_TYPE_REGISTRY.makeRegistry(SpawnCriteriaType.class, RegistryBuilder::new);
+         SPAWN_CRITERIA_TYPE_REGISTRY.makeRegistry(RegistryBuilder::new);
 
    public static final RegistryObject<SpawnCriteriaType> CLOSE_TO_STRUCTURE =
          SPAWN_CRITERIA_TYPE_REGISTRY.register("close_to_structure",

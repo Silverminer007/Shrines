@@ -2,8 +2,8 @@
   "remaps": [
     [
       {
-        "first": "#shrines:any",
-        "second": "#shrines:any"
+        "first": "#shrines:stone",
+        "second": "#shrines:stone"
       }
     ]
   ]

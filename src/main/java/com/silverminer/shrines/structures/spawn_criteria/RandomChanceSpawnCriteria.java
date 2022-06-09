@@ -13,6 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.silverminer.shrines.registries.SpawnCriteriaTypeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.function.Predicate;
 
@@ -41,10 +42,8 @@ public class RandomChanceSpawnCriteria extends SpawnCriteria {
    }
 
    @Override
-   public boolean test(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, LevelHeightAccessor heightAccessor, Predicate<Holder<Biome>> validBiome, StructureManager structureManager, RegistryAccess registryAccess) {
-      WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(seed));
-      worldgenrandom.setLargeFeatureSeed(seed, chunkPos.x, chunkPos.z);
-      return worldgenrandom.nextDouble() < this.getSpawnChance();
+   public boolean test(Structure.GenerationContext generationContext) {
+      return generationContext.random().nextDouble() < this.getSpawnChance();
    }
 
    protected double getSpawnChance() {

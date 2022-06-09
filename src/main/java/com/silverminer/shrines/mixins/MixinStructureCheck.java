@@ -8,10 +8,10 @@
 
 package com.silverminer.shrines.mixins;
 
-import com.silverminer.shrines.Shrines;
+import com.silverminer.shrines.structures.StructureUtils;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheck;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,8 +27,8 @@ public class MixinStructureCheck {
    private RegistryAccess registryAccess;
 
    @Inject(method = "canCreateStructure", at = @At("HEAD"), cancellable = true)
-   private void shrines_canGenerateStructure(ChunkPos chunkPos, ConfiguredStructureFeature<?, ?> configuredStructureFeature, CallbackInfoReturnable<Boolean> cir) {
-      if (Shrines.invalidateStructure(registryAccess, configuredStructureFeature)) {
+   private void shrines_canGenerateStructure(ChunkPos chunkPos, Structure structure, CallbackInfoReturnable<Boolean> cir) {
+      if (StructureUtils.invalidateStructure(registryAccess, structure)) {
          cir.setReturnValue(false);
       }
    }

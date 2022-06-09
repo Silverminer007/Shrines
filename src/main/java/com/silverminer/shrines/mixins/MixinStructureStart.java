@@ -9,20 +9,18 @@
 package com.silverminer.shrines.mixins;
 
 import com.silverminer.shrines.random_variation.RandomVariationConfig;
-import com.silverminer.shrines.registries.RandomVariationConfigRegistry;
 import com.silverminer.shrines.structures.PrideMonthProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.levelgen.WorldgenRandom;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
@@ -36,21 +34,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 import java.util.List;
-import java.util.Random;
 
 @Mixin(StructureStart.class)
 public class MixinStructureStart {
    @Final
    @Shadow
-   private ConfiguredStructureFeature<?, ?> feature;
+   private Structure structure;
 
    @Final
    @Shadow
    private PiecesContainer pieceContainer;
 
-   @Inject(method = "placeInChunk", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/level/levelgen/structure/PostPlacementProcessor;afterPlace(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/StructureFeatureManager;Lnet/minecraft/world/level/chunk/ChunkGenerator;Ljava/util/Random;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/levelgen/structure/pieces/PiecesContainer;)V"))
-   private void shrines_onPlaceInChunk(WorldGenLevel worldGenLevel, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random,
-                                       BoundingBox boundingBox, ChunkPos chunkPos, CallbackInfo ci) {
+   @Inject(method = "placeInChunk", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/world/level/levelgen/structure/Structure;afterPlace(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/levelgen/structure/pieces/PiecesContainer;)V"))
+   private void shrines_onPlaceInChunk(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox boundingBox, ChunkPos chunkPos, CallbackInfo ci) {
       List<StructurePiece> list = this.pieceContainer.pieces();
       if (list.isEmpty()) {
          return;
@@ -67,16 +63,15 @@ public class MixinStructureStart {
          PrideMonthProcessor.process(worldGenLevel, boundingBox, box, this.pieceContainer::isInsidePiece);
       }
 
-      Registry<ConfiguredStructureFeature<?, ?>> configuredStructureFeatureRegistry = registryAccess.registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
-      ResourceLocation featureKey = configuredStructureFeatureRegistry.getKey(this.feature);
+      Registry<Structure> configuredStructureFeatureRegistry = registryAccess.registryOrThrow(Registry.STRUCTURE_REGISTRY);
+      ResourceLocation featureKey = configuredStructureFeatureRegistry.getKey(this.structure);
       RandomVariationConfig randomVariationConfig = registryAccess.registryOrThrow(RandomVariationConfig.REGISTRY).get(featureKey);
       if (randomVariationConfig == null || randomVariationConfig.remaps().isEmpty()) {
          return;
       }
 
-      WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
-      worldgenrandom.setLargeFeatureSeed(worldGenLevel.getSeed(), box.minX(), box.minZ());
-
-      randomVariationConfig.process(worldGenLevel, worldgenrandom, boundingBox, box, this.pieceContainer::isInsidePiece);
+      RandomSource newRandomSource =  randomSource.fork();
+      newRandomSource.setSeed((long) box.minX() * box.minY() * box.minZ());
+      randomVariationConfig.process(worldGenLevel, newRandomSource, boundingBox, box, this.pieceContainer::isInsidePiece);
    }
 }

@@ -18,7 +18,7 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 public class DataProviderEvents {
    @SubscribeEvent
    public static void onGatherDataEvent(GatherDataEvent event) {
-      event.getGenerator().addProvider(new ShrinesBiomeTagsProvider(event.getGenerator(), event.getExistingFileHelper()));
-      event.getGenerator().addProvider(new StructureTagProvider(event.getGenerator(), event.getExistingFileHelper()));
+      event.getGenerator().addProvider(event.includeServer(), new ShrinesBiomeTagsProvider(event.getGenerator(), event.getExistingFileHelper()));
+      event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(event.getGenerator(), event.getExistingFileHelper()));
    }
 }

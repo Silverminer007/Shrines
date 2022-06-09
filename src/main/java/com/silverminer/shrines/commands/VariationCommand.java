@@ -16,7 +16,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.silverminer.shrines.random_variation.RandomVariationConfig;
-import com.silverminer.shrines.structures.ShrinesJigsawPlacement;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
@@ -25,32 +24,38 @@ import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.core.SectionPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
+import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 public class VariationCommand {
-   private static final DynamicCommandExceptionType ERROR_INVALID_CONFIG = new DynamicCommandExceptionType((o) -> new TranslatableComponent("commands.variate.invalid.config", o));
-   private static final DynamicCommandExceptionType ERROR_INVALID_TEMPLATE = new DynamicCommandExceptionType((o) -> new TranslatableComponent("commands.variate.invalid.template", o));
+   private static final DynamicCommandExceptionType ERROR_INVALID_CONFIG = new DynamicCommandExceptionType((o) -> Component.translatable("commands.variate.invalid.config", o));
+   private static final DynamicCommandExceptionType ERROR_INVALID_TEMPLATE = new DynamicCommandExceptionType((o) -> Component.translatable("commands.variate.invalid.template", o));
 
    public static void register(CommandDispatcher<CommandSourceStack> pDispatcher) {
       pDispatcher.register(Commands.literal("variate").requires((commandSourceStack) ->
@@ -74,7 +79,7 @@ public class VariationCommand {
                                     .then(Commands.argument("structurePos", BlockPosArgument.blockPos())
                                           .then(Commands.argument("config", ResourceKeyArgument.key(RandomVariationConfig.REGISTRY)).executes((context) ->
                                                 loadJigsawAndVariate(context.getSource().getLevel(),
-                                                      getTemnplatePool(context, "startPool"),
+                                                      ResourceKeyArgument.getStructureTemplatePool(context, "startPool"),
                                                       IntegerArgumentType.getInteger(context, "maxDepth"),
                                                       BoolArgumentType.getBool(context, "keepJigsaws"),
                                                       BlockPosArgument.getLoadedBlockPos(context, "structurePos"),
@@ -83,12 +88,12 @@ public class VariationCommand {
 
    private static int variate(CommandSourceStack source, RandomVariationConfig config, BlockPos from, BlockPos to) {
       BoundingBox box = BoundingBox.fromCorners(from, to);
-      config.process(source.getLevel(), createRandom(), box, box, box::isInside);
+      config.process(source.getLevel(), source.getLevel().getRandom(), box, box, box::isInside);
       return 0;
    }
 
    private static int loadAndVariate(CommandSourceStack source, ResourceLocation template, BlockPos structurePos, RandomVariationConfig config) {
-      StructureManager structuremanager = source.getLevel().getStructureManager();
+      StructureTemplateManager structuremanager = source.getLevel().getStructureManager();
 
       Optional<StructureTemplate> optional;
       try {
@@ -100,7 +105,7 @@ public class VariationCommand {
       if (optional.isEmpty()) {
          return -1;
       }
-      Random random = createRandom();
+      RandomSource random = source.getLevel().getRandom();
       StructureTemplate structureTemplate = optional.get();
       StructurePlaceSettings structureplacesettings = (new StructurePlaceSettings()).setMirror(Mirror.NONE).setRotation(Rotation.NONE).setIgnoreEntities(false);
       structureTemplate.placeInWorld(source.getLevel(), structurePos, structurePos, structureplacesettings, random, 2);
@@ -109,28 +114,21 @@ public class VariationCommand {
       return 0;
    }
 
-   private static Random createRandom() {
-      return new Random(Util.getMillis());
-   }
-
-   private static int loadJigsawAndVariate(ServerLevel serverLevel, StructureTemplatePool structureTemplatePool, int maxDepth, boolean keepJigsaws, BlockPos structurePos, RandomVariationConfig config) {
+   private static int loadJigsawAndVariate(ServerLevel serverLevel, Holder<StructureTemplatePool> structureTemplatePool, int maxDepth, boolean keepJigsaws, BlockPos structurePos, RandomVariationConfig config) {
       ChunkGenerator chunkgenerator = serverLevel.getChunkSource().getGenerator();
-      StructureManager structuremanager = serverLevel.getStructureManager();
-      StructureFeatureManager structurefeaturemanager = serverLevel.structureFeatureManager();
-      Random random = serverLevel.getRandom();
+      StructureTemplateManager structureTemplateManager = serverLevel.getStructureManager();
+      StructureManager structureManager = serverLevel.structureManager();
+      RandomSource random = serverLevel.getRandom();
       List<PoolElementStructurePiece> list = Lists.newArrayList();
-      StructurePoolElement structurepoolelement = structureTemplatePool.getRandomTemplate(random);
-      PoolElementStructurePiece poolelementstructurepiece = new PoolElementStructurePiece(structuremanager, structurepoolelement, structurePos, 1, Rotation.NONE, structurepoolelement.getBoundingBox(structuremanager, structurePos, Rotation.NONE));
+      StructurePoolElement structurepoolelement = structureTemplatePool.value().getRandomTemplate(random);
+      PoolElementStructurePiece poolelementstructurepiece = new PoolElementStructurePiece(structureTemplateManager, structurepoolelement, structurePos, 1, Rotation.NONE, structurepoolelement.getBoundingBox(structureTemplateManager, structurePos, Rotation.NONE));
       list.add(poolelementstructurepiece);// TODO Take care about the bounds of the first structure template
-      ShrinesJigsawPlacement.addPieces(serverLevel.registryAccess(), poolelementstructurepiece, maxDepth, PoolElementStructurePiece::new, chunkgenerator, structuremanager, list, random, serverLevel);
+      JigsawPlacement.generateJigsaw(serverLevel, structureTemplatePool, new ResourceLocation("empty"), maxDepth, structurePos, keepJigsaws);// TODO Jigsaw start command param
 
       for (PoolElementStructurePiece poolelementstructurepiece1 : list) {
-         poolelementstructurepiece1.place(serverLevel, structurefeaturemanager, chunkgenerator, random, BoundingBox.infinite(), structurePos, keepJigsaws);
+         poolelementstructurepiece1.place(serverLevel, structureManager, chunkgenerator, random, BoundingBox.infinite(), structurePos, keepJigsaws);
       }
 
-      if (list.isEmpty()) {
-         return 0;
-      }
       PiecesContainer container = new PiecesContainer(list.stream().map(o -> (StructurePiece) o).toList());
       BoundingBox box = container.calculateBoundingBox();
       config.process(serverLevel, random, box, box, container::isInsidePiece);
@@ -142,13 +140,6 @@ public class VariationCommand {
       ResourceKey<RandomVariationConfig> resourcekey = getRegistryType(commandContext, literal, (ResourceKey<Registry<RandomVariationConfig>>) RandomVariationConfig.REGISTRY, ERROR_INVALID_CONFIG);
       return commandContext.getSource().getLevel().getServer().registryAccess().registryOrThrow(RandomVariationConfig.REGISTRY).getOptional(resourcekey).orElseThrow(() ->
             ERROR_INVALID_CONFIG.create(resourcekey.location())
-      );
-   }
-
-   private static StructureTemplatePool getTemnplatePool(CommandContext<CommandSourceStack> commandContext, String literal) throws CommandSyntaxException {
-      ResourceKey<StructureTemplatePool> resourcekey = getRegistryType(commandContext, literal, Registry.TEMPLATE_POOL_REGISTRY, ERROR_INVALID_TEMPLATE);
-      return commandContext.getSource().getLevel().getServer().registryAccess().registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).getOptional(resourcekey).orElseThrow(() ->
-            ERROR_INVALID_TEMPLATE.create(resourcekey.location())
       );
    }
 

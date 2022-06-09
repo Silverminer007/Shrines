@@ -19,7 +19,9 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.function.Predicate;
 
@@ -43,12 +45,12 @@ public class GroundLevelDeltaSpawnCriteria extends SpawnCriteria {
    }
 
    @Override
-   public boolean test(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, LevelHeightAccessor heightAccessor, Predicate<Holder<Biome>> validBiome, StructureManager structureManager, RegistryAccess registryAccess) {
-      int[] corners = this.getCornerHeights(chunkPos.getMinBlockX() - (this.getCheckSize() / 2),
-      chunkPos.getMinBlockZ() - (this.getCheckSize() / 2),
-      chunkPos.getMinBlockX() + (this.getCheckSize() / 2),
-            chunkPos.getMinBlockZ() + (this.getCheckSize() / 2),
-      chunkGenerator, heightAccessor);
+   public boolean test(Structure.GenerationContext generationContext) {
+      int[] corners = this.getCornerHeights(generationContext.chunkPos().getMinBlockX() - (this.getCheckSize() / 2),
+            generationContext.chunkPos().getMinBlockZ() - (this.getCheckSize() / 2),
+            generationContext.chunkPos().getMinBlockX() + (this.getCheckSize() / 2),
+            generationContext.chunkPos().getMinBlockZ() + (this.getCheckSize() / 2),
+      generationContext.chunkGenerator(), generationContext.heightAccessor(), generationContext.randomState());
       int sum = 0;
       for(int i : corners) {
          sum += i;
@@ -58,12 +60,12 @@ public class GroundLevelDeltaSpawnCriteria extends SpawnCriteria {
       return delta < this.getDelta();
    }
 
-   private int[] getCornerHeights(int x0, int z0, int x1, int z1, ChunkGenerator chunkGenerator, LevelHeightAccessor heightAccessor) {
+   private int[] getCornerHeights(int x0, int z0, int x1, int z1, ChunkGenerator chunkGenerator, LevelHeightAccessor heightAccessor, RandomState randomState) {
       return new int[]{
-            chunkGenerator.getFirstOccupiedHeight(x0, x1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor),
-            chunkGenerator.getFirstOccupiedHeight(x0, x1 + z1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor),
-            chunkGenerator.getFirstOccupiedHeight(x0 + z0, x1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor),
-            chunkGenerator.getFirstOccupiedHeight(x0 + z0, x1 + z1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor)};
+            chunkGenerator.getFirstOccupiedHeight(x0, x1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor, randomState),
+            chunkGenerator.getFirstOccupiedHeight(x0, x1 + z1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor, randomState),
+            chunkGenerator.getFirstOccupiedHeight(x0 + z0, x1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor, randomState),
+            chunkGenerator.getFirstOccupiedHeight(x0 + z0, x1 + z1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor, randomState)};
    }
 
    protected double getDelta() {

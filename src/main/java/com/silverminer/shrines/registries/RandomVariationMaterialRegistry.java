@@ -18,6 +18,6 @@ import java.util.function.Supplier;
 
 public class RandomVariationMaterialRegistry {
    public static final DeferredRegister<RandomVariationMaterial> REGISTRY = DeferredRegister.create(RandomVariationMaterial.REGISTRY, Shrines.MODID);
-   public static final Supplier<IForgeRegistry<RandomVariationMaterial>> FORGE_REGISTRY_SUPPLIER = REGISTRY.makeRegistry(RandomVariationMaterial.class,
-         () -> new RegistryBuilder<RandomVariationMaterial>().dataPackRegistry(RandomVariationMaterial.DIRECT_CODEC));
+   public static final Supplier<IForgeRegistry<RandomVariationMaterial>> FORGE_REGISTRY_SUPPLIER =
+         REGISTRY.makeRegistry(() -> new RegistryBuilder<RandomVariationMaterial>().dataPackRegistry(RandomVariationMaterial.DIRECT_CODEC));
 }

@@ -1,63 +1,63 @@
 {
   "elements": [
     {
-      "first": "minecraft:oak_planks",
+      "first": "minecraft:mangrove_planks",
       "second": "shrines:plank"
     },
     {
-      "first": "minecraft:oak_slab",
+      "first": "minecraft:mangrove_slab",
       "second": "shrines:slab"
     },
     {
-      "first": "minecraft:oak_button",
+      "first": "minecraft:mangrove_button",
       "second": "shrines:button"
     },
     {
-      "first": "minecraft:oak_stairs",
+      "first": "minecraft:mangrove_stairs",
       "second": "shrines:stairs"
     },
     {
-      "first": "minecraft:oak_fence",
+      "first": "minecraft:mangrove_fence",
       "second": "shrines:fence"
     },
     {
-      "first": "minecraft:oak_fence_gate",
+      "first": "minecraft:mangrove_fence_gate",
       "second": "shrines:fence_gate"
     },
     {
-      "first": "minecraft:oak_log",
+      "first": "minecraft:mangrove_log",
       "second": "shrines:log"
     },
     {
-      "first": "minecraft:stripped_oak_log",
+      "first": "minecraft:stripped_mangrove_log",
       "second": "shrines:stripped_log"
     },
     {
-      "first": "minecraft:oak_trapdoor",
+      "first": "minecraft:mangrove_trapdoor",
       "second": "shrines:trapdoor"
     },
     {
-      "first": "minecraft:oak_door",
+      "first": "minecraft:mangrove_door",
       "second": "shrines:door"
     },
     {
-      "first": "minecraft:oak_sign",
+      "first": "minecraft:mangrove_sign",
       "second": "shrines:standing_sign"
     },
     {
-      "first": "minecraft:oak_wall_sign",
+      "first": "minecraft:mangrove_wall_sign",
       "second": "shrines:wall_sign"
     },
     {
-      "first": "minecraft:oak_leaves",
+      "first": "minecraft:mangrove_leaves",
       "second": "shrines:leaves"
     },
     {
-      "first": "minecraft:oak_wood",
+      "first": "minecraft:mangrove_wood",
       "second": "shrines:wood"
     },
     {
-      "first": "minecraft:stripped_oak_wood",
+      "first": "minecraft:stripped_mangrove_wood",
       "second": "shrines:stripped_wood"
     }
   ]

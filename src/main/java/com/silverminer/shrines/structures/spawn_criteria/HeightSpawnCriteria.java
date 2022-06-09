@@ -19,7 +19,9 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.util.function.Predicate;
 
@@ -46,25 +48,25 @@ public class HeightSpawnCriteria extends SpawnCriteria {
    }
 
    @Override
-   public boolean test(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, LevelHeightAccessor heightAccessor, Predicate<Holder<Biome>> validBiome, StructureManager structureManager, RegistryAccess registryAccess) {
-      int lowestY = this.getLowestY(chunkPos, chunkGenerator, heightAccessor);
+   public boolean test(Structure.GenerationContext generationContext) {
+      int lowestY = this.getLowestY(generationContext.chunkPos(), generationContext.chunkGenerator(), generationContext.heightAccessor(), generationContext.randomState());
       return lowestY > this.minHeight && lowestY < this.maxHeight;
    }
 
-   private int getLowestY(ChunkPos chunkPos, ChunkGenerator chunkGenerator, LevelHeightAccessor heightAccessor) {
+   private int getLowestY(ChunkPos chunkPos, ChunkGenerator chunkGenerator, LevelHeightAccessor heightAccessor, RandomState randomState) {
       int i = chunkPos.getMinBlockX();
       int j = chunkPos.getMinBlockZ();
       int[] aint = this.getCornerHeights(i - (this.getCheckSize() / 2), i + (this.getCheckSize() / 2),
-            j - (this.getCheckSize() / 2), j + (this.getCheckSize() / 2), chunkGenerator, heightAccessor);
+            j - (this.getCheckSize() / 2), j + (this.getCheckSize() / 2), chunkGenerator, heightAccessor, randomState);
       return Math.min(Math.min(aint[0], aint[1]), Math.min(aint[2], aint[3]));
    }
 
-   private int[] getCornerHeights(int x0, int z0, int x1, int z1, ChunkGenerator chunkGenerator, LevelHeightAccessor heightAccessor) {
+   private int[] getCornerHeights(int x0, int z0, int x1, int z1, ChunkGenerator chunkGenerator, LevelHeightAccessor heightAccessor, RandomState randomState) {
       return new int[]{
-            chunkGenerator.getFirstOccupiedHeight(x0, x1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor),
-            chunkGenerator.getFirstOccupiedHeight(x0, x1 + z1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor),
-            chunkGenerator.getFirstOccupiedHeight(x0 + z0, x1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor),
-            chunkGenerator.getFirstOccupiedHeight(x0 + z0, x1 + z1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor)};
+            chunkGenerator.getFirstOccupiedHeight(x0, x1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor, randomState),
+            chunkGenerator.getFirstOccupiedHeight(x0, x1 + z1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor, randomState),
+            chunkGenerator.getFirstOccupiedHeight(x0 + z0, x1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor, randomState),
+            chunkGenerator.getFirstOccupiedHeight(x0 + z0, x1 + z1, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor, randomState)};
    }
 
    protected int getMinHeight() {

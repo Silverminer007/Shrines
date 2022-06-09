@@ -55,6 +55,10 @@
     {
       "first": "minecraft:jungle_wood",
       "second": "shrines:wood"
+    },
+    {
+      "first": "minecraft:stripped_jungle_wood",
+      "second": "shrines:stripped_wood"
     }
   ]
 }

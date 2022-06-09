@@ -1,6 +1,6 @@
 {
-  "replace": false,
   "values": [
-    "#shrines:is_theend"
+    "minecraft:end_highlands",
+    "minecraft:end_midlands"
   ]
 }

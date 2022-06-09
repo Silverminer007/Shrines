@@ -20,7 +20,8 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 import java.util.function.Predicate;
 
@@ -41,12 +42,13 @@ public class MinStructureDistanceSpawnCriteria extends SpawnCriteria {
    }
 
    @Override
-   public boolean test(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, LevelHeightAccessor heightAccessor, Predicate<Holder<Biome>> validBiome, StructureManager structureManager, RegistryAccess registryAccess) {
+   public boolean test(Structure.GenerationContext generationContext) {
       int range = this.getRange() >= 0 ? this.getRange() : ShrinesConfig.min_structure_distance.get();
       if (range < 0)
          return true;
-      return registryAccess.registryOrThrow(Registry.STRUCTURE_SET_REGISTRY).entrySet().stream().filter((structureSet) ->
-                  chunkGenerator.hasFeatureChunkInRange(structureSet.getKey(), seed, chunkPos.x, chunkPos.z, range))
+      Registry<StructureSet> structureSetRegistry = generationContext.registryAccess().registryOrThrow(Registry.STRUCTURE_SET_REGISTRY);
+      return structureSetRegistry.holders().filter((structureSet) ->
+                  generationContext.chunkGenerator().hasStructureChunkInRange(structureSet, generationContext.randomState(), generationContext.seed(), generationContext.chunkPos().x, generationContext.chunkPos().z, range))
             .count() <= range;
    }
 

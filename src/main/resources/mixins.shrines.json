@@ -6,7 +6,7 @@
   "mixins": [
     "MixinChunkGenerator",
     "MixinCommands",
-    "MixinConfiguredStructureFeature",
+    "MixinStructure",
     "MixinStructureCheck",
     "MixinStructureStart"
   ],

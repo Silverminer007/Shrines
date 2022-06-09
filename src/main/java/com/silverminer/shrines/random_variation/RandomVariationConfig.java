@@ -18,10 +18,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public class RandomVariationConfig extends ForgeRegistryEntry<RandomVariationConfig> {
+public record RandomVariationConfig(
+      List<List<RandomVariationConfigElement>> remaps) {
    public static final ResourceKey<? extends Registry<RandomVariationConfig>> REGISTRY =
          ResourceKey.createRegistryKey(Shrines.location("random_variation/config"));
    public static final Codec<RandomVariationConfig> DIRECT_CODEC = RecordCodecBuilder.create(randomVariationConfigInstance ->
@@ -41,17 +42,7 @@ public class RandomVariationConfig extends ForgeRegistryEntry<RandomVariationCon
          ).apply(randomVariationConfigInstance, RandomVariationConfig::new));
    public static final Codec<Holder<RandomVariationConfig>> CODEC = RegistryFileCodec.create(REGISTRY, DIRECT_CODEC);
 
-   private final List<List<RandomVariationConfigElement>> remaps;
-
-   public RandomVariationConfig(List<List<RandomVariationConfigElement>> remaps) {
-      this.remaps = remaps;
-   }
-
-   public List<List<RandomVariationConfigElement>> remaps() {
-      return this.remaps;
-   }
-
-   public void process(@NotNull WorldGenLevel worldGenLevel, @NotNull Random random, @NotNull BoundingBox chunkBounds,
+   public void process(@NotNull WorldGenLevel worldGenLevel, @NotNull RandomSource random, @NotNull BoundingBox chunkBounds,
                        @NotNull BoundingBox structureBounds, Predicate<BlockPos> isInside) {
       var unmappedRemaps = random(this.remaps(), random);
       if (unmappedRemaps == null) {
@@ -97,7 +88,7 @@ public class RandomVariationConfig extends ForgeRegistryEntry<RandomVariationCon
    }
 
    @Nullable
-   private <T> T random(@NotNull List<T> list, Random r) {
+   private <T> T random(@NotNull List<T> list, RandomSource r) {
       if (list.isEmpty()) {
          return null;
       }
