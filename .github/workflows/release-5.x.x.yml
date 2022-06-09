@@ -141,7 +141,7 @@ jobs:
       - name: Upload files to curseforge
         uses: itsmeow/curseforge-upload@v3
         with:
-          file_path: Shrines-Default-Config-${{ github.event.inputs.minecraftVersion }}${{ github.event.inputs.version }}.zip
+          file_path: Shrines-Default-Config-${{ github.event.inputs.minecraftVersion }}-${{ github.event.inputs.version }}.zip
           game_endpoint: "minecraft"
           project_id: "418915"
           token: ${{ secrets.CURSEFORGE_TOKEN }}
