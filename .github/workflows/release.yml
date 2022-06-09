@@ -18,7 +18,7 @@ on:
       branch:
         required: true
         description: ""
-        default: '1.19-5.x.x'
+        default: '1.19.x-5.x.x'
 
 env:
   CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
