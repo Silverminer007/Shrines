@@ -19,6 +19,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.tags.TagKey;
 import net.minecraftforge.registries.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -266,12 +268,14 @@ public class RandomVariationConfigRegistry {
          )
    ));
 
-   private static HolderSet<RandomVariationMaterial> tag(TagKey<RandomVariationMaterial> tagKey) {
+   @Contract("_ -> new")
+   private static @NotNull HolderSet<RandomVariationMaterial> tag(TagKey<RandomVariationMaterial> tagKey) {
       return new ReferenceNamedHolderSet<>(RandomVariationMaterial.REGISTRY, tagKey);
    }
 
+   @Contract("_ -> new")
    @SafeVarargs
-   private static HolderSet<RandomVariationMaterial> list(RegistryObject<RandomVariationMaterial>... registryObject) {
+   private static @NotNull HolderSet<RandomVariationMaterial> list(RegistryObject<RandomVariationMaterial>... registryObject) {
       return HolderSet.direct(Arrays.stream(registryObject).map(RegistryObject::getHolder).map(Optional::orElseThrow).toList());
    }
 }
