@@ -32,10 +32,9 @@ The Structure Novel rework is planned for this version
 ### 1.19 TODO
 
 - [ ] Re-add structure novels
-- [ ] Use Data-Gen for loot_tables
-- [ ] Use Data-Gen for random_variation/config
-- [ ] Use Data-Gen for random_variation/material
-- [ ] Use Data-Gen for random_variation/material tags
+- [x] Use Data-Gen for random_variation/config
+- [x] Use Data-Gen for random_variation/material
+- [x] Use Data-Gen for random_variation/material tags
 - [ ] Improve Ground level delta check
 - [ ] Fix warning: Hanging entity at invalid position: BlockPos{x=338, y=-3, z=36}
 

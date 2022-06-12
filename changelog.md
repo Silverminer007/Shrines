@@ -1,5 +1,10 @@
 ### 5.0.0-alpha2
 
+- use data-gen for Random variation Material & Random Variation Material Tags & Random Variation Config
+
+===========
+### 5.0.0-alpha2
+
 - fix Shrines Default Configuration Pack
 
 ===========

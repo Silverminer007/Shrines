@@ -25,6 +25,7 @@ env:
   MODRINTH: ${{ secrets.MODRINTH_TOKEN }}
   shrines_mod_version: ${{ github.event.inputs.version }}
   SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
+  MC_VERSION: ${{ github.event.inputs.minecraftVersion }}
 
 jobs:
   build:
@@ -107,32 +108,8 @@ jobs:
           tag_name: ${{ github.event.inputs.version }}
       - name: Create default configuration pack
         run: |
-          if [[ -d ./Shrines-Default-Config ]]; then
-            rm -r ./Shrines-Default-Config # make sure no files persisted over multiple runs
-          fi
-          mkdir ./Shrines-Default-Config
-          mkdir ./Shrines-Default-Config/data
-          mkdir ./Shrines-Default-Config/data/shrines
-          ./gradlew --info --stacktrace runWorldGenData
-          cp -r src/generated/reports/reports/shrines/worldgen ./Shrines-Default-Config/data/shrines/worldgen
-          ./gradlew --info --stacktrace runGenerateData
-          mkdir ./Shrines-Default-Config/data/shrines/tags
-          cp -r src/generated/resources/data/shrines/tags/worldgen ./Shrines-Default-Config/data/shrines/tags/worldgen
-          mkdir ./Shrines-Default-Config/data/shrines/tags/shrines
-          cp -r src/main/resources/data/shrines/tags/shrines/random_variation ./Shrines-Default-Config/data/shrines/tags/shrines/random_variation
-          cp -r src/main/resources/data/shrines/loot_tables ./Shrines-Default-Config/data/shrines/loot_tables
-          cp -r src/main/resources/data/shrines/shrines ./Shrines-Default-Config/data/shrines/shrines
-          cp -r src/main/resources/data/shrines/structures ./Shrines-Default-Config/data/shrines/structures
-          touch ./Shrines-Default-Config/pack.mcmeta
-          echo "{
-            \"pack\": {
-              \"description\": \"Default Worldgen Configuration for Shrines Structures\",
-              \"pack_format\": 10,
-              \"_comment\": \"Modify the contained files to configure Shrines Structures Structures'\"
-            }
-          }" > ./Shrines-Default-Config/pack.mcmeta
-          cd Shrines-Default-Config || exit
-          zip -r ../Shrines-Default-Config-${{ github.event.inputs.minecraftVersion }}-${{ github.event.inputs.version }}.zip data pack.mcmeta
+          chmod +x ./defaultconfig.sh
+          ./defaultconfig.sh
       - name: Upload default config pack to GitHub
         uses: softprops/action-gh-release@v1
         with:

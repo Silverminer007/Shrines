@@ -8,14 +8,19 @@
 
 package com.silverminer.shrines.random_variation;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.tags.TagKey;
 
-public record RandomVariationConfigElement(HolderSet<RandomVariationMaterial> from,
-                                           HolderSet<RandomVariationMaterial> to) {
+import java.util.function.Supplier;
 
+public record RandomVariationConfigElement(
+      HolderSet<RandomVariationMaterial> from,
+      HolderSet<RandomVariationMaterial> to) {
    public static final Codec<RandomVariationConfigElement> CODEC = RecordCodecBuilder.create(randomVariationConfigElementInstance ->
          randomVariationConfigElementInstance.group(
                RegistryCodecs.homogeneousList(RandomVariationMaterial.REGISTRY, RandomVariationMaterial.DIRECT_CODEC, false).fieldOf("first").forGetter(RandomVariationConfigElement::from),

@@ -29,4 +29,3 @@ forge*changelog.txt
 /src/generated/reports
 /Shrines-Default-Config
 *.zip
-/defaultconfig.sh

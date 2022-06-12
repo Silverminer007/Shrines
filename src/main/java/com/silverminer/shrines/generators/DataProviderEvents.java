@@ -20,5 +20,6 @@ public class DataProviderEvents {
    public static void onGatherDataEvent(GatherDataEvent event) {
       event.getGenerator().addProvider(event.includeServer(), new ShrinesBiomeTagsProvider(event.getGenerator(), event.getExistingFileHelper()));
       event.getGenerator().addProvider(event.includeServer(), new StructureTagProvider(event.getGenerator(), event.getExistingFileHelper()));
+      event.getGenerator().addProvider(event.includeServer(), new RandomVariationMaterialTagProvider(event.getGenerator(), event.getExistingFileHelper()));
    }
 }
