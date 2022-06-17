@@ -18,19 +18,27 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import java.util.function.Predicate;
 
-public class RelativePlacementCalculator extends PlacementCalculator {// TODO 1.19 Add option for Heightmap Type
+public class RelativePlacementCalculator extends PlacementCalculator {
    public static final Codec<RelativePlacementCalculator> CODEC = RecordCodecBuilder.create(relativePlacementCalculatorInstance ->
          relativePlacementCalculatorInstance.group(
-               Codec.INT.fieldOf("offset").forGetter(RelativePlacementCalculator::getOffset)
+               Codec.INT.fieldOf("offset").forGetter(RelativePlacementCalculator::getOffset),
+               Heightmap.Types.CODEC.optionalFieldOf("heightmap", Heightmap.Types.WORLD_SURFACE_WG).forGetter(RelativePlacementCalculator::getHeightmap)
          ).apply(relativePlacementCalculatorInstance, RelativePlacementCalculator::new));
    private final int offset;
+   private final Heightmap.Types heightmap;
 
    public RelativePlacementCalculator(int offset) {
+      this(offset, Heightmap.Types.WORLD_SURFACE_WG);
+   }
+
+   public RelativePlacementCalculator(int offset, Heightmap.Types heightmap) {
       this.offset = offset;
+      this.heightmap = heightmap;
    }
 
    @Override
@@ -40,15 +48,19 @@ public class RelativePlacementCalculator extends PlacementCalculator {// TODO 1.
 
    @Override
    public int calculate(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long seed, ChunkPos chunkPos, LevelHeightAccessor heightAccessor, Predicate<Holder<Biome>> validBiome, StructureManager structureManager, RegistryAccess registryAccess) {
-      return this.getOffset();
+      return this.getOffset() + chunkGenerator.getFirstFreeHeight(chunkPos.x, chunkPos.z, Heightmap.Types.WORLD_SURFACE_WG, heightAccessor);
    }
 
    @Override
    public boolean isRelativeToWorldHeight() {
-      return true;
+      return false;
    }
 
    private int getOffset() {
       return offset;
+   }
+
+   private Heightmap.Types getHeightmap() {
+      return heightmap;
    }
 }

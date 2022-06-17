@@ -1,3 +1,16 @@
+## 4.1.0
+
+- Add optional parameter to `shrines:relative` placement calculator
+  - `heightmap`. Possible values:
+    - `WORLD_SURFACE_WG`
+    - `WORLD_SURFACE`
+    - `OCEAN_FLOOR_WG`
+    - `OCEAN_FLOOR`
+    - `MOTION_BLOCKING`
+    - `MOTION_BLOCKING_NO_LEAVES`
+
+===========
+
 # 4.0.0
 
 **User facing changes**
