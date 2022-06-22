@@ -18,7 +18,8 @@ plugins {
 
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${mc_version}-${System.getenv('shrines_mod_version')}"
+version = "${mc_version}-stories-overhaul-preview-4"
+//version = "${mc_version}-${System.getenv('shrines_mod_version')}"
 group = 'com.silverminer.shrines'
 
 java {
@@ -63,6 +64,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            args 'nogui'
             mods {
                 shrines {
                     source sourceSets.main

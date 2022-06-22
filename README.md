@@ -1,7 +1,8 @@
 [![Curseforge Project Name](https://cf.way2muchnoise.eu/title/418915.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
 [![Version on Curseforge](https://cf.way2muchnoise.eu/versions/418915.svg)](https://www.curseforge.com/minecraft/mc-mods/shrines-structures)
 [![Latest Release](https://img.shields.io/github/v/release/Silverminer007/Shrines?include_prereleases&label=latest%20release&logo=github)](https://github.com/Silverminer007/Shrines/releases)
-![Discord](https://img.shields.io/discord/777129358769782814?color=blue&label=discord&logo=discord&logoColor=white)![GitHub issues by-label](https://img.shields.io/github/issues/Silverminer007/Shrines/bug?label=bugs&logo=github)
+![Discord](https://img.shields.io/discord/777129358769782814?color=blue&label=discord&logo=discord&logoColor=white)
+![GitHub issues by-label](https://img.shields.io/github/issues/Silverminer007/Shrines/bug?label=bugs&logo=github)
 [![License](https://img.shields.io/github/license/Silverminer007/Shrines?color=informational)](https://www.mozilla.org/en-US/MPL/2.0/)
 
 [![](https://img.buymeacoffee.com/api/?url=aHR0cHM6Ly9jZG4uYnV5bWVhY29mZmVlLmNvbS91cGxvYWRzL3Byb2ZpbGVfcGljdHVyZXMvMjAyMi8wNS9uY20zTDNpNENLNHN2bUNrLnBuZ0AzMDB3XzBlLndlYnA=&creator=Silver+Miner&design_code=1&design_color=%23ff813f&slug=silverminer)](https://www.buymeacoffee.com/silverminer)

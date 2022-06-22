@@ -59,10 +59,6 @@ public class MixinStructureStart {
       }
       RegistryAccess registryAccess = server.registryAccess();
 
-      if (LocalDate.now().get(ChronoField.MONTH_OF_YEAR) == 6) {
-         PrideMonthProcessor.process(worldGenLevel, boundingBox, box, this.pieceContainer::isInsidePiece);
-      }
-
       Registry<Structure> configuredStructureFeatureRegistry = registryAccess.registryOrThrow(Registry.STRUCTURE_REGISTRY);
       ResourceLocation featureKey = configuredStructureFeatureRegistry.getKey(this.structure);
       RandomVariationConfig randomVariationConfig = registryAccess.registryOrThrow(RandomVariationConfig.REGISTRY).get(featureKey);
@@ -73,5 +69,9 @@ public class MixinStructureStart {
       RandomSource newRandomSource =  randomSource.fork();
       newRandomSource.setSeed((long) box.minX() * box.minY() * box.minZ());
       randomVariationConfig.process(worldGenLevel, newRandomSource, boundingBox, box, this.pieceContainer::isInsidePiece);
+
+      if (LocalDate.now().get(ChronoField.MONTH_OF_YEAR) == 6) {
+         PrideMonthProcessor.process(worldGenLevel, boundingBox, box, this.pieceContainer::isInsidePiece);
+      }
    }
 }

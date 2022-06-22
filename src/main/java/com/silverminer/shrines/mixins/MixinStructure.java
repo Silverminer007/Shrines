@@ -8,6 +8,7 @@
 
 package com.silverminer.shrines.mixins;
 
+import com.silverminer.shrines.config.ShrinesConfig;
 import com.silverminer.shrines.structures.StructureUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -31,7 +32,7 @@ import java.util.function.Predicate;
 public class MixinStructure {
    @Inject(method = "generate", at = @At("HEAD"), cancellable = true)
    private void shrines_generate(RegistryAccess registryAccess, ChunkGenerator p_226598_, BiomeSource p_226599_, RandomState p_226600_, StructureTemplateManager p_226601_, long p_226602_, ChunkPos p_226603_, int p_226604_, LevelHeightAccessor p_226605_, Predicate<Holder<Biome>> p_226606_, CallbackInfoReturnable<StructureStart> cir) {
-      if (StructureUtils.invalidateStructure(registryAccess, (Structure) (Object) this)) {
+      if (StructureUtils.invalidateStructure(registryAccess, StructureUtils.getStructureKey((Structure) (Object) this, registryAccess), ShrinesConfig.disabledStructures.get())) {
          cir.setReturnValue(StructureStart.INVALID_START);
       }
    }

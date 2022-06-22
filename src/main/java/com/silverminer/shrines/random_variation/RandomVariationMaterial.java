@@ -27,10 +27,15 @@ import java.util.List;
 public record RandomVariationMaterial(
       List<Pair<Block, ResourceLocation>> elements) {
    public static final ResourceKey<? extends Registry<RandomVariationMaterial>> REGISTRY = ResourceKey.createRegistryKey(Shrines.location("random_variation/material"));
-   public static final Codec<RandomVariationMaterial> DIRECT_CODEC = RecordCodecBuilder.create(randomVariationMaterialInstance ->
+   public static final Codec<RandomVariationMaterial> OLD_CODEC = RecordCodecBuilder.create(randomVariationMaterialInstance ->
          randomVariationMaterialInstance.group(
                Codec.list(Codecs.pairCodec(ForgeRegistries.BLOCKS.getCodec(), ResourceLocation.CODEC)).fieldOf("elements").forGetter(RandomVariationMaterial::elements)
          ).apply(randomVariationMaterialInstance, RandomVariationMaterial::new));
+   public static final Codec<RandomVariationMaterial> NEW_CODEC = RecordCodecBuilder.create(randomVariationMaterialInstance ->
+         randomVariationMaterialInstance.group(
+               Codec.list(Codecs.namedPairCodec(ForgeRegistries.BLOCKS.getCodec(), "block", ResourceLocation.CODEC, "id")).fieldOf("elements").forGetter(RandomVariationMaterial::elements)
+         ).apply(randomVariationMaterialInstance, RandomVariationMaterial::new));
+   public static final Codec<RandomVariationMaterial> DIRECT_CODEC = Codecs.alternativeCodec(NEW_CODEC, OLD_CODEC);
    public static final Codec<Holder<RandomVariationMaterial>> CODEC = RegistryFileCodec.create(REGISTRY, DIRECT_CODEC);
 
 }

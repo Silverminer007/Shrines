@@ -8,37 +8,38 @@
 
 package com.silverminer.shrines.structures;
 
-import com.silverminer.shrines.config.ShrinesConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.data.worldgen.Structures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class StructureUtils {
-   public static boolean invalidateStructure(@NotNull RegistryAccess registryAccess, Structure structure) {
-      Registry<Structure> registry = registryAccess.registryOrThrow(Registry.STRUCTURE_REGISTRY);
-      ResourceLocation id = registry.getKey(structure);
-      if (id != null) {
-         ResourceKey<Structure> resourceKey = ResourceKey.create(Registry.STRUCTURE_REGISTRY, id);
-         Holder<Structure> holder = Holder.Reference.createStandAlone(registry, resourceKey);
-         for (String structureID : ShrinesConfig.disabledStructures.get()) {
-            if (structureID.startsWith("#")) {
-               TagKey<Structure> tagKey = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(structureID.substring(1)));
-               if (registry.getTag(tagKey).map(tag -> tag.contains(holder)).orElse(false)) {
-                  return true;
-               }
-            } else {
-               if (id.toString().equals(structureID)) {
-                  return true;
-               }
+   public static boolean invalidateStructure(@NotNull RegistryAccess registryAccess, ResourceKey<Structure> structure, @NotNull List<String> disabledStructures) {
+      Registry<Structure> structureRegistry  = registryAccess.ownedRegistryOrThrow(Registry.STRUCTURE_REGISTRY);
+      Holder<Structure> holder = structureRegistry.getHolderOrThrow(structure);
+      for (String structureID : disabledStructures) {
+         if (structureID.startsWith("#")) {
+            TagKey<Structure> tagKey = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(structureID.substring(1)));
+            if (structureRegistry.getTag(tagKey).map(tag -> tag.contains(holder)).orElse(false)) {
+               return true;
+            }
+         } else {
+            if (structure.location().toString().equals(structureID)) {
+               return true;
             }
          }
-
       }
       return false;
+   }
+
+   public static ResourceKey<Structure> getStructureKey(Structure structure, RegistryAccess registryAccess) {
+      return registryAccess.ownedRegistryOrThrow(Registry.STRUCTURE_REGISTRY).getResourceKey(structure).orElseThrow();
    }
 }
