@@ -1,3 +1,9 @@
+### 5.0.0-alpha3
+
+- update to Forge 1.19 RB
+- Fix #48
+
+===========
 ### 5.0.0-alpha2
 
 - use data-gen for Random variation Material & Random Variation Material Tags & Random Variation Config

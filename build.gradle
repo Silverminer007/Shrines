@@ -163,7 +163,7 @@ modrinth {
     def file = file('changelog.md')
     def changelogFile = file.text
     changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
-    gameVersions = ["1.19"]
+    gameVersions = ["1.19", "1.19.1"]
 }
 
 curseforge {
@@ -181,6 +181,7 @@ curseforge {
             releaseType = 'beta'
         }
         addGameVersion '1.19'
+        addGameVersion '1.19.1'
         addGameVersion 'Forge'
     }
     options {
