@@ -31,7 +31,7 @@ public class StoryToast implements Toast {
 
    private StoryToast(ResourceLocation storyID, List<FormattedCharSequence> snippetText, int width, long displayTime) {
       this.storyID = storyID;
-      this.title = Component.translatable("gui.shrines.stories.unlock.title", storyID);// TODO Translation
+      this.title = Component.translatable("gui.shrines.stories.unlock.title", storyID);
       this.snippetText = snippetText;
       this.width = width;
       this.displayTime = displayTime;
@@ -45,7 +45,7 @@ public class StoryToast implements Toast {
       Component snippetTextTranslated = Component.translatable(snippetText);
       List<FormattedCharSequence> list = font.split(snippetTextTranslated, 200);
       int i = Math.max(200, list.stream().mapToInt(font::width).max().orElse(200));
-      return new StoryToast(storyID, list, i + 30, snippetTextTranslated.getString().length() * 1000L);
+      return new StoryToast(storyID, list, i + 30, snippetTextTranslated.getString().length() * 250L);
    }
 
    public int width() {

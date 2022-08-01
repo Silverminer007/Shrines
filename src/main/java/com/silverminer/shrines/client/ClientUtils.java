@@ -23,7 +23,7 @@ public class ClientUtils {
    }
 
    public static void openStoriesScreen(List<List<Snippet>> unlockedStories){
-      Minecraft.getInstance().setScreen(new StoryScreen(unlockedStories));
+      Minecraft.getInstance().setScreen(StoryScreen.create(unlockedStories));
    }
 
    public static class KeyMappings {

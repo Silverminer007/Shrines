@@ -9,8 +9,7 @@
 package com.silverminer.shrines.registries;
 
 import com.silverminer.shrines.Shrines;
-import com.silverminer.shrines.stories.StructureTrigger;
-import com.silverminer.shrines.stories.TriggerType;
+import com.silverminer.shrines.stories.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -22,4 +21,7 @@ public class TriggerTypeRegistry {
    public static final DeferredRegister<TriggerType> REGISTRY = DeferredRegister.create(TriggerType.REGISTRY, Shrines.MODID);
    public static final Supplier<IForgeRegistry<TriggerType>> FORGE_REGISTRY_SUPPLIER = REGISTRY.makeRegistry(RegistryBuilder::new);
    public static final RegistryObject<TriggerType> STRUCTURE = REGISTRY.register("structure", () -> () -> StructureTrigger.CODEC);
+   public static final RegistryObject<TriggerType> BIOME = REGISTRY.register("biome", () -> () -> BiomeTrigger.CODEC);
+   public static final RegistryObject<TriggerType> DIMENSION = REGISTRY.register("dimension", () -> () -> DimensionTrigger.CODEC);
+   public static final RegistryObject<TriggerType> ALL_MATCH = REGISTRY.register("all_match", () -> () -> AllMatchTrigger.CODEC);
 }

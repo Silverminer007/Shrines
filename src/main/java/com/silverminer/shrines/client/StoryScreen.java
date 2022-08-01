@@ -8,14 +8,20 @@
 
 package com.silverminer.shrines.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.silverminer.shrines.network.CTSFetchStoriesPacket;
 import com.silverminer.shrines.network.NetworkManager;
 import com.silverminer.shrines.stories.Snippet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -28,23 +34,30 @@ public class StoryScreen extends BookViewScreen {
       NetworkManager.SIMPLE_CHANNEL.sendToServer(new CTSFetchStoriesPacket());
    }
 
-   public StoryScreen(List<List<Snippet>> unlockedStories) {
+   protected StoryScreen(List<FormattedText> pages) {
       super(new BookAccess() {
          @Override
          public int getPageCount() {
-            return unlockedStories.size();
+            return pages.size();
          }
 
          @Override
          public @NotNull FormattedText getPageRaw(int page) {
-            StringBuilder stringBuilder = new StringBuilder();
-            List<Snippet> snippets = new ArrayList<>(unlockedStories.get(page));
-            snippets.sort(Comparator.comparing(Snippet::id));
-            for(int i = 0; i < snippets.size(); i++){
-               stringBuilder.append("#").append(i + 1).append(" ").append(Component.translatable(snippets.get(i).text()).getString()).append("\n");
-            }
-            return FormattedText.of(stringBuilder.toString());
+            return pages.get(page);
          }
       });
+   }
+
+   @Contract("_ -> new")
+   public static @NotNull StoryScreen create(@NotNull List<List<Snippet>> unlockedStories) {
+      List<FormattedText> pages = new ArrayList<>();
+      for (List<Snippet> unlockedStory : unlockedStories) {
+         List<Snippet> snippets = new ArrayList<>(unlockedStory);
+         snippets.sort(Comparator.comparing(Snippet::id));
+         for (Snippet snippet : snippets) {
+            pages.add(FormattedText.of("#" + snippet.id() + " " + Component.translatable(snippet.text()).getString() + "\n"));
+         }
+      }
+      return new StoryScreen(pages);
    }
 }

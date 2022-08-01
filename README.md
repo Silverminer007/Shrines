@@ -52,7 +52,8 @@ The Structure Novel rework is planned for this version
 - [x] Use Data-Gen for random_variation/config
 - [x] Use Data-Gen for random_variation/material
 - [x] Use Data-Gen for random_variation/material tags
-- [ ] Improve Ground level delta check
+- [ ] Improve Ground level delta check (use NoiseRouter?)
+- [ ] Improve Structure Min Distance Check
 - [ ] Fix warning: Hanging entity at invalid position: BlockPos{x=338, y=-3, z=36}
 
 ### Requested features

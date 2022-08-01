@@ -9,9 +9,10 @@
 package com.silverminer.shrines.registries;
 
 import com.silverminer.shrines.Shrines;
-import com.silverminer.shrines.stories.Snippet;
-import com.silverminer.shrines.stories.Story;
-import com.silverminer.shrines.stories.StructureTrigger;
+import com.silverminer.shrines.stories.*;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
