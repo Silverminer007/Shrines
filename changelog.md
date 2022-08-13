@@ -1,3 +1,9 @@
+### 5.0.0-alpha4
+
+- update to 1.19.2
+- Fix #50
+
+===========
 ### 5.0.0-alpha3
 
 - update to Forge 1.19 RB
