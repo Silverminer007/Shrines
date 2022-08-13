@@ -28,6 +28,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
+import net.minecraft.commands.arguments.ResourceOrTagLocationArgument.Result;
+
 public class LocateInBiomeCommand {
    private static final DynamicCommandExceptionType ERROR_STRUCTURE_INVALID = new DynamicCommandExceptionType((args) -> {
       return Component.translatable("commands.locate.structure.invalid", args);

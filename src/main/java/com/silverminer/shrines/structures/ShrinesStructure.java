@@ -12,7 +12,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.silverminer.shrines.registries.StructureTypeRegistry;
-import com.silverminer.shrines.structures.spawn_criteria.*;
+import com.silverminer.shrines.structures.spawn_criteria.SpawnCriteria;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.Pools;
