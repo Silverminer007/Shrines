@@ -106,16 +106,16 @@ jobs:
         with:
           files: build/libs/*.jar
           tag_name: ${{ github.event.inputs.version }}
-      - name: Create default configuration pack
+      - name: Create datapack
         run: |
-          chmod +x ./defaultconfig.sh
-          ./defaultconfig.sh
-      - name: Upload default config pack to GitHub
+          chmod +x ./datapack.sh
+          ./datapack.sh
+      - name: Upload datapack to GitHub
         uses: softprops/action-gh-release@v1
         with:
           files: Shrines-Structures-${{ github.event.inputs.minecraftVersion }}-${{ github.event.inputs.version }}.zip
           tag_name: ${{ github.event.inputs.version }}
-      - name: Upload files to curseforge
+      - name: Upload datapack to curseforge
         uses: itsmeow/curseforge-upload@v3
         with:
           file_path: Shrines-Structures-${{ github.event.inputs.minecraftVersion }}-${{ github.event.inputs.version }}.zip
@@ -124,3 +124,11 @@ jobs:
           token: ${{ secrets.CURSEFORGE_TOKEN }}
           release_type: ${{ github.event.inputs.releaseType }}
           parent_file_id: ${{ steps.curseforge.outputs.id }}
+      - name: Upload datapack to modrinth
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: ndAPpS24
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: true
+          modrinth-unfeature-mode: subset
+          changelog: ${{ steps.split.outputs._0}}

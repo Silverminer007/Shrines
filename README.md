@@ -39,22 +39,3 @@ to [issue tracker](https://github.com/Silverminer007/Shrines/issues) or [discord
 The wiki is still in work, but you can watch progress at here:
 
 [![](https://img.shields.io/badge/wiki-in--progress-orange)](https://silverminer007.github.io/ShrinesWiki/)
-
-## 1.19
-
-A 1.19 port is planned as soon as Forge releases their first version. 1.19 will be fully supported and 1.18.2 is going to be "bugfixes only".
-
-The Structure Novel rework is planned for this version
-
-### 1.19 TODO
-
-- [ ] Re-add structure novels
-- [x] Use Data-Gen for random_variation/config
-- [x] Use Data-Gen for random_variation/material
-- [x] Use Data-Gen for random_variation/material tags
-- [ ] Improve Ground level delta check
-- [ ] Fix warning: Hanging entity at invalid position: BlockPos{x=338, y=-3, z=36}
-
-### Requested features
-- better documentation and wiki
-- tutorials about how to add custom structures
