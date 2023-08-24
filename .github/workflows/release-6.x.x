@@ -1,0 +1,126 @@
+name: release-6.x.x
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        description: 'The version to publish'
+        default: ''
+      releaseType:
+        required: true
+        description: "alpha, beta or release"
+        default: 'alpha'
+      minecraftVersion:
+        required: true
+        description: "Mc Version"
+        default: '1.20.1'
+      branch:
+        required: true
+        description: ""
+        default: '1.20.x-6.x.x'
+
+env:
+  CURSEFORGE: ${{ secrets.CURSEFORGE_TOKEN }}
+  MODRINTH: ${{ secrets.MODRINTH_TOKEN }}
+  shrines_mod_version: ${{ github.event.inputs.version }}
+  SHRINES_RELEASE_TYPE: ${{ github.event.inputs.releaseType }}
+  MC_VERSION: ${{ github.event.inputs.minecraftVersion }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: 'Publish 6.x.x'
+    steps:
+      - name: Get current time
+        uses: srfrnk/current-time@master
+        id: current-time
+        with:
+          format: DD.MM.YYYY HH:mm [UTC]
+      - name: Git checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17.0.1'
+          distribution: temurin
+          cache: 'gradle'
+      - name: Echo JAVA_HOME
+        run: echo $JAVA_HOME
+      - name: Verify Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Run Tests
+        run: ./gradlew --info --stacktrace runGameTestServer
+      - name: Execute build
+        run: ./gradlew --info --stacktrace build
+      - name: Create Tag
+        id: create_tag
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git tag ${{ github.event.inputs.version }} -a -m ${{ github.event.inputs.version }}
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.event.inputs.branch }}
+          tags: true
+      - name: read changelog file
+        uses: juliangruber/read-file-action@v1
+        id: changelog
+        with:
+          path: ./changelog.md
+      - name: Split Changelog
+        id: split
+        uses: rishabhgupta/split-by@v1
+        with:
+          string: ${{ steps.changelog.outputs.content }}
+          split-by: "==========="
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: release ${{ github.event.inputs.version }} --- ${{ steps.current-time.outputs.formattedTime }}
+          tag: ${{ github.event.inputs.version }}
+          body: |
+            ![GitHub release (by tag)](https://img.shields.io/github/downloads/Silverminer007/Shrines/${{ github.event.inputs.version }}/total)
+            ${{ steps.split.outputs._0}}
+      - name: Upload files to modrinth
+        run: ./gradlew --info --stacktrace modrinth
+      - name: Upload files to curseforge
+        id: curseforge
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          file_path: build/libs/Shrines-${{ github.event.inputs.minecraftVersion }}-${{ github.event.inputs.version }}.jar
+          game_endpoint: "minecraft"
+          project_id: "418915"
+          token: ${{ secrets.CURSEFORGE_TOKEN }}
+          changelog_type: "markdown"
+          changelog: ${{ steps.split.outputs._0}}
+          release_type: ${{ github.event.inputs.releaseType }}
+          game_versions: "Minecraft 1.20:1.20.1,java:Java 17,java:Java 18,Forge"
+      - name: Upload files to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/libs/*.jar
+          tag_name: ${{ github.event.inputs.version }}
+      - name: Create default configuration pack
+        run: |
+          chmod +x ./defaultconfig.sh
+          ./defaultconfig.sh
+      - name: Upload default config pack to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Shrines-Default-Config-${{ github.event.inputs.minecraftVersion }}-${{ github.event.inputs.version }}.zip
+          tag_name: ${{ github.event.inputs.version }}
+      - name: Upload files to curseforge
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          file_path: Shrines-Default-Config-${{ github.event.inputs.minecraftVersion }}-${{ github.event.inputs.version }}.zip
+          game_endpoint: "minecraft"
+          project_id: "418915"
+          token: ${{ secrets.CURSEFORGE_TOKEN }}
+          release_type: ${{ github.event.inputs.releaseType }}
+          parent_file_id: ${{ steps.curseforge.outputs.id }}
