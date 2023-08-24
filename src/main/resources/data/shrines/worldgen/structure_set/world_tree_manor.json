@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 14944438,
+    "separation": 45,
+    "spacing": 55
+  },
+  "structures": [
+    {
+      "structure": "shrines:world_tree_manor",
+      "weight": 1
+    }
+  ]
+}

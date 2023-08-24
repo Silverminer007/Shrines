@@ -27,5 +27,5 @@ forge*changelog.txt
 /logs/
 /src/generated/resources/.cache
 /src/generated/reports
-/Shrines-Default-Config
+/Shrines-Structures
 *.zip

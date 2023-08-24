@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1721882513,
+    "separation": 23,
+    "spacing": 60
+  },
+  "structures": [
+    {
+      "structure": "shrines:abandoned_witch_house",
+      "weight": 1
+    }
+  ]
+}

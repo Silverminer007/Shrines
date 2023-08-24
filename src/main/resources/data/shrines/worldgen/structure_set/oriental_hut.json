@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 42384446,
+    "separation": 14,
+    "spacing": 32
+  },
+  "structures": [
+    {
+      "structure": "shrines:oriental_hut",
+      "weight": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 751963298,
+    "separation": 27,
+    "spacing": 80
+  },
+  "structures": [
+    {
+      "structure": "shrines:small_player_house",
+      "weight": 1
+    },
+    {
+      "structure": "shrines:tall_player_house",
+      "weight": 1
+    }
+  ]
+}

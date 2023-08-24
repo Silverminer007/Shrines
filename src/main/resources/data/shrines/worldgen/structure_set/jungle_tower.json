@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 987531843,
+    "separation": 11,
+    "spacing": 60
+  },
+  "structures": [
+    {
+      "structure": "shrines:jungle_tower",
+      "weight": 1
+    }
+  ]
+}

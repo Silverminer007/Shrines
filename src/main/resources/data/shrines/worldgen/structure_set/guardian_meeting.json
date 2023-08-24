@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1498473232,
+    "separation": 17,
+    "spacing": 70
+  },
+  "structures": [
+    {
+      "structure": "shrines:guardian_meeting",
+      "weight": 1
+    }
+  ]
+}

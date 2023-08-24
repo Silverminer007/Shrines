@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 651398043,
+    "separation": 8,
+    "spacing": 50
+  },
+  "structures": [
+    {
+      "structure": "shrines:harbour",
+      "weight": 1
+    }
+  ]
+}

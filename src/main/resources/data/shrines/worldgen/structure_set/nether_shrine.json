@@ -1,0 +1,18 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 653267,
+    "separation": 15,
+    "spacing": 80
+  },
+  "structures": [
+    {
+      "structure": "shrines:nether_shrine_nether",
+      "weight": 1
+    },
+    {
+      "structure": "shrines:nether_shrine_overworld",
+      "weight": 1
+    }
+  ]
+}

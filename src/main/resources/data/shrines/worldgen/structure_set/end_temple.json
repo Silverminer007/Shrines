@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 478360,
+    "separation": 11,
+    "spacing": 60
+  },
+  "structures": [
+    {
+      "structure": "shrines:end_temple",
+      "weight": 1
+    }
+  ]
+}

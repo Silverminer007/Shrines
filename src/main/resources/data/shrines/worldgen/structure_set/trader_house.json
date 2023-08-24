@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 760055678,
+    "separation": 18,
+    "spacing": 60
+  },
+  "structures": [
+    {
+      "structure": "shrines:trader_house",
+      "weight": 1
+    }
+  ]
+}

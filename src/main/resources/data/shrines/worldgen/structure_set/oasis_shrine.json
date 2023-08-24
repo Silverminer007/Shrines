@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 2056047070,
+    "separation": 32,
+    "spacing": 40
+  },
+  "structures": [
+    {
+      "structure": "shrines:oasis_shrine",
+      "weight": 1
+    }
+  ]
+}

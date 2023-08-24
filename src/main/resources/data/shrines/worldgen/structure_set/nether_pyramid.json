@@ -1,0 +1,18 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 7428394,
+    "separation": 50,
+    "spacing": 150
+  },
+  "structures": [
+    {
+      "structure": "shrines:nether_pyramid_overworld",
+      "weight": 1
+    },
+    {
+      "structure": "shrines:nether_pyramid_nether",
+      "weight": 1
+    }
+  ]
+}

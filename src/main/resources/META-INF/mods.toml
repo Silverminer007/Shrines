@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[41,)"
+loaderVersion = "[47,)"
 license = "MPL-2.0"
 issueTrackerURL = "https://github.com/Silverminer007/Shrines/issues"
 
@@ -21,6 +21,6 @@ See https://www.curseforge.com/minecraft/mc-mods/shrines-structures for more Inf
 [[dependencies.shrines]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19,1.20)"
+versionRange = "[1.20.1,1.21)"
 ordering = "NONE"
 side = "BOTH"

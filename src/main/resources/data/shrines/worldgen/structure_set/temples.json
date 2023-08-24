@@ -1,0 +1,30 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 536987987,
+    "separation": 25,
+    "spacing": 56
+  },
+  "structures": [
+    {
+      "structure": "shrines:small_temple",
+      "weight": 3
+    },
+    {
+      "structure": "shrines:high_temple",
+      "weight": 3
+    },
+    {
+      "structure": "shrines:flooded_temple",
+      "weight": 4
+    },
+    {
+      "structure": "shrines:mineral_temple",
+      "weight": 4
+    },
+    {
+      "structure": "shrines:mayan_temple",
+      "weight": 3
+    }
+  ]
+}
