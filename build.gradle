@@ -9,7 +9,6 @@ buildscript {
 
 plugins {
     id "com.modrinth.minotaur" version "2.+"
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'eclipse'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.+'
@@ -158,28 +157,6 @@ modrinth {
     def changelogFile = file.text
     changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
     gameVersions = ["1.20.1"]
-}
-
-curseforge {
-    project {
-        apiKey = System.getenv('CURSEFORGE')
-        id = '418915'
-        //changelog = file('changelog.md')
-        def file = file('changelog.md')
-        def changelogFile = file.text
-        changelog = changelogFile.substring(0, changelogFile.contains('===') ? changelogFile.indexOf("===") : changelogFile.length())
-        changelogType = 'markdown'
-        if (System.getenv("SHRINES_RELEASE_TYPE") != null) {
-            releaseType = System.getenv("SHRINES_RELEASE_TYPE")
-        } else {
-            releaseType = 'beta'
-        }
-        addGameVersion '1.20.1'
-        addGameVersion 'Forge'
-    }
-    options {
-        detectNewerJava = true // defaults to false
-    }
 }
 
 repositories {
