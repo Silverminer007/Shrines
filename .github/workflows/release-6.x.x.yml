@@ -132,3 +132,4 @@ jobs:
           modrinth-featured: true
           modrinth-unfeature-mode: subset
           changelog: ${{ steps.split.outputs._0}}
+          files: Shrines-Structures-${{ github.event.inputs.minecraftVersion }}-${{ github.event.inputs.version }}.zip
